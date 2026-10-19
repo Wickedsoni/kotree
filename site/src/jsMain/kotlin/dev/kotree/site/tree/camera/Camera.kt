@@ -63,8 +63,21 @@ fun boundsOf(lines: List<Polyline>): Bounds {
     return Bounds(minX, minY, maxX, maxY)
 }
 
-/** All branches at p = 1 plus the bough centre (docs/03 §2.5). */
-fun boughBounds(bough: BoughGeo): Bounds = boundsOf(listOf(bough.centre) + bough.branches.map { it.full })
+/** All branches at p = 1, the bough centre and every branch label anchor (docs/03 §2.5). */
+fun boughBounds(bough: BoughGeo): Bounds {
+    val limbs = boundsOf(listOf(bough.centre) + bough.branches.map { it.full })
+    var minX = limbs.minX
+    var minY = limbs.minY
+    var maxX = limbs.maxX
+    var maxY = limbs.maxY
+    for (branch in bough.branches) {
+        minX = min(minX, branch.labelAnchor.x)
+        minY = min(minY, branch.labelAnchor.y)
+        maxX = max(maxX, branch.labelAnchor.x)
+        maxY = max(maxY, branch.labelAnchor.y)
+    }
+    return Bounds(minX, minY, maxX, maxY)
+}
 
 /** The limb plus its label anchor, so a fit always keeps the branch title on screen. */
 fun branchBounds(branch: BranchGeo): Bounds {
@@ -134,7 +147,7 @@ class Camera(val bounds: Bounds) {
         return whole / perArt / baseScale(bounds, viewport)
     }
 
-    fun boughTarget(b: BoughGeo): FlyTarget = fit(boughBounds(b), Tokens.Camera.fitMarginBough, Tokens.Zoom.splitEnd)
+    fun boughTarget(b: BoughGeo): FlyTarget = fit(boughBounds(b), Tokens.Camera.fitMarginBough, Tokens.Zoom.boughFitMin)
 
     /**
      * Fit the branch limb plus its label. A branch runs from the trunk fork to its tip, so at zMax the whole

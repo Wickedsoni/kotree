@@ -66,6 +66,8 @@ object Tokens {
         const val splitEnd = 2.4
         const val boughEnter = 1.8
         const val boughLeave = 1.62
+        /** Lowest zoom a bough fit may use: near the split end, so branch labels are readable. */
+        const val boughFitMin = 2.2
         /** Quantised split steps: 0..8 means 9 bitmaps per bough (docs/03 §2.4). */
         const val splitSteps = 8
     }
