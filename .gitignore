@@ -1,0 +1,26 @@
+# Gradle and Kobweb build output
+.gradle/
+build/
+**/build/
+/site/.kobweb/*
+!/site/.kobweb/conf.yaml
+.kotlin/
+
+# Vercel local project link (docs/07 section 5.5 and 6)
+.vercel/
+
+# IDE and agent local settings
+.idea/
+.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and local config
+*.log
+local.properties
+.env
+.env.*
+!.env.example
