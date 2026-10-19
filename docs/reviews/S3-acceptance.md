@@ -21,7 +21,7 @@ Measured with headless Chrome 155, 1440x900, DPR 1, exported static site served 
 | White page, one black tree, no dark mode, no console error | PASS (no errors logged; tree black, limbs grey) |
 | z=1: exactly 5 bough labels; z>=2.4: 16 branch labels + Foundation | PASS (5 at z=1; 17 at z=2.46) |
 | Limbs separate in 8 steps; no flicker at z=1.80 | PASS by construction (step = round(p*8)); label set is stable at 1.74, 1.80, 1.86. Note: between z 1.8 and ~1.9 only Foundation is labelled (bough titles hand over at 1.8, branch titles reach opacity above 0 at p>0.5). Spec behaviour, author may want to tune |
-| Bough click lands z>=2.4; branch click z=4.0; Home z=1 | PASS (2.40, 4.00, 1.00) |
+| Bough click lands z>=2.4; branch click z=4.0; Home z=1 | PASS (2.40, 4.00); Home now lands at the whole-pixel fit z=0.82 at 1440x900 (see Scale) |
 | Same pixels each load | PASS (hash identical across runs) |
 | No hex colour, font or px size outside Tokens.kt | PASS (only FNV/RNG constants in gen/, not colours) |
 | No leaf, stem, lesson or /content read; export succeeds | PASS (`kobweb export --notty --layout static` exit 0, kotree.js 827 KB, index.html 72 KB; no OOM text in log) |
@@ -31,7 +31,7 @@ Measured with headless Chrome 155, 1440x900, DPR 1, exported static site served 
 
 - Keyboard bug: the container re-applied its attributes on every recomposition, which removed and re-added `tabindex` and dropped focus, so only the first key press worked. Camera state is now read only in a child composable. `+`, `=`, `-`, Home, drag and wheel verified.
 - Renderer bug: tile alpha was written as a Byte (255 became -1, clamped to 0), so the canvas stayed blank. Fixed.
-- Scale: tiles are 1 art pixel per `World.px` (4) generator units and are blitted at the camera's scale (nearest neighbour, rounded edges), not an integer factor, so labels stay on limbs. Pixels are 3 or 4 device px wide at z=1.
+- Scale (updated 20 Oct 2026, docs/12 §8): the non-integer blit deviation is removed. `snappedScale` rounds the art-pixel size to a whole number of device px; tiles, whole-pixel origin and labels all use it, so edges are crisp at every zoom. Camera z stays continuous, the picture steps. Home and fits floor to a whole scale, so Home shows z about 0.82 at 1440x900 (was 1.00) and the tree is slightly smaller.
 - Tapered width: `Polyline.tipWidthPx` added (contract change).
 - Branch limbs use `color.outline` (rule 8). Foundation has no separate limb. Limbs are drawn under the bough so they hide inside it at step 0.
 - Not done: determinism unit test (no Kotlin/JS test setup, owed to Phase 2 remainder). At bough zoom, neighbouring boughs' branch labels can overlap.

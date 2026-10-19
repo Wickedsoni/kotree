@@ -3,7 +3,7 @@ package dev.kotree.site.tree.render
 import dev.kotree.site.Tokens
 import dev.kotree.site.tree.Bounds
 import dev.kotree.site.tree.CameraState
-import dev.kotree.site.tree.camera.baseScale
+import dev.kotree.site.tree.camera.snappedScale
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -13,7 +13,7 @@ import kotlin.math.roundToInt
 fun cssRgb(rgb: Int): String = "#" + rgb.toString(16).padStart(6, '0')
 
 /**
- * Blits cached tiles to one `<canvas>` with integer scaling only (docs/07 §7).
+ * Blits cached tiles to one `<canvas>` with whole-number scaling only (docs/12 §8).
  * Backing size = CSS size x devicePixelRatio; smoothing off; the element also needs CSS `image-rendering: pixelated`
  * (see [applyPixelatedStyle]). Call [draw] only while the camera moves (no idle frames).
  */
@@ -32,11 +32,11 @@ class PixelCanvas(private val canvas: HTMLCanvasElement, private val cache: Tile
         ctx.fillStyle = cssRgb(Tokens.Color.surface)
         ctx.fillRect(0.0, 0.0, bw.toDouble(), bh.toDouble())
 
-        // Device pixels per generator unit, then per art pixel.
-        val unit = baseScale(bounds, cam.viewportPx) * cam.z * dpr
-        val s = unit * Tokens.World.px
-        val originX = bw / 2.0 - cam.centre.x * unit
-        val originY = bh / 2.0 - cam.centre.y * unit
+        // Whole device pixels per art pixel (docs/12 §8), and a whole-pixel origin, so every edge is crisp.
+        val unit = snappedScale(bounds, cam.viewportPx, cam.z) * dpr
+        val s = (unit * Tokens.World.px).roundToInt().toDouble()
+        val originX = (bw / 2.0 - cam.centre.x * unit).roundToInt().toDouble()
+        val originY = (bh / 2.0 - cam.centre.y * unit).roundToInt().toDouble()
 
         fun blit(tile: Tile?) {
             if (tile == null) return

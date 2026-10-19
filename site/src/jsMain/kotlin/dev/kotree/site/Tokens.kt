@@ -13,15 +13,15 @@ object Tokens {
         /** color.on-surface */ const val onSurface = 0x1A1C1E
         /** color.on-surface-muted */ const val onSurfaceMuted = 0x5F6368
         /** color.outline */ const val outline = 0xC4C7CC
-        /** color.leaf.shadow (prototype branch limb colour, docs/12 ยง2) */ const val leafShadow = 0xD8DADF
         /** color.leaf.shadow.label */ const val leafShadowLabel = 0x6B7280
 
         /** Token names used as `ink` strings in the contracts. */
         const val inkBark = "color.bark"
-        /** Grey limb ink for branches without a live leaf (docs/02 ง5 rule 8). */
+        /** Grey limb ink for branches without a live leaf (docs/02 ยง5 rule 8). */
         const val inkOutline = "color.outline"
 
         /** Resolves an ink token name from the contracts to its rgb value. */
+        // inkRgb resolves only bark and outline: the two inks the prototype draws.
         fun inkRgb(name: String): Int = when (name) {
             inkBark -> bark
             inkOutline -> outline
@@ -36,7 +36,6 @@ object Tokens {
         const val labelSizePx = 14
         const val labelLineHeightPx = 20
         const val labelWeight = 600
-        const val placeholderTitleSizePx = 32
     }
 
     object Space {
@@ -123,10 +122,20 @@ object Tokens {
         const val panStepFraction = 0.12
         /** Pointer travel before a press becomes a drag. */
         const val dragThresholdPx = Space.grid
-        /** Fit margins from docs/03 ง2.5. */
+        /** Fit margins from docs/03 ยง2.5. */
         const val fitMarginTree = 0.05
         const val fitMarginBough = 0.08
         const val fitMarginBranch = 0.08
+    }
+
+    /** Label collision nudging (screen px; deterministic, vertical only). */
+    object LabelNudge {
+        /** Estimated text width per character as a fraction of the label font size. */
+        const val charWidthFactor = 0.62
+        /** Largest distance a label may move from its limb tip. */
+        const val maxPx = 60.0
+        const val iterations = 16
+        const val gapPx = Space.grid
     }
 
     object Motion {

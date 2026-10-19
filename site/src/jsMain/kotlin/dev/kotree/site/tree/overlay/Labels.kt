@@ -1,6 +1,7 @@
 package dev.kotree.site.tree.overlay
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,9 +56,17 @@ fun TreeLabels(
     camera: CameraState,
     onBough: (BoughGeo) -> Unit,
     onBranch: (BoughGeo, BranchGeo) -> Unit,
+    onLevelSwitch: () -> Unit = {},
 ) {
     val mode = remember { LevelMode() }
     val inBough = mode.update(camera.z)
+    var seen by remember { mutableStateOf(inBough) }
+    LaunchedEffect(inBough) {
+        if (seen != inBough) {
+            seen = inBough
+            onLevelSwitch()
+        }
+    }
     val branchOpacity = (2.0 * splitProgress(camera.z) - 1.0).coerceIn(0.0, 1.0)
     val boughTitles = data.boughs.associate { it.id to it.title }
     val branchTitles = data.boughs.flatMap { it.branches }.associate { it.id to it.title }
@@ -67,15 +76,15 @@ fun TreeLabels(
             property("position", "absolute")
             property("inset", "0")
             property("pointer-events", "none")
-            property("overflow", "hidden")
+            property("overflow", "clip") // clip, not hidden: focus or scrollIntoView can never scroll the overlay
         }.toAttrs()
     ) {
+        val specs = ArrayList<LabelSpec>()
         for (bough in geometry.boughs) {
-            val title = boughTitles[bough.id] ?: bough.id
             val isRoots = bough.id == ROOTS_ID
             if (!inBough || isRoots) {
-                LabelButton(
-                    text = title,
+                specs += LabelSpec(
+                    text = boughTitles[bough.id] ?: bough.id,
                     at = camera.toScreen(geometry.bounds, bough.labelAnchor),
                     opacity = 1.0,
                     colour = Tokens.Color.onSurface,
@@ -84,7 +93,7 @@ fun TreeLabels(
             }
             if (inBough && !isRoots) {
                 for (branch in bough.branches) {
-                    LabelButton(
+                    specs += LabelSpec(
                         text = branchTitles[branch.id] ?: branch.id,
                         at = camera.toScreen(geometry.bounds, branch.labelAnchor),
                         opacity = branchOpacity,
@@ -94,7 +103,43 @@ fun TreeLabels(
                 }
             }
         }
+        val placed = nudgeApart(specs, camera.viewportPx.widthPx, camera.viewportPx.heightPx)
+        for ((i, spec) in specs.withIndex()) {
+            LabelButton(spec.text, placed[i], spec.opacity, spec.colour, spec.onClick)
+        }
     }
+}
+
+private class LabelSpec(val text: String, val at: Vec, val opacity: Double, val colour: Int, val onClick: () -> Unit)
+
+/**
+ * Pushes overlapping labels apart vertically, each at most [Tokens.LabelNudge.maxPx] from its anchor.
+ * Deterministic: input order is the tie-break, there is no randomness and no clock. Labels fully off screen
+ * are left alone so they never push visible ones.
+ */
+private fun nudgeApart(specs: List<LabelSpec>, vw: Int, vh: Int): List<Vec> {
+    val n = specs.size
+    val ys = DoubleArray(n) { specs[it].at.y }
+    val xs = DoubleArray(n) { specs[it].at.x }
+    val halfH = Tokens.Type.labelLineHeightPx / 2.0
+    val halfW = DoubleArray(n) {
+        specs[it].text.length * Tokens.Type.labelSizePx * Tokens.LabelNudge.charWidthFactor / 2.0 + Tokens.Space.grid
+    }
+    val active = BooleanArray(n) { xs[it] in 0.0..vw.toDouble() && ys[it] in 0.0..vh.toDouble() }
+    val max = Tokens.LabelNudge.maxPx
+    repeat(Tokens.LabelNudge.iterations) {
+        for (i in 0 until n) for (j in i + 1 until n) {
+            if (!active[i] || !active[j]) continue
+            if (kotlin.math.abs(xs[i] - xs[j]) >= halfW[i] + halfW[j]) continue
+            val need = 2 * halfH + Tokens.LabelNudge.gapPx - kotlin.math.abs(ys[i] - ys[j])
+            if (need <= 0.0) continue
+            val dir = if (ys[i] <= ys[j]) -1.0 else 1.0 // i is the upper one unless it is lower
+            val push = need / 2.0
+            ys[i] = (ys[i] + dir * push).coerceIn(specs[i].at.y - max, specs[i].at.y + max)
+            ys[j] = (ys[j] - dir * push).coerceIn(specs[j].at.y - max, specs[j].at.y + max)
+        }
+    }
+    return List(n) { Vec(xs[it], ys[it]) }
 }
 
 private const val ROOTS_ID = "roots"
