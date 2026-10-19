@@ -447,6 +447,22 @@ Measured on the production export, desktop, Chrome, Lighthouse "desktop" preset,
 | Tree sprites / images on home | ≤ 150 KB total | File size check |
 | Home page, first load total transfer | ≤ 1 MB | DevTools |
 | Whole export (`site/.kobweb/site`) | ≤ 100 MB (Vercel Hobby CLI upload limit) | CI size check |
+
+### 8.1 Measured baselines (tree-first prototype, 20 Oct 2026; `docs/reviews/S3-acceptance.md`)
+
+These close `docs/11` P0-10 for the prototype. They come from headless Chrome on the author's machine, **not** the Lighthouse run on the reference laptop above, so they are a first reading and do not become acceptance criteria until re-measured in Phase 8.
+
+| Measure | Value | Against the budget |
+|---|---|---|
+| First paint, HTML shell (static export) | 56 ms | Well under LCP ≤ 2.0 s |
+| First paint, dev server | 590 to 700 ms | Dev only |
+| Tree visible | before the 3 s sample | Meets "first screen < 3 s" |
+| Frame time while zooming (120 wheel events) | p50 16.7 ms, p95 16.7 ms, max 16.9 ms | At the display refresh limit (max 0.2 ms over one 16.7 ms frame) |
+| `kotree.js` | 827,482 B raw, **240,690 B gzip -9** (`gzip -9 -c site/.kobweb/site/kotree.js \| wc -c`) | 60 % of the 400 KB budget before any lesson text |
+| DOM nodes on the home page | 24 to 29 | Far below the 200-node test |
+| Geometry hash | `cecb906380417dd8` on every load | Deterministic |
+
+**Consequence for the bundle spike (§8, 50 synthetic leaves).** The baseline already uses about 235 KB of the 400 KB budget, leaving about 159 KB. If the per-leaf cost projects over that headroom, ADR 005 must decide the lesson design before the pilot leaf. Part of the baseline is Kotlin/JS runtime and Compose HTML and will not grow, but the spike must measure it, not assume it.
 | Frame time while panning/zooming | ≤ 16.7 ms p95 (60 fps), canvas draw ≤ 8 ms | Performance panel, 10 s pan/zoom script |
 | Click on a leaf → popup visible | ≤ 100 ms | Performance panel |
 | Matter.js (physics engine) | 0 bytes on home and on pages with no `physics` sim; on other pages loaded on demand (script tag, when the first sim nears the viewport), ≤ 30 KB gzip, cached once per visit (`docs/05` §3.1, §6.3) | Network panel; file size check on `/vendor/` |
