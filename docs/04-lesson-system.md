@@ -432,11 +432,11 @@ Extra writing rules for lessons:
 
 ## 10. Worked example: `kotlin/null-safety/what-is-null`
 
-This is a **filled example for teaching the format**. It is not a published leaf and must not be copied into `content/` without the author's "I understood X" (L5). Its facts were checked on 18 Oct 2026 against four official pages: `https://kotlinlang.org/docs/null-safety.html`, `https://kotlinlang.org/docs/java-interop.html`, `https://kotlinlang.org/docs/strings.html` and the Kotlin language specification, `https://kotlinlang.org/spec/expressions.html` (string interpolation). The code was **not compiled or run** by anyone (no shell in either review), so it carries one `⚠️ VERIFY`, and its `challenge` blocks say `verified: "UNVERIFIED: ..."`. The expected output of each snippet is listed in §10.2 with where it comes from (documented, or derived by reading, never run). The title and difficulty below match the `kotlin` roadmap row (checked 18 Oct 2026); `order` matches the roadmap. `requires` adds the two Kotlin leaves for `if` and functions that the example's code uses; the roadmap row still lists only `basic-types`, so V5 would fail until `curriculum-designer` adds them (O5). `requires` holds same-branch leaves only (V3), so the Foundation leaf `foundation/programming-thinking/what-is-a-function` is an `Assumes` line in the Kotlin roadmap, not a `requires` entry. The roadmap row proposes a different analogy and different Predict seeds (see O5), which a real write-up would follow.
+This is a **filled example for teaching the format**. It is not a published leaf and must not be copied into `content/` without the author's "I understood X" (L5). Its facts were checked on 18 Oct 2026 against four official pages: `https://kotlinlang.org/docs/null-safety.html`, `https://kotlinlang.org/docs/java-interop.html`, `https://kotlinlang.org/docs/strings.html` and the Kotlin language specification, `https://kotlinlang.org/spec/expressions.html` (string interpolation). The code was **not compiled or run** by anyone (no shell in either review), so it carries one `⚠️ VERIFY`, and its `challenge` blocks say `verified: "UNVERIFIED: ..."`. The expected output of each snippet is listed in §10.2 with where it comes from (documented, or derived by reading, never run). The title and difficulty below match the `kotlin` roadmap row (checked 18 Oct 2026); `order` matches the roadmap. `requires` lists only `basic-types`: since 20 Oct 2026 (O5) the example code declares no function of its own and has no `if`, so it does not need `declaring-functions` or `if-as-an-expression`. The code still sits inside the usual `fun main()` wrapper, which the first-programs leaves already taught. The `val` lines sit above `main`, on purpose: Kotlin does not narrow a top-level property from its initialiser, so `!!` and `!= null` stay meaningful and draw no "always null" or "unnecessary" warning (derived, not run, so ⚠️ VERIFY). `requires` holds same-branch leaves only (V3), so the Foundation leaf `foundation/programming-thinking/what-is-a-function` is an `Assumes` line in the Kotlin roadmap, not a `requires` entry. The analogy is the lunch box (decided 20 Oct 2026, O5), as in `docs/05` §10 and the `docs/08` row example.
 
 Frontmatter uses `status: shadow` and empty dates on purpose: nothing goes live without `reviewer` PASS and `housekeeper` (§8.1). The example has one sim marker. The sim ID `null-lunch-box` is specified in `docs/05` §10 (worked spec).
 
-The example teaches one idea (P8): `null` means "nothing here", and a program can crash if it treats nothing as something. It leaves `?.`, `?:` and `let` to later leaves.
+The example teaches one idea (P8): `null` means "nothing here", and a program can crash if it treats nothing as something. It leaves `?.`, `?:`, `let`, `if` checks and smart casts to later leaves.
 
 ````markdown
 ---
@@ -445,7 +445,7 @@ title: What is null and why does it crash apps?
 status: shadow
 difficulty: easy
 order: 17
-requires: [kotlin/types-and-variables/basic-types, kotlin/control-flow/if-as-an-expression, kotlin/functions/declaring-functions]
+requires: [kotlin/types-and-variables/basic-types]
 summary: Null means nothing is here. See how Kotlin catches it before your app runs, and how a crash still gets through.
 video: ""
 publishedOn:
@@ -510,48 +510,42 @@ Idea A hides the truth. Sam has no middle name, which is not the same as a middl
 
 1. Give every box a label: "always has a value" or "might have nothing".
 2. Never hand nothing to a box labelled "always". Refuse it before the program starts.
-3. Before asking about what is inside a box labelled "might have nothing", check that something is there.
-4. If you skip the check and ask anyway, the program stops with an error.
+3. Before asking about what is inside a box labelled "might have nothing", find out whether something is there.
+4. If you skip that and ask anyway, the program stops with an error.
 
 ### Name it
 
-The mark for "nothing here" is **`null`**. A box that must always hold a value has a **non-null type**, written `String`. A box that might hold nothing has a **nullable type**, written with a question mark: `String?`. The check from step 3 is written `middleName != null`.
+The mark for "nothing here" is **`null`**. A box that must always hold a value has a **non-null type**, written `String`. A box that might hold nothing has a **nullable type**, written with a question mark: `String?`. The question from step 3, "is anything here?", is written `middleName != null`. It answers `true` or `false`. A later leaf shows what to do with that answer.
 
 ```kotlin
-fun findMiddleName(hasOne: Boolean): String? {
-    return if (hasOne) "Rose" else null
-}
+val firstName: String = "Ada"
+val middleName: String? = null
 
 fun main() {
-    val firstName: String = "Ada"
-    val middleName: String? = findMiddleName(false)
     println(firstName)
     println(middleName)
-    if (middleName != null) {
-        println(middleName.length)
-    }
+    println(middleName != null)
 }
 ```
 
-This prints `Ada` and then `null`. The `if` block is skipped because the check finds nothing. Inside the `if`, Kotlin knows the box is not empty, so `middleName.length` is allowed.
+This prints `Ada`, then `null`, then `false`. Printing an empty box is fine. The question `middleName != null` answers `false` because nothing is here.
 
 Kotlin refuses to run the next two programs. They break rules 2 and 3.
 
 ```kotlin
 // does not compile
+val firstName: String = null
+
 fun main() {
-    val firstName: String = null
+    println(firstName)
 }
 ```
 
 ```kotlin
 // does not compile
-fun findMiddleName(hasOne: Boolean): String? {
-    return if (hasOne) "Rose" else null
-}
+val middleName: String? = null
 
 fun main() {
-    val middleName = findMiddleName(false)
     println(middleName.length)
 }
 ```
@@ -565,8 +559,9 @@ type: predict
 id: print-null-box
 verified: "UNVERIFIED: compile not run"
 code: |
+  val middleName: String? = null
+
   fun main() {
-      val middleName: String? = null
       println("Middle name: $middleName")
       println("Done")
   }
@@ -591,12 +586,9 @@ type: predict
 id: bang-on-full-box
 verified: "UNVERIFIED: compile not run"
 code: |
-  fun findMiddleName(hasOne: Boolean): String? {
-      return if (hasOne) "Rose" else null
-  }
+  val middleName: String? = "Rose"
 
   fun main() {
-      val middleName = findMiddleName(true)
       println("Start")
       println(middleName!!.length)
       println("End")
@@ -622,8 +614,8 @@ output: |
 
 1. **Write.** Copy the program from the second Predict item into the editor.
 2. **Run.** You should see `Start`, then `4`, then `End`. The word "Rose" has four letters.
-3. **Break.** Change `true` to `false`. Run it again. The program prints `Start` and then stops with a NullPointerException.
-4. **Fix.** Replace the line `println(middleName!!.length)` with a check: `if (middleName != null) { println(middleName.length) }`. Run it with `false`. You should see `Start` and `End`, and no crash.
+3. **Break.** Change `"Rose"` to `null`. Run it again. The program prints `Start` and then stops with a NullPointerException.
+4. **Fix.** Replace the line `println(middleName!!.length)` with `println(middleName)`. Run it. You should see `Start`, `null` and `End`, and no crash. You stopped asking about what is inside an empty box. Later leaves in this branch show safer ways to ask.
 
 ## Fix the bug
 
@@ -633,44 +625,28 @@ id: fix-bang-in-describe
 generated: true
 verified: "UNVERIFIED: compile not run"
 code: |
-  fun findMiddleName(name: String): String? {
-      return if (name == "Ada") "Rose" else null
-  }
-
-  fun describe(name: String): String {
-      val middleName = findMiddleName(name)
-      return "$name has a middle name with ${middleName!!.length} letters"
-  }
+  val firstName: String = "Ada"
+  val middleName: String? = null
 
   fun main() {
-      println(describe("Ada"))
-      println(describe("Sam"))
+      println(firstName)
+      println("Middle name has ${middleName!!.length} letters")
   }
 hints:
-  - "Look at the line inside describe that uses !!. Which name reaches it second?"
-  - "Check for null first. Give each case its own message."
+  - "Look at the line that uses !!. What is in the box when that line runs?"
+  - "You do not need the letter count to show the box. Print the box itself."
 expected: |
-  Ada has a middle name with 4 letters
-  Sam has no middle name
+  Ada
+  Middle name: null
 fix: |
-  fun findMiddleName(name: String): String? {
-      return if (name == "Ada") "Rose" else null
-  }
-
-  fun describe(name: String): String {
-      val middleName = findMiddleName(name)
-      if (middleName != null) {
-          return "$name has a middle name with ${middleName.length} letters"
-      } else {
-          return "$name has no middle name"
-      }
-  }
+  val firstName: String = "Ada"
+  val middleName: String? = null
 
   fun main() {
-      println(describe("Ada"))
-      println(describe("Sam"))
+      println(firstName)
+      println("Middle name: $middleName")
   }
-explanation: "The !! promised that every box has a sandwich. Sam's box was empty, so the promise broke. Checking for null first gives each case its own message."
+explanation: "The !! promised that the box has a sandwich. The box was empty, so the promise broke. Printing the box itself never asks about what is inside, so it cannot crash."
 ```
 
 **Read it like a reviewer.** Answer in this order:
@@ -709,7 +685,7 @@ The same crash can come from Java code. Kotlin does not report nullability error
 
 - Explain why a `String` box cannot hold `null` but a `String?` box can.
 - Predict whether a short program prints `null` or stops with a NullPointerException.
-- Fix a function that uses `!!` by checking for `null` first.
+- Fix a line that uses `!!` on an empty box so the program no longer crashes.
 ````
 
 ### 10.1 What the example shows
@@ -723,7 +699,7 @@ The same crash can come from Java code. Kotlin does not report nullability error
 | Predict before run, answers in the page (`challenge` blocks, exactly 3 options) | `## Predict the output` |
 | Write, run, break, fix | `## Try it` |
 | One `fix` block with exactly two hints; five reviewer questions in plain Markdown | `## Fix the bug` |
-| Verified facts | `String?` versus `String`, the `if (b != null)` check with smart cast, `!!` causing an NPE, the list of NPE causes, and Java values without nullability information (`https://kotlinlang.org/docs/null-safety.html`, `https://kotlinlang.org/docs/java-interop.html`, read 18 Oct 2026) |
+| Verified facts | `String?` versus `String`, `!!` causing an NPE, the list of NPE causes, and Java values without nullability information (`https://kotlinlang.org/docs/null-safety.html`, `https://kotlinlang.org/docs/java-interop.html`, read 18 Oct 2026) |
 | Not verified | That every block compiles and prints what the text and the `output` / `expected` fields say (⚠️ VERIFY in the example's comment; the `challenge` blocks say `UNVERIFIED`). §10.2 lists, per snippet, what the official pages support. The run on Kotlin 2.4.21 is still needed. |
 | No video section | `video: ""`, so the layout draws no button and no video section |
 | No capstone section, no previous/next | Not in the body at all |
@@ -734,14 +710,15 @@ The same crash can come from Java code. Kotlin does not report nullability error
 
 | Snippet | Expected result | Support |
 |---|---|---|
-| Name it program (`findMiddleName(false)`) | Prints `Ada`, then `null`; the `if` body is skipped | Documented for `null` printing: null-safety page `print(b) // null` and `println(b?.length) // null`. Smart cast: the same page's `if (b != null && b.length > 0)` example. The `Ada` line and the skipped `if`: derived. |
+| Name it program (top-level `val`s, three `println`) | Prints `Ada`, then `null`, then `false` | Documented for `null` printing: null-safety page `print(b) // null`. The `Ada` line and `middleName != null` giving `false`: derived. No "always false" warning is expected because the top-level property is not narrowed by its initialiser: derived, ⚠️ VERIFY on Kotlin 2.4.21. |
 | `val firstName: String = null` | Does not compile | Derived. The null-safety page shows `a = null` on a non-null `String` with the comment "Null can not be a value of a non-null type String", but not an initialiser. |
 | `println(middleName.length)` on a `String?` | Does not compile | Documented: null-safety page says the compiler reports an error for `b.length` on a nullable; java-interop page shows `inventory.nullable().length // Error: only safe (?.) or non-null asserted (!!) calls are allowed`. |
 | Predict 1 `print-null-box`: `"Middle name: $middleName"` | `Middle name: null`, then `Done` | Documented: strings page, `val text: String? = null; println("Hello, $text") // Hello, null`; the spec (string interpolation) says a null value becomes the text `"null"`. |
-| Predict 2 `bang-on-full-box`: `findMiddleName(true)` with `!!` | `Start`, `4`, `End` | Documented for `!!` on a non-null value returning it (`val l = b!!.length; println(l) // 6`). The length 4 of "Rose": derived. |
-| Try it step 3 (`false`) | `Start`, then the program stops with a `NullPointerException` | Documented: null-safety page, `println(l) // Exception in thread "main" java.lang.NullPointerException`. How the Playground shows it: unknown, so the lesson says it in words only. |
-| Fix the bug, broken version | Prints `Ada has a middle name with 4 letters`, then stops with an NPE on `Sam` | Derived from the `!!` rule above. |
-| Fix the bug, fixed version (`expected`) | `Ada has a middle name with 4 letters`, then `Sam has no middle name` | Derived. Uses a smart cast of a local `val` inside a string template; check that it compiles without a warning. |
+| Predict 2 `bang-on-full-box`: top-level `val middleName: String? = "Rose"` with `!!` | `Start`, `4`, `End` | Documented for `!!` on a non-null value returning it (`val l = b!!.length; println(l) // 6`). The length 4 of "Rose": derived. |
+| Try it step 3 (`"Rose"` changed to `null`) | `Start`, then the program stops with a `NullPointerException` | Documented: null-safety page, `println(l) // Exception in thread "main" java.lang.NullPointerException`. How the Playground shows it: unknown, so the lesson says it in words only. |
+| Try it step 4 (`println(middleName)`) | `Start`, `null`, `End` | Documented for printing a null `String?` as `null` (strings page, same as Predict 1). |
+| Fix the bug, broken version | Prints `Ada`, then stops with an NPE | Derived from the `!!` rule above. |
+| Fix the bug, fixed version (`expected`) | `Ada`, then `Middle name: null` | Documented for the `null` text in a template (strings page). The `Ada` line: derived. |
 
 ---
 
@@ -755,6 +732,6 @@ The same crash can come from Java code. Kotlin does not report nullability error
 | O2 | ~~How Predict and Fix widgets work.~~ **Resolved 18 Oct 2026:** the `challenge` block of `docs/06` §3 is the single format. `syncLessons` and `validateContent` handling is owned by `docs/07` §6. | `docs/06` §3. |
 | O3 | Kobweb and HTML comments (§5.3). Read in source: a block comment is dropped without error. Not built. ⚠️ VERIFY with the export-and-grep test in §5.3 (Phase 6). | The build pre-processor (`docs/07` §6) already replaces the marker, so nothing here depends on the answer. |
 | O4 | ~~Marker in `_roadmap.md` for stems with AI-style tasks.~~ **Resolved 18 Oct 2026:** `ai-review` in the stem `Flags:` line and `F(ai):` in the Challenges column (`docs/08` §2.2, §5). | closed |
-| O5 | Checked 18 Oct 2026 against `content/kotlin/_roadmap.md`: title, difficulty and `fruit` match; `order` (17) matches. Still different from the roadmap row: (1) it proposes the analogy "an empty seat on a bus" and Predict seeds (`name?.length` on null, which needs `?.`, taught later in `safe-call-and-elvis`), not the lunch box; (2) the example code uses `fun` and an `if` expression; §10 now lists `kotlin/functions/declaring-functions` and `kotlin/control-flow/if-as-an-expression` in `requires`, but the roadmap row does not yet (V5 mismatch). Its code was not compiled. | `curriculum-designer` (add the two requires, or simplify the code) and `reviewer`, before the leaf is ever written for real. |
+| O5 | **Resolved 20 Oct 2026 (author, via orchestrator):** (1) the analogy is the lunch box (`docs/05` §10, §3.2 list); the Mental model keeps "Where the analogy stops". (2) The Predict seeds, Try it and Fix block need no `?.`, `if` or declared function; `?.` waits for `safe-call-and-elvis`. (3) The code is simplified: top-level `val`s plus `fun main()`, no `fun` of its own, no `if`; `requires` is `[basic-types]` only. Code still not compiled (⚠️ VERIFY). **Still open, outside this doc:** `content/kotlin/_roadmap.md` (not edited here) still has, checked 20 Oct 2026, the bus analogy, a `name?.length` Predict seed and a ball-and-shelf sim in its table row, and `requires` with `if-as-an-expression` and `declaring-functions` in its YAML and Notes. V5 will fail until `curriculum-designer` aligns that row with this example. | `curriculum-designer` updates the roadmap row; `reviewer` before the leaf is written for real. |
 | O7 | ~~Tree data source.~~ **Resolved 18 Oct 2026:** the app reads generated `TreeData.kt`; the same generator also writes `/tree.json` for tools (`docs/03` §4, `docs/07` §6.4). | closed |
 | O6 | `docs/05` §11.3 Q1: author decided to KEEP "Look inside first". The worked example now has it as optional Try-this item 4; `showLookInsideFirst` stays `true`. | Done in §10 and §3.4. |

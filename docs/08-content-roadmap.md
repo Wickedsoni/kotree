@@ -293,7 +293,7 @@ Not tested, not used: paid cloud Macs, and macOS inside a virtual machine on Win
 | iOS side of a `Mac needed` leaf | A green CI run on the public repository whose link and log excerpt he can show | "Seen in this CI run" (link) |
 | Anything on a real iPhone, signing, TestFlight, App Store | Only if he borrows a Mac or pays 99 USD per year (O5, outside L27) | "From the docs, not run by me" |
 
-He must never write "I ran this on an iPhone" from a CI build alone. **Proposal, author to confirm:** the three labels are plain sentences in the lesson body; they add no frontmatter field (`docs/00` §8.2 is locked). Lesson structure belongs to `docs/04`, which was not read for this pass; `docs/04` decides where the labels sit.
+He must never write "I ran this on an iPhone" from a CI build alone. **Accepted by the author 20 Oct 2026:** the three labels are plain sentences in the lesson body; they add no frontmatter field (`docs/00` §8.2 is locked). Where they sit is set in `docs/04` §4.13.
 
 **How a `Mac needed` leaf is taught (applies to every leaf whose Notes say `Mac needed`)**
 
@@ -301,7 +301,7 @@ He must never write "I ran this on an iPhone" from a CI build alone. **Proposal,
 2. Show the iOS result as a recorded artifact from the CI run, never as a live claim: the log lines, the generated framework header, the built app folder, or a screenshot or recording only if experiment E3 works. Copy the excerpt into the repo's lesson assets so the lesson does not depend on how long GitHub keeps run files.
 3. Print the §8.1 label next to each iOS-side claim.
 4. Name the Xcode steps that stay outside the lesson (signing, account) as "From the docs, not run by me".
-5. **Proposal, author to confirm:** a `Mac needed` leaf goes live only when the author links a green CI run for it, or notes a borrowed-Mac session. This is a suggested check for the author and `reviewer`, not a new field and not yet a rule; L5 and CLAUDE.md name the real gates.
+5. **Accepted by the author 20 Oct 2026, as a suggested check only:** before a `Mac needed` leaf goes live, the author and `reviewer` look for a linked green CI run for it, or a note of a borrowed-Mac session. It is not a hard rule and not a new field; L5 and CLAUDE.md name the real gates.
 
 **Experiments for the author's first CI week** (each has a pass test; until it passes, the lesson claims nothing it needs)
 
