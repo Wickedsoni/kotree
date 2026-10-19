@@ -15,6 +15,7 @@ import dev.kotree.site.tree.BranchGeo
 import dev.kotree.site.tree.CameraState
 import dev.kotree.site.tree.TreeGeometry
 import dev.kotree.site.tree.Vec
+import dev.kotree.site.tree.camera.boughBounds
 import dev.kotree.site.tree.camera.toScreen
 import dev.kotree.site.tree.model.TreeData
 import org.jetbrains.compose.web.dom.Button
@@ -37,9 +38,25 @@ internal fun splitProgress(z: Double): Double =
 /** Bough level switch with hysteresis: enter at 1.8, leave below 1.62 (docs/03 §2.2). */
 private class LevelMode {
     var inBough = false
+    var currentId: String? = null
     fun update(z: Double): Boolean {
         if (z >= Tokens.Zoom.boughEnter) inBough = true else if (z < Tokens.Zoom.boughLeave) inBough = false
+        if (!inBough) currentId = null
         return inBough
+    }
+
+    /** The bough the camera is inside: nearest bough box centre to the view centre, sticky against flicker. */
+    fun current(geometry: TreeGeometry, centre: Vec): String? {
+        fun dist(b: BoughGeo): Double {
+            val box = boughBounds(b)
+            val dx = (box.minX + box.maxX) / 2.0 - centre.x
+            val dy = (box.minY + box.maxY) / 2.0 - centre.y
+            return kotlin.math.sqrt(dx * dx + dy * dy)
+        }
+        val nearest = geometry.boughs.minByOrNull { dist(it) } ?: return null
+        val held = geometry.boughs.firstOrNull { it.id == currentId }
+        if (held == null || dist(nearest) < dist(held) * Tokens.Camera.boughSwitchRatio) currentId = nearest.id
+        return currentId
     }
 }
 
@@ -67,6 +84,7 @@ fun TreeLabels(
             onLevelSwitch()
         }
     }
+    val currentBough = if (inBough) mode.current(geometry, camera.centre) else null
     val branchOpacity = (2.0 * splitProgress(camera.z) - 1.0).coerceIn(0.0, 1.0)
     val boughTitles = data.boughs.associate { it.id to it.title }
     val branchTitles = data.boughs.flatMap { it.branches }.associate { it.id to it.title }
@@ -91,7 +109,9 @@ fun TreeLabels(
                     onClick = { onBough(bough) },
                 )
             }
-            if (inBough && !isRoots) {
+            // Only the bough the camera is in shows branch titles; hidden ones are not rendered at all,
+            // so they leave the tab order and the accessibility tree. Opacity 0 is not rendered either.
+            if (inBough && !isRoots && bough.id == currentBough && branchOpacity > 0.0) {
                 for (branch in bough.branches) {
                     specs += LabelSpec(
                         text = branchTitles[branch.id] ?: branch.id,

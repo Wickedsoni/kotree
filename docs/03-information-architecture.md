@@ -83,7 +83,7 @@ Rejected alternatives:
 
 ### 2.4 Grouped-to-split boughs (D4 amendment)
 
-At Canopy each bough is **one fused limb** carrying **one label** (the bough title). As the camera zooms in, the limb splits into its branch limbs, and the bough label hands over to the branch labels.
+At Canopy each bough is **one fused limb** carrying **one label** (the bough title). As the camera zooms in, the limb splits into its branch limbs, and the bough label hands over to the branch labels. Inside a bough, only that bough's branch labels (plus Foundation's) are shown; the other boughs' branch labels are not rendered, so they also leave the tab order (author decision, 20 Oct 2026).
 
 Split progress for every bough:
 

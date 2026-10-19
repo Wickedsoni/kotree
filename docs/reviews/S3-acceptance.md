@@ -35,3 +35,4 @@ Measured with headless Chrome 155, 1440x900, DPR 1, exported static site served 
 - Tapered width: `Polyline.tipWidthPx` added (contract change).
 - Branch limbs use `color.outline` (rule 8). Foundation has no separate limb. Limbs are drawn under the bough so they hide inside it at step 0.
 - Not done: determinism unit test (no Kotlin/JS test setup, owed to Phase 2 remainder). At bough zoom, neighbouring boughs' branch labels can overlap.
+- 20 Oct 2026: at bough zoom only the current bough's branch labels render (nearest bough to view centre, sticky via Tokens.Camera.boughSwitchRatio); other boughs' branch labels and zero-opacity ones are removed from DOM, so tab order and accessibility tree drop them; Foundation stays labelled; zooming out restores all bough labels. Screenshots 02, 05, 06, 07 retaken at 1440x900.

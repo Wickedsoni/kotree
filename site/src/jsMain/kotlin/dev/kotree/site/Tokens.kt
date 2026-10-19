@@ -114,6 +114,8 @@ object Tokens {
 
     /** Camera and input tuning. */
     object Camera {
+        /** A different bough becomes current only when its centre is this fraction as far as the held one (no flicker). */
+        const val boughSwitchRatio = 0.8
         /** Zoom per wheel pixel, in e-folds (z *= exp(-deltaY * this)). */
         const val wheelSensitivity = 0.0015
         /** Wheel `deltaMode` LINE to pixels. */
