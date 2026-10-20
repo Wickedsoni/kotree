@@ -63,7 +63,10 @@ class LabelLayout(private val nodes: TreeNodes, private val g: dynamic) {
     private val sets = HashMap<Long, LabelSet>()
     private val widths = HashMap<String, Double>()
     private val titleWidths = HashMap<String, Double>()
-    private var lastKey = Long.MIN_VALUE
+    private var lastLevel = -1
+    private var lastBranch = 0
+    private var lastStem = 0
+    private var lastBucket = 0
     private var lastSet: LabelSet? = null
 
     private val inkLabel = cssColor(Tokens.Color.onSurface)
@@ -75,25 +78,27 @@ class LabelLayout(private val nodes: TreeNodes, private val g: dynamic) {
         sets.clear()
         widths.clear()
         titleWidths.clear()
-        lastKey = Long.MIN_VALUE
         lastSet = null
     }
 
-    /** The layout for this level at zoom [z]; [base] = camera.base. [level] is the ZoomLevel ordinal. */
+    /** The layout for this level at zoom [z]; [base] = camera.base. [level] is the ZoomLevel ordinal. Allocates only on a cache miss. */
     fun get(level: Int, branchIdx: Int, stemIdx: Int, z: Double, base: Double): LabelSet {
         val bucket = floor(ln(z) * Tokens.Tree.labelBuckets).toInt()
         val bi = if (level >= LEVEL_BRANCH) branchIdx else -1
         val si = if (level == LEVEL_STEM) stemIdx else -1
-        val key = (((level.toLong() * KEY_BRANCH + (bi + 1)) * KEY_STEM + (si + 1)) * KEY_BUCKET) + (bucket + KEY_BUCKET_OFFSET)
         val cached = lastSet
-        if (key == lastKey && cached != null) return cached
+        if (cached != null && level == lastLevel && bi == lastBranch && si == lastStem && bucket == lastBucket) return cached
+        val key = (((level.toLong() * KEY_BRANCH + (bi + 1)) * KEY_STEM + (si + 1)) * KEY_BUCKET) + (bucket + KEY_BUCKET_OFFSET)
         var set = sets[key]
         if (set == null) {
             val sRef = base * exp((bucket + 0.5) / Tokens.Tree.labelBuckets)
             set = compute(level, bi, si, sRef)
             sets[key] = set
         }
-        lastKey = key
+        lastLevel = level
+        lastBranch = bi
+        lastStem = si
+        lastBucket = bucket
         lastSet = set
         return set
     }

@@ -97,7 +97,7 @@ class ViewTracker(geometry: TreeGeometry) {
         val pin = pinned
         if (pin != null) {
             var pb: BranchGeo? = null
-            for (b in branches) if (b.id == pin) pb = b
+            for (i in branches.indices) if (branches[i].id == pin) pb = branches[i]
             if (pb != null && distToBranch(pb, cx, cy) <= Tokens.Camera.pinReleaseWorld) {
                 branchId = pin
                 return
@@ -108,7 +108,8 @@ class ViewTracker(geometry: TreeGeometry) {
         var nearest: BranchGeo? = null
         var nearestD = Double.MAX_VALUE
         var held: BranchGeo? = null
-        for (b in branches) {
+        for (i in branches.indices) {
+            val b = branches[i]
             val d = distToBranch(b, cx, cy)
             if (d < nearestD) { nearestD = d; nearest = b }
             if (b.id == branchId) held = b
@@ -120,12 +121,13 @@ class ViewTracker(geometry: TreeGeometry) {
 
     private fun updateStem(cx: Double, cy: Double) {
         var branch: BranchGeo? = null
-        for (b in branches) if (b.id == branchId) branch = b
+        for (i in branches.indices) if (branches[i].id == branchId) branch = branches[i]
         if (branch == null || branch.stems.isEmpty()) { stemId = null; return }
         var nearest: StemGeo? = null
         var nearestD = Double.MAX_VALUE
         var held: StemGeo? = null
-        for (st in branch.stems) {
+        for (i in branch.stems.indices) {
+            val st = branch.stems[i]
             val d = distToStem(st, cx, cy)
             if (d < nearestD) { nearestD = d; nearest = st }
             if (st.id == stemId) held = st
@@ -138,13 +140,13 @@ class ViewTracker(geometry: TreeGeometry) {
     private fun distToBranch(b: BranchGeo, cx: Double, cy: Double): Double {
         var best = distToLine(b.full.points, cx, cy)
         // A stem fly centres on the stem (off the limb): its twigs and leaf slots count too, so focus stays on its branch.
-        for (st in b.stems) best = min(best, distToStem(st, cx, cy))
+        for (i in b.stems.indices) best = min(best, distToStem(b.stems[i], cx, cy))
         return best
     }
 
     private fun distToStem(st: StemGeo, cx: Double, cy: Double): Double {
         var best = distToLine(st.twig.points, cx, cy)
-        for (l in st.leaves) best = min(best, hypot(l.at.x - cx, l.at.y - cy))
+        for (i in st.leaves.indices) best = min(best, hypot(st.leaves[i].at.x - cx, st.leaves[i].at.y - cy))
         return best
     }
 

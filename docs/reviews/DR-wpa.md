@@ -1,9 +1,17 @@
 # DR WP-A: vector tree, unverified items
 
-Not compiled here (dl.google.com blocked, no Compose/Kobweb artifacts offline). CI must compile with no `w:` warnings.
-What was checked locally: `scripts/check-hardcoded.sh` clean, `scripts/check-tokens.py` 0 failures, and a JVM-frontend type check of
-the pure-Kotlin files (Camera, ViewTracker, HitIndex, LabelLayout, FrameLoop, VectorRenderer, WoodLayer, PerfProbe, DeepLink, gen/*)
-with only the expected "unresolved DOM / dynamic" errors left. Compose files (TreeView, A11yNodes, NodeCard) and Input.kt were re-read only.
+Not compiled for JS here (dl.google.com blocked, no Compose/Kobweb artifacts offline). CI must compile with no `w:` warnings.
+
+Checked locally:
+- `scripts/check-hardcoded.sh` clean, `scripts/check-tokens.py` 0 failures.
+- A JVM-frontend type check of the non-DOM, non-`dynamic` code only (Camera, ViewTracker, HitIndex, LabelLayout types, gen/*). Calls on `dynamic` and
+  `window` (VectorRenderer, WoodLayer, PerfProbe, FrameLoop, DeepLink, the context in LabelLayout) and the Compose files (TreeView, A11yNodes, NodeCard)
+  and Input.kt were re-read only, never type-checked.
+- A JVM run (scratch harness outside the repo) of `generate`, `TreeNodes`, `HitIndex`, `ViewTracker` and `Camera` on the real tree data:
+  constructors do not throw; `limbHash=cecb906380417dd8` (unchanged); 5 boughs, 17 branches, 180 stems, 482 leaves;
+  `HitIndex.query` at 1440x900 returns the right node for all 482 leaves at levels 3 and 4, a STEM for every twig midpoint at level 2,
+  a BRANCH for every limb midpoint at level 1, a BOUGH for every bough centre at level 0, and null in empty space (0 failures);
+  a z/centre sweep of `ViewTracker` visits all five levels and always has a branch from Z2 and a stem from Z3; branch and stem fly targets are never NaN.
 
 ## Not measured (no browser here)
 - Draw p95, frame interval, idle frame count, long tasks: need `?perf=1` and the acceptance script.
@@ -21,6 +29,8 @@ with only the expected "unresolved DOM / dynamic" errors left. Compose files (Tr
 - `canvas.setPointerCapture`, `canvas.style.setProperty`, `Element.matches(":focus-visible")`, `target.closest(selector)` through `dynamic`.
 - Compose: `Modifier.toAttrs { }` on a `Button(...)` (A11yNodes), `ref { element -> ... onDispose { } }` with `element.asDynamic().animate(...)`
   (copied from the removed GlowRing), `it.nativeEvent.stopPropagation()` in `onKeyDown`, `key(id) { }`, `Ul`/`Li`.
+- Links in the node card (and WP-B/WP-C) are plain `A` elements with `/#<branch>` hrefs. Whether Kobweb's router lets a same-page hash change fire
+  `hashchange` (which `DeepLink` relies on) or intercepts it is unknown.
 - `ZoomControls` is unchanged and placed bottom-right with a `Modifier` that sets `position/right/bottom`.
 
 ## Deviations and decisions
