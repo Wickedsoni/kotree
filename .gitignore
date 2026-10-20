@@ -27,3 +27,6 @@ local.properties
 .env.*
 !.env.example
 .claude/worktrees/
+
+.vercel
+.env*
