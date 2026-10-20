@@ -14,6 +14,12 @@
 - **Author one-time step (Vercel MCP in the cloud box lacks team access, 403):** Vercel dashboard -> Add New Project -> import `Wickedsoni/kotree` -> Framework Preset **Other**, Root Directory `./`, Build Command empty (override on), Install Command empty (override on), Output Directory `.` -> Deploy. Then Settings -> Git -> **Production Branch = `site-dist`**, and Settings -> Git -> **Ignored Build Step** = `[ "$VERCEL_GIT_COMMIT_REF" != "site-dist" ]` (so pushes to `main` do not trigger a useless build). Later: add the domain `kotree.garvitmaheshwari.in` (CNAME in Hostinger).
 - After that, every push to `main` that passes CI updates the live site automatically.
 
+## DESIGN RESET (21 Oct 2026, merged to main; read before the next wave)
+
+- Decision L32 and ADR 006 (`docs/adr/006-design-reset.md`): smooth vector tree (Canvas 2D, hit-testing, NodeCard, rAF loop), `/topics` bento grid, real-name breadcrumb, lesson side rail, shared tokens + `SiteHeader`. All three work packages compiled in CI (the cloud box cannot compile; CI prints compiler errors in `scripts/wave-check.sh`).
+- **Not visually verified by an agent** (no browser access to the live site in the cloud box). Author reviews the live site; open items: `docs/reviews/DR-wpa.md`, `DR-wpb.md`, `DR-wpc.md` (unverified APIs, perf p95, `/#` hashchange, tokens `tree.card.width`, `tree.layer.max-area`).
+- Next session: first fix whatever the author reports from the live site, THEN resume wave 5 (see STATUS after Wave 4).
+
 ## STATUS after Wave 4 (21 Oct 2026, newest; read this first)
 
 - **Done:** 31 of 482 leaves live (Foundation 31/34). Wave 4: `debugging-mindset/check-code-you-did-not-write`, `from-code-to-running/{what-is-a-compiler, compiler-vs-interpreter, what-is-the-jvm, what-is-art}`, `how-an-app-is-born/{what-is-an-app-file, what-happens-when-i-build, how-an-app-gets-installed}`. Reviews: `docs/reviews/W4-a.md`, `W4-b.md`.
