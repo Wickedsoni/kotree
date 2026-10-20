@@ -222,7 +222,7 @@ The same crash can come from Java, an older language that many Android libraries
 ## Say it in an interview
 
 **What is null, and why does Kotlin treat it specially?**
-Null means no value. In many languages any reference, which is a name that points to an object, can be null, and using it crashes with a NullPointerException (general knowledge). Kotlin splits its types into ones that can hold null and ones that cannot, and the compiler checks that split before the app runs. So most of those crashes show up as errors while you write. The trade-off is that you must say where null is allowed and then deal with it.
+Null means no value. In many languages any reference, which is a name that points to an object, can be null, and using it crashes with a NullPointerException (general knowledge). Kotlin splits its types into ones that can hold null and ones that cannot, and the compiler checks the split before the app runs. The trade-off is that you must say where null is allowed and then deal with it.
 
 **Is null the same as 0 or an empty string?**
 No. An empty string is a text with zero letters, which is a real value. Zero is a real number. Null is no value at all. My own reasoning: if "no answer yet" is different from "the answer is empty" in your app, a nullable type keeps those two apart.
@@ -231,7 +231,7 @@ No. An empty string is a text with zero letters, which is a real value. Zero is 
 No. The Kotlin documentation says the only possible causes are an explicit throw of one, the `!!` operator, data that is not ready during setup, and Java interoperation. The last one covers a member access on a null platform value and other issues from Java code. So the safety is strong, but it has gaps at the edges.
 
 **What is a platform type?**
-It is how Kotlin sees a value from Java when Java does not say whether it can be null. The documentation says Kotlin relaxes the checks for these, so safety is the same as in Java. You cannot write the type yourself. Tools show it as `String!`, which means `String` or `String?`. If you put such a value in a non-null Kotlin variable and it is null, Kotlin throws a NullPointerException. The fix is to choose `String?` for your variable, or to use nullability annotations in the Java code. The trade-off is convenience with Java libraries against the null guarantee.
+It is how Kotlin sees a value from Java when Java does not say whether it can be null. Tools write it as `String!`, meaning `String` or `String?`, and the documentation says the checks are relaxed, so the call may fail while the app runs. If you put such a value in a non-null variable and it is null, Kotlin throws a NullPointerException, so write `String?` on your own variable or add nullability annotations in the Java code. The trade-off is convenience with Java libraries against the null guarantee.
 
 ## Recap
 

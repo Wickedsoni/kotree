@@ -228,7 +228,7 @@ The API page says `Unit` corresponds to `void`. The functions page adds that `Un
 No. `Unit` is a value, the only one of its type. `null` is the mark for "nothing here" and is allowed only in types written with a question mark. A function that returns `Unit` has not returned nothing, it has returned the flag.
 
 **What is `Nothing`, and where would you meet it?**
-The exceptions page calls `Nothing` a built-in type that fits wherever any other type is expected. It marks code that never completes successfully, because it always throws or never stops. `TODO()` returns it and always throws `NotImplementedError`. The compiler marks the code after such a call as unreachable. The trade-off: `TODO()` lets unfinished code compile, but if it runs the app stops.
+The exceptions page calls `Nothing` a built-in type that fits wherever any other type is expected, for code that never completes successfully because it always throws or never stops. `TODO()` returns it and always throws `NotImplementedError`, and the compiler marks the code after such a call as unreachable. The trade-off: `TODO()` lets unfinished code compile, but if it runs, the app stops.
 
 ## Recap
 

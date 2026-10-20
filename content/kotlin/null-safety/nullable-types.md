@@ -228,7 +228,7 @@ So the first time a screen opens, that locker is empty, and later it may hold a 
 ## Say it in an interview
 
 **What is the difference between `String` and `String?`?**
-A `String` can never hold `null`. A `String?` can hold a text or `null`. The Kotlin documentation says the type system tells the two apart. A `String` fits where a `String?` is expected, but not the other way round, because the `String?` might be `null`. The trade-off: you write a question mark and handle the empty case, and in return the compiler finds the missing-value mistakes before the app runs.
+A `String` can never hold `null`, and a `String?` can hold a text or `null`. A `String` fits where a `String?` is expected, but not the other way round. The trade-off: you handle the empty case, and in return the compiler finds missing-value mistakes before the app runs.
 
 **Does adding a question mark make code null-safe?**
 No. It only lets the name be `null`. After that, the compiler refuses to use it until you check or handle it. The safety comes from that handling. My own reasoning: a `?` added only to remove an error moves the problem and does not solve it.

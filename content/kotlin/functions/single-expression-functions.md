@@ -214,7 +214,7 @@ This next part is our own reasoning: because an expression function holds one ca
 It does the same job and you call it the same way. The Kotlin documentation says that when the body is a single expression you can omit the braces and write it after an `=`. The trade-off is length against room: the short form is tidy for one calculation, and the braces form is needed when there are several steps.
 
 **Do you have to write the return type?**
-Often not. The documentation says Kotlin can work it out for a single expression. You must write it for functions that call themselves and for something like `fun empty() = null`, and when you want a type other than the one Kotlin picks. The coding conventions say that library code, which other people build on, should state its return types, so a change inside does not change them by accident. My own reasoning: for code only your team reads, a worked-out type saves noise.
+Often not. The documentation says Kotlin works it out for a single expression, but you must write it for a function that calls itself and for something like `fun empty() = null`. The coding conventions say library code, which other people build on, should state its return types so a change inside does not alter them by accident. My own reasoning: for code only your team reads, a worked-out type saves noise.
 
 **What is the difference between `fun f(x: Int) = x * 2` and `fun f(x: Int) { x * 2 }`?**
 The first gives back `x * 2`. The second has braces and no `return`, so the documentation says its return type is `Unit` and the calculation is thrown away. One missing `=` changes what the function gives back.

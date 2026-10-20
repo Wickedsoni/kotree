@@ -26,7 +26,7 @@ Think of swearing an oath that a parcel is in a locker, without looking inside.
 
 - The locker is a name whose sticker says "may be empty".
 - The parcel is the value. An empty locker holds nothing.
-- The oath is the `!!` operator: "I swear a parcel is in locker 7."
+- The oath is the promise "I swear a parcel is in locker 7."
 - The judge is the running program. The judge believes every oath and acts on it at once.
 - Looking inside first is the careful way: knock, leave a note, or go home.
 - A false oath is a crash. The app stops on that line.
@@ -211,7 +211,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android tip-calculator codelab turns the typed text into a number and says the value could be `null` if the text field is empty. This next part is our own reasoning: if that line ended in `!!`, the app would close the first time a user pressed the button with an empty box, and every test with a filled box would pass.
+The Android tip-calculator codelab turns the typed text into a number and says the value could be `null` if the text field is empty. This next part is our own reasoning: if that line ended in `!!`, the app would close whenever the box is empty, and every test with a filled box would pass.
 
 Another place is the Android activity page. It shows `onCreate(savedInstanceState: Bundle?)` and says that if the activity has never existed before, the value of the `Bundle` object is `null`. An activity is one screen of the app. Our own reasoning: writing `savedInstanceState!!` there would work after the screen is rebuilt and close the app the very first time it opens.
 
@@ -223,13 +223,13 @@ Values from Java are the third place. The Android interop page says every non-pr
 When you can point to the reason the value is not null, and the compiler cannot see it. For example, you set the value on the line before, or an earlier check guarantees it. My own reasoning: write a short comment with the reason, because the next reader cannot see it either. It is not acceptable to silence the red line, or on values from users, files or the network.
 
 **What does `!!` throw, and how is that different from `requireNotNull`?**
-`!!` throws a NullPointerException, with no explanation. The Kotlin library page says `requireNotNull` throws an `IllegalArgumentException`, and you can give it a message. `checkNotNull` throws an `IllegalStateException`. My own reasoning: use `require` when a caller handed you something bad, and `check` when your own state is wrong. The message makes the crash report easier to read.
+`!!` throws a NullPointerException with no explanation. The library page says `requireNotNull` throws an `IllegalArgumentException` and accepts a message, while `checkNotNull` throws an `IllegalStateException`. My own reasoning: use `require` when a caller handed you something bad and `check` when your own state is wrong, and write a message so the crash report explains itself.
 
 **What is the trade-off between `!!` and `?:` with a default?**
 The `!!` stops loudly at the exact line, so you find the bug early, but the user sees a crash. A default keeps the app running, but if the default is wrong, the user sees wrong data and nobody is told. My own reasoning: for user input, choose an honest default or a message. For a broken promise inside your own code, a loud stop is better.
 
 **Can a non-null type still hold `null` at runtime?**
-Yes, through Java. The Kotlin documentation says Kotlin does not issue nullability errors at compile time for a platform value, and if you assign it to a non-null variable and it is `null`, Kotlin throws a NullPointerException. It also says the compiler emits assertions when you pass platform values to Kotlin functions that expect non-null values. The fix is to write the nullable type on your own variable, or to add nullability annotations in the Java code.
+Yes, through Java. The Kotlin documentation says a platform value gets no nullability error at compile time, and if you assign a null one to a non-null variable, Kotlin throws a NullPointerException. The compiler also adds assertions when platform values are passed to Kotlin functions that expect non-null values. The fix is to write the nullable type on your own variable, or to add nullability annotations in the Java code.
 
 ## Recap
 

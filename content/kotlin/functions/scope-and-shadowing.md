@@ -68,7 +68,7 @@ Idea A would make the name unclear. Idea C feels fair because the baker came fir
 
 ### Build
 
-1. Every pair of curly braces is a house. A function body, an `if` branch and a loop body each make one.
+1. Every pair of curly braces is a house. A function body, one branch of a choice and a loop body each make one.
 2. A person is born on the line that makes them and lives until the closing brace of their house. A call to them before that line finds nobody.
 3. To answer a call, look first in the house where you are standing. If a person with that name lives there, stop.
 4. If not, step out one level and look again. Keep going until you reach the street.

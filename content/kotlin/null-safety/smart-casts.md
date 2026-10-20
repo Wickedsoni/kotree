@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 20
 requires: [kotlin/null-safety/nullable-types, kotlin/control-flow/if-as-an-expression]
-summary: After you check that a value is not null, Kotlin lets you use it as a plain value, but only when nothing can change it.
+summary: After you check a value is not null, Kotlin lets you use it as non-null, but only when nothing can change it.
 video: ""
 publishedOn:
 updatedOn:
@@ -249,7 +249,7 @@ The documentation says a `var` property never works, because other code can chan
 The `!!` silences the error but keeps the risk, because the value can still become `null` between the check and the use. A safer way is to copy the property into a local `val`, then check and use the copy. Or use a safe call with a fallback. My own reasoning: the local copy costs one line and removes the reason for the crash.
 
 **Does a smart cast work after an early return, or inside `&&`?**
-Yes to both. The documentation says the compiler knows a cast is safe if a negative check leads to a return. It also says the compiler can smart cast on the right-hand side of `&&` and `||` if there is a check on the left. And a `var` made inside a function loses the cast if it is changed between check and use, or captured by a lambda, which is a small piece of code in braces that can run later, and that changes it.
+Yes to both. The documentation says the compiler knows a cast is safe if a negative check leads to a return, and that it can smart cast on the right of `&&` and `||` after a check on the left. A `var` made inside a function loses the cast if it is changed between the check and the use.
 
 ## Recap
 

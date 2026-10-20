@@ -25,7 +25,7 @@ A tip calculator has a box for the bill. The user leaves it empty and presses th
 Think of knocking on a door.
 
 - A street of houses is your program. Each door is a name that may hold nothing.
-- The person behind the door is the value. A door with nobody home is `null`.
+- The person behind the door is the value. A door with nobody home is the mark for nothing here.
 - A polite knock with a question, such as "how many letters are in your name?", is asking about the value.
 - The reply is the answer you carry away.
 - "No reply" is what you carry away from an empty house.
@@ -216,7 +216,7 @@ output: |
 
 The Android tip-calculator codelab turns the typed text into a number with the line `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. The function `toDoubleOrNull()` gives back a number, or `null`. The Kotlin library page for the matching `toIntOrNull()` says it returns `null` if the text is not a valid number. The codelab says this value could be `null` if the text field is empty. The note `?: 0.0` turns that case into 0.0.
 
-That is the symptom this lesson fixes: a user leaves the tip box empty and presses the button. With the note, the screen shows a tip of 0.0. This next part is our own reasoning: with `!!` in place of the note, the same empty box would close the app.
+That is the case this lesson handles: the text field is empty, so there is no number to use. With the note, the calculation goes on with 0.0 instead of stopping. This next part is our own reasoning: with `!!` in place of the note, an empty box would close the app, and a user who leaves it empty would see the crash.
 
 ## Say it in an interview
 
@@ -227,7 +227,7 @@ It gives `"Guest"`. The safe call `user?.name` returns `null` when `user` is `nu
 Both can meet a `null`. The Kotlin documentation says `?.` returns `null` there, and `!!` throws a NullPointerException. The trade-off: `?.` lets the app go on with a missing result that you must handle, and `!!` stops loudly at the line where the promise broke.
 
 **Does a safe call hide the bug?**
-It can. The null does not vanish. It becomes the result, and it travels until something handles it. A fallback such as `?: 0` can hide a real problem if 0 is wrong for the app, and `?: return` quietly skips work. My own reasoning: choose a fallback that is honest, and make a silent skip visible when it matters.
+It can. The null does not vanish: it becomes the result and travels until something handles it. A fallback such as `?: 0` hides a real problem if 0 is wrong for the app, and `?: return` quietly skips work. My own reasoning: choose an honest fallback, and make a silent skip visible when it matters.
 
 **What can be on the right side of `?:`?**
 Any expression. The documentation says `return` and `throw` work there, because they are expressions. The documentation's example ends a line with `?: throw IllegalArgumentException("name expected")`, which demands a value and stops with a clear message if it is missing. The right side is used only when the left side is `null`.
