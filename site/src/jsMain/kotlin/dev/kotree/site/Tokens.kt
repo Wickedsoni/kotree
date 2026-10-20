@@ -182,6 +182,10 @@ object Tokens {
         const val fitMarginBranch = 0.08
         /** A stem or leaf fly keeps its branch focused until the view is farther than this (world px) from it. */
         const val pinReleaseWorld = 120.0
+        /** camera.wheel.tau: wheel smoothing time constant, ms. */
+        const val wheelTauMs = 90
+        /** camera.pinch.sensitivity: ctrl+wheel (trackpad pinch), e-folds per deltaY unit. */
+        const val pinchSensitivity = 0.01
     }
 
     /** Label collision nudging (screen px; deterministic, vertical only). */
@@ -295,6 +299,12 @@ object Tokens {
         const val xs = 8
         const val md = 16
         const val xl = 28
+        /** shape.lg.increased: M3 CornerLargeIncreased (ADR 006). */
+        const val lgIncreased = 20
+        /** shape.xl.increased: M3 CornerExtraLargeIncreased (card hover morph target, node card). */
+        const val xlIncreased = 32
+        /** shape.xxl: M3 CornerExtraExtraLarge (Foundation hero card). */
+        const val xxl = 48
         const val full = 999
         /** shape.blob: asymmetric radii 28 / 8 / 28 / 8. */
         const val blobLarge = 28
@@ -321,6 +331,46 @@ object Tokens {
         const val shadowOffsetYPx = 2
         const val shadowBlurPx = 8
         const val shadowAlphaPercent = 12
+        /** elevation.3 (ADR 006): M3 Level3 = 6 dp; the CSS shadow is ours. */
+        const val level3OffsetYPx = 6
+        const val level3BlurPx = 16
+        const val level3AlphaPercent = 14
+    }
+
+    /** color.status.* (ADR 006 §Tokens). Inks; containers are computed with [Branch.tint]. Hex typed here only. */
+    object Status {
+        /** color.status.live (= feedback.correct) */ const val live = 0x2C7730
+        /** color.status.upnext (= concurrency ink) */ const val upnext = 0x7A5A00
+        /** color.status.upnext.glow (alias of color.leaf.upnext.glow) */ const val upnextGlow = Leaf.upnextGlow
+        /** color.status.shadow (= on-surface-muted) */ const val shadow = 0x5F6368
+        /** color.tree.stem: stem lines, non-text 3:1 on white. */ const val treeStem = 0x80868B
+        /** color.leaf.shadow.stroke: outline of a locked (shadow) leaf. */ const val leafShadowStroke = 0x80868B
+    }
+
+    /** state.* layers (M3 StateTokens): share of on-surface laid over a surface. */
+    object StateLayer {
+        const val hoverPercent = 8
+        const val focusPercent = 10
+        const val pressedPercent = 10
+    }
+
+    /** tree.* tuning for the vector canvas (ADR 006). Kotlin only. */
+    object Tree {
+        /** tree.leaf.min / max: drawn leaf size clamp, CSS px. */
+        const val leafMinPx = 12
+        const val leafMaxPx = 28
+        /** tree.stem.line.min / max: stem stroke width clamp, CSS px. */
+        const val stemLineMinPx = 1.5
+        const val stemLineMaxPx = 3.0
+        /** tree.hit.cell: hit-grid cell, world px. */
+        const val hitCell = 32
+        /** tree.label.buckets: label layout cache buckets per e-fold of z. */
+        const val labelBuckets = 8
+        /** tree.layer.margin / tree.layer.rescale: wood layer margin and re-render tolerance. */
+        const val layerMargin = 0.25
+        const val layerRescale = 0.15
+        /** tree.idle.crisp: re-render crisp after motion stops, ms. */
+        const val idleCrispMs = 120
     }
 
     /** type.<name> rows (docs/02 §3): size px, line height px, weight. */
@@ -342,6 +392,14 @@ object Tokens {
         const val lessonText = 544
         const val lessonWide = 720
         const val gutter = Spacing.s8
+        /** layout.page.max: topics grid and lesson page max width. */
+        const val pageMax = 1440
+        /** layout.rail.width: lesson side rail. */
+        const val railWidth = 320
+        /** layout.rail.min-viewport: rail shown from here (media query, so Kotlin only). */
+        const val railMinViewport = 1200
+        /** layout.bento.col.min: minmax() lower bound of a bento column. */
+        const val bentoColMin = 280
         /** SimFrame is 16:9: height = width * 9 / 16. */
         const val simAspectW = 16
         const val simAspectH = 9

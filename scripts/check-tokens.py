@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Contrast check for the design tokens (docs/13 section 1 step 7). Stdlib only.
 
-Reads every `const val name = 0xRRGGBB` of site/src/jsMain/kotlin/dev/kotree/site/Tokens.kt and applies the
+Reads every `const val name = 0xRRGGBB` (also object Status, ADR 006) of site/src/jsMain/kotlin/dev/kotree/site/Tokens.kt and applies the
 WCAG 2.x ratio. Tints are mixed in sRGB into white with the same rounding as Tokens.Branch.tint (round half to even).
 Run from the repo root: python scripts/check-tokens.py   (exit 0 = all pass)
 """
@@ -130,6 +130,13 @@ def main():
         check(f"{key} on white", ink, white, TEXT_MIN)
         check(f"{key} on its tint", ink, tint(ink, pct), TEXT_MIN)
     check("focus ring default on white", obj["Branch"]["kotlin"], white, UI_MIN)
+    # ADR 006: status inks on white and on their own container; tree stem and shadow stroke are non-text.
+    for key in ("live", "upnext", "shadow"):
+        ink = obj["Status"][key]
+        check(f"status.{key} on white", ink, white, TEXT_MIN)
+        check(f"status.{key} on its container #{tint(ink, pct):06X}", ink, tint(ink, pct), TEXT_MIN)
+    for key in ("treeStem", "leafShadowStroke"):
+        check(f"status.{key} on white", obj["Status"][key], white, UI_MIN)
     for key in ("easy", "medium", "hard", "upnext", "shadow"):
         # Swatches repeat the chip text, so they need only the non-text 3:1 against white when they carry meaning alone.
         rows.append(f"info {'leaf.' + key + ' swatch on white':46} {ratio(obj['Leaf'][key], white):5.2f} (not gated: text carries the meaning)")
