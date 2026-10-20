@@ -87,7 +87,7 @@ Idea B feels safe, because you can see every step. But the day the basket change
 
 The basket is a **list**, a row of values kept under one name. A job that repeats for each item in a list is done with a **`for` loop**, the same kind of loop you used to count. The Kotlin documentation shows the shape as `for (item in collection)`. The word `in` means "take each item, one at a time".
 
-The name between the brackets is the **loop variable**. It holds the item the cashier is scanning right now. Kotlin sets it for you at the start of every round. In a counting loop it held a number from a range. In a loop over a list it holds the item itself.
+The name between the brackets is the **loop variable**. It holds the item the cashier is scanning right now. Kotlin sets it for you at the start of every round. In a counting loop it held one number at a time. In a loop over a list it holds the item itself.
 
 ```kotlin
 fun main() {
@@ -102,7 +102,7 @@ fun main() {
 
 The line `var total = 0` sits above the loop, so it runs once. In round 1, `price` is 3 and `total` becomes 3. Then `total` becomes 8, then 10, then 14. After the last item the loop ends, and `println` prints `14`.
 
-Sometimes you need the place number of each item too. This number is called its index. The documentation says that to go through a list with an index, you can use the `indices` property, as in `for (i in prices.indices)`. Then `prices[i]` is the item at that place.
+Sometimes you need the place number of each item too. This number is called its **index**. The documentation says that to go through a list with an index, you can use the `indices` property, as in `for (i in prices.indices)`. Then `prices[i]` is the item at that place.
 
 ## Predict the output
 

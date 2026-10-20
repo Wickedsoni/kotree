@@ -81,7 +81,7 @@ A card is a **function**: a named set of steps. Writing the card is **declaring*
 
 Saying the card's name is **calling** the function. You write its name and the parentheses.
 
-You have already met one function. The Kotlin documentation says the entry point of a Kotlin program is the `main` function. Here, `main` calls a card named `greet`.
+You have already met one function. The Kotlin documentation says a Kotlin program starts in the `main` function. Here, `main` calls a card named `greet`.
 
 ```kotlin
 fun greet() {
@@ -206,7 +206,7 @@ output: |
 
 A button looks blue on one screen and green on another. Nobody changed the design on purpose. This part is my own reasoning, not the documentation's. If each screen has its own copy of the button's steps, a fix made in one copy never reaches the other.
 
-The Android documentation says that in Jetpack Compose you build your user interface by defining a set of composable functions. Jetpack Compose is the modern toolkit for building Android UI. The documentation says all composable functions must have the `@Composable` annotation, which is a label written above the function. When one function describes the button, every screen calls the same card.
+Jetpack Compose is the modern toolkit for building Android UI. The Android documentation says you build your user interface by defining a set of **composable functions**, which take in data and emit UI elements. It says every one must have the `@Composable` **annotation**, a label written above the function. When one function describes the button, every screen calls the same card.
 
 ## Recap
 

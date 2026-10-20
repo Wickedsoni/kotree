@@ -93,7 +93,7 @@ The call `double(4)` hands back 8, and `kept` holds it. The first `println` prin
 | `double(4)` | nothing | 8 |
 | `showDouble(4)` | 8 | nothing useful |
 
-The Kotlin tour says a function with no useful value to hand back has the return type `Unit`, a type with only one value. That is why `showDouble` has no `: Int` after its parentheses. Kotlin refuses to run this program, because `showDouble` hands back `Unit` and the line asks for a whole number.
+The Kotlin tour says a function with no useful value to hand back has the return type **`Unit`**, a type with only one value. That is why `showDouble` has no `: Int` after its parentheses. Kotlin refuses to run this program, because `showDouble` hands back `Unit` and the line asks for a whole number.
 
 ```kotlin
 // does not compile
@@ -205,7 +205,7 @@ output: |
 
 ## Common mistakes
 
-- **Treating printing and returning as the same thing.** When you run the program, both show a number on the screen. Only the tray can be used by later code. If a later line needs the number, make the function return it.
+- **Treating printing and returning as the same thing.** On the screen, `showDouble(4)` and `println(double(4))` look the same: both show 8. Only the tray can be used by later code. If a later line needs the number, make the function return it.
 - **Calling a function that returns a value and ignoring the tray.** The call `double(5)` on its own line feels like it should show 10. It drops the 10 into the tray and nothing picks it up. Print it or keep it in a variable.
 - **Mixing up the order of the arguments.** The names of the slots feel like they sort things out. Without names in the call, the order decides. Check which slot comes first.
 
@@ -213,7 +213,7 @@ output: |
 
 A profile card shows the title where the subtitle should be, and the subtitle where the title should be. Nothing crashes. This part is my own reasoning, not the documentation's. If the code gives the two arguments in the wrong order, each one goes into the wrong slot.
 
-The Android documentation says that in Jetpack Compose you define composable functions that take in data and emit UI elements. It adds that composable functions can accept parameters, which let the app logic describe the UI. Jetpack Compose is the modern toolkit for building Android UI.
+Jetpack Compose is the modern toolkit for building Android UI. The Android documentation says you build it from **composable functions**, which take in data and emit UI elements. It adds that composable functions can accept parameters, which let the app logic describe the UI.
 
 ## Recap
 
