@@ -35,7 +35,7 @@ Think of one recipe cooked in two kinds of kitchen.
 - The cooks have three habits. They can read a card line by line while cooking. They can jot a quick-prep sheet for a step that keeps coming back. Or they can prepare sheets before the step is needed.
 - The quiet hour is a time when nobody is ordering, so the kitchen can prepare sheets ahead.
 
-**Where the analogy stops:** The cooks are programs, not people, and nobody can ask them to work differently. Android decides how they work, and its rules have changed between versions. Also, a recipe is cooked once per order. A running app keeps going until you leave it.
+**Where the analogy stops:** The cooks are programs, not people. Android decides how they work, and its rules have changed between versions. Also, a recipe is cooked once per order. A running app keeps going until you leave it.
 
 ## See it move
 
@@ -99,6 +99,8 @@ Steps 5 to 7 are three ways of running a step. To be **interpreted** means to be
 | Clerk | d8 | Rewrites bytecode into DEX |
 | Compact cards | DEX | The form that goes to the phone |
 | Phone kitchen's cooks | ART | Run the DEX on the phone |
+| Box | The app file | Carries the DEX to the phone |
+| Head cook and station | One ART instance in one process | Every app gets its own |
 | Read as they cook | Interpreted | No preparation first |
 | Jot a sheet while cooking | JIT compilation | Prepare a step while the app runs |
 | Prepare in the quiet hour | AOT compilation | Prepare a step before it is needed |
@@ -208,7 +210,7 @@ Here is a second symptom. One app stops working, and the others on your phone ca
 ## Recap
 
 1. Your Kotlin becomes bytecode, and then DEX, before it reaches an Android phone.
-2. The phone's own runtime, ART, runs the DEX. The JVM is not used.
+2. The phone's own runtime, ART, runs the DEX, and the JVM is not used.
 3. ART reads as it goes, prepares while running, and prepares ahead.
 
 ## You can now

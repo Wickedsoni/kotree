@@ -34,7 +34,7 @@ Think of a flat-pack furniture box.
 
 If the label card is missing, a pile of parts is all you have. Nobody can tell which part starts first or what the pieces are for.
 
-**Where the analogy stops:** You assemble furniture yourself, but nobody assembles an app by hand. The phone reads the label card and sets the app up. Also, in the animation the phone refuses a box with no label card. The Android documentation says something narrower: a part that is not listed on the label card cannot be started.
+**Where the analogy stops:** You assemble furniture yourself, but nobody assembles an app by hand. The phone reads the label card and sets the app up. Also, the animation takes the label card away to make a point. The Android documentation says the system must read the label card to know a part exists, so for the main kinds of part, one that is not listed cannot be started.
 
 ## See it move
 
@@ -88,9 +88,9 @@ The box is an **APK**, short for Android package. The Android documentation says
 
 Inside it you find these piles.
 
-- The compiled code is the code after it has been translated for the phone. It is stored in **DEX** files. DEX, short for Dalvik Executable format, is a compact code form made for Android. The phone's own runtime executes it.
-- The **resources** are the images, the text and the other files the app uses that are not code. One resource file keeps values that change with the phone's settings, such as the translations of a string.
-- The **manifest** is the label card. Its file name is `AndroidManifest.xml`. The documentation says it must declare the app's components, the permissions the app needs, and the hardware and software features it requires. A **component** is a building block that the system can start. The system can only start a component that the manifest lists.
+- The compiled code is the code after it has been translated for the phone. It is stored in **DEX** files. DEX, short for Dalvik Executable format, is a compact code form made for Android. The phone's own program for running apps executes it.
+- The **resources** are the images, the text and the other files the app uses that are not code. One resource file keeps values that change with the phone's settings, such as the same text in each language.
+- The **manifest** is the label card. Its file name is `AndroidManifest.xml`. The documentation says it must declare the app's components, the **permissions** the app needs, which are the things it asks the phone to let it use, and the hardware and software features it requires. A **component** is a building block that the system can start. For the main kinds of component, such as a screen of the app, the system can't start one that the manifest does not list.
 
 The manifest also carries the app's icon and name. In the documentation's example, the `application` entry sets `android:icon` and `android:label`, and both point to resources, a picture and a piece of text. So the manifest names the picture and the words, and the resources hold them.
 
@@ -168,7 +168,7 @@ run: false
 id: part-missing-from-the-label
 verified: not-run
 code: |
-  A maker writes a new component, a part the system can start.
+  A maker writes a new screen for the app, a part the system can start.
   The code is in the parts bag, but the maker forgets to list it on the label card.
   The box is sealed and sent. The system tries to start that component.
   What happens?
@@ -203,7 +203,7 @@ output: "The system cannot start it, because the label card does not list it"
 
 A friend sends you a file that ends in `.aab`, and your phone will not install it. The file is a bundle. The documentation says you cannot deploy one directly to a device, and that Google Play builds the APKs from it.
 
-Here is a second symptom. A developer adds a new screen to an app, and nothing happens when they try to open it. My own reasoning: the first thing to check is the manifest. The documentation says that a component not declared in the manifest cannot be started by the system.
+Here is a second symptom. A developer adds a new screen to an app, and nothing happens when they try to open it. My own reasoning: the first thing to check is the manifest. The documentation says that a screen left out of the manifest is not visible to the system and can never run.
 
 ## Recap
 

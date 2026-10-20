@@ -82,7 +82,7 @@ The master carton is an **AAB**, an Android App Bundle. The store uses it to bui
 
 The parcel is a set of **split APKs**: a base APK plus configuration APKs, which are small extra pieces for things like screen and language. The documentation calls the installed package the base APK plus configuration APKs.
 
-The seal is a **signature**, a digital mark made with a key that only the maker holds. A **certificate** is the proof of who signed it. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. On an update, the system compares the certificates in the new version and in the existing one, and allows the update if they match.
+The seal is a **signature**, a digital mark made with a private key, which is a secret code. With **Play App Signing**, the maker lets Google keep that key, and Google does the sealing for the maker. A **certificate** is the proof of who signed it. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. On an update, the system compares the certificates in the new version and in the existing one, and allows the update if they match.
 
 The label card is the **manifest**, the file that lists the parts of the app and what it needs.
 

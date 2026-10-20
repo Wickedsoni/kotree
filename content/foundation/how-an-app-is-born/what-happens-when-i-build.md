@@ -35,7 +35,7 @@ Think of a bakery line.
 - The house stamp is a plain stamp. Every test box gets it automatically.
 - The shop's own stamp is a private stamp. A box meant for customers needs it.
 
-**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a key, which is a secret code that only the maker holds. Also, the test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point. The documentation's own rule is that Android requires every app file to be signed before it is installed. And a bakery sells bread, but this line makes a box. The app only runs after the phone opens it.
+**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a key, which is a secret code that only the maker holds. Test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point.
 
 ## See it move
 
@@ -92,7 +92,7 @@ The whole line is a **build**. The Android documentation says the Android build 
 
 **Stamp** is **signing**: adding a digital signature made with a key. A **certificate** is the proof of who signed. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. My own reasoning from that rule: a file with no signature is not installed.
 
-The line manager is **Gradle**, the build tool that runs the steps in order. The documentation says you can run all the build tasks of an Android project with it, and that adding the Android Gradle plugin, an add-on, registers the tasks needed to build an APK. This page does not go further into Gradle.
+The line manager is **Gradle**, the build tool that runs the steps in order. The documentation says you can run every build step of an Android project with it. It also says the Android Gradle plugin, an add-on, registers the steps needed to build an APK. This page does not go further into Gradle.
 
 By default there are two kinds of build. A **debug build** is for testing, and the build system signs it with a default key, the house stamp. A **release build** is for users, and the build system does not sign it until you give it your own signing settings, the shop's own stamp.
 
@@ -204,6 +204,6 @@ Here is a second symptom. You are ready to publish a new app, and the store want
 
 ## You can now
 
-- Put the four build steps in order and say what each one makes.
+- Put the four build steps in order.
 - Predict what happens to a file that was never signed.
 - Predict what the later steps receive when an early step is missing.
