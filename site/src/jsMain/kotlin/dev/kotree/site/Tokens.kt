@@ -1,5 +1,7 @@
 package dev.kotree.site
 
+import kotlin.math.round
+
 /**
  * Every colour, size, threshold and duration of the tree-first prototype (docs/12 §3, §7).
  * Names follow docs/02 (dotted token name in the KDoc, camelCase here). No literal of this kind
@@ -30,8 +32,10 @@ object Tokens {
     }
 
     object Type {
-        /** font.ui fallback only; Roboto Flex arrives in Phase 1. */
-        val fontUi: Array<String> = arrayOf("system-ui", "sans-serif")
+        /** font.ui: self-hosted Roboto Flex (public/fonts), then system fallbacks. */
+        val fontUi: Array<String> = arrayOf("Roboto Flex", "system-ui", "sans-serif")
+        /** font.code: self-hosted JetBrains Mono. Ligatures are switched off in Base.kt. */
+        val fontCode: Array<String> = arrayOf("JetBrains Mono", "ui-monospace", "monospace")
         /** type.label: 14 / 20, weight 600 */
         const val labelSizePx = 14
         const val labelLineHeightPx = 20
@@ -144,5 +148,161 @@ object Tokens {
 
     object Motion {
         const val flyDurationMs = 500
+    }
+
+    // ---- Phase 1 additions (docs/13 section 2). Additions only: nothing above this line was renamed. ----
+    // Hex values are typed here and nowhere else. scripts/check-tokens.py reads the `const val ... = 0x......` lines below.
+
+    /** color.branch.<slug> inks (docs/02 §2.2). Tints are computed by [tint], never typed. */
+    object Branch {
+        const val foundation = 0x6D4C41
+        const val kotlin = 0x3B5BDB
+        const val androidCore = 0x1B2F7A
+        const val ui = 0xC2185B
+        const val concurrency = 0x7A5A00
+        /** Darkened from 2E7D4F on 20 Oct 2026: ink on its 12% tint was 4.30 (author answer 2, docs/13). */
+        const val architectureData = 0x2C774B
+        const val appNetworking = 0x01579B
+        const val kmp = 0x4A7000
+        const val dsa = 0xA84A00
+        const val daa = 0x7B3FC4
+        const val os = 0xB3261E
+        /** Darkened from 00796B on 20 Oct 2026: ink on its 12% tint was 4.49. */
+        const val networking = 0x007669
+        const val testing = 0xC0392B
+        const val profiling = 0x5E4AE3
+        const val nativeNdk = 0x8A4B2A
+        const val security = 0x37474F
+        const val tools = 0x546E7A
+
+        /** Share of the ink mixed into white for a container fill (docs/02 §2.2). */
+        const val tintPercent = 12
+
+        /** Branch slug (docs/00 §5) to ink, in tree order. */
+        val inks: List<Pair<String, Int>> = listOf(
+            "foundation" to foundation, "kotlin" to kotlin, "android-core" to androidCore, "ui" to ui,
+            "concurrency" to concurrency, "architecture-data" to architectureData, "app-networking" to appNetworking,
+            "kmp" to kmp, "dsa" to dsa, "daa" to daa, "os" to os, "networking" to networking, "testing" to testing,
+            "profiling" to profiling, "native-ndk" to nativeNdk, "security" to security, "tools" to tools,
+        )
+
+        /** sRGB mix of [ink] into white: [pct] percent ink, the rest white. The same formula scripts/check-tokens.py uses. */
+        fun tint(ink: Int, pct: Int = tintPercent): Int {
+            fun mix(shift: Int): Int {
+                val c = (ink shr shift) and 0xFF
+                val white = 0xFF
+                return ((c * pct + white * (100 - pct)) / 100.0).let { round(it).toInt() }
+            }
+            return (mix(16) shl 16) or (mix(8) shl 8) or mix(0)
+        }
+    }
+
+    /** color.bough.* reuse a branch ink (docs/02 §2.2). */
+    object Bough {
+        const val roots = Branch.foundation
+        const val kotlinAndroid = Branch.kotlin
+        const val architectureKmp = Branch.architectureData
+        const val csTheory = Branch.dsa
+        const val craft = Branch.security
+    }
+
+    /** Chrome colours: text on an ink fill and the feedback set (docs/02 §2.4). */
+    object Chrome {
+        /** color.on-branch */ const val onBranch = 0xFFFFFF
+        /** color.feedback.correct, darkened from 2E7D32 on 20 Oct 2026 (ink on tint was 4.36) */ const val feedbackCorrect = 0x2C7730
+        /** color.feedback.wrong */ const val feedbackWrong = 0xB3261E
+        /** color.feedback.hint */ const val feedbackHint = 0x7A5A00
+        /** color.focus-ring default when no branch is active. */
+        const val focusRingDefault = Branch.kotlin
+        const val focusRingWidthPx = 3
+        const val focusRingOffsetPx = 2
+        /** State layers on buttons: share of the content colour laid over the fill (M3). */
+        const val hoverLayerPercent = 6
+        const val pressedLayerPercent = 8
+        /** Tonal buttons darken their label ink by this share of black while hovered or pressed, to keep 4.5:1 (P1 review item 3). */
+        const val tonalStateInkDarkenPercent = 10
+        /** Chip swatch edge, px. */
+        const val chipSwatchPx = 12
+    }
+
+    /** World colours as Int (docs/02 §2.3). The canvas and DOM chips read these directly. */
+    object Leaf {
+        /** color.leaf.shadow */ const val shadow = 0xD8DADF
+        /** color.leaf.upnext */ const val upnext = 0xC9CDD4
+        /** color.leaf.upnext.glow, drawn at [upnextGlowAlphaPercent] */ const val upnextGlow = 0xFFD54F
+        const val upnextGlowAlphaPercent = 60
+        /** color.leaf.easy */ const val easy = 0xA5D6A7
+        /** color.leaf.medium */ const val medium = 0x43A047
+        /** color.leaf.hard */ const val hard = 0x1B5E20
+        /** color.leaf.done-mark */ const val doneMark = 0x000000
+        /** color.fruit */ const val fruit = 0xE53935
+    }
+
+    /** shape.* (docs/02 §4.1), px. */
+    object Shape {
+        const val xs = 8
+        const val md = 16
+        const val xl = 28
+        const val full = 999
+        /** shape.blob: asymmetric radii 28 / 8 / 28 / 8. */
+        const val blobLarge = 28
+        const val blobSmall = 8
+    }
+
+    /** space.1 .. space.16 (docs/02 §4.2), px. */
+    object Spacing {
+        const val s1 = 4
+        const val s2 = 8
+        const val s3 = 12
+        const val s4 = 16
+        const val s6 = 24
+        const val s8 = 32
+        const val s12 = 48
+        const val s16 = 64
+        /** Minimum click target for chrome. */
+        const val minTargetPx = 44
+    }
+
+    /** elevation.* (docs/02 §4.3). */
+    object Elevation {
+        const val borderPx = 1
+        const val shadowOffsetYPx = 2
+        const val shadowBlurPx = 8
+        const val shadowAlphaPercent = 12
+    }
+
+    /** type.<name> rows (docs/02 §3): size px, line height px, weight. */
+    object TypeScale {
+        class Row(val sizePx: Int, val lineHeightPx: Int, val weight: Int)
+        /** Emphasized variants add this to the weight. */
+        const val emphasisWeightStep = 100
+        val display = Row(48, 56, 700)
+        val headline = Row(32, 40, 650)
+        val title = Row(22, 30, 600)
+        val body = Row(18, 30, 400)
+        val label = Row(Type.labelSizePx, Type.labelLineHeightPx, Type.labelWeight)
+        val code = Row(16, 26, 400)
+    }
+
+    /** layout.* (docs/02 §4.5), px. */
+    object LayoutW {
+        const val viewportMin = 1024
+        const val lessonText = 544
+        const val lessonWide = 720
+        const val gutter = Spacing.s8
+        /** SimFrame is 16:9: height = width * 9 / 16. */
+        const val simAspectW = 16
+        const val simAspectH = 9
+    }
+
+    /** Spring parameters (Compose Material 3 ExpressiveMotionTokens, docs/02 §4.4). Mass is 1. */
+    object Spring {
+        class Params(val dampingRatio: Double, val stiffness: Double)
+        val spatial = Params(0.8, 380.0)
+        val spatialFast = Params(0.6, 800.0)
+        val spatialSlow = Params(0.8, 200.0)
+        val effects = Params(1.0, 1600.0)
+        val effectsFast = Params(1.0, 3800.0)
+        val effectsSlow = Params(1.0, 800.0)
     }
 }

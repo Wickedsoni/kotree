@@ -12,6 +12,7 @@ import com.varabyte.kobweb.silk.SilkApp
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import dev.kotree.site.ui.baseTypography
 import org.jetbrains.compose.web.css.vh
 
 /** White only, no dark mode (L9): the colour mode is fixed to LIGHT and never read from the system. */
@@ -29,6 +30,8 @@ fun AppEntry(content: @Composable () -> Unit) {
                 .fillMaxSize()
                 .minHeight(Tokens.Layout.fullViewportHeightVh.vh)
                 .backgroundColor(Color.rgb(Tokens.Color.surface))
+                .tokenVariables()
+                .baseTypography()
         ) {
             content()
         }

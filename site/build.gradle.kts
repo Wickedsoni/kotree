@@ -1,4 +1,5 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import kotlinx.html.link
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -14,6 +15,15 @@ kobweb {
     app {
         index {
             description.set("Kotree: learn Android and CS theory on one tree.")
+            head.add {
+                // Self-hosted fonts (docs/02 section 3). Preload only the UI font; the code font loads on demand.
+                link(rel = "preload", href = "/fonts/roboto-flex-v1.woff2") {
+                    attributes["as"] = "font"
+                    attributes["type"] = "font/woff2"
+                    attributes["crossorigin"] = "anonymous"
+                }
+                link(rel = "stylesheet", href = "/fonts/fonts.css")
+            }
         }
     }
 }
