@@ -35,7 +35,7 @@ Think of a bakery line.
 - The house stamp is a plain stamp. Every test box gets it automatically.
 - The shop's own stamp is a private stamp. A box meant for customers needs it.
 
-**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a secret key. Also, the test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point. The documentation's own rule is that Android requires every app file to be signed before it is installed. And a bakery sells bread, but this line makes a box. The app only runs after the phone opens it.
+**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a key, which is a secret code that only the maker holds. Also, the test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point. The documentation's own rule is that Android requires every app file to be signed before it is installed. And a bakery sells bread, but this line makes a box. The app only runs after the phone opens it.
 
 ## See it move
 
@@ -84,17 +84,17 @@ Idea B puts the stamp on a box with nothing in it. The stamp belongs on the fini
 
 The whole line is a **build**. The Android documentation says the Android build system compiles app resources and source code and packages them into APKs or Android App Bundles. I split that into four stations. This four-station picture is my own summary, not a list from one Android page.
 
-**Mix** is to **compile**: to translate code into a form that runs. The documentation says bytecode is generated for compiled Java and Kotlin source. **Bytecode** is a compact list of instructions that is not tied to one exact CPU. The resources are compiled too.
+**Mix** is to **compile**: to translate code into a form that runs. The documentation says bytecode is generated for compiled Java and Kotlin source. **Bytecode** is a compact list of instructions that is not tied to one exact kind of processor. The resources are compiled too.
 
 **Bake** is the conversion. A tool called **d8** compiles Java bytecode into DEX bytecode. **DEX** is the compact code form made for Android. The build tools run d8 for you.
 
 **Pack** puts the DEX code, the resources and the label card, called the **manifest**, into one file. An **APK** is the file a phone installs. An **AAB**, or Android App Bundle, is a publishing format that Google Play turns into APKs.
 
-**Stamp** is **signing**: adding a digital signature made with a key. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. My own reasoning from that rule: a file with no signature is not installed.
+**Stamp** is **signing**: adding a digital signature made with a key. A **certificate** is the proof of who signed. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. My own reasoning from that rule: a file with no signature is not installed.
 
 The line manager is **Gradle**, the build tool that runs the steps in order. The documentation says you can run all the build tasks of an Android project with it, and that adding the Android Gradle plugin, an add-on, registers the tasks needed to build an APK. This page does not go further into Gradle.
 
-By default there are two kinds of build. A **debug build** is for testing, and the build system signs it with a default key, the house stamp. A **release build** is for users, and the build system does not sign it until you define a signing configuration, the shop's own stamp.
+By default there are two kinds of build. A **debug build** is for testing, and the build system signs it with a default key, the house stamp. A **release build** is for users, and the build system does not sign it until you give it your own signing settings, the shop's own stamp.
 
 | Bakery | Station | Real step | What comes out |
 |---|---|---|---|
@@ -192,7 +192,7 @@ output: "Nothing to bake, so Pack and Stamp have nothing to work with either"
 
 ## Where this shows up in Android
 
-You send a friend the file the build gave you. It installs on your phone, but the store refuses to publish it. The documentation says the debug certificate is created by the build tools and is insecure by design, so most app stores, including Google Play, do not accept apps signed with it. Your file came from a debug build. A release build must be signed with your own private key.
+You send a friend the file the build gave you. It installs on your phone, but the store refuses to publish it. The documentation says the debug certificate is created by the build tools and is insecure by design, so most app stores, including Google Play, do not accept apps signed with it. Your file came from a debug build. A release build must be signed with your own private key, the secret code only you hold.
 
 Here is a second symptom. You are ready to publish a new app, and the store wants a bundle, not an APK. The documentation says all new apps submitted after August 2021 are required to use AABs. It also says an APK suits a quick test on your own device. So the Pack station makes a different file for each job.
 

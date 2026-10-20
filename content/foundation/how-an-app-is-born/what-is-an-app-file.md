@@ -94,7 +94,7 @@ Inside it you find these piles.
 
 The manifest also carries the app's icon and name. In the documentation's example, the `application` entry sets `android:icon` and `android:label`, and both point to resources, a picture and a piece of text. So the manifest names the picture and the words, and the resources hold them.
 
-The seal is a **signature**, a digital mark made with a certificate. The documentation says Android requires all APKs to be digitally signed with a certificate before they are installed.
+The seal is a **signature**, a digital mark that shows who packed the file. The documentation says Android requires all APKs to be digitally signed before they are installed.
 
 There is a second kind of box. An **AAB**, or Android App Bundle, is the master carton. The documentation calls it a publishing format that holds all your compiled code and resources, and defers APK generation and signing to Google Play. It adds that, unlike an APK, you cannot deploy an app bundle directly to a device. The Android build documentation says all new apps submitted after August 2021 are required to use AABs.
 
@@ -104,7 +104,7 @@ There is a second kind of box. An **AAB**, or Android App Bundle, is the master 
 | Parts bag | Compiled code | DEX files |
 | Pictures and printed words | Resources | Images and text |
 | Label card | Manifest | `AndroidManifest.xml` |
-| Seal | Signature | A certificate on the APK |
+| Seal | Signature | A digital mark on the APK |
 | Master carton | AAB | What you send to Google Play |
 
 ## Predict the output

@@ -27,6 +27,7 @@ Think of posting a sealed parcel.
 
 - The master carton is the big box the maker sends to the shop.
 - The shop opens the master carton and packs a parcel for your address. The parcel has one main box and a few small extra boxes.
+- The picture sheets and the printed words in the parcel are the images and the text for your phone's screen and language.
 - The label card inside the parcel lists what it holds.
 - The delivery slip says what your phone is like, such as its screen and its language.
 - The seal on the parcel shows who packed it.
@@ -34,7 +35,7 @@ Think of posting a sealed parcel.
 - Your front door is where you check the seal, before you open anything.
 - Your home has a locked room for each app. A key fits one room only.
 
-**Where the analogy stops:** A real parcel is a thing that moves. An app is a copy of files, and the store sends a copy to each phone. Also, you check a real seal with your eyes, but a phone compares certificates. And a real shop does not pack a new box for each customer, but Google Play does pack one for each kind of phone.
+**Where the analogy stops:** A real parcel is a thing that moves. An app is a copy of files, and the store sends a copy to each phone. Also, you check a real seal with your eyes, but a phone compares digital marks. And a real shop does not pack a new box for each customer, but Google Play does pack one for each kind of phone.
 
 ## See it move
 
@@ -81,15 +82,15 @@ The master carton is an **AAB**, an Android App Bundle. The store uses it to bui
 
 The parcel is a set of **split APKs**: a base APK plus configuration APKs, which are small extra pieces for things like screen and language. The documentation calls the installed package the base APK plus configuration APKs.
 
-The seal is a **signature**, made when an APK is signed with a certificate. The documentation says Android requires all APKs to be signed before they are installed or updated. On an update, the system compares the certificates in the new version and in the existing one, and allows the update if they match. With **Play App Signing**, Google manages the app's signing key and signs the APKs it delivers.
+The seal is a **signature**, a digital mark made with a key that only the maker holds. A **certificate** is the proof of who signed it. The documentation says Android requires all APKs to be signed with a certificate before they are installed or updated. On an update, the system compares the certificates in the new version and in the existing one, and allows the update if they match.
 
-The label card is the **manifest**, the file that lists the parts of the app and what it needs. The Android build documentation says it is read by the **package manager**, the part of Android that tells the system what the app contains.
+The label card is the **manifest**, the file that lists the parts of the app and what it needs.
 
 The locked room is a **sandbox**. The documentation says each Android app lives in its own security sandbox. By default the system gives each app a unique ID number, and it sets permissions on the app's files so that only that ID can reach them.
 
 One more word covers a different route. An app that is not installed through the Google Play Store is **sideloaded**. The documentation says a sideloaded install that is missing one or more required split APKs fails on devices running Android 10 or higher.
 
-The documentation does not list install steps in order. The order in Build, with the seal check first, then the label card, then the locked room, is my own reasoning.
+The documentation does not list install steps in order. The order in Build is my own reasoning: the seal check, then the label card, then the locked room.
 
 | Parcel | Official name | On Android |
 |---|---|---|
@@ -111,7 +112,7 @@ verified: not-run
 code: |
   A parcel reaches the door of Maya's phone.
   The phone has not opened it yet.
-  What does the phone check first?
+  What does the phone check before it installs the app?
 options:
   - id: a
     text: "Whether the maker's whole working folder is inside"
@@ -191,7 +192,7 @@ output: "The install fails"
 
 You copy part of an app from one phone to another, and the install fails. That app was sideloaded, because it did not come through the store. The documentation says that when you download through Google Play, Google ensures all required components of the app are installed.
 
-Here is a second symptom. An update will not go over the app already on your phone. The documentation says the system allows an update if the certificates match. My own reasoning: when they do not match, the update is not allowed, and you may have to start from a fresh install.
+Here is a second symptom. An update will not go over the app already on your phone. The documentation says the system allows an update if the certificates of the old and new versions match. My own reasoning: when they do not match, the update is not allowed, and you may have to start from a fresh install.
 
 ## Recap
 

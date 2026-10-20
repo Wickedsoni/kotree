@@ -29,12 +29,13 @@ Think of one recipe cooked in two kinds of kitchen.
 - The standard cards are the first rewrite of the recipe. Big kitchens everywhere can cook from them.
 - The big kitchen is the kind you find on a laptop. It has its own cooks, and they read standard cards.
 - The phone kitchen is small, with little counter space. It has its own cooks, and they read a different, more compact card.
-- The clerk is the person who rewrites each standard card into a compact card before the box goes to the phone.
+- The clerk is the person who rewrites each standard card into a compact card.
+- The box carries the compact cards from the clerk to the phone.
 - The head cook is the one who runs a phone kitchen station. Every app gets its own station and its own head cook.
 - The cooks have three habits. They can read a card line by line while cooking. They can jot a quick-prep sheet for a step that keeps coming back. Or they can prepare sheets before the step is needed.
 - The quiet hour is a time when nobody is ordering, so the kitchen can prepare sheets ahead.
 
-**Where the analogy stops:** The cooks are programs, not people, and nobody can ask them to work differently. Android decides how they work, and its rules changed between versions. Also, a recipe is cooked once per order. A running app keeps going until you leave it.
+**Where the analogy stops:** The cooks are programs, not people, and nobody can ask them to work differently. Android decides how they work, and its rules have changed between versions. Also, a recipe is cooked once per order. A running app keeps going until you leave it.
 
 ## See it move
 
@@ -83,13 +84,13 @@ Idea A treats the phone as a small laptop, but its cooks are different. Idea C n
 
 ### Name it
 
-Step 1 produces **bytecode**: a compact list of instructions that is not tied to one exact CPU. The Android documentation says bytecode is generated for both Java and Kotlin source code. On a laptop, the program that runs bytecode is the **JVM**, short for Java Virtual Machine. The same documentation says the JVM is not used on Android devices or emulators.
+Step 1 produces **bytecode**: a compact list of instructions that is not tied to one exact kind of processor. The Android documentation says bytecode is generated for both Java and Kotlin source code. On a laptop, the program that runs bytecode is the **JVM**, short for Java Virtual Machine. The same documentation says the JVM is not used on Android devices or emulators.
 
-Step 2 is done by a tool called **d8**. To **compile** is to translate code into a form that runs. The documentation says d8 compiles Java bytecode into DEX bytecode. **DEX** is short for Dalvik Executable format. The documentation calls it a bytecode format designed specifically for Android and optimized for a minimal memory footprint.
+Step 2 is done by a tool called **d8**. To **compile** is to translate code into a form that runs. The documentation says d8 compiles Java bytecode into DEX bytecode. **DEX** is short for Dalvik Executable format. The documentation calls it a bytecode format designed specifically for Android, so that it uses little memory.
 
-Step 4 is the **Android Runtime (ART)**. ART runs an app by executing DEX files. The documentation says that on Android 5.0 (API level 21) and higher, each app runs in its own **process**, which is a running app together with the memory it was given, and with its own instance of ART.
+Step 4 is the **Android Runtime (ART)**. ART runs an app by executing DEX files. The documentation says that on Android 5.0 and higher, each app runs in its own **process**, which is a running app together with the memory it was given, and with its own instance of ART.
 
-Steps 5 to 7 are three ways of running a step. To be **interpreted** means to be read and carried out line by line, with no preparation first. In **just-in-time (JIT) compilation**, a step is translated while the app is running. In **ahead-of-time (AOT) compilation**, a step is translated before it is needed. The documentation says that without a profile, code is either JIT-compiled in memory after being interpreted, or written to a file in the background when the device is idle.
+Steps 5 to 7 are three ways of running a step. To be **interpreted** means to be read and carried out line by line, with no preparation first. In **just-in-time (JIT) compilation**, a step is translated while the app is running. In **ahead-of-time (AOT) compilation**, a step is translated before it is needed. The documentation says that without a profile, code is either JIT-compiled in memory after being interpreted, or written to a file in the background when the device is idle. The documentation's table of Android versions shows that this mix changed from one version to the next.
 
 | Kitchen | Official name | What it does on Android |
 |---|---|---|
@@ -101,8 +102,6 @@ Steps 5 to 7 are three ways of running a step. To be **interpreted** means to be
 | Read as they cook | Interpreted | No preparation first |
 | Jot a sheet while cooking | JIT compilation | Prepare a step while the app runs |
 | Prepare in the quiet hour | AOT compilation | Prepare a step before it is needed |
-
-The documentation also shows that the rules changed. On Android 5 and 6 the whole app was optimized during install, which made long waits. From Android 7 the phone prepares only part of the app ahead, and it can add more when the device is idle. That is as deep as this page goes.
 
 ## Predict the output
 
