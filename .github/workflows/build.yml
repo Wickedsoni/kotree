@@ -30,6 +30,13 @@ jobs:
         run: ./gradlew :site:validateContent
       - name: Gate script (export, file and log check, kotree.js size)
         run: bash scripts/wave-check.sh
+      - name: Upload static export
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-export
+          path: site/.kobweb/site
+          retention-days: 3
       - name: Upload export log
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,3 +44,31 @@ jobs:
           name: export-log
           path: site/export.log
           if-no-files-found: ignore
+
+  # Publishes the verified export to the site-dist branch. Vercel (linked to this repo,
+  # production branch site-dist, no build step) serves that branch as the live site.
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency: publish-site
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: src
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-export
+          path: dist
+      - name: Push export to site-dist
+        run: |
+          cp src/deploy/vercel.json dist/vercel.json
+          cd dist
+          git init -q -b site-dist
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "site: export of ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" site-dist
