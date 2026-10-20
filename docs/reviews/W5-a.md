@@ -7,7 +7,7 @@ VERDICT: FIX (0 PASS, 8 FIX). Every item is mechanical (`fixer` can do it; repla
 
 | Leaf | Verdict | Items |
 |---|---|---|
-| `foundation/how-an-app-is-born/what-happens-when-i-tap-an-icon` | FIX | 5 |
+| `foundation/how-an-app-is-born/what-happens-when-i-tap-an-icon` | FIX | 6 |
 | `foundation/how-an-app-is-born/run-your-first-app` | FIX | 4 |
 | `kotlin/first-programs/where-a-program-starts` | FIX | 2 |
 | `kotlin/first-programs/print-values-in-text` | FIX | 2 |
@@ -38,7 +38,7 @@ No `kotlinc` is installed, but Gradle's bundled compiler is: I ran `K2JVMCompile
 
 | Claim | Page | Result |
 |---|---|---|
-| Cold, warm, hot start wording; the system's three tasks (load and launch, blank starting window, create process); the app process's five steps in the leaf's order; blank window stays until first draw, then swapped; TTID = time to first frame, reported automatically | developer.android.com/topic/performance/vitals/launch-time | Matches |
+| Cold, warm, hot start wording; the system's three tasks (load and launch, blank starting window, create process); the app process's five steps in the leaf's order; blank window stays until first draw, then swapped; TTID = time to first frame, reported automatically | developer.android.com/topic/performance/vitals/launch-time | Matches, except the order of the starting window and the process (tap item 5) |
 | Every app runs in its own Linux process; system starts it when a component needs it and shuts it down when no longer needed or memory is needed; "no single entry point: there's no `main()` function"; each component is an entry point; activity = entry point for the user, one screen | developer.android.com/guide/components/fundamentals | Matches, but the page says "By default" (tap item 3) |
 | Main thread "in charge of dispatching events ... including drawing events"; process may be shut down for other processes | .../processes-and-threads | Matches |
 | Main activity is "the first screen to appear when the user launches the app" | .../activities/intro-activities | Matches |
@@ -66,7 +66,8 @@ Could not verify from an official page (all labelled in the leaves unless item s
 2. Line 78 (Name it), general knowledge is not labelled (checklist 4). Old: `A **process** is a running app together with the memory the system gave it.` New: `A **process** is a running app together with the memory the system gave it. That plain meaning is general knowledge, not a quote from the Android pages.`
 3. Line 78 (Name it), "by default" dropped, and a 37-word sentence (T7). Old: `The Android documentation says each app runs in its own Linux process. It says the system starts the process when any of the app's parts need to run, and shuts it down when it is no longer needed or when the system must get memory back for other apps.` New: `The Android documentation says that by default each app runs in its own Linux process. It says the system starts the process when any of the app's parts need to run. It shuts the process down when it is no longer needed, or when the system must get memory back for other apps.`
 4. Line 80 (Name it), 33 words, two ideas (T7). Old: `The documentation says a **warm start** does a subset of the cold start's work, and a **hot start** has lower overhead still, because the system brings the app's main screen to the foreground.` New: `The documentation says a **warm start** does a subset of the cold start's work. A **hot start** has lower overhead still, because the system brings the app's main screen to the foreground.`
-5. Insert before `## Recap` (line 194), and also line 29 (Mental model uses "process" before it is defined; checklist 3). Old (line 29): `A room is a private place for the app to run in. It is the app's process.` New: `A room is a private place for the app to run in. It stands for a running copy of the app.` Then insert:
+5. Lines 70-71 (Build steps 4 and 5) and line 144 (Predict `what-the-guest-sees-first`, option b `why`), the order disagrees with the launch-time page. The page lists the system's cold-start tasks as: load and launch the app, display a blank starting window immediately after launch, create the app process. The leaf makes the room first and then hangs the card "at once", and its Predict `why` says the window is shown "while the process is created". The page does not say the list is strictly timed, so make the text order-neutral and label the reading. Old (step 4): `4. If no room is open, the manager gets a new one ready.` New: `4. If no room is open, the manager starts getting a new one ready.` Old (step 5): `5. At once, the manager hangs the blank welcome card in the doorway.` New: `5. Straight away, the manager hangs the blank welcome card in the doorway. The documentation lists the card before the room is made. My own reasoning: the two happen close together.` Old (line 144): `The documentation says the system shows a blank starting window while the process is created.` New: `The documentation says the system shows a blank starting window immediately after launch.` Step 8 (`starts again from step 4`) stays correct.
+6. Insert before `## Recap` (line 194), and also line 29 (Mental model uses "process" before it is defined; checklist 3). Old (line 29): `A room is a private place for the app to run in. It is the app's process.` New: `A room is a private place for the app to run in. It stands for a running copy of the app.` Then insert:
 
 ```
 ## Say it in an interview
@@ -75,7 +76,7 @@ Could not verify from an official page (all labelled in the leaves unless item s
 A cold start is an app starting from scratch, with no process yet. A warm start does a subset of that work. A hot start has lower overhead still, because the system only brings the app's screen to the foreground. The trade-off is time: the more has to be built, the longer the wait.
 
 **What happens between the tap and the first frame on a cold start?**
-The system loads and launches the app, shows a blank starting window, and creates the app process. Then the app process creates the app object, launches the main thread, creates the main activity, initializes the UI and draws it. After the first draw, the system swaps the blank window for the main activity.
+The launch-time page lists the system's tasks as: load and launch the app, show a blank starting window, and create the app process. Then the app process creates the app object, launches the main thread, creates the main activity, initializes the UI and draws it. After the first draw, the system swaps the blank window for the main activity.
 
 **Why does the system show a blank window first?**
 My own reasoning: it answers the tap at once, so the phone does not look frozen while the process is made. The cost is that slow work in the five steps keeps the blank window up longer. The documentation measures this wait as time to initial display, the time to show the first frame.
@@ -86,7 +87,7 @@ No. The documentation says the system starts the process when a component needs 
 
 ## Leaf 2: run-your-first-app: FIX
 
-1. Line 58 (Build step 3), "Package name" and "Minimum API level" are never explained (checklist 3). Old: `3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. Android Studio makes a project with some basic code and resources.` New: `3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. The documentation says the Package name becomes the app's namespace and its application ID. The Minimum API level is the oldest Android version you want your app to support. Android Studio makes a project with some basic code and resources.`
+1. Line 58 (Build step 3), "Package name" and "Minimum API level" are never explained (checklist 3). Old: `3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. Android Studio makes a project with some basic code and resources.` New: `3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. The documentation says the Package name also becomes the app's application ID, which is the ID used for publishing. The Minimum API level is the oldest Android version you want your app to support. Android Studio makes a project with some basic code and resources.`
 2. Line 68 (Name it), "Compose" is defined but not bold (T2). Old: `Compose is the toolkit for building Android screens in Kotlin.` New: `**Compose** is the toolkit for building Android screens in Kotlin.`
 3. Lines 128-129 (Predict `phone-not-in-the-list`, option b), the distractor is not plausible as a next step (checklist 6; the store idea is already Predict 3). Old: `text: "Publish the app to a store first"` / `why: "You may have thought the store is the only door. The device page does not list a store step, and the phone is waiting on a dialog."` New: `text: "Switch USB debugging off and on again"` / `why: "You may have thought the switch got stuck. The setting is on, and the phone is still waiting for an answer to its question."`
 4. Insert before `## Recap` (line 181):
@@ -95,7 +96,7 @@ No. The documentation says the system starts the process when a component needs 
 ## Say it in an interview
 
 **What do you set up so Android Studio can put an app on your phone?**
-You switch on Developer options by tapping Build number seven times, then switch on USB debugging. On Windows you may also need a USB driver for ADB, if applicable. When you plug in, you unlock the phone and approve the computer's key. The documentation lists these steps.
+You switch on Developer options by tapping Build number seven times, then switch on USB debugging. On Windows you may also need a USB driver, if applicable. When you plug in, you unlock the phone and approve this computer. The documentation lists these steps.
 
 **What is adb?**
 It stands for Android Debug Bridge. The documentation says USB debugging lets your phone communicate with your computer through adb. Running `adb devices` lists the devices that are connected.
@@ -109,17 +110,17 @@ No. The documentation says Android Studio builds the debug version by default, a
 
 ## Leaf 3: where-a-program-starts: FIX
 
-1. Line 71 (Name it), the second documented form of `main` is missing; a fresher meets `fun main(args: Array<String>)` in older code. Old: `The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function.` New: `The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function. It shows two forms: `fun main()` and `fun main(args: Array<String>)`, which accepts a variable number of `String` arguments. Both start the program. This lesson uses the short form.`
+1. Line 71 (Name it), the second documented form of `main` is missing; a fresher meets `fun main(args: Array<String>)` in older code. Old: `The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function.` New: `The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function. It shows two forms: `fun main()` and `fun main(args: Array<String>)`. The second accepts a variable number of `String` arguments, which means pieces of text handed to the program when it starts (that plain meaning is general knowledge). Both start the program. This lesson uses the short form.`
 2. Insert before `## Recap` (line 207):
 
 ```
 ## Say it in an interview
 
 **What is the entry point of a Kotlin program, and what forms can it take?**
-The entry point is the `main` function. The Kotlin documentation shows two forms: `fun main()` and `fun main(args: Array<String>)`, which accepts a variable number of `String` arguments. Both start the program.
+The entry point is the `main` function. The Kotlin documentation shows two forms: `fun main()` and `fun main(args: Array<String>)`. The second accepts a variable number of `String` arguments, which are pieces of text handed to the program when it starts. Both start the program.
 
 **Does `main` have to sit inside a class, like in Java?**
-No. In Kotlin, `main` can be a top-level function, written straight in the file, as in the Kotlin documentation's examples. General knowledge, JVM only: the compiler puts top-level functions into a class named after the file, such as `MainKt` for `Main.kt`.
+No. In Kotlin, `main` can be a top-level function, which means a function written straight in the file, not inside any class. The Kotlin documentation's examples do exactly that.
 
 **Does a function written above `main` run first?**
 No. Only a call decides when a function runs. The order in the file is not the order of running. A function that nobody calls never runs.
@@ -137,10 +138,10 @@ The Android documentation says Android apps don't have a single entry point: the
 ## Say it in an interview
 
 **What is a string template?**
-It is a string with `$name` or `${expression}` marks that Kotlin fills in. The Kotlin documentation says templates let you embed variables and expressions directly inside a `String` literal.
+It is a string with `$name` or `${expression}` marks that Kotlin fills in. The Kotlin documentation says templates let you embed variables and expressions directly inside a piece of text in quotes.
 
-**Why use a template instead of the `+` operator?**
-Both work. The documentation says templates are usually easier to read and more idiomatic. It also says that with `+`, Kotlin creates a new `String` object for each operation, which may not be beneficial in loops or when you join many pieces.
+**Why use a template instead of the plus sign?**
+Both work. The documentation says templates are usually easier to read and more idiomatic. It also says that with the plus sign, Kotlin creates a new `String` for each join, which may not be beneficial when you join many pieces.
 
 **When do you need `${ }` instead of `$`?**
 When you insert an expression, or when a variable sits right next to other text. The documentation's example is `"${language}Lang"`, which prints `KotlinLang`.
@@ -161,7 +162,7 @@ The Kotlin characters page lists `\$` as the escape sequence for a dollar sign. 
 No. Braces decide which lines belong to a block. The coding conventions say to use four spaces for indentation, which is a style rule for people. My own reasoning: a badly indented file can still compile and mislead the reader, so keep it tidy.
 
 **Do you need semicolons?**
-No. The coding conventions say semicolons are optional and tell you to omit them whenever possible. They add that line breaks are therefore significant, and that the language design assumes Java-style braces.
+No. The coding conventions say semicolons are optional and tell you to omit them whenever possible. They add that line breaks are therefore significant.
 
 **Can comments be nested?**
 Yes. The Kotlin basic syntax page says block comments can be nested. My own reasoning: this lets you comment out code that already holds a block comment.
@@ -187,24 +188,24 @@ A `val` is assigned a value only once and cannot be reassigned. A `var` can be r
 The collections page says to use `val` as much as possible for safer and more robust code. My own reasoning: with a `val`, no later line can change which value the name means, so there are fewer places to look when a value is wrong. The trade-off: when a value must change, such as a counter, you need a `var`.
 
 **Is `val` the same as immutable?**
-No. A `val` stops the name from being reassigned. The collections page says write operations on a mutable collection are still possible when it is assigned to a `val`. So `val` locks the tag, not what is inside.
+No. A `val` stops the name from being reassigned. The collections page shows a list you can add to, assigned to a `val`. Adding to it is allowed, and only giving the name a different list is refused. So `val` locks the tag, not what is inside.
 
 **In Compose, `var name by remember { mutableStateOf("") }` uses `var`. Could it use `val`?**
-In another form, yes. The Compose state page lists three equivalent ways to declare state, and one is `val mutableState = remember { mutableStateOf(default) }`. There the `val` keeps the name fixed and the value inside the state changes. My own reasoning: with `by`, the code writes `name = it`, so that form needs a `var`.
+In another form, yes. Compose keeps the text a person types in state, which is a value the screen reads. The Compose state page lists three equivalent ways to declare it, and one is `val mutableState = remember { mutableStateOf(default) }`. There the `val` keeps the name fixed and the value inside the state changes. My own reasoning: with `by`, the code writes `name = it`, so that form needs a `var`.
 ```
 
 ## Leaf 7: basic-types: FIX
 
 1. Line 70 (Name it), "range" is on the checklist 3 list of undefined terms. Old: `Its range runs from -2,147,483,648 to 2,147,483,647.` New: `Its smallest value is -2,147,483,648 and its largest is 2,147,483,647.`
-2. Lines 188 and 193 (Tricks, Common mistakes), industry accuracy (L29): "money never goes in the egg box" and "use a `Double`" are not sound advice for real money. Cents in an `Int` or `Long` is a normal choice; a `Double` is approximate. My run: `0.1 + 0.2` prints `0.30000000000000004`. Old (188): `- Money has a part after the point, so it never goes in the egg box.` New: `- A price with cents does not fit an `Int` of whole units. The cents are cut off.` Old (193): `- **Storing a price in an `Int`.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. Use a `Double` when the value has a part after the point.` New: `- **Storing a price in an `Int` of whole units.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. A `Double` keeps the .99 here. General knowledge, not from the Kotlin pages: a `Double` holds many decimals only approximately, so real money code often keeps cents in a `Long` or uses `BigDecimal`.`
-3. Line 201 (Where this shows up in Android), `null` and `?:` are used with no meaning. Old: `the codelab says the result could be null if the text field is empty, so the code supplies 0.0.` New: `the codelab says the result could be `null`, which means no number, if the text field is empty. The `?:` mark makes the code supply 0.0 in that case.`
+2. Lines 188 and 193 (Tricks, Common mistakes), industry accuracy (L29): "money never goes in the egg box" and "use a `Double`" are not sound advice for real money. Cents in an `Int` or `Long` is a normal choice; a `Double` is approximate. My run: `0.1 + 0.2` prints `0.30000000000000004`. Old (188): `- Money has a part after the point, so it never goes in the egg box.` New: `- A price with cents does not fit an `Int` of whole units. The cents are cut off.` Old (193): `- **Storing a price in an `Int`.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. Use a `Double` when the value has a part after the point.` New: `- **Storing a price in an `Int` of whole units.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. A `Double` keeps the .99 here. General knowledge, not from the Kotlin pages: a `Double` holds many decimals only approximately, so real money code often keeps cents in a `Long`, or uses `BigDecimal`, a type made for exact decimal numbers.`
+3. Line 201 (Where this shows up in Android), `null` and `?:` are used with no meaning. Old: `the codelab says the result could be null if the text field is empty, so the code supplies 0.0.` New: `the codelab says the result could be `null`, which means no number, if the text field is empty. The `?:` mark means "otherwise use": if there is no number, the code uses 0.0.`
 4. Insert before `## Recap` (line 203):
 
 ```
 ## Say it in an interview
 
 **What are the sizes and limits of `Int` and `Long`?**
-`Int` takes 32 bits and holds -2,147,483,648 to 2,147,483,647. `Long` takes 64 bits and holds -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. The Kotlin numbers page lists both. For a plain whole number, Kotlin infers `Int` if it fits and `Long` if it does not.
+`Int` takes 32 bits, the on-or-off switches a number is stored in, and holds -2,147,483,648 to 2,147,483,647. `Long` takes 64 bits and holds -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. The Kotlin numbers page lists both. For a plain whole number, Kotlin infers `Int` if it fits and `Long` if it does not.
 
 **Why is `5 / 2` equal to `2`?**
 The documentation says division between integer values always returns an integer, and the compiler discards the fractional part. To keep the .5, write `5.0 / 2`, which is a `Double`.
@@ -213,7 +214,7 @@ The documentation says division between integer values always returns an integer
 General knowledge: it wraps around, so `Int.MAX_VALUE + 1` gives -2147483648. If a count can pass about two billion, use a `Long`. The trade-off is memory: a `Long` is 64 bits and an `Int` is 32.
 
 **Should money be stored in a `Double`?**
-General knowledge: usually not. A `Double` holds many decimals only approximately, and `0.1 + 0.2` prints `0.30000000000000004`. Real code often keeps cents in a `Long`, or uses `BigDecimal`.
+General knowledge: usually not. A `Double` holds many decimals only approximately, and `0.1 + 0.2` prints `0.30000000000000004`. Real code often keeps cents in a `Long`, or uses `BigDecimal`, a type made for exact decimal numbers.
 ```
 
 ## Leaf 8: type-inference: FIX
@@ -224,18 +225,18 @@ General knowledge: usually not. A `Double` holds many decimals only approximatel
 ## Say it in an interview
 
 **Is Kotlin dynamically typed because you can leave the type out?**
-No. The Kotlin FAQ calls Kotlin statically typed. The tour says every variable has a type, and that when you leave it out the compiler infers it. So the type is fixed before the program runs, and text put into a name inferred as `Int` is refused.
+No. The Kotlin FAQ calls Kotlin statically typed, which means types are checked before the program runs. The tour says every variable has a type, and that when you leave it out the compiler infers it. So the type is fixed before the program runs, and text put into a name inferred as `Int` is refused.
 
 **What types do `val a = 5` and `val b = 3_000_000_000` get?**
 `a` is an `Int`, because 5 fits. `b` is a `Long`, because it does not fit in an `Int`. The numbers page says Kotlin infers `Int` if the value fits, otherwise `Long`.
 
 **When should you write the type anyway?**
-When you want a type Kotlin would not pick, such as `val small: Long = 5`. The coding conventions also say libraries should always explicitly specify function return types and property types, so a change inside does not change them by accident. My own reasoning: for code only you read, inference saves noise. For a public API, a written type is a promise.
+When you want a type Kotlin would not pick, such as `val small: Long = 5`. The coding conventions also say libraries, which are code other people build on, should always write out the types of what their functions give back, so a change inside does not change them by accident. My own reasoning: for code only you read, inference saves noise. For code other people build on, a written type is a promise.
 ```
 
 ## Owner items (not leaf edits)
 
 1. `docs/04` §4 (table, "twelve body sections"), §9 acceptance and the §10 worked example still list twelve headings. The template and checklist now have a thirteenth, `## Say it in an interview`. I found no code that enforces the heading list (no `.kt` or `.kts` file mentions the heading names), so nothing breaks, but the doc should be updated by the orchestrator so the next reviewer does not read it as a defect.
-2. Sim divergence, `val-vs-var`: the roadmap cell (`content/kotlin/_roadmap.md` line 424) asks for "two labelled jars" while the same row's analogy column is a mug and a whiteboard name tag. The leaf uses mugs and tags, and `docs/sims/needed-ids.md` line 28 records why. Judgement: not a rule 5 breach. Rule 5 protects the structure (stems, leaf ids, titles, difficulty, requires, fruit), and V5 checks only those fields, all of which match. The leaf is right on the merits: `docs/04` §3.2 allows one analogy and forbids a second object in later sections, and a jar would be a second object. The roadmap cell should still be aligned so it does not contradict its own analogy: `curriculum-designer` changes the cell to the mug sim. The same applies to the VERIFY notes in the Foundation roadmap rows 282 and 283: the start-up steps and the Empty Activity / Developer options facts were verified here, so only the "on the publish date" re-check of the Android Studio steps remains.
+2. Sim divergence, `val-vs-var`: the roadmap cell (`content/kotlin/_roadmap.md` line 424) asks for "two labelled jars" while the same row's analogy column is a mug and a whiteboard name tag. The leaf uses mugs and tags, and `docs/sims/needed-ids.md` line 28 records why. Judgement: not a rule 5 breach. Rule 5 protects the structure (stems, leaf ids, titles, difficulty, requires, fruit), and V5 checks only those fields, all of which match. The leaf is right on the merits: `docs/04` §3.2 allows one analogy and forbids a second object in later sections, and a jar would be a second object. The roadmap cell should still be aligned so it does not contradict its own analogy: `curriculum-designer` changes the cell to the mug sim. Also in `docs/sims/needed-ids.md` line 27 (`hotel-bell-startup`): it says a room is made ready and then the blank card goes up; make that order-neutral to match tap item 5 (the sim-spec owner, `physics-designer`, or the orchestrator). The same applies to the VERIFY notes in the Foundation roadmap rows 282 and 283: the start-up steps and the Empty Activity / Developer options facts were verified here, so only the "on the publish date" re-check of the Android Studio steps remains.
 3. Dependency, Foundation: `foundation/first-code/run-your-first-program` (shadow, order 8) is a transitive requirement of both `what-happens-when-i-tap-an-icon` (via 19 ancestors, one shadow) and `run-your-first-app` (20 ancestors, two shadow: that leaf and the tap leaf). `lines-run-in-order` is already live and requires it, so a live leaf with a shadow prerequisite is not new and `validateContent` allows it (V3 checks only that the id exists and comes earlier). Coherence is otherwise good: the browser leaf says Android Studio is met "in the last lesson of this part", which is `run-your-first-app`, and the phone leaf never contradicts "no project to create" because that sentence is about the Playground. Two things for whoever reviews that leaf next: it still carries `UNVERIFIED` fields and a VERIFY comment (Playground availability), and its sentence "which you meet in the last lesson of this part of the course" is a forward promise (checklist 7). Recommendation: review it in the next wave so the chain is live end to end; it should not block these two.
 4. Policy note: the Kotlin leaves are `playground: false`, so the roadmap's `F:` and `B:` tasks (for example the `val` counter, the misspelled `main`) are not present. This follows `docs/06` §3.1 and W4-a. For a fresher this loses the write, run, break, fix loop, which is the main way the site teaches. Once a CI run can confirm outputs, these leaves should be upgraded to `playground: true` with Try it and Fix the bug. My runs above show the existing code would pass such a run.
