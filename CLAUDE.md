@@ -19,7 +19,7 @@ A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, 
 - Escalate model only when a cheaper one failed once: Haiku → Sonnet → Opus.
 
 ## Hard rules
-1. Never create or publish a leaf unless the author said he understood that topic (or explicitly asks you to).
+1. Leaves are written and published autonomously (decision L31, 21 Oct 2026; the "I understood X" gate is dropped). A leaf still goes `live` only after `reviewer` PASS; two failed reviews → stay `shadow` and list in `docs/NEEDS-ME.md`.
 2. White background only. No dark mode. No hardcoded colours, fonts or spacing: use design tokens from `docs/02-design-system.md`.
 3. World (tree) is pixelated; UI chrome is smooth Material 3 Expressive.
 4. Android/Kotlin/KMP facts in lessons must be checked against official docs before status becomes `live`. `reviewer` must PASS first.
