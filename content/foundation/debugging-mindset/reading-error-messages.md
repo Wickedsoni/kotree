@@ -58,7 +58,7 @@ Idea A throws away the one clue you were given. Idea C removes a line without kn
 
 ### Build
 
-1. Ask when the message appeared. Was it before the program started, or after it printed something?
+1. Ask when the message appeared. Was it before the program started, or after it started running?
 2. Read the first line of the message. It names the problem in a few words.
 3. Find the line number. If there is a file name, note it too.
 4. Open that line. Look for the word the message names.
@@ -91,13 +91,15 @@ fun main() {
 }
 ```
 
-The documentation shows this message for it. The report is called a **stack trace**: it shows the sequence of function calls leading to the point where the error happened.
+The documentation's sample output for it has the parts in the table below (wording varies by Kotlin version). The report is called a **stack trace**: it shows the sequence of function calls leading to the point where the error happened.
 
 | Part of the message | In the documentation sample | What it tells you |
 |---|---|---|
 | First line, the type | `java.lang.ArithmeticException` | The kind of problem |
 | First line, the message | `"This is an arithmetic exception!"` | The words the programmer wrote |
 | A line that starts with `at` | `at MainKt.main(Main.kt:3)` | The function, the file and the line number |
+
+In the documentation, the throw is on line 3, so its message says Main.kt:3. In the snippet above, the throw is on line 2, so your own run should point at line 2. If you see `at` lines, the program was running when it crashed.
 
 Read the first line first. Then look at the `at` line that names your file, and open that line number.
 
@@ -123,7 +125,7 @@ options:
   - id: a
     text: "Ada, then Lovelace"
     correct: true
-    why: "The message named lst on line 5. The purse that holds the last name is called last. With that fixed, both lines run."
+    why: "The message pointed at lst on line 5, like a light pointing at one page of the manual. The name that holds the last name is last. With that fixed, both lines run."
   - id: b
     text: "Ada, then lst"
     why: "You may have expected the word to print as you typed it. After the fix, the name stands for the value it holds."
@@ -196,7 +198,7 @@ output: "13"
 ## Tricks to remember
 
 - A warning light is a clue, not an accusation.
-- Before or after "Start"? That tells you which kind of message it is.
+- Did the program start running? That tells you which kind of message it is.
 - First line says what. Line number says where.
 - Read the named line, then the line above it.
 
@@ -221,6 +223,6 @@ An app can also crash while it runs. The Android documentation says a stack trac
 
 ## You can now
 
-- Tell a compile error from a crash by whether the program printed anything first.
+- Tell a compile error from a crash by whether the program started running.
 - Find the word and the line a compile message names, and predict the output after the fix.
 - Predict which lines run before an exception stops a program.

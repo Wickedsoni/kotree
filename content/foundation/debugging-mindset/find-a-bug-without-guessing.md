@@ -44,7 +44,7 @@ You do not replace every lamp in the house. You switch everything off and switch
 2. Keep the half that holds the fault, and switch on half of that. Count how many tries it takes to find the lamp.
 3. Move the faulty lamp to another room and find it again in as few tries as you can.
 
-**What you should notice:** Each try cuts the rooms left in half, so 16 rooms take 4 tries, while testing one room at a time can take many more.
+**What you should notice:** Each try cuts the rooms left in half, so 16 rooms take 4 tries, while testing one room at a time can take up to 15.
 
 ## Build the logic
 
@@ -70,7 +70,7 @@ The fuse keeps blowing. How do you find the faulty lamp?
 - B. Replace every lamp in the house and see whether the problem goes away.
 - C. Check the rooms one by one, from room 1.
 
-Idea B is the habit of changing things until it works. It may fix the house, but you will not learn which lamp was bad. Idea C will find it, but it can need many tries. Idea A is the answer.
+Idea B is the habit of changing things until it works. It may fix the house, but you will not learn which lamp was bad. Idea C will find it, but it can need up to 15 tries. Idea A is the answer.
 
 ### Build
 
@@ -84,7 +84,7 @@ Idea B is the habit of changing things until it works. It may fix the house, but
 
 ### Name it
 
-Finding and fixing a bug is **debugging**. The check in step 4 is **print debugging**: you add a `println` line that shows a value while the program runs. The Kotlin documentation says `println` prints its arguments and adds a line break. A label in the text tells you which check you are reading.
+Finding and fixing a bug is **debugging**. The check in step 4 is **print debugging**: you add a `println` line that shows a value while the program runs. The Kotlin documentation says `println` prints its arguments and adds a line break. A label in the text tells you which check you are reading. Inside the quotes, `$coins` is a **string template**: Kotlin swaps it for the current value of `coins`.
 
 ```kotlin
 fun main() {
@@ -120,11 +120,11 @@ code: |
 options:
   - id: a
     text: "Four item lines, then Total: 20"
-    why: "You may have read the comment. The range stops one below 4, so the loop runs for items 1, 2 and 3 only."
+    why: "You may have read the comment. The `..<` sign stops one below 4, so the repeated part runs for items 1, 2 and 3 only."
   - id: b
     text: "Three item lines, then Total: 15"
     correct: true
-    why: "The print inside the loop shows 5, 10 and 15 for items 1 to 3. Item 4 is never visited, so the bug is in the range."
+    why: "The print inside the repeated part shows 5, 10 and 15 for items 1 to 3. Item 4 is never visited, so the bug is in the `1..<4` part."
   - id: c
     text: "Four item lines, then Total: 15"
     why: "You may have counted four lines but added three times. Each line comes from one round, so three rounds give three lines."
@@ -157,7 +157,7 @@ options:
     why: "You may have counted one try per room. Each try here halves the rooms, so far fewer tries are needed."
   - id: b
     text: "8"
-    why: "You may have stopped after the first halving. The loop keeps going until one room is left."
+    why: "You may have stopped after the first halving. The repeated part keeps going until one room is left."
   - id: c
     text: "4"
     correct: true
@@ -225,6 +225,6 @@ The Android documentation gives two ways to check. The Log class writes messages
 
 ## You can now
 
-- Predict what a print line inside a loop shows, and use it to spot a loop that stops one round short.
+- Predict what a print line inside a repeated part shows, and use it to spot a repeat that stops one round short.
 - Explain why checking the middle clears half the lines.
 - Work out how many halvings it takes to narrow 16 places down to one.

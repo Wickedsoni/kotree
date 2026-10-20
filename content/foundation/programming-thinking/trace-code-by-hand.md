@@ -30,7 +30,8 @@ Think of walking a treasure map with a pencil.
 - A pencil cross shows the line you are standing on.
 - A pouch hangs at your belt. It holds one purse for each name the map uses, and each purse holds one number.
 - A logbook has one row for every step. In each row you write what every purse holds after that step.
-- Sometimes the map says "follow the trail called double, and carry this number". That is a detour. You walk the detour, carry one number back, and return to the cross you left.
+- Sometimes the map says "take this number to the helper on the trail called double". That trail is a detour. You walk the detour, carry one number back from the helper, and return to the cross you left.
+- When the map says to say a number aloud, the program prints it. What gets said aloud is the output.
 
 **Where the analogy stops:** A real walker sees the whole land. A program shows you nothing except the lines, and a line does nothing until you reach it. Also, the computer keeps no logbook. It swaps the number in a purse and forgets the old one at once. The logbook is your tool, and it is how you keep the old numbers in sight.
 
@@ -241,6 +242,6 @@ Android Studio has a tool that does your logbook for you. The Android debugging 
 
 ## You can now
 
-- Predict the output of a short program with a loop and a function by filling in a trace table.
+- Predict the output of a short program that repeats lines and calls a function by filling in a trace table.
 - Follow a function call into its lines and back, writing the value that returns.
-- Spot a variable that a loop resets in the wrong place.
+- Spot a variable that a repeat resets in the wrong place.
