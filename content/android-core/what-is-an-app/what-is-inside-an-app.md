@@ -119,7 +119,7 @@ verified: not-run
 code: |
   Match each situation to a kind of part.
     Situation 1: the user is looking at a settings page and taps a switch.
-    Situation 2: the phone announces that it has just been plugged in to charge.
+    Situation 2: the phone announces that it was plugged in a moment ago to charge.
     Situation 3: the app makes its contacts list available to another app, with permission.
   Which list of kinds is right, for situations 1, 2, 3?
 options:

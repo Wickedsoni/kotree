@@ -65,7 +65,7 @@ What does the app have to put in the message so the server can answer?
 - B. The address, what kind of request it is, and any extra word the server needs, such as "kotlin".
 - C. Nothing, because the server knows what every app wants.
 
-Idea A is a common guess. It misses that the same address can mean different things: reading a list is not the same as saving a new book. Idea C is how it can feel when an app just works. Idea B is the answer.
+Idea A is a common guess. It misses that the same address can mean different things: reading a list is not the same as saving a new book. Idea C is how it can feel when an app works smoothly. Idea B is the answer.
 
 ### Build
 
@@ -257,7 +257,7 @@ For this code, question 3 has a short answer: this code has no null values in pl
 
 ## Where this shows up in Android
 
-A book screen shows an empty list, or says "not found". Nothing crashed. The app sent a request, and the reply carried a code such as 404 because one letter in the address was wrong, just like `/book` in Try it.
+A book screen shows an empty list, or says "not found". Nothing crashed. The app sent a request, and the reply carried a code such as 404 because one letter in the address was wrong, like `/book` in Try it.
 
 Whatever tool an Android app uses to talk to a server, the message it sends and the reply it gets have the parts in this lesson. When a screen shows the wrong thing, ask four questions in order. Was the address right? Was it the right kind of request? Did it need something inside or a note outside? What status code came back?
 
