@@ -217,10 +217,10 @@ The same page says most Compose libraries use default arguments. It shows `Text(
 ## Say it in an interview
 
 **When is a default value worked out?**
-On every call that leaves the argument out, not once when the function is written. In the reviewer's compiler run, a default that counted upward gave 1 and then 2 on two calls. The functions page shows the same idea: the default's `println` runs only when the argument is left out.
+On every call that leaves the argument out, not once when the function is written. When you run it, a default that counted upward gave 1 and then 2 on two calls. The functions page shows the same idea: the default's `println` runs only when the argument is left out.
 
 **Can a default use an earlier parameter?**
-Yes. In the reviewer's run, `fun f(a: Int, b: Int = a * 2)` compiled and worked. My own reasoning: this fits the left-to-right order in which the boxes are filled.
+Yes. When you run it, `fun f(a: Int, b: Int = a * 2)` compiled and worked. My own reasoning: this fits the left-to-right order in which the boxes are filled.
 
 **Why use default values instead of several functions with the same name?**
 The Compose Kotlin page says default arguments reduce the need for overloaded functions, which are several functions with one name and different inputs. It also says one function with defaults saves redundant code and is clearer to read. The trade-off is that the one function has more boxes to understand.

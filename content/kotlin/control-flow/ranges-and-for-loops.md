@@ -225,10 +225,10 @@ The numbers there are decimals, but the two dots mean the same thing: from the s
 No. The standard library describes `until` as a range up to but excluding the end value, and `..<` does the same. Two dots, as in `1..5`, include the end. My own reasoning: when you walk positions from 0, `..<` is the safer form, because the last position is one less than the count.
 
 **What does `for (i in 5..1)` print?**
-Nothing. The range is empty, because `..` only counts upward. The documentation says to use `downTo` instead of `..` to go in reverse order. In a compiler run by the reviewer, the loop ran zero times and gave no error.
+Nothing. The range is empty, because `..` only counts upward. The documentation says to use `downTo` instead of `..` to go in reverse order. When you run it, the loop ran zero times and gave no error.
 
 **What happens with `step 0`?**
-In the reviewer's compiler run, `1..9 step 0` threw `IllegalArgumentException` with the message "Step must be positive, was: 0." The direction comes from `downTo`, not from the sign of the step. So the step is a size, and it must be above zero.
+When you run it, `1..9 step 0` threw an error called `IllegalArgumentException` with the message "Step must be positive, was: 0." The direction comes from `downTo`, not from the sign of the step. So the step is a size, and it must be above zero.
 
 **What is the last number of `1..9 step 3`?**
 It is 7. The ranges page shows a step of 3 over this kind of range stopping at 7. My own reasoning: the next number would be 10, which is past 9, so the walk ends. A step can therefore skip the end value.

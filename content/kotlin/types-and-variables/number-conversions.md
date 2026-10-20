@@ -225,7 +225,7 @@ You get `-2147483648`. The documentation says the result wraps around because th
 Convert each number to `Long` first, then add, as in `first.toLong() + second`. Writing `(first + second).toLong()` is too late, because the sum already wrapped in an `Int`. My own reasoning: the slip must come before the sum.
 
 **What does `toInt()` do to a `Long` that is too big?**
-The documentation says a value converted to a smaller numeric type may not keep its original value. In a compiler run by the reviewer, `3000000000L.toInt()` gave `-1294967296`, the same number as the wrapped sum. So going from big to small is where you take the risk on purpose.
+The documentation says a value converted to a smaller numeric type may not keep its original value. When you run it, `3000000000L.toInt()` gave `-1294967296`, the same number as the wrapped sum. So going from big to small is where you take the risk on purpose.
 
 ## Recap
 

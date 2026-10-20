@@ -239,9 +239,6 @@ Yes. `break` ends only the loop, not the function or the program. The line after
 **In nested loops, which loop does `break` end?**
 The nearest enclosing one. The documentation says a `break` with a label, such as `break@loop`, jumps to the point right after the loop marked with that label. That lets you leave an outer loop from an inner one. The trade-off is code that is harder to follow, so use it sparingly (my own reasoning).
 
-**Can you use `break` or `continue` inside `forEach`?**
-The documentation says non-local `break` and `continue` are valid in lambdas passed to inline functions. In the reviewer's compiler run, they compiled only when a loop encloses the `forEach` call. A `return@forEach` also works like `continue`, and the documentation notes that local returns are similar to `continue`.
-
 ## Recap
 
 1. `continue` skips the rest of one round and moves on to the next.

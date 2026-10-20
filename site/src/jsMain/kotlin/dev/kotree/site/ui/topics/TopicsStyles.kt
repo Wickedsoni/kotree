@@ -6,6 +6,7 @@ import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.style.base
 import dev.kotree.site.Tokens
+import dev.kotree.site.space2Var
 import dev.kotree.site.spaceGapGridVar
 import dev.kotree.site.space6Var
 import dev.kotree.site.space8Var
@@ -89,7 +90,7 @@ fun initTopicsStyles(ctx: InitSilkContext) {
             Modifier.styleModifier {
                 property("display", "grid")
                 property("grid-template-columns", columns(TILE_COLS_NARROW))
-                property("gap", Tokens.Spacing.s2.toString() + "px")
+                property("gap", space2Var.value())
             }
         }
         cssRule(large) {
