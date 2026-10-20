@@ -16,12 +16,35 @@ data class Polyline(val points: List<Vec>, val widthPx: Int, val ink: String, va
     val maxWidthPx: Int get() = maxOf(widthPx, tipWidthPx)
 }
 
+/** Axis-aligned box in world pixels. */
+data class Bounds(val minX: Double, val minY: Double, val maxX: Double, val maxY: Double)
+
+/** One leaf slot at a stem's twig tip. A slot exists for EVERY leaf; it is drawn only if live or up-next (D1, D3). */
+data class LeafGeo(val id: String, val at: Vec)
+
+/** A stem twig on a branch limb (Phase 3, docs/14 §4.2). */
+data class StemGeo(
+    val id: String,
+    val twig: Polyline,
+    val tip: Vec,
+    val labelAnchor: Vec,
+    val leaves: List<LeafGeo>,
+    val bounds: Bounds,
+)
+
 data class BranchGeo(
     val id: String,
     /** The limb at p = 1. */
     val full: Polyline,
     val tip: Vec,
     val labelAnchor: Vec,
+    /** Stem twigs along the limb, filled by layoutStems; empty until then. */
+    val stems: List<StemGeo> = emptyList(),
+    /** Limb plus stems plus leaf slots. Defaults to the limb's own box (stems add to it later). */
+    val bounds: Bounds = Bounds(
+        full.points.minOf { it.x }, full.points.minOf { it.y },
+        full.points.maxOf { it.x }, full.points.maxOf { it.y },
+    ),
 )
 
 data class BoughGeo(
@@ -31,9 +54,6 @@ data class BoughGeo(
     val branches: List<BranchGeo>,
     val labelAnchor: Vec,
 )
-
-/** Axis-aligned box in world pixels. */
-data class Bounds(val minX: Double, val minY: Double, val maxX: Double, val maxY: Double)
 
 interface TreeGeometry {
     val bounds: Bounds

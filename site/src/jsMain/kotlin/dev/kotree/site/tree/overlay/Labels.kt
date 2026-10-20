@@ -130,14 +130,14 @@ fun TreeLabels(
     }
 }
 
-private class LabelSpec(val text: String, val at: Vec, val opacity: Double, val colour: Int, val onClick: () -> Unit)
+internal class LabelSpec(val text: String, val at: Vec, val opacity: Double, val colour: Int, val onClick: () -> Unit)
 
 /**
  * Pushes overlapping labels apart vertically, each at most [Tokens.LabelNudge.maxPx] from its anchor.
  * Deterministic: input order is the tie-break, there is no randomness and no clock. Labels fully off screen
  * are left alone so they never push visible ones.
  */
-private fun nudgeApart(specs: List<LabelSpec>, vw: Int, vh: Int): List<Vec> {
+internal fun nudgeApart(specs: List<LabelSpec>, vw: Int, vh: Int): List<Vec> {
     val n = specs.size
     val ys = DoubleArray(n) { specs[it].at.y }
     val xs = DoubleArray(n) { specs[it].at.x }
@@ -165,7 +165,16 @@ private fun nudgeApart(specs: List<LabelSpec>, vw: Int, vh: Int): List<Vec> {
 private const val ROOTS_ID = "roots"
 
 @Composable
-private fun LabelButton(text: String, at: Vec, opacity: Double, colour: Int, onClick: () -> Unit) {
+internal fun LabelButton(
+    text: String,
+    at: Vec,
+    opacity: Double,
+    colour: Int,
+    onClick: () -> Unit,
+    ariaLabel: String = text,
+    describedBy: String? = null,
+    onHint: ((Boolean) -> Unit)? = null,
+) {
     var focusRing by remember { mutableStateOf(false) }
     val ring = Tokens.Space.grid / 2
     val outline = Tokens.Space.labelOutlinePx
@@ -198,11 +207,17 @@ private fun LabelButton(text: String, at: Vec, opacity: Double, colour: Int, onC
             property("border-radius", "${Tokens.Space.grid}px")
         }.toAttrs {
             attr("type", "button")
-            attr("aria-label", text)
+            attr("aria-label", ariaLabel)
+            if (describedBy != null) attr("aria-describedby", describedBy)
             onClick { onClick() }
             // Ring only for keyboard focus, not for a mouse click.
-            onFocus { focusRing = (it.nativeEvent.target as? Element)?.matches(":focus-visible") == true }
-            onBlur { focusRing = false }
+            onFocus {
+                focusRing = (it.nativeEvent.target as? Element)?.matches(":focus-visible") == true
+                onHint?.invoke(true)
+            }
+            onBlur { focusRing = false; onHint?.invoke(false) }
+            onMouseEnter { onHint?.invoke(true) }
+            onMouseLeave { onHint?.invoke(false) }
         }
     ) {
         Text(text)

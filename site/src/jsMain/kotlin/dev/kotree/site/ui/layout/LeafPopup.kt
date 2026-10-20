@@ -35,8 +35,8 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 /**
- * Popup for a live leaf: shape.blob, elevation.2, title in the branch ink, summary, Open lesson, and a Watch the
- * video button only when [videoUrl] is non-empty (L26). It is a dialog: focus moves into it on open and Escape
+ * Popup for a leaf: shape.blob, elevation.2, title in the branch ink, summary, Open lesson only when [onOpenLesson]
+ * is not null (an up-next leaf has none), and a Watch the video button only when [videoUrl] is non-empty (L26). It is a dialog: focus moves into it on open and Escape
  * or Close return focus to the opener, then call [onClose]. The caller decides where it is placed.
  */
 @Composable
@@ -45,7 +45,7 @@ fun LeafPopup(
     title: String,
     summary: String,
     difficulty: Difficulty,
-    onOpenLesson: () -> Unit,
+    onOpenLesson: (() -> Unit)?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
     videoUrl: String = "",
@@ -101,7 +101,7 @@ fun LeafPopup(
             property("flex-wrap", "wrap")
             property("gap", space2Var.value())
         }.toAttrs()) {
-            Button("Open lesson", onOpenLesson, kind = ButtonKind.Filled, branch = branch)
+            if (onOpenLesson != null) Button("Open lesson", onOpenLesson, kind = ButtonKind.Filled, branch = branch)
             if (videoUrl.isNotEmpty()) {
                 Button(
                     "Watch the video",

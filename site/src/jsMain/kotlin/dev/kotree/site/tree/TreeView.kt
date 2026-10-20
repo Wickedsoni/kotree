@@ -10,17 +10,26 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.Tokens
+import dev.kotree.site.space6Var
 import dev.kotree.site.tree.camera.Camera
 import dev.kotree.site.tree.camera.Fly
+import dev.kotree.site.tree.camera.ViewTracker
 import dev.kotree.site.tree.camera.attachCameraInput
 import dev.kotree.site.tree.gen.generate
 import dev.kotree.site.tree.gen.geometryHash
+import dev.kotree.site.tree.gen.layoutReport
+import dev.kotree.site.tree.model.Difficulty
+import dev.kotree.site.tree.model.Leaf
 import dev.kotree.site.tree.model.TreeData
+import dev.kotree.site.tree.overlay.LeafNodes
+import dev.kotree.site.tree.overlay.StemLabels
 import dev.kotree.site.tree.overlay.TreeLabels
 import dev.kotree.site.tree.overlay.cssRgb
 import dev.kotree.site.tree.overlay.splitProgress
 import dev.kotree.site.tree.render.PixelCanvas
 import dev.kotree.site.tree.render.TileCache
+import dev.kotree.site.ui.core.Difficulty as UiDifficulty
+import dev.kotree.site.ui.layout.LeafPopup
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.jetbrains.compose.web.dom.Button
@@ -32,7 +41,10 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 import kotlin.math.roundToInt
 
+private const val REPORT_WIDTH_PX = 1280
+private const val REPORT_HEIGHT_PX = 800
 private const val HOME_TEXT = "Home"
+private const val UP_NEXT_SUMMARY = "Coming next. The author is learning this now."
 private const val VIEW_LABEL = "Kotree. Drag to pan, scroll or plus and minus to zoom, Home to fit the tree."
 
 /**
@@ -42,14 +54,24 @@ private const val VIEW_LABEL = "Kotree. Drag to pan, scroll or plus and minus to
 @Composable
 fun TreeView(data: TreeData) {
     val geometry = remember(data) {
-        generate(data, data.seed).also { console.log("geometry hash", geometryHash(it)) }
+        val t0 = window.performance.now()
+        generate(data, data.seed).also {
+            console.log("generate + treeData init ms", (window.performance.now() - t0).roundToInt(), "(plan <= 50)")
+            console.log("geometry hash", geometryHash(it))
+            // Check at the zoom each branch label really flies to (docs/14 §5), on a 1280 x 800 viewport.
+            val probe = Camera(it.bounds).also { c -> c.setViewport(Viewport(REPORT_WIDTH_PX, REPORT_HEIGHT_PX)) }
+            layoutReport(it, data, Viewport(REPORT_WIDTH_PX, REPORT_HEIGHT_PX)) { b -> probe.branchTarget(b, upNextIds(data)[b.id]).z }
+                .forEach { line -> console.log(line) }
+        }
     }
     val camera = remember(geometry) { Camera(geometry.bounds) }
     val fly = remember(camera) { Fly(camera) }
+    val tracker = remember(geometry) { ViewTracker(geometry) }
     // Not read in this scope: reading it here would recompose the container and re-apply its attributes,
     // which drops keyboard focus. Only [Overlay] reads it.
     val state = remember(camera) { mutableStateOf(camera.state) }
     var container: Element? = null
+    var popupLeaf by remember(data) { mutableStateOf<Leaf?>(null) }
 
     Div(
         Modifier.styleModifier {
@@ -94,7 +116,7 @@ fun TreeView(data: TreeData) {
                 el.addEventListener("focus", onFocusIn)
                 el.addEventListener("blur", onFocusOut)
 
-                val painter = PixelCanvas(canvas, TileCache(geometry))
+                val painter = PixelCanvas(canvas, TileCache(geometry, data))
                 val ids = geometry.boughs.map { it.id }
                 var pending = false
                 fun paint() {
@@ -138,27 +160,63 @@ fun TreeView(data: TreeData) {
             property("border", "0")
         }.toAttrs()) { Text("Kotree") }
         // Home first so it is first in tab order after the container.
-        HomeButton { fly.to(camera.homeTarget()) }
-        Overlay(data, geometry, camera, fly, state) {
+        HomeButton { tracker.unpin(); fly.to(camera.homeTarget()) }
+        Overlay(data, geometry, camera, fly, tracker, state, { popupLeaf = it }) {
             // The focused label was removed on a level switch: keep focus inside the view.
             val active = document.activeElement
             if (active == null || active == document.body) (container as? HTMLElement)?.focus()
         }
+        popupLeaf?.let { UpNextPopup(it) { popupLeaf = null } }
     }
 }
 
 @Composable
 private fun Overlay(
-    data: TreeData, geometry: TreeGeometry, camera: Camera, fly: Fly, state: State<CameraState>, onLevelSwitch: () -> Unit,
+    data: TreeData, geometry: TreeGeometry, camera: Camera, fly: Fly, tracker: ViewTracker, state: State<CameraState>,
+    onLeaf: (Leaf) -> Unit, onLevelSwitch: () -> Unit,
 ) {
+    val view = tracker.update(state.value)
+    val upNextId = remember(data) { upNextIds(data) }
     TreeLabels(
         data = data,
         geometry = geometry,
         camera = state.value,
-        onBough = { fly.to(camera.boughTarget(it)) },
-        onBranch = { _, branch -> fly.to(camera.branchTarget(branch)) },
+        onBough = { tracker.unpin(); fly.to(camera.boughTarget(it)) },
+        onBranch = { _, branch -> tracker.pin(branch.id); fly.to(camera.branchTarget(branch, upNextId[branch.id])) },
         onLevelSwitch = onLevelSwitch,
     )
+    StemLabels(data, geometry, state.value, view) { tracker.pin(it.id.substringBefore('/')); fly.to(camera.stemTarget(it)) }
+    LeafNodes(data, geometry, state.value, view, onLeaf)
+}
+
+/** Up-next popup (docs/03 §6.2): the shared [LeafPopup] without "Open lesson", centred over the view. */
+@Composable
+private fun UpNextPopup(leaf: Leaf, onClose: () -> Unit) {
+    LeafPopup(
+        branch = leaf.id.substringBefore('/'),
+        title = leaf.title,
+        summary = UP_NEXT_SUMMARY,
+        difficulty = leaf.difficulty.toUi(),
+        onOpenLesson = null,
+        onClose = onClose,
+        modifier = Modifier.styleModifier {
+            property("position", "absolute")
+            property("left", "50%")
+            property("top", "50%")
+            property("transform", "translate(-50%, -50%)")
+            property("max-width", "calc(100% - ${space6Var.value()} * 2)")
+        },
+    )
+}
+
+/** Branch id to the full id of its up-next leaf (absent when every leaf is live). */
+private fun upNextIds(data: TreeData): Map<String, String> =
+    data.boughs.flatMap { it.branches }.mapNotNull { b -> b.upNext?.let { b.id to it } }.toMap()
+
+private fun Difficulty.toUi(): UiDifficulty = when (this) {
+    Difficulty.EASY -> UiDifficulty.Easy
+    Difficulty.MEDIUM -> UiDifficulty.Medium
+    Difficulty.HARD -> UiDifficulty.Hard
 }
 
 @Composable

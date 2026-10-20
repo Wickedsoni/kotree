@@ -65,7 +65,7 @@ object Tokens {
 
     object Zoom {
         const val zMin = 0.8
-        const val zMax = 4.0
+        const val zMax = 24.0
         const val splitStart = 1.4
         const val splitEnd = 2.4
         const val boughEnter = 1.8
@@ -74,6 +74,31 @@ object Tokens {
         const val boughFitMin = 2.2
         /** Quantised split steps: 0..8 means 9 bitmaps per bough (docs/03 §2.4). */
         const val splitSteps = 8
+        /** Z3 Stem level (docs/14 §4.1): enter and leave thresholds (hysteresis). */
+        const val stemEnter = 7.0
+        const val stemLeave = 6.3
+        /** Z4 Leaf level. */
+        const val leafEnter = 14.0
+        const val leafLeave = 12.6
+        /** Stem twigs are drawn only from this split step (fully split). */
+        const val twigsOnStep = 8
+        /** Z2 Branch level enter (docs/14 §4.1); leave uses the same 0.9 ratio as the bough thresholds. */
+        const val branchEnter = 3.5
+        /** Stem fly (docs/14 §4.1): fit margin and lowest zoom. */
+        const val stemFitMargin = 0.12
+        const val stemFitMinZ = 8.0
+        /** Branches whose stem labels need more than the default landing z of 4 to clear each other (docs/14 §5). */
+        val branchLandingZ: Map<String, Double> = mapOf("ui" to 6.0)
+    }
+
+    /** layoutReport estimates (docs/14 §5, docs/03 §2.6). */
+    object LayoutCheck {
+        /** Estimated label glyph width in CSS px per character. */
+        const val LABEL_CHAR_PX = 8.0
+        /** Horizontal label padding in CSS px, each side. */
+        const val LABEL_PAD_PX = 6.0
+        /** Minimum CSS gap between leaf hit areas at the stem level. */
+        const val LEAF_GAP_MIN_PX = 8.0
     }
 
     /** Generator shape tuning (layout, not design). World size comes from [World]. */
@@ -114,6 +139,27 @@ object Tokens {
         const val DEG = kotlin.math.PI / 180.0
         /** Coordinates are rounded to 1/QUANT world px so the geometry hash is stable. */
         const val QUANT = 16.0
+        /** Stem twigs attach along the limb at parameters from STEM_T_MIN to STEM_T_MAX, alternating sides. */
+        const val STEM_T_MIN = 0.25
+        const val STEM_T_MAX = 0.95
+        /** Twig length in world px, plus per-stem jitter (Rng "stem:<id>"). */
+        const val STEM_LEN = 36.0
+        const val STEM_LEN_JITTER = 6.0
+        /** Extra twig length for every second same-side stem, so neighbouring labels stack. */
+        const val STEM_LEN_STAGGER = 20.0
+        /** Twig angle off the limb tangent, degrees, plus jitter. */
+        const val STEM_ANGLE_DEG = 55.0
+        const val STEM_ANGLE_JITTER_DEG = 8.0
+        const val STEM_WIDTH = 2
+        const val STEM_TIP_WIDTH = 1
+        /** Gap between the leaf grid's edge and the label anchor (sideways), and the twig tip's vertical label offset. */
+        const val STEM_LABEL_GAP = 12.0
+        /** Leaf slots: fixed pitch between slots in a ceil(sqrt(n))-column grid at the twig tip; leaf edge, world px. */
+        const val LEAF_PITCH = 12.0
+        const val LEAF_SIZE = 8
+        /** Twig bend as a share of twig length, and leaf slot jitter as a share of the pitch (Rng jitter, +-). */
+        const val STEM_BEND = 0.15
+        const val LEAF_JITTER = 0.05
     }
 
     /** Camera and input tuning. */
@@ -134,6 +180,8 @@ object Tokens {
         const val fitMarginTree = 0.05
         const val fitMarginBough = 0.08
         const val fitMarginBranch = 0.08
+        /** A stem or leaf fly keeps its branch focused until the view is farther than this (world px) from it. */
+        const val pinReleaseWorld = 120.0
     }
 
     /** Label collision nudging (screen px; deterministic, vertical only). */
@@ -148,6 +196,8 @@ object Tokens {
 
     object Motion {
         const val flyDurationMs = 500
+        /** Half a glow pulse of an up-next leaf (grow, then shrink); static under reduced motion. */
+        const val glowPulseMs = 1000
     }
 
     // ---- Phase 1 additions (docs/13 section 2). Additions only: nothing above this line was renamed. ----
@@ -231,6 +281,8 @@ object Tokens {
         /** color.leaf.upnext */ const val upnext = 0xC9CDD4
         /** color.leaf.upnext.glow, drawn at [upnextGlowAlphaPercent] */ const val upnextGlow = 0xFFD54F
         const val upnextGlowAlphaPercent = 60
+        /** Up-next pip drawn on the grey twigs: color.on-surface-muted, 3.5:1 against color.outline (the swatch above is too close to it). */
+        const val upnextPip = Color.onSurfaceMuted
         /** color.leaf.easy */ const val easy = 0xA5D6A7
         /** color.leaf.medium */ const val medium = 0x43A047
         /** color.leaf.hard */ const val hard = 0x1B5E20

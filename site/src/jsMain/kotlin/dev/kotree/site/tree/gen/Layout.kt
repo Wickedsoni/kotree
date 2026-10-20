@@ -104,7 +104,7 @@ private fun foundation(seed: Long, b: Bough, base: Vec): BoughGeo {
     // One branch, "foundation": it never splits, so its full limb equals the centre path.
     val branches = b.branches.map {
         val tip = centre.points.last()
-        BranchGeo(it.id, Polyline(centre.points, Tokens.Gen.BRANCH_WIDTH, Tokens.Color.inkOutline, Tokens.Gen.BRANCH_TIP_WIDTH), tip, q(at(tip, dir, Tokens.Gen.LABEL_GAP)))
+        withStems(seed, it, BranchGeo(it.id, Polyline(centre.points, Tokens.Gen.BRANCH_WIDTH, Tokens.Color.inkOutline, Tokens.Gen.BRANCH_TIP_WIDTH), tip, q(at(tip, dir, Tokens.Gen.LABEL_GAP))))
     }
     return BoughGeo(b.id, base, centre, branches, q(at(end, dir, Tokens.Gen.LABEL_GAP)))
 }
@@ -139,9 +139,24 @@ private fun bough(seed: Long, b: Bough, norm: Double, fork: Vec): BoughGeo {
         val dy = tip.y - prev.y
         val norm2 = kotlin.math.sqrt(dx * dx + dy * dy)
         val tangent = if (norm2 == 0.0) dir else Vec(dx / norm2, dy / norm2)
-        BranchGeo(br.id, Polyline(pts, Tokens.Gen.BRANCH_WIDTH, Tokens.Color.inkOutline, Tokens.Gen.BRANCH_TIP_WIDTH), tip, q(at(tip, tangent, Tokens.Gen.LABEL_GAP)))
+        withStems(seed, br, BranchGeo(br.id, Polyline(pts, Tokens.Gen.BRANCH_WIDTH, Tokens.Color.inkOutline, Tokens.Gen.BRANCH_TIP_WIDTH), tip, q(at(tip, tangent, Tokens.Gen.LABEL_GAP))))
     }
     return BoughGeo(b.id, fork, centre, branches, q(at(end, dir, Tokens.Gen.LABEL_GAP)))
+}
+
+/** Adds stem twigs and leaf slots; the branch bounds then cover limb, stems and leaf slots. */
+private fun withStems(seed: Long, br: dev.kotree.site.tree.model.Branch, geo: BranchGeo): BranchGeo {
+    val stems = layoutStems(seed, br, geo)
+    val m = geo.full.maxWidthPx / 2.0
+    var x0 = geo.full.points.minOf { it.x } - m
+    var y0 = geo.full.points.minOf { it.y } - m
+    var x1 = geo.full.points.maxOf { it.x } + m
+    var y1 = geo.full.points.maxOf { it.y } + m
+    for (s in stems) {
+        x0 = min(x0, s.bounds.minX); y0 = min(y0, s.bounds.minY)
+        x1 = max(x1, s.bounds.maxX); y1 = max(y1, s.bounds.maxY)
+    }
+    return geo.copy(stems = stems, bounds = Bounds(x0, y0, x1, y1))
 }
 
 private fun sign(v: Double) = if (v < 0) -1.0 else 1.0

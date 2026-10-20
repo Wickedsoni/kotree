@@ -11,6 +11,7 @@ import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * A rasterised group of limbs: one canvas pixel per art pixel (Tokens.World.px generator units),
@@ -27,16 +28,28 @@ object LimbRaster {
     private const val SAMPLES_PER_PX = 2.0
     private const val ALPHA_OPAQUE = 0xFF
 
-    /** Rasterises [lines] in order (later lines paint over earlier fills). Returns null when there is nothing to draw. */
-    fun rasterise(lines: List<Polyline>): Tile? {
+    /** A filled square centred on ([cx], [cy]) in generator units, edge [sizeUnits], with a 1 px outline (leaf pixels). */
+    class Pip(val cx: Double, val cy: Double, val sizeUnits: Double, val rgb: Int)
+
+    /**
+     * Rasterises [lines] in order (later lines paint over earlier fills), then [pips] on top.
+     * Returns null when there is nothing to draw.
+     */
+    fun rasterise(lines: List<Polyline>, pips: List<Pip> = emptyList()): Tile? {
         val drawable = lines.filter { it.points.isNotEmpty() }
-        if (drawable.isEmpty()) return null
+        if (drawable.isEmpty() && pips.isEmpty()) return null
 
         var minX = Double.MAX_VALUE
         var minY = Double.MAX_VALUE
         var maxX = -Double.MAX_VALUE
         var maxY = -Double.MAX_VALUE
         var pad = 0
+        for (pip in pips) {
+            val half = pip.sizeUnits * K / 2
+            pad = max(pad, ceil(half).toInt() + OUTLINE_PX + 1)
+            minX = min(minX, pip.cx * K); maxX = max(maxX, pip.cx * K)
+            minY = min(minY, pip.cy * K); maxY = max(maxY, pip.cy * K)
+        }
         for (line in drawable) {
             pad = max(pad, ceil(line.maxWidthPx * K / 2).toInt() + OUTLINE_PX + 1)
             for (p in line.points) {
@@ -76,7 +89,34 @@ object LimbRaster {
                 }
             }
         }
+        if (pips.isNotEmpty()) paintPips(pips, rgb, painted, x0, y0, w, h)
         return toTile(rgb, painted, x0, y0, w, h)
+    }
+
+    private fun paintPips(pips: List<Pip>, rgb: IntArray, painted: BooleanArray, x0: Int, y0: Int, w: Int, h: Int) {
+        val fill = BooleanArray(w * h)
+        for (pip in pips) {
+            val edge = max(1, (pip.sizeUnits * K).roundToInt())
+            val left = (pip.cx * K - edge / 2.0).roundToInt() - x0
+            val top = (pip.cy * K - edge / 2.0).roundToInt() - y0
+            for (y in max(0, top) until min(h, top + edge)) for (x in max(0, left) until min(w, left + edge)) {
+                val i = y * w + x
+                fill[i] = true
+                rgb[i] = pip.rgb
+                painted[i] = true
+            }
+        }
+        // Outline on pixels no pip filled; it may overwrite a twig pixel, never a leaf.
+        for (y in 0 until h) for (x in 0 until w) {
+            val i = y * w + x
+            if (fill[i]) continue
+            val touches = (x > 0 && fill[i - 1]) || (x < w - 1 && fill[i + 1]) ||
+                (y > 0 && fill[i - w]) || (y < h - 1 && fill[i + w])
+            if (touches) {
+                rgb[i] = Tokens.Color.outline
+                painted[i] = true
+            }
+        }
     }
 
     private fun stamp(line: Polyline, fill: BooleanArray, x0: Int, y0: Int, w: Int, h: Int) {

@@ -51,7 +51,14 @@ class PixelCanvas(private val canvas: HTMLCanvasElement, private val cache: Tile
 
         blit(cache.roots())
         blit(cache.trunk())
-        for (id in boughIds) blit(cache.bough(id, stepFor(id)))
+        for (id in boughIds) {
+            val step = stepFor(id)
+            blit(cache.bough(id, step))
+            // Twigs only at full split: at partial split they would detach from the moving limb.
+            if (step >= Tokens.Zoom.twigsOnStep) {
+                for (branchId in cache.branchIds(id)) blit(cache.twigs(id, branchId))
+            }
+        }
     }
 
     companion object {
