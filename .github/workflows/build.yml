@@ -1,0 +1,39 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Kobweb CLI 0.9.23
+        run: |
+          curl -fsSL -o kobweb.zip https://github.com/varabyte/kobweb-cli/releases/download/v0.9.23/kobweb-0.9.23.zip
+          unzip -q kobweb.zip -d "$HOME/kobweb-cli"
+          echo "$HOME/kobweb-cli/kobweb-0.9.23/bin" >> "$GITHUB_PATH"
+      - run: chmod +x gradlew
+      - name: Validators and buildSrc tests
+        run: ./gradlew :site:validateContent
+      - name: Gate script (export, file and log check, kotree.js size)
+        run: bash scripts/wave-check.sh
+      - name: Upload export log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: export-log
+          path: site/export.log
+          if-no-files-found: ignore
