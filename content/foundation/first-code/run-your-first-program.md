@@ -41,7 +41,7 @@ Think of writing a note and pressing a doorbell.
 
 You write, you ring, you read the reply. If the note has a mistake, the reply is a complaint instead of an answer. You fix the note and ring again.
 
-**Where the analogy stops:** A real doorbell does not read anything. Run sends your whole note away to be carried out, so it needs an internet connection. A real helper might also guess what you meant. This one never does, as you saw in the last lesson. And this page has no doorbell of its own: you ring it on another web page, which you will find below.
+**Where the analogy stops:** A real doorbell does not read anything. Run sends your whole note away to be carried out. In my own reasoning, an online page like that needs an internet connection. A real helper might also guess what you meant. This one never does, as you saw in the last lesson. And this page has no doorbell of its own: you ring it on another web page, which you will find below.
 
 ## Build the logic
 
@@ -181,7 +181,7 @@ output: "The Step 1 line is missing its closing quote mark, after the word code.
 
 ## Where this shows up in Android
 
-The Playground runs plain Kotlin, not Android apps. A real Android app is built with Android Studio, a tool you install on your computer.
+The Playground runs plain Kotlin, not Android apps. Real Android apps are built and debugged with a different tool, Android Studio.
 
 The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Kotlin is fully supported for Android development. So a button that does nothing on a phone is, deep down, a few missing or wrong lines like these.
 
@@ -190,10 +190,10 @@ An app has no output area under a button. To see what an app is doing, developer
 ## Say it in an interview
 
 **Q: How would you try a few lines of Kotlin quickly, without making a project?**
-A: I would open the Kotlin Playground in a browser, type the code, and press Run. The Kotlin documentation also names scratch files in IntelliJ IDEA and Android Studio. The trade-off is that the Playground needs an internet connection, while a scratch file needs an installed tool.
+A: I would open the Kotlin Playground in a browser, type the code, and press Run. The Kotlin documentation also names scratch files in IntelliJ IDEA and Android Studio. The trade-off, in my own reasoning, is that an online page needs an internet connection, while a scratch file needs an installed tool.
 
 **Q: Where does a Kotlin program start?**
-A: In the `main()` function. The Kotlin documentation says that is where the program starts from. Code outside it does not run by itself.
+A: In the `main()` function. The Kotlin documentation says that is where the program starts from. In the Playground, you write the part that should run inside it.
 
 **Q: What is the difference between `print` and `println`?**
 A: Both print a message to standard output. The documentation says `println` also prints the line separator, so the next message starts on a new line. `print` does not, so the messages stay on one line.
