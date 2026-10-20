@@ -21,7 +21,7 @@ A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, 
 ## Hard rules
 1. Leaves are written and published autonomously (decision L31, 21 Oct 2026; the "I understood X" gate is dropped). A leaf still goes `live` only after `reviewer` PASS; two failed reviews → stay `shadow` and list in `docs/NEEDS-ME.md`.
 2. White background only. No dark mode. No hardcoded colours, fonts or spacing: use design tokens from `docs/02-design-system.md`.
-3. World (tree) is pixelated; UI chrome is smooth Material 3 Expressive.
+3. Tree and UI chrome are smooth Material 3 Expressive; pixel art is no longer required (decision L32). Readability, clickability and smooth zoom come first.
 4. Android/Kotlin/KMP facts in lessons must be checked against official docs before status becomes `live`. `reviewer` must PASS first.
 5. `content/<branch>/_roadmap.md` is the canonical structure of the tree. Change it only through `curriculum-designer`.
 6. Slugs never change after publishing.
