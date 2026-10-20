@@ -301,7 +301,7 @@ He must never write "I ran this on an iPhone" from a CI build alone. **Accepted 
 2. Show the iOS result as a recorded artifact from the CI run, never as a live claim: the log lines, the generated framework header, the built app folder, or a screenshot or recording only if experiment E3 works. Copy the excerpt into the repo's lesson assets so the lesson does not depend on how long GitHub keeps run files.
 3. Print the §8.1 label next to each iOS-side claim.
 4. Name the Xcode steps that stay outside the lesson (signing, account) as "From the docs, not run by me".
-5. **Accepted by the author 20 Oct 2026, as a suggested check only:** before a `Mac needed` leaf goes live, the author and `reviewer` look for a linked green CI run for it, or a note of a borrowed-Mac session. It is not a hard rule and not a new field; L5 and CLAUDE.md name the real gates.
+5. **Dropped by the author, 21 Oct 2026:** a `Mac needed` leaf goes live like any other leaf. No linked CI run and no borrowed-Mac session is needed. Teach the concept and the shared code, and label iOS-only claims "From the docs, not run by me". `reviewer` PASS and the official-docs check still apply.
 
 **Experiments for the author's first CI week** (each has a pass test; until it passes, the lesson claims nothing it needs)
 
