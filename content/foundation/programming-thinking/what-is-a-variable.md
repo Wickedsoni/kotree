@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/what-is-a-variable
 title: How does a program remember a value?
-status: shadow
+status: live
 difficulty: easy
 order: 10
 requires: [foundation/first-code/lines-run-in-order, foundation/how-computers-work/memory-vs-storage]
 summary: A variable is a named place that holds one value. Give it a new value and the old one is gone.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [labelled-jars]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://kotlinlang.org/docs/basic-syntax.html (val is assigned once and cannot be reassigned, var can be reassigned, variables can be used only after initializing them, declaring a variable starts with val or var, type inference); https://developer.android.com/develop/ui/compose/state ("State in an app is any value that can change over time", "everything from a Room database to a variable in a class", mutableStateOf creates an observable MutableState, "Any changes to value schedule recomposition of any composable functions that read value"). The right side of an assignment is worked out before the result is stored is textbook programming knowledge with no single official quote. No Kotlin was run: every output below is traced by hand. -->
 ## The question
 
 You play a game and the score shows 0. You score a goal and it shows 1. You score again and it shows 2.

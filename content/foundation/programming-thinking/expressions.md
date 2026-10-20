@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/expressions
 title: How does a program calculate a new value?
-status: shadow
+status: live
 difficulty: easy
 order: 12
 requires: [foundation/programming-thinking/what-is-a-type]
 summary: A program works out sums with symbols. Dividing two whole numbers drops the leftover, so 5 divided by 2 is 2.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://kotlinlang.org/docs/numbers.html ("Kotlin supports the standard arithmetic operations on numbers: +, -, *, /, and %", "Division between integer values always returns an integer result. The compiler discards the fractional part", 5 / 2 gives 2, "To return a floating-point result, make at least one operand a Float or Double", 5 / 2.0 gives 2.5, decimal literals are inferred as Double); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/rem.html (Int.rem calculates the remainder of truncating division of the dividend by the divisor); https://kotlinlang.org/docs/operator-overloading.html (the table of a + b, a - b, a * b, a / b, a % b); https://kotlinlang.org/spec/syntax-and-grammar.html (the grammar nests multiplicativeExpression inside additiveExpression, so multiplication, division and remainder group more tightly than addition and subtraction; a parenthesizedExpression is a primary expression); https://developer.android.com/develop/ui/compose/components/progress (the progress value is a Float between 0.0 and 1.0, and the page's sample divides after converting with i.toFloat() / 100). Negative operands and chains of equal-level operators are left out because no page was read on them. No Kotlin was run: every output below is traced by hand. -->
 ## The question
 
 You share 5 sweets between 2 friends. Maths says 2.5 sweets each. But ask a program for 5 divided by 2, and it answers 2.

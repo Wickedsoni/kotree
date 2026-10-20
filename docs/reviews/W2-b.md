@@ -124,3 +124,20 @@ N1. Answer position. In all 12 Predict items the correct option is `b`. A learne
 N2. Roadmap `F:` and `B:` tasks. The roadmap rows promise a Fix the bug (and a Break) task for each leaf. With `playground: false` these are delivered as Predict items instead (`sign-says-18`, `signs-in-wrong-order`, `sum-misses-five`, `stove-never-lit`, `at-most-four`, `count-down-to-go`). That matches the rule in `docs/04` §2 and the accepted W1-b pattern. When Phase 6 (Playground) ships, `curriculum-designer` and `challenge-builder` may add real Try it and Fix the bug sections; slugs and challenge ids already in the files must not change.
 N3. Sims. Three sims (`fork-and-gate`, `loop-track-gate`, `numbered-stairs-loop`) are only one-line entries in `docs/sims/needed-ids.md`. Per the L31 ruling this does not block. The plain text under each marker works with the sim switched off (after repeats FIX 2).
 N4. Go-live step for `housekeeper`: strip the line-18 SOURCES comment from each leaf; keep the `<!-- SIM: ... -->` marker; set `status`, `publishedOn`, `updatedOn`. The comment holds the source trail; the table above records the quotes I verified.
+
+## Re-check
+
+Date 20 Oct 2026. Independent re-read of the four edited leaves against every FIX above. Answer keys re-traced: unchanged and true. T4 banned-word grep: zero new hits. Non-ASCII: only the line-18 SOURCES comment in `how-a-program-repeats.md` (housekeeper strips it).
+
+| Leaf | Verdict | Notes |
+|---|---|---|
+| `yes-or-no-questions` | PASS | FIX 1 applied: `or-and-not` output is a `\|` block, `true` then `false`. |
+| `how-a-program-decides` | PASS | FIX 1 and 2 applied ("just" gone, lines 38 and 201). FIX 3 applied: The question is now 5 sentences (3 + 2), within 2 to 5. FIX 4 applied: `temp-thirty` and `signs-in-wrong-order` use `\|` blocks. |
+| `how-a-program-repeats` | PASS | FIX 1 to 5 applied as written. No "loop" before line 86 outside the SOURCES comment and SIM marker; "condition" is now bolded and defined at line 86; `while` loop qualified at line 196; summary opens "A program checks". |
+| `counting-loops` | PASS | FIX 1 applied: "range" first appears at line 84. FIX 2 applied: summary no longer contradicts itself. FIX 3 applied: `count-down-to-go` output is a 4-line `\|` block. |
+
+Remaining required fixes: none.
+
+Optional, not blocking:
+- `how-a-program-repeats.md` line 86: "body" appears in the sentence before it is bolded and defined (the next sentence). Swapping the two sentences would fix it. The title still contains "condition", which the page now defines in Name it; acceptable.
+- `how-a-program-decides.md` line 220: "The screen is wrong because" (optional T5 note above) still unchanged.

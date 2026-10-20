@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/yes-or-no-questions
 title: How does a program ask a yes-or-no question?
-status: shadow
+status: live
 difficulty: easy
 order: 13
 requires: [foundation/programming-thinking/expressions]
 summary: A program asks a yes-or-no question by comparing two values. The answer is itself a value it can keep, print or combine.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026). Booleans: https://kotlinlang.org/docs/booleans.html ("The Boolean type represents logical values: true and false."; "You cannot assign an integer value to a Boolean variable. In Kotlin, 0 and 1 are not Boolean values."; AND "returns true only if both operands are true"; OR "returns true if at least one operand is true"; NOT "inverts a Boolean value"; "&& before ||", with true || false && false giving true; sample val isPositive = number > 0 // true). Comparison and equality operators: https://kotlinlang.org/docs/operator-overloading.html (a > b, a < b, a >= b, a <= b, a == b, a != b). Equality: https://kotlinlang.org/docs/equality.html (== and != are structural equality). Variables, val and var, reassignment with =: https://kotlinlang.org/docs/basic-syntax.html. Android: https://developer.android.com/develop/ui/compose/components/button (enabled: "When false, this parameter makes the button appear unavailable and inactive."); https://developer.android.com/develop/ui/compose/state (if statement on state hides the greeting when the name is empty); https://developer.android.com/develop/ui/compose/documentation ("Jetpack Compose is the modern toolkit for building Android UI"). No Kotlin compiler on the authoring machine: every output below is hand-traced, not run. Not from a doc page: the turnstile picture and the claim that asking never changes the value asked about (it follows from the comparison operators being separate from =). -->
 ## The question
 
 A club has one rule on its door: guests must be 18 or older. A guard looks at each guest's card and says yes or no. The guard never says "maybe".

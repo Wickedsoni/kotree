@@ -8,16 +8,15 @@
 - Nothing is published. No site code exists yet (`/site` not created). Git repo exists (created in the IDE) but **nothing is committed or pushed**. The author will push later.
 - Open `⚠️ VERIFY` marks in docs 00-10: about 53 (each has a test). Roadmap marks (~287) are checked per leaf before it goes live.
 
-## STATUS after Wave 1 (21 Oct 2026, newest; read this first)
+## STATUS after Wave 2 (21 Oct 2026, newest; read this first)
 
-- **Mode:** decision L31 (autonomous publishing, no "I understood X" gate). Work in waves of ~8 leaves; one wave per session; say `resume`.
-- **Branch:** all work is on `claude/kotree-foundation-build-auo9uz` (pushed), which already contains `feat/phase4-lesson-page`. **Merged to `main` on 21 Oct 2026 at the author's explicit request (L31 follow-up: every wave is pushed to `main` as well as to this branch).** Caveat, still open: Phase 4 code has no compile/export proof from this cloud box (see `docs/reviews/P4-verify.md`; `dl.google.com` and Playwright hosts return 403) and no `reviewer` PASS on the code. Run `bash scripts/setup-cloud.sh && bash scripts/wave-check.sh` once those hosts are allowed to confirm the build. `content/drafts-a` and `drafts-b` are stale (already in main).
-- **Wave 1 done:** 7 Foundation leaves live (`how-computers-work`: 6; `first-code/what-is-code`), reviewer PASS in `docs/reviews/W1-final.md`. 7/482 live. Leaves whose `<!-- SIM: id -->` has no built sim go live anyway (the renderer draws nothing for an unregistered sim); sims come in step 4.
-- **No kotlinc here:** Kotlin challenge outputs could not be run; leaves use `run: false` / not-run labels. `challenge-builder` step is skipped until a box has kotlinc.
-- **Next 8 leaves:** `first-code/run-your-first-program` (shadow; blocked, see NEEDS-ME), then `first-code/lines-run-in-order`, `programming-thinking/*` (what-is-a-variable, what-is-a-type, expressions, yes-or-no-questions, how-a-program-decides, how-a-program-repeats). Read only each leaf's roadmap row.
-- **NEEDS-ME:** `docs/NEEDS-ME.md` (run-your-first-program; sims list; export unverified).
-- **kotree.js size:** not measured this wave (export blocked). Last recorded: 333,619 B gzip (budget 600,000).
-- **Reviewer tip:** reachable hosts: developer.android.com, kotlinlang.org. Not reachable: wikipedia, play.kotlinlang.org.
+- **Mode:** decision L31 (autonomous publishing). Waves of ~8 leaves, one wave per session; user says `resume`. Every wave is pushed to `main` and to branch `claude/kotree-foundation-build-auo9uz` (user asked that `main` always be current).
+- **Done:** 15 of 482 leaves live (Foundation 15/34): wave 1 (6 how-computers-work + what-is-code) and wave 2 (`first-code/lines-run-in-order` + 7 `programming-thinking`: what-is-a-variable, what-is-a-type, expressions, yes-or-no-questions, how-a-program-decides, how-a-program-repeats, counting-loops). Reviews: `docs/reviews/W1-final.md`, `W2-a.md`, `W2-b.md`.
+- **Build verified by GitHub Actions** (`.github/workflows/build.yml`, runs on every push): validators, buildSrc tests, compile and static export pass on Ubuntu; `kotree.js` gzip **334,045 B** of 600,000 B (21 Oct 2026). Check the latest run with the Actions tools after each push; the cloud box itself cannot compile (403 on dl.google.com / Playwright hosts). `/kitchen-sink` is still in the export (Phase 4 said drop it from prod; ~30 KB).
+- **Next 8 leaves** (Foundation, roadmap order): `programming-thinking/what-is-a-list`, `loop-over-a-list`, `what-is-a-function`, `function-inputs-and-outputs`, `trace-code-by-hand`; then the `debugging` stem: `debugging-mindset`, `reading-error-messages`, `what-is-a-bug`. (`first-code/run-your-first-program` stays shadow, see NEEDS-ME.) Read only each leaf's roadmap row.
+- **Pipeline as run in cloud:** lesson-writer (2 agents x 4 leaves, Sonnet) -> 2 reviewers -> fixer (Haiku) -> reviewer re-check -> housekeeper (Haiku) -> `generateTreeData` + `scripts/progress.py` -> commit, push both branches. No kotlinc here: outputs are hand-traced and labelled `verified: not-run`; challenge-builder is skipped. Reachable docs hosts: developer.android.com, kotlinlang.org (not wikipedia, play.kotlinlang.org).
+- **Reviewer tips (recurring FIXes):** one-sentence Recap; sentences <= 5 per Question block; bold jargon at first use and define before use ("loop", "range", "body", "condition"); `output` blocks are real stdout; no "next lesson" promises; Guess/Predict keys consistent.
+- **NEEDS-ME:** `docs/NEEDS-ME.md` (run-your-first-program; sims in `docs/sims/needed-ids.md`).
 
 ## STATUS 21 Oct 2026 (previous)
 

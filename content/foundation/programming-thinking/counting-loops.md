@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/counting-loops
 title: How do I repeat something exactly ten times?
-status: shadow
+status: live
 difficulty: medium
 order: 16
 requires: [foundation/programming-thinking/how-a-program-repeats]
 summary: You name the first and last number up front. The program then repeats once for each number from the first to the last.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [numbered-stairs-loop]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026). Ranges: https://kotlinlang.org/docs/ranges.html ("A range represents an ordered set of values with a defined start and end. By default, it increments by 1 at each step. For example, 1..4 represents the numbers 1, 2, 3, and 4."; the .. operator "includes both the start and end values"; the ..< operator "includes the start value but excludes the end value"; samples "for (i in 1..4) print(i) // 1234", "for (i in 4 downTo 1) print(i) // 4321", "for (i in 0..8 step 2) print(i)" giving 02468; "To iterate numbers in reverse order, use the downTo function instead of .."). For over a range: https://kotlinlang.org/docs/control-flow.html ("To iterate over a range of numbers, use a range expression with .. and ..< operators"; "for (i in 1..6)" prints 123456 and "for (i in 1..<6)" prints 12345). The output of 1..<4 (123) is derived from the 1..<6 sample, not quoted. Android Compose lists: https://developer.android.com/develop/ui/compose/lists (Column with messages.forEach; LazyColumn with items(5) { index -> Text("Item: $index") } commented "Add 5 items"; the page uses forEach and items, not a for loop). No Kotlin compiler on the authoring machine: every output below is hand-traced, not run. -->
 ## The question
 
 A game gives the player ten lives, and the screen must show ten hearts. You could write the heart-drawing step ten times. That is slow, and the day the game gives twelve lives, you have to find every copy.

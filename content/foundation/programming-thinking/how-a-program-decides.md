@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/how-a-program-decides
 title: How does a program choose what to do next?
-status: shadow
+status: live
 difficulty: easy
 order: 14
 requires: [foundation/programming-thinking/yes-or-no-questions]
 summary: A program asks a yes-or-no question and follows one path. The steps on the other path are skipped.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [fork-and-gate]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026). Kotlin if, else, else if: https://kotlinlang.org/docs/control-flow.html ("To use if in Kotlin, add the condition to check within parentheses () and the action to take if the result is true within curly braces {}. You can use else and else if for additional branches and checks."; sample "if (heightAlice < heightBob) taller = heightBob" with no else). https://kotlinlang.org/docs/basic-syntax.html (if/else sample, maxOf). The control-flow page says nothing about the order of if / else if checks or about else being skipped when the condition is true, so the lesson teaches both as what a hand trace shows, not as a quoted rule. Android: https://developer.android.com/develop/ui/compose/state ("if you don't want to display the greeting if the name is empty, use the state in an if statement"); https://developer.android.com/develop/ui/compose/documentation ("Jetpack Compose is the modern toolkit for building Android UI"). No Kotlin compiler on the authoring machine: every output below is hand-traced, not run. -->
 ## The question
 
 You open a weather app. When it rains, the app shows an umbrella, and when it does not, it shows a sun. It never shows both.

@@ -1,21 +1,20 @@
 ---
 id: foundation/first-code/lines-run-in-order
 title: In what order does a computer run my lines?
-status: shadow
+status: live
 difficulty: easy
 order: 9
 requires: [foundation/first-code/run-your-first-program]
 summary: A program runs its lines one at a time, from the top down. Swap two lines and the printed result swaps too.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [line-by-line-stepper]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://developer.android.com/kotlin ("Kotlin is fully supported for Android development", as recorded in docs/reviews/W1-b.md); https://kotlinlang.org/docs/basic-syntax.html (main is the entry point of a Kotlin application); https://kotlinlang.org/docs/kotlin-tour-hello-world.html (main() is where a program starts, println prints its argument); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println prints the message and the line separator). The top-to-bottom order of lines is textbook programming knowledge with no single official quote. No Kotlin was run: every output below is traced by hand. -->
 ## The question
 
 You write a note for a friend: "Open the door. Walk in. Say hello." Your friend does the steps in that order. Now you shuffle the note: "Say hello. Walk in. Open the door." Your friend talks to a closed door.

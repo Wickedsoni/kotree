@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/what-is-a-type
 title: Why can't I add a word to a number?
-status: shadow
+status: live
 difficulty: easy
 order: 11
 requires: [foundation/programming-thinking/what-is-a-variable, foundation/how-computers-work/how-letters-become-numbers]
 summary: Every value has a kind, such as whole number or text. The kind decides what a plus sign does with it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://kotlinlang.org/docs/kotlin-tour-basic-types.html (every variable has a type, types tell the compiler what you are allowed to do, type inference, the table of Int, Double, String and the others); https://kotlinlang.org/docs/numbers.html (whole-number literals are inferred as Int, decimal literals as Double); https://kotlinlang.org/docs/strings.html (a String literal is enclosed in double quotes); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/plus.html (String.plus returns the string made by joining this string with the string form of the other object; the page's sample prints Kotlin 2 for "Kotlin " + 2); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/plus.html (Int.plus has six overloads, for Byte, Short, Int, Long, Float and Double, and none takes a String); https://kotlinlang.org/docs/operator-overloading.html (a + b is translated to a.plus(b)); https://developer.android.com/develop/ui/compose/state (the text-field example keeps the typed name in a variable that starts as an empty string). That a number plus text is refused is derived from the Int.plus overload list; no compiler message is quoted. That everything is stored as numbers inside the computer is textbook knowledge. No Kotlin was run: every output below is traced by hand. -->
 ## The question
 
 Ask a program to add the number 5 and the number 5, and it answers 10. Put quote marks around the first 5 and ask again. Now it answers 55.

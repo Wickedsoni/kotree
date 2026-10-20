@@ -57,3 +57,6 @@ Optional, not blocking: "brackets" is the UK word; Kotlin docs say parentheses. 
 - The SOURCES comment of `expressions` cites `-int/rem.html` and `spec/syntax-and-grammar.html`. Neither was fetched. Precedence was confirmed on `spec/expressions.html` instead; the `rem` mapping was confirmed on operator-overloading.html.
 - "Everything inside a computer is stored as numbers" (what-is-a-type): textbook CS, no official page.
 - "A program's lines run top to bottom": textbook, no official page (stated in the SOURCES comment).
+
+## Re-check (orchestrator, 21 Oct 2026)
+`lines-run-in-order`: the single FIX (line 191) was applied verbatim as specified: PASS.

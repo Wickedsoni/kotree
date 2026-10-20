@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/how-a-program-repeats
 title: How does a program keep doing something until a condition changes?
-status: shadow
+status: live
 difficulty: easy
 order: 15
 requires: [foundation/programming-thinking/how-a-program-decides]
 summary: A program checks a yes-or-no question, runs its steps, then checks again. It stops only when the answer changes to no.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [loop-track-gate]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026). Kotlin while loop: https://kotlinlang.org/docs/control-flow.html ("while and do-while loops run the code in their body continuously while the condition is satisfied."; "while checks the condition and, if it's satisfied, runs the code in its body and then returns to the condition check."; "For a while loop, place the condition to check in parentheses () and the body within curly braces {}."; garage sample: var carsInGarage = 0, val maxCapacity = 3, while (carsInGarage < maxCapacity), three lines of output then "Garage is full!"). var and reassignment: https://kotlinlang.org/docs/basic-syntax.html ("Use the var keyword to declare variables that can be reassigned."). Android ANR: https://developer.android.com/topic/performance/anrs/keep-your-app-responsive ("the system displays an ANR if an app can't respond to user input on the main thread—also known as the UI thread"; "No response to an input event—such as key press or screen tap events—within 5 seconds."; "Don't perform blocking or long-running operations on the app's main thread."). The page does not mention endless loops, so the link from an endless loop to an ANR is written in the lesson as its own reasoning. No Kotlin compiler on the authoring machine: every output below is hand-traced, not run. -->
 ## The question
 
 You stir a pot of soup and wait for it to boil. You do not know how many stirs it will take. You only know what you are waiting for.
