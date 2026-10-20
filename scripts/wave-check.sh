@@ -28,5 +28,8 @@ else
   echo "FAIL $JS missing"; fail=1
 fi
 
+if [ "$fail" -ne 0 ] && [ -f export.log ]; then
+  echo "== compiler errors (first 40)"; grep -E '^e: ' export.log | head -40
+fi
 [ "$fail" -eq 0 ] && echo "wave-check: PASS" || echo "wave-check: FAIL"
 exit "$fail"
