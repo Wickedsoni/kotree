@@ -44,7 +44,7 @@ One switch can only say "yes" or "no". A row of them says much more, because the
 2. Look at the sign above each switch. Flip only the switch that is worth 8 and watch the counter change by 8.
 3. Press "Add a ninth switch". Turn every switch on and read the counter.
 
-**What you should notice:** Each switch adds its own worth to the counter when it is on, and each extra switch doubles how many different patterns the row can make.
+**What you should notice:** A lit switch adds its worth to the counter, and each extra switch doubles the patterns.
 
 ## Build the logic
 
@@ -97,7 +97,7 @@ Here is the row for the pattern 0000 0101, with 1 for a lit switch and 0 for a d
 
 The lit switches are worth 4 and 1, so the number is 4 + 1 = 5.
 
-Kotlin lets you write a number in binary by putting `0b` in front of it. The Kotlin documentation shows `0b00001011` as an example, and by the rule above its value is 8 + 2 + 1 = 11. Kotlin's `Byte` type is 8 bits wide.
+Kotlin lets you write a number in binary by putting `0b` in front of it. The Kotlin documentation shows `0b00001011` as an example, and by the rule above its value is 8 + 2 + 1 = 11. Kotlin's `Byte` type is 8 bits wide. It counts from -128 to 127 so it can hold negative numbers, but this lesson counts from 0.
 
 A picture, a song and a word are not stored as pictures, songs and words. They are stored as numbers, and so as patterns of bits, together with agreed rules for reading them back.
 
@@ -190,15 +190,15 @@ output: "511"
 
 ## Where this shows up in Android
 
-Picture a red heart under a photo. The heart's red is a number the app chose. The Android reference for its `Color` class says a colour is held in one whole number, with four parts (opacity, red, green and blue) packed into 32 bits. That is 32 switches in a row, read by an agreed rule.
+Picture a red heart under a photo. The heart's red is a number the app chose. The Android reference for its `Color` class says the most common way to hold a colour is a colour int. It packs four parts (alpha, which is opacity, then red, green and blue) into one 32-bit whole number. That is 32 switches in a row, read by an agreed rule.
 
 So when a button shows the wrong shade, one of those patterns holds a different number than the developer meant. The wrong colour is not a drawing error. It is the right reading of the wrong number.
 
 ## Recap
 
 1. A bit is one switch, on or off, written 0 or 1.
-2. Each switch has a worth that doubles to the left. Add the worths of the lit ones.
-3. Every extra switch doubles the patterns. Eight switches give 256, which is 0 to 255.
+2. Each switch has a worth that doubles to the left, and you add the worths of the lit ones.
+3. Every extra switch doubles the patterns, so eight switches give 256, which is 0 to 255.
 
 ## You can now
 

@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 3
 requires: [foundation/how-computers-work/what-is-a-bit]
-summary: A computer cannot keep the shape of a letter. It keeps a number, and a shared list says which letter that number means.
+summary: A computer does not keep text as shapes. It keeps a number, and a shared list says which letter that number means.
 video: ""
 publishedOn:
 updatedOn:
@@ -33,13 +33,13 @@ Think of a locker room.
 
 To store an A, the computer writes down 65. To show it, someone looks up 65 on the list and sees that it means A.
 
-**Where the analogy stops:** A real locker holds a thing, and a locker number is only a label. In a computer the number is the only thing that exists. Nothing is stored in a locker. The shape you see on screen is drawn later by a font, which is a set of pictures that the screen uses. Also, a real building has one list on one wall. Many computers each have their own copy, so they all have to hold the same list or they will read each other's numbers wrongly.
+**Where the analogy stops:** A real locker holds a thing, and a locker number is only a label. In a computer the number is the only thing that exists. Nothing is stored in a locker. The shape you see on screen is drawn later by a **font**, which is a set of pictures that the screen uses. Also, a real building has one list on one wall. Many computers each have their own copy, so they all have to hold the same list or they will read each other's numbers wrongly.
 
 ## Build the logic
 
 ### Notice
 
-Take the word CAB. Each of its three letters is a shape, and the computer cannot keep a shape. But it can keep a number. If every letter has its own number, the word CAB becomes three numbers in a row.
+Take the word CAB. Each of its three letters is a shape, and the computer does not keep text as shapes. It keeps a number instead. If every letter has its own number, the word CAB becomes three numbers in a row.
 
 ### Guess
 
@@ -63,7 +63,7 @@ The numbers are whole numbers, so each one can be kept as a pattern of switches,
 
 ### Name it
 
-The agreed list is a **character set**: a list that gives every character its own number. The big shared list in use today is called **Unicode**. The Kotlin documentation says that every character has a numeric Unicode value, and it shows an emoji as a Unicode character too.
+The agreed list is a **character set**: a list that gives every character its own number. The big shared list in use today is called **Unicode**. The Kotlin documentation says that every character has a numeric Unicode value.
 
 Here are a few rows. The number for A is the one Kotlin prints for `'A'.code`, and B and C follow in order. The small letter a has its own, later number.
 
@@ -168,14 +168,14 @@ output: "B"
 
 ## Where this shows up in Android
 
-You open a chat and a friend's newest emoji shows up as a small empty square instead of a picture. The Android documentation calls this a small square box called tofu. It says that if an app does not support the latest emoji fonts, later emoji might be displayed that way, and that Android 11 (API level 30) and lower cannot update the emoji font.
+You open a chat and a friend's newest emoji shows up as a small empty square instead of a picture. The Android documentation calls this small square box **tofu**. It says that if an app does not support the latest emoji fonts, later emoji might be displayed that way. It also says that Android 11 (API level 30) and lower cannot update the emoji font.
 
 This is what the locker room explains. In the locker-room picture, the message carries a number. The phone looks the number up and draws its picture. If the phone's font has no picture for that number, you see the box. So the box points to the drawing side, not to the number.
 
 ## Recap
 
 1. A computer stores a letter as a whole number, never as a shape.
-2. An agreed list says which number is which letter. The big shared one is Unicode.
+2. An agreed list says which number is which letter, and the big shared one is Unicode.
 3. A font draws the shape when the number is shown.
 
 ## You can now

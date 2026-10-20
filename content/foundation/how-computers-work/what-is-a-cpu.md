@@ -34,7 +34,7 @@ Think of a cook in a kitchen, reading a recipe card.
 
 The cook does this over and over. Look at the line under the finger. Do what it says. Move the finger down to the next line. Wait for the bell.
 
-**Where the analogy stops:** A real phone chip is not one cook. It usually has several cores, which are like several cooks, each with a card and a finger of their own. Also, one real step may take more than one ring of the bell, and some chips start the next step before the last one ends. This page follows one cook and one card, which is the picture you need first.
+**Where the analogy stops:** A real phone chip is not one cook. It usually has several **cores**, which are like several cooks, each with a card and a finger of their own. Also, one real step may take more than one ring of the bell, and some chips start the next step before the last one ends. This page follows one cook and one card, which is the picture you need first.
 
 ## See it move
 
@@ -45,7 +45,7 @@ The cook does this over and over. Look at the line under the finger. Do what it 
 2. Add a line that says "go back to line 1" and run the card for a while.
 3. Set the bell to zero and watch the finger.
 
-**What you should notice:** The finger moves one line per ring of the bell, it never skips a line by itself, a "go back" line sends it up to an earlier one, and with no ring it does not move.
+**What you should notice:** The finger moves one line per ring, only a "go back" line sends it up, and with no ring it stays put.
 
 ## Build the logic
 
@@ -62,10 +62,10 @@ The cook starts with the finger on line 1. A bell rings. The cook cracks an egg.
 
 ### Guess
 
-The bell rings a third time. The finger is on line 3, which says "go back to line 1". What happens at the next ring?
+The bell rings a third time, and the cook does line 3, which says "go back to line 1". Where does the finger go, and what does the ring after that do?
 
 - A. The cook jumps ahead to line 4 and serves the dish.
-- B. The cook moves the finger to line 1 and cracks another egg.
+- B. The finger goes to line 1, and the next ring cracks another egg.
 - C. The cook does lines 1 to 4 all together.
 
 Idea A treats "go back" as if it said "go forward". Idea C is the guess this page wants to change: one cook has one finger, and a finger can rest on one line at a time. Idea B follows the card exactly, so it is the right one.
@@ -110,8 +110,8 @@ code: |
     2. Stir
     3. Go back to line 1
     4. Serve the dish
-  The finger is on line 3 and the bell rings.
-  Which line does the cook do at the next ring?
+  The finger is on line 3 and the bell rings, so the cook does line 3.
+  Which line does the cook do at the ring after that?
 options:
   - id: a
     text: "Line 4"
@@ -187,21 +187,21 @@ output: "Nothing is done, and the finger stays on line 1"
 
 ## Common mistakes
 
-- **Thinking the CPU does everything at once.** Apps feel as if everything happens together. One cook with one finger does one step at a time. The steps are so fast, and a phone chip usually has several cooks, that it looks simultaneous.
+- **Thinking the CPU does everything at once.** Apps feel as if everything happens together. One cook with one finger does one step at a time. The steps are so fast that it looks simultaneous. A phone chip also has several cores, so a few things do run side by side, but each core still follows its own card one step at a time.
 - **Thinking the CPU can skip a line by itself.** It feels like a smart reader would skip the dull parts. The CPU only moves the finger down a line or to the place an instruction names.
 - **Thinking a faster clock changes what the program does.** A faster bell finishes the same card sooner. The steps and their order stay the same.
 
 ## Where this shows up in Android
 
-You tap a button in an app, and the app freezes for several seconds. Then Android shows a message that the app is not responding. The Android documentation calls this an ANR, short for "application not responding". It says the system shows one when an app cannot answer user input on its main thread. The page gives 5 seconds as the limit for an input event such as a screen tap, and says blocking work on that thread causes it.
+You tap a button in an app, and the app freezes for several seconds. Then Android shows a message that the app is not responding. The Android documentation calls this an **ANR**, short for "application not responding". It says the system shows one when an app cannot answer user input on its **main thread**. The page gives 5 seconds as the limit for an input event such as a screen tap, and says blocking work on that thread causes it.
 
 The main thread is the part of an app that answers your taps. In our picture it is one cook with one card, even on a chip that has several cooks. If one line on the card is a very long job, the next tap has to wait until the cook reaches it. That wait is what you see as a freeze. The Android documentation says to move long-running work off the main thread, so the cook who answers taps stays free.
 
 ## Recap
 
 1. The CPU reads one instruction, does it, and moves on to the next.
-2. A program counter marks the next instruction. A jump can change it.
-3. The clock sets the pace. One long step makes everything behind it wait.
+2. A program counter marks the next instruction, and a jump can change it.
+3. The clock sets the pace, and one long step makes everything behind it wait.
 
 ## You can now
 
