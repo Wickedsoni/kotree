@@ -72,7 +72,7 @@ private fun labelOf(n: Node): String {
     if (leaf != null) {
         return when (leaf.status) {
             LeafStatus.LIVE -> "${n.title}, live"
-            LeafStatus.UPNEXT -> "${n.title}, coming next"
+            LeafStatus.UPNEXT -> "${n.title}, up next"
             LeafStatus.SHADOW -> "${n.title}, coming soon"
         }
     }

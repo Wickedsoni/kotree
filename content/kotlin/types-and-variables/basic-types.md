@@ -33,7 +33,7 @@ Think of the containers in a kitchen.
 
 Each container is made for one kind of thing. You would not weigh flour in an egg box.
 
-**Where the analogy stops:** In a real kitchen you can tip eggs into a jug. Kotlin is stricter. Its documentation says numeric types are not subtypes of one another and that you need explicit conversions. Also, a real egg box has a fixed number of holes, and a number type has a limit too. An `Int` stops at 2,147,483,647.
+**Where the analogy stops:** In a real kitchen you can tip eggs into a jug. Kotlin is stricter. Its documentation says number types are not interchangeable and that you must ask for a conversion. Also, a real egg box has a fixed number of holes, and a whole-number container in Kotlin has a limit too. It stops at 2,147,483,647.
 
 ## Build the logic
 
@@ -63,7 +63,7 @@ Idea B loses the .99. Idea C keeps the digits, but a recipe card is for words. Y
 
 ### Name it
 
-Each container label is a **type**: a rule about what kind of value a name can hold. The Kotlin documentation says types tell the compiler what you are allowed to do with a variable. You write the type after the name, with a colon: `val age: Int = 15`.
+Each container label is a **type**: a rule about what kind of value a name can hold. The Kotlin documentation says types tell Kotlin what you are allowed to do with a variable. You write the type after the name, with a colon: `val age: Int = 15`.
 
 Kotlin's types for these five facts are below.
 

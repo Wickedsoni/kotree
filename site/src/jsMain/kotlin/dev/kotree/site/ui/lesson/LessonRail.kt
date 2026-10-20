@@ -176,8 +176,7 @@ private fun LeafStatus.chip(): ChipStatus = when (this) {
 }
 
 /**
- * Previous / next as tonal cards: label, leaf title and stem title (`previousLive`, `nextLive`). The up-next leaf
- * shows as text without a link. Used in the rail and at the bottom of the page.
+ * Previous / next as tonal cards: label, leaf title and stem title (`previousLive`, `nextLive`). Used in the rail and at the bottom of the page.
  */
 @Composable
 internal fun PrevNextCards(info: LeafInfo, label: String = "Lesson navigation") {
@@ -190,12 +189,7 @@ internal fun PrevNextCards(info: LeafInfo, label: String = "Lesson navigation") 
     ) {
         info.previousLive?.let { NeighbourCard("Previous", it, info.branch.id) }
         info.nextLive?.let { NeighbourCard("Next", it, info.branch.id) }
-        info.comingNext?.let {
-            Div(Modifier.styleModifier { property("color", colorOnSurfaceMutedVar.value()); typo(Typo.Label) }.toAttrs()) {
-                Text("Coming next: ${it.title}")
-            }
-        }
-        if (info.previousLive == null && info.nextLive == null && info.comingNext == null) {
+        if (info.previousLive == null && info.nextLive == null) {
             Div(Modifier.styleModifier { property("color", colorOnSurfaceMutedVar.value()); typo(Typo.Label) }.toAttrs()) {
                 Text("No other lessons are live in this branch yet.")
             }

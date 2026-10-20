@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 4
 requires: [kotlin/first-programs/print-values-in-text]
-summary: A val name cannot be pointed at a new value after it is set. A var name can. Choose val unless the value must change.
+summary: A val name cannot be pointed at a new value. A var name can. Choose val unless the value must change.
 video: ""
 publishedOn:
 updatedOn:
@@ -210,6 +210,6 @@ The text in a box changes as the person types, so its name needs a whiteboard ta
 
 ## You can now
 
-- Spot the line the compiler refuses when a `val` is reassigned.
+- Spot the line Kotlin refuses when a `val` is reassigned.
 - Predict the value of a `var` after several changes.
 - Explain why a `var` for a name that never changes still runs but gives no protection.

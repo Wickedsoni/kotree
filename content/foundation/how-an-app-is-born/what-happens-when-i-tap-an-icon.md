@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 33
 requires: [foundation/how-an-app-is-born/how-an-app-gets-installed, foundation/how-computers-work/what-is-an-os]
-summary: The phone starts a running copy of the app if there is none, the app sets itself up, and then its first screen is drawn.
+summary: The phone starts a running copy of the app if none exists, the app sets itself up, and its first screen is drawn.
 video: ""
 publishedOn:
 updatedOn:
@@ -56,7 +56,7 @@ Maya switches her phone on in the morning and taps the chat icon. The first scre
 
 What does the phone do on that first tap? Here are three ideas.
 
-- A. The app was already running behind the scenes, and the phone just shows its screen.
+- A. The app was already running behind the scenes, and the phone only has to show its screen.
 - B. The system starts a running copy of the app, the app sets itself up, and then its first screen is drawn.
 - C. The home screen turns into the app.
 
@@ -77,7 +77,7 @@ Idea A is the common guess. It is sometimes true, which is why the second tap wa
 
 A **process** is a running app together with the memory the system gave it. The Android documentation says each app runs in its own Linux process. It says the system starts the process when any of the app's parts need to run, and shuts it down when it is no longer needed or when the system must get memory back for other apps.
 
-A start with no process is a **cold start**. The documentation says it means an app starting from scratch, such as the first launch since the phone booted or since the system killed the app. A start where the process is already there is lighter. The documentation says a **warm start** does a subset of the cold start's work, and a **hot start** has lower overhead still, because the system just brings the app's main screen to the foreground.
+A start with no process is a **cold start**. The documentation says it means an app starting from scratch, such as the first launch since the phone booted or since the system killed the app. A start where the process is already there is lighter. The documentation says a **warm start** does a subset of the cold start's work, and a **hot start** has lower overhead still, because the system brings the app's main screen to the foreground.
 
 At the start of a cold start the system shows a **starting window**, which the documentation describes as a blank window shown immediately after launch. Then the app process takes five steps, in the order the documentation gives them.
 
@@ -93,7 +93,7 @@ At the start of a cold start the system shows a **starting window**, which the d
 | Set out the furniture | Initialize the UI |
 | Switch on the lights | Draw the UI |
 
-The **main thread** is the line of work the system starts the app with. The documentation says it is in charge of dispatching events to the screen's parts, including drawing events. An **activity** is one screen of an app. The **main activity** is the one the documentation calls the first screen to appear when the user launches the app. After the first draw, the documentation says the system swaps the blank window for the main activity, and the user can start using the app.
+The **main thread** is the line of work the system starts the app with. In plain words, it handles your touches and the drawing of the screen. The documentation says it is in charge of dispatching events to the user interface, including drawing events. An **activity** is one screen of an app. The **main activity** is the one the documentation calls the first screen to appear when the user launches the app. After the first draw, the documentation says the system swaps the blank window for the main activity, and the user can start using the app.
 
 ## Predict the output
 

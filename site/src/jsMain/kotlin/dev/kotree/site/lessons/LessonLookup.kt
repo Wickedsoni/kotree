@@ -19,9 +19,6 @@ class LeafInfo(val bough: Bough, val branch: Branch, val stem: Stem, val leaf: L
     /** The nearest live leaf after this one. */
     val nextLive: Leaf? get() = inBranch.firstOrNull { it.order > leaf.order && it.status == LeafStatus.LIVE }
 
-    /** The up-next leaf of the branch when it comes after this one: shown as "Coming next" without a link. */
-    val comingNext: Leaf? get() = inBranch.firstOrNull { it.order > leaf.order && it.status == LeafStatus.UPNEXT }
-
     /**
      * Breadcrumb data (ADR 006): Kotree / branch / stem / leaf. No bough crumb (the bough and its first branch can
      * share a title). A crumb whose label equals the previous one is dropped.

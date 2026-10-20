@@ -68,11 +68,20 @@ import dev.kotree.site.typeTitleSizeVar
 import dev.kotree.site.typeTitleWeightVar
 import dev.kotree.site.ui.core.Button
 import dev.kotree.site.ui.core.ButtonKind
+import dev.kotree.site.ui.core.CardVariant
 import dev.kotree.site.ui.core.Chip
 import dev.kotree.site.ui.core.Difficulty
 import dev.kotree.site.ui.core.DifficultyChip
+import dev.kotree.site.ui.core.EmptyState
 import dev.kotree.site.ui.core.LeafStatus
+import dev.kotree.site.ui.core.ListRow
+import dev.kotree.site.ui.core.Meter
+import dev.kotree.site.ui.core.SectionHeader
+import dev.kotree.site.ui.core.Skeleton
+import dev.kotree.site.ui.core.SkeletonLine
+import dev.kotree.site.ui.core.StatusIcon
 import dev.kotree.site.ui.core.StatusChip
+import dev.kotree.site.ui.core.SurfaceCard
 import dev.kotree.site.ui.layout.BranchPanel
 import dev.kotree.site.ui.layout.Breadcrumb
 import dev.kotree.site.ui.layout.ComingSoonBadge
@@ -515,6 +524,42 @@ fun KitchenSink() {
                 Difficulty.entries.forEach { DifficultyChip(it) }
                 LeafStatus.entries.forEach { StatusChip(it) }
                 Chip("Sample chip", Tokens.Leaf.fruit)
+            }
+        }
+
+        // ---- Design v2 components (ADR 007) ----
+        Section("design-v2", "Design v2 components") {
+            Note("PageShell wraps a whole page (skip link, sticky header, main), so it cannot nest here; see /topics and the lesson pages. Hover, focus and pressed come from the components and are exercised with real input.")
+            SectionHeader("Sample section", eyebrow = "Sample eyebrow", meta = "3 of 12", action = { Button("Sample action", {}, kind = ButtonKind.Text) })
+            SectionHeader("Sample level 3", level = 3)
+            Div(Modifier.styleModifier { wrapRow() }.toAttrs()) {
+                SurfaceCard(CardVariant.Outlined, "kotlin", inkBand = true) { P { Text("Outlined card with an ink band, no hover effect.") } }
+                SurfaceCard(CardVariant.Tonal, "os") { P { Text("Tonal card, no hover effect.") } }
+                SurfaceCard(CardVariant.Hero, "dsa") { P { Text("Hero card, no hover effect.") } }
+                SurfaceCard(CardVariant.Outlined, "ui", href = "#design-v2") { P { Text("Link card: hover layer and shape morph.") } }
+                SurfaceCard(CardVariant.Tonal, "ui", href = "#design-v2") { P { Text("Tonal link card.") } }
+            }
+            Div(Modifier.styleModifier { property("display", "grid"); property("max-width", layoutLessonTextVar.value()) }.toAttrs()) {
+                ListRow("Row as a link", href = "#design-v2", leading = { StatusIcon(LeafStatus.Live) }, trailing = { StatusChip(LeafStatus.Live, compact = true) })
+                ListRow("Row as a button", onClick = {}, supporting = "Supporting text", leading = { StatusIcon(LeafStatus.UpNext) }, trailing = { StatusChip(LeafStatus.UpNext, compact = true) })
+                ListRow("Row as a plain div", leading = { StatusIcon(LeafStatus.Shadow) })
+                ListRow("Current row", href = "#design-v2", current = true, branch = "os")
+                ListRow("Muted row", muted = true, trailing = { StatusChip(LeafStatus.Shadow, compact = true) })
+                ListRow("A long row title that is clamped to two lines with an ellipsis when it does not fit in the available width of the row", onClick = {}, clampLines = 2)
+            }
+            Div(Modifier.styleModifier { property("display", "grid"); property("gap", space4Var.value()); property("max-width", layoutLessonTextVar.value()) }.toAttrs()) {
+                Meter(3, 12, "Sample progress", "kotlin")
+                Meter(12, 12, "Sample progress on tint", "os", onTint = true)
+                Meter(0, 5, "Sample progress without text", "dsa", showText = false)
+            }
+            Div(Modifier.styleModifier { wrapRow() }.toAttrs()) {
+                LeafStatus.entries.forEach { StatusIcon(it) }
+                LeafStatus.entries.forEach { StatusChip(it, compact = true) }
+            }
+            Div(Modifier.styleModifier { property("display", "grid"); property("gap", space4Var.value()); property("max-width", layoutLessonTextVar.value()) }.toAttrs()) {
+                EmptyState("Sample empty state", "Sample text that explains what to do next.", action = { Button("Sample action", {}, kind = ButtonKind.Tonal) })
+                Skeleton(4)
+                Skeleton(3, SkeletonLine.Row)
             }
         }
 

@@ -20,8 +20,6 @@ import dev.kotree.site.fontUiVar
 import dev.kotree.site.typeBodyLineVar
 import dev.kotree.site.typeBodySizeVar
 import dev.kotree.site.typeBodyWeightVar
-import dev.kotree.site.ui.topics.BENTO_HERO_CLASS
-import dev.kotree.site.ui.topics.BENTO_WIDE_CLASS
 import org.jetbrains.compose.web.css.CSSMediaQuery
 import org.jetbrains.compose.web.css.StylePropertyValue
 import org.jetbrains.compose.web.css.LineStyle
@@ -55,22 +53,8 @@ fun initBaseStyles(ctx: InitSilkContext) {
                 .outlineOffset(Tokens.Chrome.focusRingOffsetPx.px)
         }
     }
-    // Bento spans (ADR 006): wide and hero cards span columns only where at least two columns fit.
-    val twoColumnsPx = 2 * Tokens.LayoutW.bentoColMin + Tokens.Spacing.s6
-    val twoColumns = CSSMediaQuery.MediaFeature("min-width", StylePropertyValue("${twoColumnsPx}px"))
-    ctx.stylesheet.registerStyle(".$BENTO_WIDE_CLASS") {
-        base { Modifier }
-        cssRule(twoColumns) { Modifier.styleModifier { property("grid-column", "span 2") } }
-    }
-    ctx.stylesheet.registerStyle(".$BENTO_HERO_CLASS") {
-        base { Modifier }
-        cssRule(twoColumns) {
-            Modifier.styleModifier {
-                property("grid-column", "span 2")
-                property("grid-row", "span 2")
-            }
-        }
-    }
+    registerScrollbarStyles(ctx)
+    registerPageRules(ctx)
     ctx.stylesheet.registerStyle("*") {
         base { Modifier }
         cssRule(CSSMediaQuery.MediaFeature("prefers-reduced-motion", StylePropertyValue("reduce"))) {
@@ -81,5 +65,97 @@ fun initBaseStyles(ctx: InitSilkContext) {
                 property("scroll-behavior", "auto !important")
             }
         }
+    }
+}
+
+/** Class for counts: tabular figures so numbers do not jitter (ADR 007). */
+const val NUM_CLASS = "kt-num"
+
+private fun rgbCss(rgb: Int): String = "rgb(${(rgb shr 16) and 0xFF}, ${(rgb shr 8) and 0xFF}, ${rgb and 0xFF})"
+
+/**
+ * True when the engine understands `::-webkit-scrollbar` (Chrome, Edge, Safari). Chrome 121+ drops the pill shape when
+ * the standard `scrollbar-width` / `scrollbar-color` are also set, so those are only written where this is false (Firefox).
+ */
+private fun supportsWebkitScrollbar(): Boolean {
+    val supported: dynamic = js("typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('selector(::-webkit-scrollbar)')")
+    return supported == true
+}
+
+/**
+ * Slim pill scrollbars for the page and every scroller (ADR 007). Colours come from Tokens.kt as plain rgb values, not
+ * from CSS variables: the viewport scrollbar belongs to `html`, where the token variables (set on the app root) do not exist.
+ */
+private fun registerScrollbarStyles(ctx: InitSilkContext) {
+    val size = "${Tokens.Scrollbar.sizePx}px"
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar") {
+        base { Modifier.styleModifier { property("width", size); property("height", size) } }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-track") {
+        base { Modifier.styleModifier { property("background-color", "transparent") } }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-corner") {
+        base { Modifier.styleModifier { property("background-color", "transparent") } }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-button") {
+        base { Modifier.styleModifier { property("display", "none") } }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-thumb") {
+        base {
+            Modifier.styleModifier {
+                property("background-color", rgbCss(Tokens.Scrollbar.thumb))
+                property("border", "${Tokens.Scrollbar.insetPx}px solid transparent")
+                property("background-clip", "padding-box")
+                property("border-radius", "${Tokens.Shape.full}px")
+                property("min-height", "${Tokens.Scrollbar.thumbMinPx}px")
+                property("min-width", "${Tokens.Scrollbar.thumbMinPx}px")
+            }
+        }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-thumb:hover") {
+        base {
+            Modifier.styleModifier {
+                property("background-color", rgbCss(Tokens.Scrollbar.thumbHover))
+                property("border-width", "${Tokens.Scrollbar.insetHoverPx}px")
+            }
+        }
+    }
+    ctx.stylesheet.registerStyle("::-webkit-scrollbar-thumb:active") {
+        base { Modifier.styleModifier { property("background-color", rgbCss(Tokens.Scrollbar.thumbActive)) } }
+    }
+    if (!supportsWebkitScrollbar()) {
+        // Firefox: the standard properties. scrollbar-color inherits, scrollbar-width does not, so both go on every element.
+        ctx.stylesheet.registerStyle(":root, :root *") {
+            base {
+                Modifier.styleModifier {
+                    property("scrollbar-width", "thin")
+                    property("scrollbar-color", "${rgbCss(Tokens.Scrollbar.thumb)} transparent")
+                }
+            }
+        }
+    }
+}
+
+/** Page-level rules: header clearance for hash targets, balanced headings, tabular counts, pointer cursors (ADR 007). */
+private fun registerPageRules(ctx: InitSilkContext) {
+    // html has no token variables, so the clearance is computed from Tokens (header height + space.4).
+    ctx.stylesheet.registerStyle("html") {
+        base {
+            Modifier.styleModifier {
+                property("scroll-padding-top", "${Tokens.LayoutW.headerHeight + Tokens.Spacing.s4}px")
+            }
+        }
+    }
+    ctx.stylesheet.registerStyle("h1, h2, h3") {
+        base { Modifier.styleModifier { property("text-wrap", "balance") } }
+    }
+    ctx.stylesheet.registerStyle(".$NUM_CLASS") {
+        base { Modifier.styleModifier { property("font-variant-numeric", "tabular-nums") } }
+    }
+    ctx.stylesheet.registerStyle("a[href], button:not([disabled]), [role=button], [role=radio]") {
+        base { Modifier.styleModifier { property("cursor", "pointer") } }
+    }
+    ctx.stylesheet.registerStyle("button:disabled, [aria-disabled=true]") {
+        base { Modifier.styleModifier { property("cursor", "not-allowed") } }
     }
 }

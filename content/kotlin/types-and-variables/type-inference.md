@@ -53,7 +53,7 @@ Idea A is the common guess, because "no sign" sounds like "no rule". But the ass
 
 1. You show a value.
 2. The assistant looks at how it is written. A whole number goes to the whole-number aisle. A number with a point goes to the decimal aisle.
-3. One character in single quotes goes to the character aisle. Words in double quotes go to the text aisle. The words true and false go to the yes-or-no aisle.
+3. One character in single quotes goes to the character aisle. Words in double quotes go to the text aisle. A yes-or-no answer goes to the yes-or-no aisle.
 4. A whole number too big for the whole-number aisle goes to the big-number aisle.
 5. The aisle you got stays yours. If you later try to bring something from another aisle, the assistant refuses.
 6. If you want an aisle the assistant would not pick, hold up a sign and say it yourself.
@@ -62,7 +62,7 @@ Idea A is the common guess, because "no sign" sounds like "no rule". But the ass
 
 Kotlin's ability to work out a type for you is called **type inference**. The Kotlin documentation says every variable has a type, and that when you leave the type out, Kotlin infers it.
 
-Here are the reading rules, from the documentation.
+Here are the reading rules, from the documentation. The underscores in `3_000_000_000` are only for reading. They help your eye count the zeros and do not change the number.
 
 | What you write | Type Kotlin infers |
 |---|---|

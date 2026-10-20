@@ -45,18 +45,33 @@ private fun swatchCss(rgb: Int): String = "rgb(${(rgb shr 16) and 0xFF}, ${(rgb 
 /**
  * Chip: [text] with a swatch square beside it (docs/02 section 6). The text carries the meaning, so the chip is
  * readable without colour. [swatchRgb] is a world colour as Int (docs/13 section 2: DOM chips read the Int).
- * Not interactive, so it takes no focus.
+ * Not interactive, so it takes no focus. [compact] (ADR 007) is 24 px high with no swatch: ink on its container, the
+ * text still carries the meaning.
  */
 @Composable
-fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier, ink: String? = null, fill: String? = null) {
+fun Chip(
+    text: String,
+    swatchRgb: Int,
+    modifier: Modifier = Modifier,
+    ink: String? = null,
+    fill: String? = null,
+    compact: Boolean = false,
+) {
     Div(
         modifier
             .styleModifier {
                 property("display", "inline-flex")
                 property("align-items", "center")
                 property("gap", space2Var.value())
-                property("padding", "${space1Var.value()} ${space2Var.value()}")
-                property("border", "${Tokens.Elevation.borderPx}px solid ${colorOutlineVar.value()}")
+                property("box-sizing", "border-box")
+                if (compact) {
+                    property("height", Tokens.Size.chipCompactPx.px)
+                    property("padding", "0 ${space2Var.value()}")
+                    property("border", "0")
+                } else {
+                    property("padding", "${space1Var.value()} ${space2Var.value()}")
+                    property("border", "${Tokens.Elevation.borderPx}px solid ${colorOutlineVar.value()}")
+                }
                 property("border-radius", shapeXsVar.value())
                 property("color", ink ?: colorOnSurfaceVar.value().toString())
                 if (fill != null) property("background-color", fill)
@@ -68,7 +83,7 @@ fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier, ink: Strin
             }
             .toAttrs()
     ) {
-        Span(
+        if (!compact) Span(
             Modifier
                 .attrsModifier { attr("aria-hidden", "true") }
                 .styleModifier {
@@ -89,7 +104,7 @@ fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier, ink: Strin
 fun DifficultyChip(difficulty: Difficulty, modifier: Modifier = Modifier) = Chip(difficulty.label, difficulty.swatch, modifier)
 
 @Composable
-fun StatusChip(status: LeafStatus, modifier: Modifier = Modifier) {
+fun StatusChip(status: LeafStatus, modifier: Modifier = Modifier, compact: Boolean = false) {
     // Status tokens (ADR 006): ink on its own container, text carries the meaning.
     val ink: String
     val fill: String
@@ -98,5 +113,5 @@ fun StatusChip(status: LeafStatus, modifier: Modifier = Modifier) {
         LeafStatus.UpNext -> { ink = colorStatusUpnextVar.value().toString(); fill = colorStatusUpnextContainerVar.value().toString() }
         LeafStatus.Shadow -> { ink = colorStatusShadowVar.value().toString(); fill = colorStatusShadowContainerVar.value().toString() }
     }
-    Chip(status.label, status.swatch, modifier, ink, fill)
+    Chip(status.label, status.swatch, modifier, ink, fill, compact)
 }

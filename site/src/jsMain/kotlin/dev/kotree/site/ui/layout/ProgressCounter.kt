@@ -41,6 +41,7 @@ fun ProgressCounter(grown: Int, total: Int, modifier: Modifier = Modifier) {
                 property("line-height", typeLabelLineVar.value())
                 property("font-weight", typeLabelWeightVar.value())
                 property("white-space", "nowrap")
+                property("font-variant-numeric", "tabular-nums")
             }
             .toAttrs()
     ) {
