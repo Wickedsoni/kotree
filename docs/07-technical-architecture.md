@@ -517,6 +517,8 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 
 **Phase 1 update (20 Oct 2026, `docs/reviews/P1-acceptance.md`).** After tokens, fonts, the base components and the `/kitchen-sink` page, `kotree.js` is **277,917 B gzip** (+37,227 B over the 240,690 B prototype; 247,676 B without the kitchen sink, so the sink costs about 30 KB). That is over the +25 KB point where the architect must look and under the +40 KB fail line. Decision (orchestrator, 20 Oct 2026): accept for now because the kitchen sink is the only large item and Phase 3 will measure the real lesson cost; if the Phase 3 projection is over budget, the first cut is to drop `/kitchen-sink` from the production build, then ADR 005. Headroom is now about 122 KB of the 400 KB budget.
 
+**Phase 3 S2 update (20 Oct 2026).** With the generated tree data (482 leaves, 180 stems, shadow state) `kotree.js` is **313,048 B gzip**, so T = +35,131 B over the 277,917 B Phase 1 figure (cap 60,000; ADR 005 needs T <= 40,000). Headroom to the 400,000 B budget is about 87 KB. S3 must add at most 15,000 B.
+
 **Phase 3 S1 bundle spike (P0-7, 20 Oct 2026, `docs/reviews/P3-probes.md`).** 50 synthetic Markdown leaves (about 8,100 B of real prose each, 6 headings, a 15-line Kotlin block, one `PredictOutput` and one `FixBug` with literal data), compiled by the Kobweb markdown plugin:
 
 | N leaves | `kotree.js` raw B | gzip -9 B |

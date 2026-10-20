@@ -8,13 +8,28 @@
 - Nothing is published. No site code exists yet (`/site` not created). Git repo exists (created in the IDE) but **nothing is committed or pushed**. The author will push later.
 - Open `⚠️ VERIFY` marks in docs 00-10: about 53 (each has a test). Roadmap marks (~287) are checked per leaf before it goes live.
 
-## PAUSED 20 Oct 2026 (usage limit) - read this first
+## PAUSED 20 Oct 2026, after Phase 3 session 2 (read this first, then docs/INDEX.md)
 
-- Tree-first prototype (docs/12) is built, pushed to https://github.com/Wickedsoni/kotree (3 commits on main) and passed S3 acceptance. Start it with `./gradlew :site:kobwebStart`, open http://localhost:8080/, stop with `./gradlew :site:kobwebStop`. Never use interactive `kobweb run` (opens looping console windows).
-- NOT pushed, uncommitted: docs/07 §8.1 and docs/11 P0-10 (baseline numbers, done), docs/reviews/S3-review.md (reviewer: FIX, 2 medium), plus a HALF-FINISHED fix run that was stopped mid-way: edits in Tokens.kt, TreeView.kt, camera/Camera.kt, overlay/Labels.kt and refreshed screenshots. Unverified: no clean build or browser check was run after those edits. Next: run `./gradlew clean :site:compileKotlinJs`, check the diff (`git diff`), finish S3-review.md items 1, 2, 3, 4, 7, 8, 9 (item 2: no label after branch click at z=4), then commit and push.
-- Vercel Hobby (20 Oct 2026): the author's YouTube channel is not monetised yet, so the free Hobby plan is fine for now. Revisit if the channel is monetised or the site gets ads (ask Vercel Support or upgrade).
-- Author decisions (20 Oct 2026): item 5 = use whole-number pixel scaling only (blit scale is an integer, as docs/12 §8 says); item 6 = nudge colliding bough labels apart (do not hide them). To be implemented after the current fix run finishes.
-- Still owed by the author: review of docs 00, 01, 02, 03, 04, 08 and the two proposals in docs/08 §8.1. Then Phase 1 (design tokens) and Phase 0b (docs/12 §4 deferred rows).
+**Repo:** https://github.com/Wickedsoni/kotree (public, `main`). Everything below is committed and pushed. Work on `main`; the orchestrator makes small conventional commits; agents never commit. Author is on Windows; git identity for this repo is `Wickedsoni` (noreply).
+
+**Done (all reviewed unless noted)**
+- Spec set docs/00-14, ADRs 001 and 005, roadmaps for 17 branches (482 leaves, 20 fruits, all `shadow`), 10 agents in `.claude/agents/`.
+- Tree-first prototype (docs/12): pixel tree, pan/zoom/fly, labels, whole-number pixel scale, nudged labels, only the current bough's branch labels (docs/reviews/S3-*).
+- Phase 1 (docs/13): tokens, self-hosted fonts, Button/Chip, layout and lesson/challenge components, unlisted noindex `/kitchen-sink`, contrast and hard-code check scripts (docs/reviews/P1-*).
+- Phase 3 S1 (docs/14, docs/reviews/P3-probes.md): lesson export shape OK; hyphenated file names break Kobweb (sync renames `-` to `_` plus absolute routeOverride, check V11); bundle spike FAILED (about 4,190 B gzip per compiled lesson), so ADR 005: lessons are rendered to JSON (`/lessons/<id>.json`) plus pre-rendered pages, not compiled into the app.
+- Phase 3 S2: `buildSrc` parser and validators V1-V12 (50 tests, 0 failures), tree data generator (`generateTreeData` writes `tree.json` and the Kotlin data, deterministic), home page now uses generated data (`SampleTree.kt` deleted). Real numbers: 482 leaves, 180 stems, 17 branches, 20 fruits; day one 0 live, 17 upnext, 465 shadow. Limb hash still `cecb906380417dd8`. `kotree.js` gzip 313,048 B (T = +35,131 over 277,917; ADR 005 needs T <= 40,000; budget 400,000).
+
+**Next, in order**
+1. Phase 3 S3 (docs/14 section 4): the tree shows real stems/leaves at deeper zoom (shadow leaves not drawn, D3), new `fullHash`, 3 parallel engineers after a frozen geometry contract. Then a `reviewer` pass and `docs/reviews/P3-acceptance.md`.
+2. `architect` writes `docs/adr/003-content-pipeline.md` (owed at S2 exit).
+3. Phase 3 follow-ups: add `scripts/spike-bundle.py` (cleaned) for Phase 8; ask the author "add /topics?" (a plain list page of live and up-next topics; not yet decided).
+4. Phase 4 (lesson page and pilot leaf `kotlin/null-safety/what-is-null`, lunch-box analogy): only after the author says he understood it. Open design gaps from ADR 005: how `runnable` is set for a plain kotlin fence; EditorShell to Playground handoff; where challenge state lives; SimFrame vs SimHost hosting; the VERIFY comment in the worked example breaks V12 once live.
+5. Phase 0b leftovers in docs/11, then Phase 5 (sims), 6 (editor), 7 (deploy; Vercel Hobby is fine while the channel is not monetised), 8 (polish).
+6. The author decided to stay local (no cloud sessions) and push to GitHub as we go.
+
+**How to run:** `./gradlew :site:kobwebStart` then http://localhost:8080/ ; stop with `./gradlew :site:kobwebStop`. NEVER use interactive `kobweb run` (opens looping console windows). The Kobweb CLI is at `C:\Users\Avik\.cache\portfolio-tools\kobweb-cli\kobweb-0.9.23\bin\kobweb.bat`. `kobweb export` can exit 0 even when the build fails: check that output files exist. Agents must not leave `find /` searches or headless Chrome running (a stuck shell and a hung headless Chrome blocked agents; kill stale processes if an agent's token count stops moving).
+
+**Rules to keep:** docs/00 wins; L28 (tree first), L29 (lesson voice: industry accurate, easy to say aloud, one analogy with where it stops); no leaf goes live until the author says he understood it; no cloud sessions.
 
 ## Resumed 20 Oct 2026
 
