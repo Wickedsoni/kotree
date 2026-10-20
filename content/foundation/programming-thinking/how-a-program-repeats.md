@@ -100,7 +100,7 @@ fun main() {
 }
 ```
 
-It prints `Stir` three times and then `Boiling`. The check `heat < 3` is the question "still short of boiling?". With `heat` at 0, 1 and 2, the answer is yes. With `heat` at 3, the answer is no and the loop ends. The Kotlin documentation has a sample of the same shape, with a garage that fills up to a maximum of 3 cars and then prints "Garage is full!".
+It prints `Stir` three times and then `Boiling`. The check `heat < 3` is the question "still short of boiling?". With `heat` at 0, 1 and 2, the answer is yes. With `heat` at 3, the answer is no and the loop ends. The Kotlin documentation has a sample of the same shape. It counts up to a limit and then prints a message.
 
 ## Predict the output
 
@@ -217,4 +217,4 @@ The documentation does not mention endless loops. This part is our own reasoning
 
 - Predict how many times a while loop runs its body.
 - Spot a loop that never ends because nothing changes the number it checks.
-- Predict how one more or one fewer run follows from changing less than to at most.
+- Predict how many extra times a loop runs when less than becomes at most.

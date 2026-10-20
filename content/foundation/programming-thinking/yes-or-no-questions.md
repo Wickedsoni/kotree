@@ -207,13 +207,13 @@ output: "true, then false"
 
 - **Writing one equals sign when you mean to ask.** In maths, one equals sign is both a statement and a question, so it feels the same. In Kotlin, `=` gives a name a value, and `==` asks. Say "is it the same as" aloud and reach for `==`.
 - **Forgetting that more than leaves out the number itself.** The sign says "18 or older", and `>` feels close enough. With `>`, the age 18 gets a red light. Pick `>=` when the number itself should get in.
-- **Reading OR as "one or the other, not both".** In daily talk, "tea or coffee" often means one only. In a program, OR is also `true` when both are `true`, as the table shows. Read it as "at least one".
+- **Reading OR as "one or the other, not both".** In daily talk, "or" often means one only. In a program, OR is also `true` when both are `true`, as the table shows. Read it as "at least one".
 
 ## Where this shows up in Android
 
 You fill in every box on a sign-up screen, but the Send button stays greyed out. Or the opposite: the button turns on when only one box is filled.
 
-The Android documentation for the button in **Jetpack Compose**, the modern toolkit for building Android UI, lists an `enabled` setting. When it is `false`, the button appears unavailable and inactive. That setting takes a yes-or-no answer. If the code uses OR where it needed AND, one filled box gives one green light, and the button turns on too early. If a comparison asks for more than where it needed at least, one edge case stays red.
+The Android documentation for the button in **Jetpack Compose**, the modern toolkit for building Android UI, lists an `enabled` setting. When it is `false`, the button appears unavailable and inactive. That setting takes a yes-or-no answer. If the code uses OR where it needed AND, one filled box gives one green light, and the button turns on too early. If a comparison asks for more than where it needed at least, the guest who is exactly 18 stays red.
 
 The Compose state page shows the same kind of question steering the screen. Its example hides a greeting while the name is empty. The program asks a yes-or-no question about the name, and the answer decides what appears.
 

@@ -31,6 +31,7 @@ Think of a small ball rolling down a garden path.
 - The path splits at a fork. A sign at the fork says "left if raining, right if not".
 - A gate at the fork swings toward the side the sign names.
 - After a short way, the two paths meet again, and the ball rolls on.
+- A second fork can sit further down the path. Its sign asks about the temperature, such as "above 25".
 
 The ball does not look at both paths. It reads the sign, the gate swings, and the ball takes one path.
 
@@ -214,7 +215,7 @@ output: "Done"
 
 A profile screen should greet the user by name. When the name box is empty, the screen shows a stray "Hello, " with nothing after it. The screen is wrong because nobody asked "is there a name?" before drawing the greeting.
 
-The Android documentation for **Jetpack Compose**, the modern toolkit for building Android UI, shows how to avoid this. Its state page says that if you do not want to display the greeting when the name is empty, you use the state in an `if` statement. That is one fork with one path. When the answer is yes, the ball walks the path that draws the greeting. When the answer is no, there is no other path, and the greeting is left out.
+The Android documentation for **Jetpack Compose**, the modern toolkit for building Android UI, shows how to avoid this. Its state page says that if you do not want to display the greeting when the name is empty, you put the check in an `if` statement. The check reads the text typed in the name box. That is one fork with one path. When the answer is yes, the ball walks the path that draws the greeting. When the answer is no, there is no other path, and the greeting is left out.
 
 ## Recap
 

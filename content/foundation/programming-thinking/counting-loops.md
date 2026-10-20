@@ -31,7 +31,7 @@ Think of climbing a staircase where every step has a number painted on it.
 - The number painted on the step you stand on is the number you are on right now.
 - Saying that number aloud is the work you do on each step.
 
-You know the first step and the last step before you take a single step. So you also know how many steps you will climb. You never have to look up and ask "am I at the top yet?", because the painted numbers tell you.
+You know the first step and the last step before you take a single step. So you also know how many numbers you will say. You never have to look up and ask "am I at the top yet?", because the painted numbers tell you.
 
 **Where the analogy stops:** A real staircase has a top step you can see, and a landing beyond it. A range of numbers is only a rule that hands out one number at a time. It is you who decides whether the last number counts. Also, a real staircase goes one step at a time. A rule for numbers can skip steps or go down.
 
@@ -52,7 +52,7 @@ You know the first step and the last step before you take a single step. So you 
 
 A staircase has ten steps, painted 1 to 10. You climb it and say each number aloud as you stand on the step: 1, 2, 3, and so on up to 10.
 
-You said ten numbers, so you climbed ten steps. You knew that before you set off, because you knew the first step and the last step.
+You said ten numbers, one on each step. You knew that before you set off, because you knew the first step and the last step.
 
 ### Guess
 
@@ -60,9 +60,9 @@ The rule says "climb from step 1 to step 10 and say each number". Which numbers 
 
 - A. 1 to 9. The top step is where you stop, so you do not say its number.
 - B. 1 to 10. You stand on both the first step and the last step, and you say both numbers.
-- C. 2 to 10. You start by stepping up from the floor, so step 1 is already behind you.
+- C. 2 to 10. Step 1 is where you begin, so you do not say its number.
 
-Idea A feels right because "up to 10" can sound like "stopping before 10". But the rule names step 10 as the last step. You stand on it, so you say its number. Idea C counts the floor as step 1, and the rule did not say that. Idea B is the answer.
+Idea A feels right because "up to 10" can sound like "stopping before 10". But the rule names step 10 as the last step. You stand on it, so you say its number. Idea C skips the first step, yet the rule says to say each number from step 1. Idea B is the answer.
 
 ### Build
 
@@ -81,7 +81,7 @@ You can change the rule in three ways.
 
 ### Name it
 
-A loop that runs once for each number in a rule is a **`for`** loop. The rule is a **range**: an ordered set of numbers with a start and an end. The Kotlin documentation says a range increments by 1 at each step by default, and that `1..4` stands for the numbers 1, 2, 3 and 4.
+A loop that runs once for each number in a rule is a **`for`** loop. The rule is a **range**: an ordered set of numbers with a start and an end. The Kotlin documentation says a range increments by 1 at each step by default. It says `1..4` stands for the numbers 1, 2, 3 and 4.
 
 The loop looks like this: `for (i in 1..10)`. The word `in` means "take each number of the range, one at a time". The name `i` is the **loop variable**. It holds the number painted on the step you are standing on. Kotlin sets it for you at the start of every round, so you do not write a line that adds one.
 
@@ -189,7 +189,7 @@ options:
     why: "The climb starts on step 3 and moves down one number each round. It ends on step 1, and then Go prints."
   - id: c
     text: "3, 2, 1, 0, then Go"
-    why: "You may have counted down to zero, like a rocket launch. This rule ends on step 1, so 0 is never visited."
+    why: "You may have counted down to zero. This rule ends on step 1, so 0 is never visited."
 output: "3, 2, 1, then Go"
 ```
 
@@ -210,7 +210,9 @@ output: "3, 2, 1, then Go"
 
 A chat screen has ten messages, but only nine rows appear. The last message is missing, and nobody sees an error.
 
-The Android documentation for lists in **Jetpack Compose**, the modern toolkit for building Android UI, builds rows with a call such as `items(5)`, which its code comment says adds 5 items, and with `forEach` over a list. It does not use a `for` loop there. The idea is the same one you met here: the app must know how many rows to draw, from the first to the last. This part is our own reasoning. If the count stops one short, as in the `1..<5` item above, the last row is never drawn. The program ran without complaint, but the staircase ended one step too early.
+The Android documentation for lists in **Jetpack Compose** builds rows with a call such as `items(5)`. Its code comment says this adds 5 items. It also builds rows with `forEach` over a list. Jetpack Compose is the modern toolkit for building Android UI. The lists page does not use a `for` loop.
+
+The idea is the same one you met here: the app must know how many rows to draw, from the first to the last. This part is our own reasoning. If the count stops one short, as in the `1..<5` item above, the last row is never drawn. The program ran without complaint, but the staircase ended one step too early.
 
 ## Recap
 
