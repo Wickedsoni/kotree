@@ -102,7 +102,7 @@ fun BranchCard(
                 property("border-top", "${space1Var.value()} solid $ink")
                 property("border-radius", if (hero) shapeXxlVar.value().toString() else if (hovered) shapeXlIncreasedVar.value().toString() else shapeXlVar.value().toString())
                 property("background-color", if (hero) tint else colorSurfaceVar.value().toString())
-                property("box-shadow", if (hovered) elevation3Var.value() else "none")
+                property("box-shadow", if (hovered) elevation3Var.value().toString() else "none")
                 property("font-family", fontUiVar.value())
                 property("color", colorOnSurfaceVar.value())
                 property("scroll-margin-top", space4Var.value())
