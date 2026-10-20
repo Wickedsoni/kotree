@@ -47,7 +47,7 @@ What does the assistant do about the aisle when you say nothing? Here are three 
 - B. Looks at what you hold, picks the aisle, and that aisle stays yours.
 - C. Makes you say the aisle every time you come in.
 
-Idea A is the common guess, because "no sign" sounds like "no rule". But the assistant did pick an aisle. Idea C is how some other languages feel. Kotlin does it the way Idea B says.
+Idea A is the common guess, because "no sign" sounds like "no rule". But the assistant did pick an aisle. Idea C would work, but you would have to say the aisle on every line. Kotlin does it the way Idea B says.
 
 ### Build
 
@@ -198,7 +198,7 @@ output: "Line 4 is refused, so nothing runs"
 
 ## Where this shows up in Android
 
-The Android Tip Time codelab, which builds a screen with Jetpack Compose, has the line `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. No type is written after `tipPercent`. The codelab's own words are that this line converts the tip text to a `Double`, so `tipPercent` is a `Double`.
+The Android Tip Time codelab builds a screen with **Jetpack Compose**, the toolkit for building Android screens in Kotlin. It has the line `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. The part on the right turns the typed text into a `Double`, or gives 0.0 when there is no number. No type is written after `tipPercent`. The codelab's own words are that this line converts the tip text to a `Double`, so `tipPercent` is a `Double`.
 
 The same codelab writes `val amount = amountInput.toDoubleOrNull() ?: 0.0`, and again no type is written. The app can then do number work with `amount`. My own reasoning: when an Android project has a line with no type, the right-hand side is where the type comes from. Reading that side tells you what the name holds.
 
@@ -206,7 +206,7 @@ The same codelab writes `val amount = amountInput.toDoubleOrNull() ?: 0.0`, and 
 
 1. Kotlin works out a variable's type from how its value is written.
 2. A point makes a Double, an L makes a Long, and single quotes make a Char.
-3. A name keeps the type it first gets, so no written type does not mean any type.
+3. A name keeps the type it first gets, even when you never wrote that type.
 
 ## You can now
 

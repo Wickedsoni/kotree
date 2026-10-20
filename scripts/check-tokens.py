@@ -137,6 +137,10 @@ def main():
         check(f"status.{key} on its container #{tint(ink, pct):06X}", ink, tint(ink, pct), TEXT_MIN)
     for key in ("treeStem", "leafShadowStroke"):
         check(f"status.{key} on white", obj["Status"][key], white, UI_MIN)
+    # ADR 007: scrollbar thumb states are aliases (stem, on-surface-muted, on-surface); non-text 3:1 on white.
+    check("scrollbar.thumb (= status.treeStem) on white", obj["Status"]["treeStem"], white, UI_MIN)
+    check("scrollbar.thumb.hover (= on-surface-muted) on white", obj["Color"]["onSurfaceMuted"], white, UI_MIN)
+    check("scrollbar.thumb.active (= on-surface) on white", obj["Color"]["onSurface"], white, UI_MIN)
     for key in ("easy", "medium", "hard", "upnext", "shadow"):
         # Swatches repeat the chip text, so they need only the non-text 3:1 against white when they carry meaning alone.
         rows.append(f"info {'leaf.' + key + ' swatch on white':46} {ratio(obj['Leaf'][key], white):5.2f} (not gated: text carries the meaning)")

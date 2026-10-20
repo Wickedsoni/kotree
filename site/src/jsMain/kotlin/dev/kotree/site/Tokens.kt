@@ -202,6 +202,8 @@ object Tokens {
         const val flyDurationMs = 500
         /** Half a glow pulse of an up-next leaf (grow, then shrink); static under reduced motion. */
         const val glowPulseMs = 1000
+        /** motion.tooltip.delay: delay before a custom tooltip (ADR 007). */
+        const val tooltipDelayMs = 500
     }
 
     // ---- Phase 1 additions (docs/13 section 2). Additions only: nothing above this line was renamed. ----
@@ -323,6 +325,14 @@ object Tokens {
         const val s16 = 64
         /** Minimum click target for chrome. */
         const val minTargetPx = 44
+        /** space.inset.card / .panel (ADR 007): padding of cards and of rail / sheet panels. */
+        const val insetCard = s6
+        const val insetPanel = s4
+        /** space.stack.page / .section: header to first content; between page sections. */
+        const val stackPage = s8
+        const val stackSection = s12
+        /** space.gap.grid: gap of every grid. */
+        const val gapGrid = s6
     }
 
     /** elevation.* (docs/02 §4.3). */
@@ -384,6 +394,9 @@ object Tokens {
         val body = Row(18, 30, 400)
         val label = Row(Type.labelSizePx, Type.labelLineHeightPx, Type.labelWeight)
         val code = Row(16, 26, 400)
+        /** type.title.small / type.body.small (ADR 007). */
+        val titleSmall = Row(16, 24, 600)
+        val bodySmall = Row(16, 24, 400)
     }
 
     /** layout.* (docs/02 §4.5), px. */
@@ -400,9 +413,71 @@ object Tokens {
         const val railMinViewport = 1200
         /** layout.bento.col.min: minmax() lower bound of a bento column. */
         const val bentoColMin = 280
+        /** layout.header.height: sticky header, scroll padding, rail top (M3 small top app bar). */
+        const val headerHeight = 64
+        /** layout.bp.*: Android window size classes (ADR 007). `bpLarge` is the same value as [railMinViewport]. */
+        const val bpExpanded = 840
+        const val bpLarge = railMinViewport
+        const val bpXlarge = 1600
+        /** layout.nav.width: lesson left stem navigation. */
+        const val navWidth = 256
+        /** layout.dialog.width: tree node card and side sheet. */
+        const val dialogWidth = 400
+        /** layout.topics.cols: branch grid columns below expanded / expanded to large / from large. */
+        const val topicsColsCompact = 1
+        const val topicsColsMedium = 2
+        const val topicsColsWide = 4
+        /** layout.measure.short, in ch. */
+        const val measureShortCh = 60
         /** SimFrame is 16:9: height = width * 9 / 16. */
         const val simAspectW = 16
         const val simAspectH = 9
+    }
+
+    /** scrollbar.* (ADR 007). Colours reuse existing tokens: thumb = color.tree.stem, hover = on-surface-muted, active = on-surface. */
+    object Scrollbar {
+        const val thumb = Status.treeStem
+        const val thumbHover = Color.onSurfaceMuted
+        const val thumbActive = Color.onSurface
+        /** scrollbar.size: gutter. */
+        const val sizePx = 12
+        /** scrollbar.inset / .inset.hover: transparent border, so the thumb is 6 px (8 px on hover). */
+        const val insetPx = 3
+        const val insetHoverPx = 2
+        /** scrollbar.thumb.min: minimum thumb length. */
+        const val thumbMinPx = 48
+    }
+
+    /** color.skeleton and color.scrim (ADR 007): on-surface mixed into white, and on-surface at an alpha. */
+    object Overlay {
+        const val skeletonPercent = 6
+        /** M3 ScrimTokens.ContainerOpacity (0.32). */
+        const val scrimAlphaPercent = 32
+        val skeleton: Int get() = Branch.tint(Color.onSurface, skeletonPercent)
+    }
+
+    /** size.* (ADR 007), px. */
+    object Size {
+        /** size.chip.compact: non-interactive status chip height. */
+        const val chipCompactPx = 24
+        /** size.status.icon: glyph edge, inside a [statusIconBoxPx] box. */
+        const val statusIconPx = 12
+        const val statusIconBoxPx = 24
+        /** size.meter: height of the progress bar. */
+        const val meterPx = 8
+        /** Last skeleton bar width, percent. */
+        const val skeletonLastPercent = 60
+        /** Status icon ring width. */
+        const val statusRingPx = 2
+        /** Segmented bough filter and disclosure rows reuse [Spacing.minTargetPx]. */
+        const val skipLinkInsetPx = Spacing.s4
+    }
+
+    /** z.* (ADR 007). */
+    object Z {
+        const val header = 10
+        const val sheet = 20
+        const val skip = 30
     }
 
     /** Spring parameters (Compose Material 3 ExpressiveMotionTokens, docs/02 §4.4). Mass is 1. */
