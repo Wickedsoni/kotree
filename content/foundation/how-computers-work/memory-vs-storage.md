@@ -1,0 +1,192 @@
+---
+id: foundation/how-computers-work/memory-vs-storage
+title: Why does a phone have both memory and storage?
+status: shadow
+difficulty: easy
+order: 5
+requires: [foundation/how-computers-work/what-is-a-bit]
+summary: Memory is the fast place a phone works in right now. Storage is the slower place where files stay when the power goes off.
+video: ""
+publishedOn:
+updatedOn:
+sims: [desk-and-cabinet]
+playground: false
+fruit: false
+upnext: false
+---
+
+<!-- ⚠️ VERIFY: (1) Generic hardware claims have no authoritative source yet: RAM is short for random-access memory; memory loses its contents when power is off; storage keeps files without power; memory is faster and usually smaller than storage; an app's files live in storage and are copied into memory while the app uses them. Sources tried (NIST glossary, kernel.org, Wikipedia) did not load on 21 Oct 2026; only a vendor blog (Corsair, not official) was found. Replace with a university text, JEDEC or NIST glossary before live. (2) The sim id desk-and-cabinet has no spec in docs/sims yet. (3) Predict items were traced by hand only; no code runs on this leaf.
+Android claims checked on 21 Oct 2026 against: https://developer.android.com/topic/performance/memory-overview ("As the system runs low on resources like memory, it kills processes in the cache."); https://developer.android.com/topic/performance/vitals/lmk (the low memory killer ends the least essential processes; to the user it looks like a crash, "often bypassing standard lifecycle state-saving mechanisms and resulting in lost user progress"); https://developer.android.com/guide/components/processes-and-threads (Android may shut down a process when resources are needed, and it more readily shuts down a process hosting activities no longer visible); https://developer.android.com/training/data-storage/app-specific ("When the user uninstalls your app, the files saved in app-specific storage are removed."). -->
+## The question
+
+You are typing a long message on your phone. The battery dies before you press Send. You charge the phone and open the app. The message is gone. But the photos you took last week are all still there.
+
+Why does one thing vanish while the other stays? And why does a phone keep things in two different places?
+
+## Mental model
+
+Think of a desk and a filing cabinet in a small office.
+
+- The desk is where you work right now. You can only work on papers that are lying on it.
+- The papers on the desk are what the phone is using at this moment: the app you have open, the message you are typing.
+- The filing cabinet is where papers wait until you need them. It holds far more than the desk, but you have to walk over and open a drawer.
+- Every night a cleaner clears the whole desk. The cabinet is left alone. The cleaner stands for the power going off.
+
+**Where the analogy stops:** A cleaner comes at night, and you know it. On a phone the desk is cleared the moment the power goes, with no warning. Also, when you file a real paper, it leaves the desk. On a phone, saving makes a copy, so the same data can sit in both places at once.
+
+## See it move
+
+<!-- SIM: desk-and-cabinet -->
+
+**Try this:**
+1. Drag a paper from the cabinet onto the desk. Drag it back.
+2. Pull the power plug. Look at the desk and the cabinet.
+3. Put more papers on the desk than fit, and watch what happens at the edge.
+
+**What you should notice:** After the plug is pulled the desk is empty and the cabinet is unchanged, so a paper that was never copied into the cabinet is gone.
+
+## Build the logic
+
+### Notice
+
+Mia is writing a note. She has typed three lines and has not saved them. Some apps save for you as you type. This one does not. Her photo of the dog was saved last week.
+
+The battery dies. She charges the phone and opens the note. The dog photo is there. The three lines are not.
+
+### Guess
+
+Why would a phone have two places to keep things? Here are three ideas.
+
+- A. They are two names for the same place.
+- B. One place is quick but forgets when the power goes off. The other is slower but remembers.
+- C. One place is for apps and the other is for photos.
+
+Idea A would make one place enough, and Mia's note shows the two behave differently. Idea C feels right because apps and photos are different things. But apps are kept in the cabinet too, and a photo is copied onto the desk while you look at it. Idea B is the answer.
+
+### Build
+
+1. Working on something needs a place that is quick to reach. That is the desk.
+2. A quick place has to be kept powered. When the power stops, it empties.
+3. Things that must last need a place that holds on to them with no power. That is the cabinet. It is slower and has more room.
+4. To use a file, the phone copies it from the cabinet to the desk, works on it there, and copies the changes back.
+5. If nobody copies the changes back, they live only on the desk. They go when the power goes.
+6. The desk has a limit. When it is full, something has to leave it.
+
+### Name it
+
+The desk is **memory**, also called **RAM**, short for random-access memory. It is the fast, short-term place a device works in, and it loses what it holds when the power goes off.
+
+The cabinet is **storage**. It is the place files are kept for the long term. It keeps them with no power, is slower than memory, and usually has more room.
+
+Copying work from memory into storage is to **save**. Copying a file from storage into memory so you can use it is to **load**.
+
+| Office | Official name | Keeps data with no power? | Speed | Room | Phone example |
+|---|---|---|---|---|---|
+| Desk | Memory (RAM) | No | Fast | Less | The message you are typing, the app that is open |
+| Filing cabinet | Storage | Yes | Slower | More | Photos, installed apps, saved files |
+
+## Predict the output
+
+```challenge
+type: predict
+run: false
+id: pull-the-plug
+verified: not-run
+code: |
+  Desk (memory):      paper A, paper B, paper C
+  Cabinet (storage):  paper C (a saved copy), paper X
+  The power is pulled, then it comes back.
+  What is on the desk and in the cabinet now?
+options:
+  - id: a
+    text: "Desk: A, B, C. Cabinet: C, X"
+    why: "You may have thought the desk keeps its papers. The cleaner clears the desk the moment the power goes."
+  - id: b
+    text: "Desk: empty. Cabinet: C, X"
+    correct: true
+    why: "The desk forgets everything when the power goes. The cabinet keeps its files, and C survives only because a copy had been filed there."
+  - id: c
+    text: "Desk: empty. Cabinet: empty"
+    why: "You may have thought a power cut clears everything. The cabinet holds its files with no power."
+output: "Desk: empty. Cabinet: C, X"
+```
+
+```challenge
+type: predict
+run: false
+id: desk-is-full
+verified: not-run
+code: |
+  A phone has four apps open, and its desk (memory) is nearly full.
+  You open a fifth app.
+  Android's documentation says that as memory runs low,
+  the system can end apps that are no longer on the screen.
+  What happens?
+options:
+  - id: a
+    text: "The fifth app refuses to open"
+    why: "You may have expected a full desk to lock the door. The system makes room instead."
+  - id: b
+    text: "The system clears a background app off the desk to make room"
+    correct: true
+    why: "The desk has a limit. To fit the new paper, the system takes away one that is not being looked at."
+  - id: c
+    text: "All four open apps are filed in the cabinet first, so nothing is lost"
+    why: "You may have hoped the phone files everything for you. An app that is cleared off the desk does not always get a chance to save."
+output: "The system clears a background app off the desk to make room"
+```
+
+```challenge
+type: predict
+run: false
+id: game-while-off
+verified: not-run
+code: |
+  You install a game on your phone.
+  Then you switch the phone off for the night.
+  Where is the game's data while the phone is off?
+options:
+  - id: a
+    text: "On the desk (memory)"
+    why: "You may have thought the game stays ready on the desk. The desk is cleared when the power goes."
+  - id: b
+    text: "In the filing cabinet (storage)"
+    correct: true
+    why: "Anything that must last while the power is off is kept in the cabinet. The game is copied onto the desk when you open it."
+  - id: c
+    text: "Nowhere, the phone downloads it again each morning"
+    why: "You may have thought a switched-off phone forgets everything. The cabinet keeps the files, so no download is needed."
+output: "In the filing cabinet (storage)"
+```
+
+## Tricks to remember
+
+- The desk is quick but forgets. The cabinet is slow but remembers.
+- Power off clears the desk and leaves the cabinet alone.
+- To save is to walk to the cabinet. If you did not walk there, the work is only on the desk.
+
+## Common mistakes
+
+- **Treating memory and storage as the same thing.** Both are counted in GB, and shop labels sometimes use the word "memory" for storage. So more GB feels like more GB. Ask one question instead: does it keep data with no power? On this page, memory always means the desk.
+- **Thinking an open app has saved its work.** The words are on the screen, so they feel safe. But the screen shows the desk. Look for a Save step, or an app that says it saves for you.
+- **Thinking saving moves the work off the desk.** A real paper leaves the desk when it is filed. On a phone, saving makes a copy, so the same data can sit in both places.
+
+## Where this shows up in Android
+
+Picture a form you are filling in. You switch to the camera to scan something, then come back. The form is empty.
+
+While you were away, the form lived on the desk. The Android documentation says that as the system runs low on resources like memory, it kills processes in the cache. A process here is an app that is running, together with the memory it was given. The low memory page adds that, to the user, this looks like the app crashed, and it often skips the usual steps for saving state, so progress is lost.
+
+Storage has a similar rule. The Android documentation says that when the user uninstalls an app, the files saved in the app's own storage are removed. So a game's saved level survives a power cut, but not an uninstall.
+
+## Recap
+
+1. Memory is the fast desk. It forgets everything when the power goes off.
+2. Storage is the filing cabinet. It is slower, holds more, and keeps files without power.
+3. Saving copies work from the desk to the cabinet. Unsaved work lives only on the desk.
+
+## You can now
+
+- Explain why unsaved work disappears when the battery dies but photos stay, using the desk and the cabinet.
+- Predict what is left in memory and in storage after the power is pulled.
+- Sort everyday items on a phone into memory or storage.

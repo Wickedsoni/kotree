@@ -1,0 +1,5 @@
+input-process-output — foundation/how-computers-work/what-does-a-computer-do — a conveyor belt carries input tokens into a middle box that stamps them and drops output tokens; learner adds tokens, and can remove the middle box
+binary-switches — foundation/how-computers-work/what-is-a-bit — a row of 8 switches with a live counter and a worth sign above each; flip to reach a target number, add a ninth switch
+recipe-card-pointer — foundation/how-computers-work/what-is-a-cpu — a finger moves down a recipe card one line per bell ring (Step button); learner changes the bell speed, adds a "go back to line 1" line, or sets the bell to zero
+desk-and-cabinet — foundation/how-computers-work/memory-vs-storage — items sit on a desk and in a cabinet; pull the power plug and the desk clears while the cabinet keeps its files; fill the desk past its edge and items fall off
+building-manager — foundation/how-computers-work/what-is-an-os — three app blocks queue for one screen board and a memory shelf; a manager block hands out slots; remove the manager and the apps collide

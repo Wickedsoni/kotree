@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: sim id input-process-output has no spec in docs/05 yet (sim-engineer / physics-designer must create docs/sims/input-process-output.md). Android claim in the last section was checked on 21 Oct 2026 against developer.android.com/develop/ui/views/touch-and-input/input-events (touch reaches the View it hits). Predict items were traced by hand only. -->
+<!-- SOURCES (read 20 Oct 2026): https://developer.android.com/develop/ui/views/touch-and-input/input-events (when a View such as a Button is touched, the framework calls onTouchEvent() on that object; buttons fire their on-click listeners when pressed). The sim id input-process-output is listed in docs/sims/needed-ids.md. The three Predict items are paper-and-pencil and were traced by hand (verified: not-run). housekeeper: this comment must be removed before the leaf goes live (V12). -->
 ## The question
 
 You tap a heart under a photo. A moment later the heart turns red. Phones feel clever, as if they think about what you want.
@@ -62,7 +62,7 @@ Think about the trip from your key press to the letter on the screen. How many d
 - B. Two jobs: it stores the letter, then it shows the letter.
 - C. Three jobs: it takes the press in, works on it, and hands a result out.
 
-Idea A is the most common guess, and it is the one this page wants to change. The computer does not understand you. Idea B misses the step where the press is turned into the letter. Idea C matches the kitchen: ingredients arrive, the cook works, a dish leaves.
+Idea A is the guess this page wants to change. The computer does not understand you. Idea B misses the step where the press is turned into the letter. Idea C matches the kitchen: ingredients arrive, the cook works, a dish leaves.
 
 ### Build
 
@@ -106,14 +106,14 @@ code: |
 options:
   - id: a
     text: "Step 1, then Step 2, then Step 3"
-    why: "You may have read the list top to bottom. The list is mixed up on purpose. A dish cannot leave the kitchen before the ingredients arrive."
+    why: "You may have read the list top to bottom, but it is mixed up on purpose, and a dish cannot leave the kitchen before the ingredients arrive."
   - id: b
     text: "Step 3, then Step 2, then Step 1"
     correct: true
     why: "The ingredients arrive first (the press), the cook works on them (works out the letter), and then the dish leaves (the H appears)."
   - id: c
     text: "Step 2, then Step 3, then Step 1"
-    why: "You may have thought the computer works before anything arrives. The cook cannot start until something comes in."
+    why: "You may have thought the computer works before anything arrives, but the cook cannot start until something comes in."
 output: "Step 3, then Step 2, then Step 1"
 ```
 
@@ -131,14 +131,14 @@ code: |
 options:
   - id: a
     text: "Step 1"
-    why: "You may have picked the first step because it has a number in it. That step is the ingredients arriving, which is the input."
+    why: "You may have picked the first step because it has a number in it, but that step is the ingredients arriving, which is the input."
   - id: b
     text: "Step 2"
     correct: true
     why: "The cook works on the ingredients here. The number comes in as a number and leaves this step as text, because the recipe says so."
   - id: c
     text: "Step 3"
-    why: "You may have picked the step you can see. Showing the text is the dish leaving the kitchen, which is the output."
+    why: "You may have picked the step you can see, but showing the text is the dish leaving the kitchen, which is the output."
 output: "Step 2"
 ```
 
@@ -155,14 +155,14 @@ code: |
 options:
   - id: a
     text: "The heart turns red, because the tap and the screen are enough"
-    why: "You may have thought the screen colours itself. Nobody has told it which colour to use. A kitchen with ingredients but no cook sends out no dish."
+    why: "You may have thought the screen colours itself, but nobody has told it which colour to use, and a kitchen with ingredients but no cook sends out no dish."
   - id: b
     text: "The tap arrives, but nothing changes on the screen"
     correct: true
-    why: "The ingredients arrive and the plates are ready, but there is no cook to follow the recipe, so no dish leaves."
+    why: "The ingredients arrive, but there is no cook to follow the recipe, so no dish leaves."
   - id: c
     text: "The phone turns itself off"
-    why: "You may have expected a dramatic failure. Missing work usually shows up as nothing happening, not as a shutdown."
+    why: "You may have expected a dramatic failure, but missing work usually shows up as nothing happening, not as a shutdown."
 output: "The tap arrives, but nothing changes on the screen"
 ```
 
@@ -180,7 +180,7 @@ output: "The tap arrives, but nothing changes on the screen"
 
 ## Where this shows up in Android
 
-Picture the heart under the photo again. You touch the screen, and Android passes the touch to the part of the app you touched. The Android documentation says that when a button is touched, the system calls that button's code. That is the input arriving.
+Picture the heart under the photo again. You touch the screen, and Android passes the touch to the part of the app you touched. The Android documentation for its classic View system says that when a View such as a Button is touched, the framework calls the `onTouchEvent()` method on that object. That is the input arriving.
 
 The app's own instructions then decide what to do with it, for example which colour the heart should have. That is processing. The heart turning red is the output.
 
@@ -194,6 +194,6 @@ This gives you a first question for a symptom like "I tapped Like and nothing ha
 
 ## You can now
 
-- Explain input, processing and output using the kitchen, without looking at the page.
-- Sort the steps of an everyday app action into input, processing and output.
-- Predict what you would see if one of the three stops were missing.
+- Put the stops of an everyday app action in order: input, processing, output.
+- Pick out the processing step in a short description of an app.
+- Predict what you would see if the processing stop were missing.
