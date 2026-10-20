@@ -28,10 +28,37 @@ kobweb {
     }
 }
 
+val validateContent = tasks.register<dev.kotree.build.ValidateContentTask>("validateContent") {
+    group = "kotree"
+    description = "Checks /content against the rules V1-V12 (docs/14 section 3.2)."
+    contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+    providers.gradleProperty("baselineRef").orNull?.let { baselineRef.set(it) }
+}
+
+val generateTreeData = tasks.register<dev.kotree.build.GenerateTreeDataTask>("generateTreeData") {
+    group = "kotree"
+    description = "Writes GeneratedTreeData.kt and build/tree.json from /content."
+    dependsOn(validateContent)
+    contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+    kotlinOut.set(layout.buildDirectory.dir("generated/kotree/kotlin"))
+    jsonOut.set(layout.buildDirectory.file("tree.json"))
+}
+
+// Run after the export (docs/07 section 6.4). The app never fetches this file.
+val copyTreeJson = tasks.register<Copy>("copyTreeJson") {
+    group = "kotree"
+    description = "Copies build/tree.json to .kobweb/site/tree.json (run after the export)."
+    from(generateTreeData.flatMap { it.jsonOut })
+    into(layout.projectDirectory.dir(".kobweb/site"))
+}
+
 kotlin {
     configAsKobwebApplication("kotree")
 
     sourceSets {
+        jsMain {
+            kotlin.srcDir(generateTreeData.flatMap { it.kotlinOut })
+        }
         jsMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.html.core)
