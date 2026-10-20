@@ -365,6 +365,7 @@ Lessons no longer pass through the markdown plugin, so none of the settings belo
   1. **`TreeData.kt`** (Kotlin source, `build/generated/kotree/kotlin/dev/kotree/site/tree/TreeData.kt`, added to the `jsMain` source set): data classes and literals mirroring `docs/03` §4.2 field for field (`video: String?`, `null` when empty, §6.5). This is the **only** tree data the app reads.
   2. **`tree.json`** (`site/build/tree.json`, plain JSON in the `docs/03` §4.2 schema, written with a JSON library on the build classpath, never in the browser bundle): a build artifact for tools and agents (`housekeeper`'s `PROGRESS.md` generator, progress counter scripts, link checks). Published at `/tree.json` by the workflow step "copy `site/build/tree.json` to `site/.kobweb/site/tree.json`" that runs after `kobweb export` (§5.4). The app never fetches it.
   - Both outputs are written deterministically: same input → byte-identical files (stable key order, fixed indentation, `\n` line endings, no timestamps).
+  - **As built in Phase 3 (deviations, ADR 003; `docs/14` §3.4):** (a) the generated file is `site/build/generated/kotree/kotlin/dev/kotree/site/tree/model/GeneratedTreeData.kt`, not `.../tree/TreeData.kt`, and it holds **only** `val treeData: TreeData = TreeData(...)` plus one private function per branch (17); the data classes and enums stay hand-written in `site/src/jsMain/kotlin/dev/kotree/site/tree/model/TreeData.kt`, so a drifting generator is a compile error and the name does not clash with that file. (b) `tree.json` is written by a hand-written deterministic writer (`buildSrc` `EmitJson.kt`), not a JSON library. (c) Locally the copy step is `../gradlew :site:copyTreeJson`, run after the export. (d) The "previously live slug removed or renamed" rule is V8 on git history (`-PbaselineRef`, default `origin/main`; a missing ref or `git` is a warning); the sitemap check below stays a Phase 7 `deploy.yml` step. (e) The SIM-marker, `sims`, `SimRegistry` and CH1–CH10 rules below arrive with Phases 4 to 6; Phase 3 implements V1–V12 (`docs/14` §3.2, V12 from ADR 005).
   - Chosen: generated Kotlin for the app (no runtime fetch, no `kotlinx.serialization` in the bundle, compile errors if the shape drifts) plus JSON for tools (agents and scripts need not parse Kotlin).
   - Rejected: runtime `tree.json` fetch by the app (extra request plus `kotlinx.serialization` in the bundle); hand-written data (drifts from roadmaps); adding a generated folder as an extra Kobweb resource directory so `tree.json` lands in the export by itself (whether the export copies an extra resource source dir is unverified; the copy step needs no unverified behaviour); two generator tasks (the outputs could drift).
 - **Live list (D16):** a leaf is `live` if and only if its file exists with `status: live`. There is no separate published-IDs file. Every other roadmap leaf is non-live (`shadow`).
@@ -517,7 +518,7 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 
 **Phase 1 update (20 Oct 2026, `docs/reviews/P1-acceptance.md`).** After tokens, fonts, the base components and the `/kitchen-sink` page, `kotree.js` is **277,917 B gzip** (+37,227 B over the 240,690 B prototype; 247,676 B without the kitchen sink, so the sink costs about 30 KB). That is over the +25 KB point where the architect must look and under the +40 KB fail line. Decision (orchestrator, 20 Oct 2026): accept for now because the kitchen sink is the only large item and Phase 3 will measure the real lesson cost; if the Phase 3 projection is over budget, the first cut is to drop `/kitchen-sink` from the production build, then ADR 005. Headroom is now about 122 KB of the 400 KB budget.
 
-**Phase 3 S2 update (20 Oct 2026).** With the generated tree data (482 leaves, 180 stems, shadow state) `kotree.js` is **313,048 B gzip**, so T = +35,131 B over the 277,917 B Phase 1 figure (cap 60,000; ADR 005 needs T <= 40,000). Headroom to the 400,000 B budget is about 87 KB. S3 must add at most 15,000 B.
+**Phase 3 S2 update (20 Oct 2026).** With the generated tree data (482 leaves, 180 stems, shadow state) `kotree.js` is **313,048 B gzip**, so T = +35,131 B over the 277,917 B Phase 1 figure (cap 60,000; ADR 005 needs T <= 40,000). Headroom to the 400,000 B budget is about 87 KB. S3 must add at most 15,000 B. (S3 result: see "Phase 3 result" below.)
 
 **Phase 3 S1 bundle spike (P0-7, 20 Oct 2026, `docs/reviews/P3-probes.md`).** 50 synthetic Markdown leaves (about 8,100 B of real prose each, 6 headings, a 15-line Kotlin block, one `PredictOutput` and one `FixBug` with literal data), compiled by the Kobweb markdown plugin:
 
@@ -528,6 +529,24 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 | 50 | 1,827,990 | 488,421 |
 
 Per leaf c50 = **4,190 B gzip** (c10 = 4,206 B). Projection 277,917 + 482 × 4,190 + 40,000 = **2,337,690 B**, 5.8 × the budget; 19 leaves fit. **FAIL → ADR 005** (lessons out of the bundle). Projection under ADR 005: 277,917 + T 40,000 (reserve) + lesson runtime ≤ 15,000 + 482 × ≤ 120 B live `TreeData` fields = **about 390,757 B**; levers if over 380,000 are listed in ADR 005. Record after Phase 4: `kotree.js` with the lesson runtime, and the per-live-leaf growth.
+
+**Phase 3 result (S2 and S3, 20 Oct 2026; `docs/reviews/P3-acceptance.md`).** Each value is `gzip -9 -c site/.kobweb/site/kotree.js | wc -c` after a clean export, against the 400,000 B budget.
+
+| Point | `kotree.js` gzip -9 B | Delta | Fail line | Result |
+|---|---|---|---|---|
+| M0 (after Phase 1) | 277,917 | — | — | baseline |
+| After S2 (generated `TreeData`, 482 leaves, 180 stems) | 313,048 | T = +35,131 over M0 | T > 60,000 (ADR 005 assumes T ≤ 40,000) | PASS |
+| After S3 (stems, twigs, up-next leaves on the tree) | 323,366 | +10,318 over S2; +45,449 over M0 | S3 > 15,000 | PASS |
+| Headroom after S3 | 76,634 | | | |
+
+- **50-leaf projection (S1 spike, above):** compiled Markdown lessons cost 4,190 B each, 482 leaves project to 2,337,690 B (FAIL, ADR 005).
+- **Projection under ADR 005, re-based on the measured S3 figure:** 323,366 + lesson runtime ≤ 15,000 + 482 × ≤ 120 B live `TreeData` fields (57,840) = **about 396,206 B**. ADR 005 assumed 390,757 B because its 40,000 B T reserve did not include S3. This is over ADR 005's 380,000 B lever point and only about 3.8 KB under the budget, so Phase 4 must measure the lesson runtime and the per-live-leaf cost at the pilot and apply ADR 005's first lever (drop `/kitchen-sink` from production, about −30 KB) if the measured projection stays above 380,000 B.
+- **Determinism hashes (console on page load, 1280 × 800):** `limbHash` = `cecb906380417dd8` (unchanged since the prototype: limbs did not move); `fullHash` = `c9399b38f0f393cf` (limbs + stems + leaves). The `fullHash` is **provisional**: a fix pass (`P3-acceptance.md` FIX 5, `Tokens.Gen` constants in `Stems.kt`) is in progress and may change it; the final value is the one recorded in `docs/reviews/P3-acceptance.md`.
+
+**§8 budget table, continued** (these rows belong to the table at the top of §8; they were split off by an earlier edit and get a header here so they render):
+
+| Metric | Budget | How checked |
+|---|---|---|
 | Frame time while panning/zooming | ≤ 16.7 ms p95 (60 fps), canvas draw ≤ 8 ms | Performance panel, 10 s pan/zoom script |
 | Click on a leaf → popup visible | ≤ 100 ms | Performance panel |
 | Matter.js (physics engine) | 0 bytes on home and on pages with no `physics` sim; on other pages loaded on demand (script tag, when the first sim nears the viewport), ≤ 30 KB gzip, cached once per visit (`docs/05` §3.1, §6.3) | Network panel; file size check on `/vendor/` |
@@ -559,7 +578,7 @@ Result: over budget (§8.1). ADR 005 chose lesson JSON plus one dynamic lesson p
 |---|---|---|
 | 001 | Kobweb as the framework | Phase 0; pin Kobweb version, JDK 17, package `dev.kotree.site`, and `LESSON_KOTLIN_VERSION = 2.4.21` (§1, author decision 18 Oct 2026; re-check the Playground version list first). |
 | 002 | Vercel hosting, built and deployed from GitHub Actions; `kotree` CNAME at Hostinger | §5.1–5.3. |
-| 003 | Content outside `site/`, read at build time; tree data as generated Kotlin for the app plus a `tree.json` tool artifact from the same generator; validators | §6.4; written at Phase 3 S2 exit (`docs/14` §3.5). Lesson delivery is ADR 005, not 003. |
+| 003 | Content outside `site/`, read at build time; tree data as generated Kotlin for the app plus a `tree.json` tool artifact from the same generator; validators | §6.4. **Written 20 Oct 2026:** `docs/adr/003-content-pipeline.md`. Lesson delivery is ADR 005, not 003. |
 | 004 | ~~Challenge blocks rewritten at sync time into generated widgets~~ | Not written: superseded by ADR 005 (challenge data travels in the lesson JSON). The number stays unused. |
 | 005 | Lesson content delivery | **Written 20 Oct 2026:** `docs/adr/005-lesson-content-delivery.md` (P0-7 failed). |
 

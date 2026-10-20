@@ -1,16 +1,39 @@
-# Next steps (handoff, written 18 Oct 2026)
+# Next steps (handoff, written 18 Oct 2026, updated 20 Oct 2026 after Phase 3)
 
 > Read this first in a new session, then `docs/INDEX.md`. `docs/00-decisions.md` wins every conflict.
 
-## State right now
+## State on 18 Oct 2026 (historical; current state is "Phase 3 done" below)
 
 - Spec set is written: `docs/00`-`10`, `docs/INDEX.md`, `content/_templates/leaf.md`, 17 `content/*/_roadmap.md` (482 leaves, 20 fruits, all `shadow`), 10 agents in `.claude/agents/`, review reports in `docs/reviews/` (A2e-* files).
 - Nothing is published. No site code exists yet (`/site` not created). Git repo exists (created in the IDE) but **nothing is committed or pushed**. The author will push later.
 - Open `⚠️ VERIFY` marks in docs 00-10: about 53 (each has a test). Roadmap marks (~287) are checked per leaf before it goes live.
 
-## PAUSED 20 Oct 2026, after Phase 3 session 2 (read this first, then docs/INDEX.md)
+## Phase 3 done, 20 Oct 2026 (read this first, then docs/INDEX.md)
 
 **Repo:** https://github.com/Wickedsoni/kotree (public, `main`). Everything below is committed and pushed. Work on `main`; the orchestrator makes small conventional commits; agents never commit. Author is on Windows; git identity for this repo is `Wickedsoni` (noreply).
+
+**Phase 3 summary**
+- S1: probes (export shape OK, hyphenated Markdown file names break Kobweb, V11), bundle spike FAILED (4,190 B gzip per compiled lesson), so ADR 005: lessons become JSON plus pre-rendered pages.
+- S2: `buildSrc` parser, validators V1-V12, generator (`GeneratedTreeData.kt` + `tree.json`, deterministic), recorded in ADR 003 (`docs/adr/003-content-pipeline.md`).
+- S3: the tree draws real stems (labels), twigs and the 17 up-next leaves at deeper zoom (shadow leaves never drawn, D3), stem fly, up-next popup, accessible stem and leaf buttons. Review: `docs/reviews/P3-acceptance.md` (screenshots in `docs/reviews/phase3/`).
+- Numbers (`docs/07` §8.1): `kotree.js` gzip 277,917 (M0) → 313,048 (S2, T = +35,131) → 323,366 (S3, +10,318). `limbHash` `cecb906380417dd8`; `fullHash` `c9399b38f0f393cf` is provisional until the FIX-5 pass lands (final value in `P3-acceptance.md`).
+- Watch: the ADR 005 projection re-based on S3 is about 396 KB of the 400 KB budget; Phase 4 must measure the lesson runtime and per-leaf cost at the pilot and likely drop `/kitchen-sink` from production (about -30 KB).
+- Open from the review: up-next pip nearly the same grey as twigs (design call); first stems / up-next leaf can be off-screen at landing z=4 on long limbs (per-branch landing z or centre on the up-next stem); chunky twigs at z 8-24 (Phase 2 remainder, re-raster per zoom).
+
+**Next, in order**
+1. Phase 4 (lesson page and pilot leaf `kotlin/null-safety/what-is-null`, lunch-box analogy): **gated** on the author saying he understood what-is-null. Before building, close the open design gaps from ADR 005: how `runnable` is set for a plain kotlin fence; EditorShell to Playground handoff; where challenge state lives; SimFrame vs SimHost hosting; the VERIFY comment in the worked example breaks V12 once live.
+2. Ask the author: "add /topics?" (a plain list page of live and up-next topics; not decided).
+3. Add `scripts/spike-bundle.py` (cleaned) for Phase 8 bundle checks.
+4. Phase 0b leftovers in docs/11, then Phase 5 (sims), 6 (editor), 7 (deploy; Vercel Hobby is fine while the channel is not monetised), 8 (polish).
+
+## Moving to cloud sessions
+
+- Everything is pushed to GitHub; a cloud session must `git clone https://github.com/Wickedsoni/kotree` (full clone, not shallow: V8 reads `origin/main` and only warns when it is missing).
+- No Windows-only paths in commands or docs. The Kobweb CLI path in "How to run" below is the author's local Windows install; a cloud machine installs its own CLI (Linux: `docs/07` §2.1 options, or the CI way in `docs/07` §3: download the pinned 0.9.23 zip from `varabyte/kobweb-cli` releases) plus JDK 17 (ADR 001).
+- `./gradlew` may need the executable bit (`docs/07` §2.2 step 4). The first export downloads a Playwright browser.
+- Results may differ from the local runs: Gradle and export behaviour (the export exit code on Linux is P4-4 in `docs/11`), and headless Chrome checks (fonts, DPR, frame timings, screenshots). Re-measure before comparing numbers.
+
+## Earlier detail (kept as the record)
 
 **Done (all reviewed unless noted)**
 - Spec set docs/00-14, ADRs 001 and 005, roadmaps for 17 branches (482 leaves, 20 fruits, all `shadow`), 10 agents in `.claude/agents/`.
@@ -19,17 +42,9 @@
 - Phase 3 S1 (docs/14, docs/reviews/P3-probes.md): lesson export shape OK; hyphenated file names break Kobweb (sync renames `-` to `_` plus absolute routeOverride, check V11); bundle spike FAILED (about 4,190 B gzip per compiled lesson), so ADR 005: lessons are rendered to JSON (`/lessons/<id>.json`) plus pre-rendered pages, not compiled into the app.
 - Phase 3 S2: `buildSrc` parser and validators V1-V12 (50 tests, 0 failures), tree data generator (`generateTreeData` writes `tree.json` and the Kotlin data, deterministic), home page now uses generated data (`SampleTree.kt` deleted). Real numbers: 482 leaves, 180 stems, 17 branches, 20 fruits; day one 0 live, 17 upnext, 465 shadow. Limb hash still `cecb906380417dd8`. `kotree.js` gzip 313,048 B (T = +35,131 over 277,917; ADR 005 needs T <= 40,000; budget 400,000).
 
-**Next, in order**
-1. Phase 3 S3 (docs/14 section 4): the tree shows real stems/leaves at deeper zoom (shadow leaves not drawn, D3), new `fullHash`, 3 parallel engineers after a frozen geometry contract. Then a `reviewer` pass and `docs/reviews/P3-acceptance.md`.
-2. `architect` writes `docs/adr/003-content-pipeline.md` (owed at S2 exit).
-3. Phase 3 follow-ups: add `scripts/spike-bundle.py` (cleaned) for Phase 8; ask the author "add /topics?" (a plain list page of live and up-next topics; not yet decided).
-4. Phase 4 (lesson page and pilot leaf `kotlin/null-safety/what-is-null`, lunch-box analogy): only after the author says he understood it. Open design gaps from ADR 005: how `runnable` is set for a plain kotlin fence; EditorShell to Playground handoff; where challenge state lives; SimFrame vs SimHost hosting; the VERIFY comment in the worked example breaks V12 once live.
-5. Phase 0b leftovers in docs/11, then Phase 5 (sims), 6 (editor), 7 (deploy; Vercel Hobby is fine while the channel is not monetised), 8 (polish).
-6. The author decided to stay local (no cloud sessions) and push to GitHub as we go.
+**How to run:** `./gradlew :site:kobwebStart` then http://localhost:8080/ ; stop with `./gradlew :site:kobwebStop`. NEVER use interactive `kobweb run` (opens looping console windows). On the author's Windows machine only, the Kobweb CLI is at `C:\Users\Avik\.cache\portfolio-tools\kobweb-cli\kobweb-0.9.23\bin\kobweb.bat` (cloud: see "Moving to cloud sessions"). `kobweb export` can exit 0 even when the build fails: check that output files exist. Agents must not leave `find /` searches or headless Chrome running (a stuck shell and a hung headless Chrome blocked agents; kill stale processes if an agent's token count stops moving).
 
-**How to run:** `./gradlew :site:kobwebStart` then http://localhost:8080/ ; stop with `./gradlew :site:kobwebStop`. NEVER use interactive `kobweb run` (opens looping console windows). The Kobweb CLI is at `C:\Users\Avik\.cache\portfolio-tools\kobweb-cli\kobweb-0.9.23\bin\kobweb.bat`. `kobweb export` can exit 0 even when the build fails: check that output files exist. Agents must not leave `find /` searches or headless Chrome running (a stuck shell and a hung headless Chrome blocked agents; kill stale processes if an agent's token count stops moving).
-
-**Rules to keep:** docs/00 wins; L28 (tree first), L29 (lesson voice: industry accurate, easy to say aloud, one analogy with where it stops); no leaf goes live until the author says he understood it; no cloud sessions.
+**Rules to keep:** docs/00 wins; L28 (tree first), L29 (lesson voice: industry accurate, easy to say aloud, one analogy with where it stops); no leaf goes live until the author says he understood it.
 
 ## Resumed 20 Oct 2026
 
