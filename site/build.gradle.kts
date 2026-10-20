@@ -11,8 +11,16 @@ plugins {
 group = "dev.kotree.site"
 version = "1.0-SNAPSHOT"
 
+// Live lesson routes for the export (ADR 005 section 3). A ValueSource, so a new live leaf file changes the routes.
+val liveRoutes: List<String> = providers.of(dev.kotree.build.LiveLessonRoutes::class) {
+    parameters.contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+}.get()
+
 kobweb {
     app {
+        export {
+            liveRoutes.forEach { addExtraRoute(it, exportPath = it.removePrefix("/") + ".html") }
+        }
         index {
             description.set("Kotree: learn Android and CS theory on one tree.")
             head.add {
@@ -52,12 +60,55 @@ val copyTreeJson = tasks.register<Copy>("copyTreeJson") {
     into(layout.projectDirectory.dir(".kobweb/site"))
 }
 
+// Preview of drafts (shadow leaves) is ON for a dev run (kobwebStart, kobweb run) and never in an export.
+// Override with -Pkotree.preview=true|false. An export always wins: drafts must not ship.
+val requestedTasks = gradle.startParameter.taskNames
+val exporting = requestedTasks.any { it.contains("export", ignoreCase = true) }
+val devRun = requestedTasks.any { Regex("kobwebStart|kobwebRun|BrowserDevelopmentRun|BrowserProductionRun").containsMatchIn(it) }
+val previewOn = !exporting && (providers.gradleProperty("kotree.preview").map { it.toBoolean() }.orNull ?: devRun)
+
+val renderLessons = tasks.register<dev.kotree.build.RenderLessonsTask>("renderLessons") {
+    group = "kotree"
+    description = "Renders content leaves to /lessons/<id>.json, static bodies, LessonConfig.kt and sitemap.xml (ADR 005)."
+    dependsOn(validateContent)
+    contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+    preview.set(previewOn)
+    resourcesOut.set(layout.buildDirectory.dir("generated/kotree/resources"))
+    previewOut.set(layout.buildDirectory.dir("generated/kotree/preview"))
+    staticOut.set(layout.buildDirectory.dir("kotree/lessons-static"))
+    kotlinOut.set(layout.buildDirectory.dir("generated/kotree/lesson-kotlin"))
+    sitemapOut.set(layout.buildDirectory.file("kotree/sitemap.xml"))
+}
+
+// Run after the export and copyTreeJson (docs/07 section 6.7).
+val emitLessonPages = tasks.register<dev.kotree.build.EmitLessonPagesTask>("emitLessonPages") {
+    group = "kotree"
+    description = "Bakes head tags, static prose and JSON into every exported live lesson page; writes sitemap.xml."
+    contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+    staticDir.set(renderLessons.flatMap { it.staticOut })
+    lessonsJsonDir.set(renderLessons.flatMap { it.resourcesOut.dir("public/lessons") })
+    sitemapFile.set(renderLessons.flatMap { it.sitemapOut })
+    siteDir.set(layout.projectDirectory.dir(".kobweb/site"))
+    outputs.upToDateWhen { false }
+}
+
+tasks.register<dev.kotree.build.VerifyLessonExportTask>("verifyLessonExport") {
+    group = "kotree"
+    description = "Fails when .kobweb/site does not match the live leaves (and when any draft is in it)."
+    contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+    siteDir.set(layout.projectDirectory.dir(".kobweb/site"))
+    outputs.upToDateWhen { false }
+}
+
 kotlin {
     configAsKobwebApplication("kotree")
 
     sourceSets {
         jsMain {
             kotlin.srcDir(generateTreeData.flatMap { it.kotlinOut })
+            kotlin.srcDir(renderLessons.flatMap { it.kotlinOut })
+            resources.srcDir(renderLessons.flatMap { it.resourcesOut })
+            if (previewOn) resources.srcDir(renderLessons.flatMap { it.previewOut })
         }
         jsMain.dependencies {
             implementation(libs.compose.runtime)

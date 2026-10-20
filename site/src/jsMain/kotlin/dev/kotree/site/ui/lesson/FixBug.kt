@@ -40,6 +40,8 @@ fun FixBug(
     online: Boolean = true,
     lastOutput: String = "",
     onRun: () -> Unit = {},
+    runEnabled: Boolean = true,
+    runHint: String = "",
 ) {
     var hintsShown by remember { mutableStateOf(0) }
     var fixShown by remember { mutableStateOf(false) }
@@ -57,6 +59,8 @@ fun FixBug(
             online = online,
             output = lastOutput,
             onRun = onRun,
+            runEnabled = runEnabled,
+            runHint = runHint,
         ) {
             CodeBlock(code, branch = branch, label = "Code with a bug")
             P(Modifier.styleModifier { property("margin", "${space3Var.value()} 0 ${space2Var.value()}"); typo(Typo.Label) }.toAttrs()) {

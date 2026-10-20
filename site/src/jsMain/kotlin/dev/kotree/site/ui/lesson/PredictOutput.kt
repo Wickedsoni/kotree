@@ -143,6 +143,7 @@ fun PredictOutput(
     modifier: Modifier = Modifier,
     branch: String = "kotlin",
     onCheck: (String) -> Unit = {},
+    checkLabel: String = "Run it to check",
 ) {
     var chosen by remember { mutableStateOf<String?>(null) }
     var checked by remember { mutableStateOf(false) }
@@ -190,7 +191,7 @@ fun PredictOutput(
         Div(Modifier.styleModifier { property("margin-top", space3Var.value()); property("display", "flex"); property("gap", space2Var.value()) }.toAttrs()) {
             // One call site keeps the same DOM node when the label changes, so focus stays on the button (WCAG 2.4.3).
             Button(
-                text = if (checked) "Try again" else "Run it to check",
+                text = if (checked) "Try again" else checkLabel,
                 onClick = {
                     if (checked) { checked = false; chosen = null; retries += 1 }
                     else picked?.let { checked = true; onCheck(it.id) }
