@@ -32,6 +32,7 @@ import dev.kotree.site.ui.core.Difficulty as UiDifficulty
 import dev.kotree.site.ui.layout.LeafPopup
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.jetbrains.compose.web.dom.A
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
@@ -161,6 +162,7 @@ fun TreeView(data: TreeData) {
         }.toAttrs()) { Text("Kotree") }
         // Home first so it is first in tab order after the container.
         HomeButton { tracker.unpin(); fly.to(camera.homeTarget()) }
+        TopicsLink()
         Overlay(data, geometry, camera, fly, tracker, state, { popupLeaf = it }) {
             // The focused label was removed on a level switch: keep focus inside the view.
             val active = document.activeElement
@@ -217,6 +219,35 @@ private fun Difficulty.toUi(): UiDifficulty = when (this) {
     Difficulty.EASY -> UiDifficulty.Easy
     Difficulty.MEDIUM -> UiDifficulty.Medium
     Difficulty.HARD -> UiDifficulty.Hard
+}
+
+/** Link to the plain topics list (/topics), placed right of the Home button. Focus ring comes from the global rule. */
+@Composable
+private fun TopicsLink() {
+    A(
+        "/topics",
+        Modifier.styleModifier {
+            property("position", "absolute")
+            property("left", "${Tokens.Space.grid * 4 + Tokens.Space.hitAreaPx * 2 + Tokens.Space.grid * 2}px")
+            property("top", "${Tokens.Space.grid * 4}px")
+            property("display", "inline-flex")
+            property("align-items", "center")
+            property("justify-content", "center")
+            property("box-sizing", "border-box")
+            property("min-width", "${Tokens.Space.hitAreaPx * 2}px")
+            property("min-height", "${Tokens.Space.hitAreaPx * 2}px")
+            property("padding", "0 ${Tokens.Space.grid * 4}px")
+            property("border", "${Tokens.Space.hairlinePx}px solid ${cssRgb(Tokens.Color.outline)}")
+            property("border-radius", "${Tokens.Space.hitAreaPx * 2}px")
+            property("background", cssRgb(Tokens.Color.surface))
+            property("color", cssRgb(Tokens.Color.onSurface))
+            property("text-decoration", "none")
+            property("font-family", Tokens.Type.fontUi.joinToString(", "))
+            property("font-size", "${Tokens.Type.labelSizePx}px")
+            property("line-height", "${Tokens.Type.labelLineHeightPx}px")
+            property("font-weight", "${Tokens.Type.labelWeight}")
+        }.toAttrs()
+    ) { Text("Topics") }
 }
 
 @Composable
