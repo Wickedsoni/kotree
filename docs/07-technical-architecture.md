@@ -538,6 +538,8 @@ Per leaf c50 = **4,190 B gzip** (c10 = 4,206 B). Projection 277,917 + 482 × 4,1
 | After S2 (generated `TreeData`, 482 leaves, 180 stems) | 313,048 | T = +35,131 over M0 | T > 60,000 (ADR 005 assumes T ≤ 40,000) | PASS |
 | After S3 (stems, twigs, up-next leaves on the tree) | 323,366 | +10,318 over S2; +45,449 over M0 | S3 > 15,000 | PASS |
 | Headroom after S3 | 76,634 | | | |
+| After Phase 4 (lesson page, preview route, 404 page, lesson runtime; 21 Oct 2026, `/kitchen-sink` still included) | 333,619 | +10,253 over S3 | lesson runtime > 15,000 | PASS (0 live leaves; budget 600,000 B, L30) |
+| Headroom after Phase 4 | 266,381 of 600,000 | | | |
 
 - **50-leaf projection (S1 spike, above):** compiled Markdown lessons cost 4,190 B each, 482 leaves project to 2,337,690 B (FAIL, ADR 005).
 - **Projection under ADR 005, re-based on the measured S3 figure:** 323,366 + lesson runtime ≤ 15,000 + 482 × ≤ 120 B live `TreeData` fields (57,840) = **about 396,206 B**. ADR 005 assumed 390,757 B because its 40,000 B T reserve did not include S3. This is over ADR 005's 380,000 B lever point and only about 3.8 KB under the budget, so Phase 4 must measure the lesson runtime and the per-live-leaf cost at the pilot and apply ADR 005's first lever (drop `/kitchen-sink` from production, about −30 KB) if the measured projection stays above 380,000 B.

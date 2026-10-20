@@ -10,6 +10,8 @@ class Fx {
     init {
         val src = File(Fx::class.java.getResource("/fixtures/good/content")!!.toURI())
         src.copyRecursively(content, overwrite = true)
+        // A Windows checkout may hold CRLF; tests edit by exact text, so normalise to LF.
+        content.walkTopDown().filter { it.isFile }.forEach { f -> f.writeText(f.readText().replace("\r\n", "\n")) }
     }
 
     fun file(rel: String): File = File(content, rel)

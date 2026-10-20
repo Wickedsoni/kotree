@@ -38,7 +38,7 @@ fun branchDef(slug: String): BranchDef? = BRANCHES.firstOrNull { it.slug == slug
 
 /** docs/03 section 7.3. Any name starting with `_` is reserved too (except `_templates`). */
 val RESERVED_FIRST_SEGMENTS: Set<String> = setOf(
-    "assets", "fonts", "images", "kitchen-sink", "about", "progress", "api", "tree.json", "404", "lessons", "sitemap.xml",
+    "assets", "fonts", "images", "kitchen-sink", "about", "progress", "api", "tree.json", "404", "lessons", "lessons-preview", "preview", "sitemap.xml",
 )
 
 val SLUG_REGEX = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")

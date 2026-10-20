@@ -27,6 +27,7 @@ const val OFFLINE_MESSAGE = "Running code needs internet. You can still read the
  * Kotlin Playground there; until then a CodeBlock), a Run button and an output area. There is no Playground here.
  * When [online] is false the Run button is replaced by [OFFLINE_MESSAGE]. The output area is a polite live region.
  *
+ * @param runEnabled false shows a disabled Run button next to [runHint] (the Playground is not wired yet, Phase 6).
  * @param output text shown under the code after a run, empty for none.
  */
 @Composable
@@ -38,6 +39,8 @@ fun EditorShell(
     runLabel: String = "Run",
     output: String = "",
     onRun: () -> Unit = {},
+    runEnabled: Boolean = true,
+    runHint: String = "",
     content: @Composable () -> Unit,
 ) {
     Div(
@@ -60,7 +63,10 @@ fun EditorShell(
             }.toAttrs()
         ) {
             if (online) {
-                Button(text = runLabel, onClick = onRun, branch = branch)
+                Button(text = runLabel, onClick = onRun, branch = branch, enabled = runEnabled)
+                if (!runEnabled && runHint.isNotEmpty()) {
+                    Span(Modifier.styleModifier { property("color", colorOnSurfaceMutedVar.value()); typo(Typo.Label) }.toAttrs()) { Text(runHint) }
+                }
             } else {
                 Span(
                     Modifier.attrsModifier { attr("role", "status") }
