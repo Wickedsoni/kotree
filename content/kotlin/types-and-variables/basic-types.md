@@ -1,21 +1,20 @@
 ---
 id: kotlin/types-and-variables/basic-types
 title: Which kinds of values does Kotlin know out of the box?
-status: shadow
+status: live
 difficulty: easy
 order: 5
 requires: [kotlin/types-and-variables/val-vs-var]
 summary: Kotlin has a different type for whole numbers, decimals, yes or no, one character and text. Pick the one that fits the value.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/types-overview.html (table of basic types and their definitions; everything is an object in the sense that you can call members on any variable); kotlinlang.org/docs/numbers.html (Int range; Int inferred if the value fits, otherwise Long; Double by default for floating-point literals; Float with f; numeric types are not subtypes of one another and need explicit conversions; 5 / 2 is 2; toInt, toDouble); kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/to-int.html (fractional part is rounded down towards zero); kotlinlang.org/docs/booleans.html (true and false); kotlinlang.org/docs/characters.html (single quotes; a Char is not a numeric type); kotlinlang.org/docs/kotlin-tour-basic-types.html (types tell the compiler what you are allowed to do); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (amountInput String, toDoubleOrNull, tipInput converted to Double, null when the field is empty). Interview section: kotlinlang.org/docs/numbers.html (Int and Long minimum and maximum values and bit sizes in the integer types table; division between integer values returns an integer and the compiler discards the fractional part; Int inferred if the value fits, otherwise Long). General knowledge, not from the Kotlin pages: Int overflow wraps around (Int.MAX_VALUE + 1 is -2147483648); a Double is approximate (0.1 + 0.2 prints 0.30000000000000004, a K2 run in review W5-a); money is often kept in a Long of cents or in BigDecimal. Own reasoning: why a price in an Int of whole units is wrong; the Android symptom. Outputs hand-traced, not compiled. -->
 ## The question
 
 Maya is writing a shop app. It must keep her age, the price 19.99, whether she is a student, her grade letter and her name. Are all five the same kind of thing? Which kind of value should each one be, and what goes wrong if you pick the wrong kind?

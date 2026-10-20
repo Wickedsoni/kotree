@@ -167,3 +167,6 @@ C. (minor, with A) ranges-and-for-loops line 231: `IllegalArgumentException` is 
 | `kotlin/functions/default-and-named-arguments` | FIX: item A (lines 220, 223) |
 
 Counts: 3 PASS, 4 FIX (all mechanical, `fixer` can do them; no owner decision left).
+
+## Final (orchestrator, 21 Oct 2026)
+All FIX items for the leaves in this report were applied as specified (re-check fixes included) and validateContent passes. Verdict for the leaves in this report: PASS.

@@ -43,3 +43,6 @@ Optional, not a FIX: the third Predict puts the instruction sentence inside `cod
 ## Could not verify
 
 The Playground's Run button, output area and need for internet (undocumented on kotlinlang.org; labelled as own reasoning by items 3 and 4). Login and "free" claims are not made by the leaf. Not retested: play.kotlinlang.org is unreachable from this box.
+
+## Final (orchestrator, 21 Oct 2026)
+All FIX items for the leaves in this report were applied as specified (re-check fixes included) and validateContent passes. Verdict for the leaves in this report: PASS.

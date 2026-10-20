@@ -1,21 +1,20 @@
 ---
 id: kotlin/control-flow/break-and-continue
 title: How do I stop a loop early or skip one turn?
-status: shadow
+status: live
 difficulty: easy
 order: 11
 requires: [kotlin/control-flow/ranges-and-for-loops]
 summary: Break leaves a loop at once. Continue skips the rest of one turn and moves to the next.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [letter-stack-gates]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/returns.html (break terminates the nearest enclosing loop, continue proceeds to the next step of the nearest enclosing loop; labels such as break@loop; non-local break and continue valid in lambdas of inline functions; return@forEach similar to continue; the "only when a loop encloses the call" detail is from the W5-b reviewer's compiler run); https://kotlinlang.org/docs/control-flow.html (break and continue exist in loops). Read 20 Oct 2026. All outputs hand-traced, not run. Android section is own reasoning, no Android page cited. Sim differs from the roadmap row, which says to reuse the spoon-and-pot sim: see docs/sims/needed-ids.md. -->
 ## The question
 
 A search screen goes through a list of 100 names to find one person. It finds her at name number 3 and keeps checking the other 97. On another screen, one name in the list is blank, and that name must be skipped while the rest are shown. How do you tell a job that goes through a list to stop early, and how do you tell it to skip only one turn?

@@ -21,7 +21,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **First Code** (3)
 
 - [x] Why does a computer need such exact instructions? (easy)
-- >> Where can I run code without installing anything? (easy)
+- [x] Where can I run code without installing anything? (easy)
 - [x] In what order does a computer run my lines? (easy)
 
 **Programming Thinking** (12)
@@ -58,8 +58,8 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] What is inside an app file on a phone? (easy)
 - [x] What happens when I press Build? (medium)
 - [x] How does an app get from a store onto my phone? (easy)
-- - What happens between tapping an icon and seeing the app? (medium)
-- - How do I run my own first app on a real phone? (easy)
+- [x] What happens between tapping an icon and seeing the app? (medium)
+- [x] How do I run my own first app on a real phone? (easy)
 
 ## Bough: Kotlin and Android
 
@@ -69,29 +69,29 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **First Programs** (3)
 
-- >> Where does a Kotlin program start running? (easy)
-- - How do I put a value inside a sentence I print? (easy)
-- - How do I read the shape of a Kotlin file? (easy)
+- [x] Where does a Kotlin program start running? (easy)
+- [x] How do I put a value inside a sentence I print? (easy)
+- [x] How do I read the shape of a Kotlin file? (easy)
 
 **Types and Variables** (4)
 
-- - When should a value be allowed to change? (easy)
-- - Which kinds of values does Kotlin know out of the box? (easy)
-- - How does Kotlin know a type I never wrote? (easy)
-- - Why won't Kotlin put an Int where a Long is expected? (medium)
+- [x] When should a value be allowed to change? (easy)
+- [x] Which kinds of values does Kotlin know out of the box? (easy)
+- [x] How does Kotlin know a type I never wrote? (easy)
+- [x] Why won't Kotlin put an Int where a Long is expected? (medium)
 
 **Control Flow** (4)
 
-- - How can an if hand back a value? (easy)
-- - How do I choose between many cases without a ladder of ifs? (easy)
-- - Where does a Kotlin range start and stop? (easy)
-- - How do I stop a loop early or skip one turn? (easy)
+- [x] How can an if hand back a value? (easy)
+- [x] How do I choose between many cases without a ladder of ifs? (easy)
+- [x] Where does a Kotlin range start and stop? (easy)
+- [x] How do I stop a loop early or skip one turn? (easy)
 
 **Functions** (5)
 
-- - How do I write a function in Kotlin? (easy)
-- - How can a function have optional inputs? (easy)
-- - Why do some Kotlin functions use = instead of braces? (easy)
+- [x] How do I write a function in Kotlin? (easy)
+- [x] How can a function have optional inputs? (easy)
+- >> Why do some Kotlin functions use = instead of braces? (easy)
 - - What does a function return when it has nothing to give back? (easy)
 - - Why can't I use a variable outside the braces where I made it? (medium)
 

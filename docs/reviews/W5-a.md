@@ -273,3 +273,6 @@ VERDICT: FIX (4 PASS, 4 FIX). All four remaining items are mechanical (`fixer` c
 4. `basic-types`, interview answers on lines 206 and 212: "infers" is not met until the next lesson, and `Int.MAX_VALUE` is an undefined name. Line 206 old: `For a plain whole number, Kotlin infers `Int` if it fits and `Long` if it does not.` New: `For a plain whole number, Kotlin picks `Int` if it fits and `Long` if it does not.` Line 212 old: `General knowledge: it wraps around, so `Int.MAX_VALUE + 1` gives -2147483648.` New: `General knowledge: it wraps around, so the largest `Int`, 2147483647, plus 1 gives -2147483648. My run of Kotlin 2.3.21 printed that.` Mechanical.
 
 Not a defect: run-your-first-app glosses Minimum API level as "the oldest Android version you want your app to support"; the page says "the API level you want your app to support", with a lower level meaning more devices, so the gloss is faithful.
+
+## Final (orchestrator, 21 Oct 2026)
+All FIX items for the leaves in this report were applied as specified (re-check fixes included) and validateContent passes. Verdict for the leaves in this report: PASS.

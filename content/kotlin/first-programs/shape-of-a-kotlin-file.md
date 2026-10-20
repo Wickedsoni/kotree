@@ -1,21 +1,20 @@
 ---
 id: kotlin/first-programs/shape-of-a-kotlin-file
 title: How do I read the shape of a Kotlin file?
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [kotlin/first-programs/where-a-program-starts]
 summary: Curly braces mark where each group of steps starts and ends, and comments are notes the computer skips.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-hello-world.html (the body of a function is written within curly braces); kotlinlang.org/docs/control-flow.html (the condition of an if goes in parentheses and the action in curly braces); kotlinlang.org/docs/basic-syntax.html (single-line and block comments; block comments can be nested); kotlinlang.org/docs/coding-conventions.html (four spaces for indentation; omit semicolons whenever possible; semicolons are optional, so line breaks are significant); developer.android.com/develop/ui/compose/tutorial (Column arranges elements vertically; Column example with two Text calls). Own reasoning: indentation does not decide membership of a block (the pages give braces for blocks and list indentation as a style rule); an unclosed brace stops the file from compiling; the Android symptom. Interview section: same coding-conventions and basic-syntax pages (four spaces; semicolons optional so line breaks are significant; nested block comments). Own reasoning: a badly indented file still compiles; why nested comments help. General knowledge: statement versus block. Outputs hand-traced, not compiled. -->
 ## The question
 
 A Kotlin file is full of curly braces, the { and } marks, and some sit inside others. One line is pushed far to the right, so it looks as if it belongs to the group of steps above it. Which braces belong together, and which lines sit inside which group? Does how far a line is pushed to the right decide it?

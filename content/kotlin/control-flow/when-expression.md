@@ -1,21 +1,20 @@
 ---
 id: kotlin/control-flow/when-expression
 title: How do I choose between many cases without a ladder of ifs?
-status: shadow
+status: live
 difficulty: easy
 order: 9
 requires: [kotlin/control-flow/if-as-an-expression]
 summary: A when checks a value against a list of cases from the top. The first case that matches gives the result.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [sorting-chutes]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (when as expression and statement, first matching branch, else, commas, in ranges, exhaustiveness); https://developer.android.com/develop/ui/compose/animation/value-based (when (state) giving a Dp). Read 20 Oct 2026. All outputs hand-traced, not run. Interview section: same control-flow page (when compares in order; statement need not be exhaustive; expression must; guard conditions need a subject and no comma conditions); https://kotlinlang.org/docs/whatsnew22.html (guard conditions stable in Kotlin 2.2.0, per W5-b review). Guard conditions are only mentioned in the interview section, no code. -->
 ## The question
 
 A ticket machine hands out numbered tickets. Ticket 1 goes to the first lane, ticket 2 to the second lane, tickets 3 and 4 to the third lane, and tickets 5 to 9 to the later lane. Everything else goes to a spare lane. You could write a question for each case, one under the other, but the pile grows fast. Is there a tidier way to say "look at this number and pick one of these answers"?

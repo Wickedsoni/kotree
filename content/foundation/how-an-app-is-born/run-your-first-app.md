@@ -1,21 +1,20 @@
 ---
 id: foundation/how-an-app-is-born/run-your-first-app
 title: How do I run my own first app on a real phone?
-status: shadow
+status: live
 difficulty: easy
 order: 34
 requires: [foundation/how-an-app-is-born/what-happens-when-i-tap-an-icon]
 summary: Make a new project in Android Studio, switch on USB debugging on your phone, plug it in and press Run.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: developer.android.com/studio/intro (Android Studio is the official IDE for Android app development); developer.android.com/studio/projects/create-project (New Project screen; Empty Activity is the recommended starting point for Compose projects; Name, Package name, Save location, Minimum API level; Finish creates the project with some basic code and resources); developer.android.com/studio/debug/dev-options (tap Build Number seven times to enable Developer options; Build number sits under Settings, About phone on a Pixel and the location varies by maker; USB debugging lets the device communicate with the development machine through adb; menu path on Android 9 and higher is Settings, System, Advanced, Developer Options, USB debugging; Wireless debugging); developer.android.com/studio/run/device (plugged in over USB, click Run to build and run your app on the device; the RSA key dialog and unlocking the device; Troubleshoot Device Connections and Restart ADB server; Windows USB driver; wireless debugging on Android 11 and higher; adb devices); developer.android.com/studio/run (select the app in the run configurations menu, the device in the target device menu, click Run; the debug version is built by default and is for development only; no device means create an Android Virtual Device or connect a physical device). Package name becomes the namespace and, by default, the application ID used for publishing, and the Minimum API level is the API level you want your app to support (developer.android.com/studio/projects/create-project). Interview section: same device, run and dev-options pages (Build number seven times; USB debugging and adb; adb devices; Troubleshoot Device Connections and Restart ADB server; debug version built by default for development only). Own reasoning: no store or account step appears on the device page; the order of the checks when the phone is missing; the analogy. No code, no output. -->
 ## The question
 
 You have read how an app is built, installed and started. Now you want to see your own app on your own phone. Do you need a store, a paid account, or something else? And what must you switch on first?

@@ -1,21 +1,20 @@
 ---
 id: kotlin/types-and-variables/number-conversions
 title: Why won't Kotlin put an Int where a Long is expected?
-status: shadow
+status: live
 difficulty: medium
 order: 7
 requires: [kotlin/types-and-variables/basic-types]
 summary: Kotlin keeps number sizes apart, so you convert an Int to a Long yourself. Adding past a size's top mark wraps around.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [overflow-cups]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/numbers.html (integer types table, explicit number conversions, L suffix, mixed Int and Long arithmetic, overflow); https://kotlinlang.org/docs/java-interop.html (Java long maps to Kotlin Long). Interview section: same numbers page (narrowing conversion "may not preserve the original numeric value"; overflow wraps; no automatic compiler error); toInt() of 3000000000L = -1294967296 from the W5-b reviewer's compiler run. Read 20 Oct 2026. All outputs hand-traced, not run. -->
 ## The question
 
 A storage screen adds up the sizes of two video files. One file is 2 billion in size and the other is 1 billion, and the screen shows a negative total. In another place in the same app, you try to put a small whole number into a slot made for a bigger kind of number, and Kotlin refuses to run. Why does Kotlin refuse, and why did the total turn negative?

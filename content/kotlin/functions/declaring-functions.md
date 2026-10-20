@@ -1,21 +1,20 @@
 ---
 id: kotlin/functions/declaring-functions
 title: How do I write a function in Kotlin?
-status: shadow
+status: live
 difficulty: easy
 order: 12
 requires: [kotlin/control-flow/if-as-an-expression]
 summary: A Kotlin function has a name, boxes for its inputs, a kind of result and steps in braces. This is what each part means.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/functions.html (fun, parameters written name: Type, block body needs an explicit return type, return); https://developer.android.com/develop/ui/compose/modifiers (Greeting(name: String)). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a syntax rule, and the editor is enough. -->
 ## The question
 
 A shop prints posters. For each order, someone works out the area of the poster from its width and height. Today there are 3 orders and tomorrow there may be 30. You want to write the steps once and reuse them with new numbers. What does the first line of that set-up have to say?

@@ -1,21 +1,20 @@
 ---
 id: kotlin/functions/default-and-named-arguments
 title: How can a function have optional inputs?
-status: shadow
+status: live
 difficulty: easy
 order: 13
 requires: [kotlin/functions/declaring-functions]
 summary: A function can fill in an input for you when you leave it out. You can also name the inputs you pass.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/functions.html (default arguments, named arguments in any order, name every argument after the first skipped one, Unit return type optional); https://developer.android.com/develop/ui/compose/kotlin (drawSquare with defaults and named arguments, Text(text = ...), most Compose libraries use default arguments; "This feature reduces the need for overloaded functions"); the interview facts about when a default is evaluated and a default using an earlier parameter are from the W5-b reviewer's compiler run (Kotlin 2.3.21). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a syntax rule, and the editor is enough. -->
 ## The question
 
 A coffee order has three questions: the drink, the size and the milk. Most customers want a medium size and regular milk. Making everyone answer all three every time is slow, and making them remember the order of the boxes is worse. How can a function let you skip the answers you do not care about, and still make it clear which answer is which?

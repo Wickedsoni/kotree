@@ -1,21 +1,20 @@
 ---
 id: kotlin/control-flow/if-as-an-expression
 title: How can an if hand back a value?
-status: shadow
+status: live
 difficulty: easy
 order: 8
 requires: [kotlin/types-and-variables/val-vs-var]
 summary: In Kotlin an if can give back a value you keep in a name. Both of its paths must give one.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (if as an expression, else required, last expression of a block, else if); https://developer.android.com/develop/ui/compose/animation/value-based (animateFloatAsState with an if value). Read 20 Oct 2026. All outputs hand-traced, not run. Interview section: same control-flow page (if as expression, ternary purpose, else required, block value); statement-only if is general knowledge. No sim: roadmap row says a single rule, and Foundation's fork sim covers the flow. -->
 ## The question
 
 A weather screen has one message box. When it rains, the box must hold "Take an umbrella". When it does not, the box must hold "Enjoy the sun". You already know how to make a program choose between two paths. Could the choice itself hand you the sentence, so you can drop it straight into the box?

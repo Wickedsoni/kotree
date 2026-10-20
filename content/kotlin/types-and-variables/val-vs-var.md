@@ -1,21 +1,20 @@
 ---
 id: kotlin/types-and-variables/val-vs-var
 title: When should a value be allowed to change?
-status: shadow
+status: live
 difficulty: easy
 order: 4
 requires: [kotlin/first-programs/print-values-in-text]
 summary: A val name cannot be pointed at a new value. A var name can. Choose val unless the value must change.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [mug-and-whiteboard-tag]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (val is assigned a value only once and cannot be reassigned; var can be reassigned; x += 1); kotlinlang.org/docs/kotlin-tour-hello-world.html (read-only variables with val, mutable with var, "You can't change a read-only variable once you have given it a value"); kotlinlang.org/docs/collections-overview.html (write operations on a mutable collection are still possible when it is assigned to a val; reassigning a val collection is a compilation error; "Use val as much as possible for safer and more robust code"); developer.android.com/develop/ui/compose/state (var name by remember { mutableStateOf("") }; TextField updates when its value parameter changes; changes to value make the functions that read it run again). Own reasoning: a val line cannot sit in the place that reassigns it in the Compose example; var for a name that never changes still runs. Outputs hand-traced, not compiled. Sim differs from the roadmap row: mugs and tags, not jars. Interview section: same basic-syntax, collections and Compose state pages; the Compose state page lists three equivalent MutableState declarations: val mutableState = remember { mutableStateOf(default) }, var value by remember { mutableStateOf(default) }, val (value, setValue) = remember { mutableStateOf(default) }. Own reasoning: fewer places to look with a val; the by form needs a var because of name = it. -->
 ## The question
 
 A game keeps two facts. The title, Space Run, never changes. The number of lives starts at 3 and drops each time the player is hit. Both facts need a name in the program. Should both names behave the same way, or should one of them be locked?

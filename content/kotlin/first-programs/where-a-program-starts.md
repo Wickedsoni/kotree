@@ -1,21 +1,20 @@
 ---
 id: kotlin/first-programs/where-a-program-starts
 title: Where does a Kotlin program start running?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: A Kotlin program starts in one function named main. Other functions wait until a line calls them.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (entry point is the main function; println adds a line break); kotlinlang.org/docs/kotlin-tour-hello-world.html (main is where the program starts; a function body is written in curly braces); developer.android.com/guide/components/fundamentals (each component is an entry point; activity is the entry point for interacting with the user and one screen; Android apps do not have a single entry point and there is no main()). Textbook, no single official page: other functions run only when called, and a call returns to the next line. Second form of main: kotlinlang.org/docs/basic-syntax.html (fun main(args: Array<String>), a variable number of String arguments). Interview section: same pages; the "no class needed" answer rests on the top-level main in the documentation's examples. Own reasoning: last paragraph of the Android section; the trade-off sentence in the last interview answer. General knowledge: what "arguments" means. Hand-traced, not compiled. -->
 ## The question
 
 You open a file with three blocks of steps, and each block has its own name. You press Run. Which block does the computer start with: the first one in the file, the biggest one, or another? And what happens to the other two?

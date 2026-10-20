@@ -1,21 +1,20 @@
 ---
 id: kotlin/types-and-variables/type-inference
 title: How does Kotlin know a type I never wrote?
-status: shadow
+status: live
 difficulty: easy
 order: 6
 requires: [kotlin/types-and-variables/basic-types]
 summary: Kotlin reads how a value is written and picks its type for you. The name then keeps that type.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-basic-types.html ("Every variable and data structure in Kotlin has a type"; types tell the compiler what you are allowed to do; "Kotlin's ability to infer the type is called type inference"); kotlinlang.org/docs/basic-syntax.html (type inference section, val x = 5 and Int is inferred); kotlinlang.org/docs/numbers.html (Int inferred if the value fits, otherwise Long; L suffix; floating-point literals are Double by default; val oneBillion: Long = 1_000_000_000); kotlinlang.org/docs/characters.html (Kotlin infers Char from single quotes); kotlinlang.org/docs/booleans.html (Kotlin infers Boolean); kotlinlang.org/docs/faq.html (Kotlin is statically typed); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (tipPercent converted to a Double with no type written). Own reasoning: assigning text to a name first given a number is refused, because the pages say every variable has a type and the type limits what you may do; the pages show the refusal only for null into a String. Interview section: kotlinlang.org/docs/faq.html (Kotlin is an open-source statically typed programming language); kotlinlang.org/docs/coding-conventions.html (coding conventions for libraries: always explicitly specify function return types and property types, to avoid accidentally changing the return type when the implementation changes). General knowledge: what "statically typed" means. Own reasoning: when inference helps and when a written type is a promise. Outputs hand-traced, not compiled. -->
 ## The question
 
 You write a line that gives a name the number 5. You never write what kind of value it is. Yet Kotlin treats the name as a whole number. How does Kotlin know, and does a name with no written kind hold anything you like?

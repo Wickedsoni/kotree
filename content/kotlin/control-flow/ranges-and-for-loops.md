@@ -1,21 +1,20 @@
 ---
 id: kotlin/control-flow/ranges-and-for-loops
 title: Where does a Kotlin range start and stop?
-status: shadow
+status: live
 difficulty: easy
 order: 10
 requires: [kotlin/control-flow/if-as-an-expression]
 summary: A Kotlin range says where to start, where to stop and how big each step is. Some forms leave the stop number out.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [tape-measure-range]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/ranges.html (range definition, .., ..<, downTo, step, last element of a progression); https://kotlinlang.org/docs/control-flow.html (for loops over ranges); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/until.html (until excludes the end); https://developer.android.com/develop/ui/compose/components/slider (valueRange = 0f..50f). Interview section: same pages; empty 5..1 and step 0 IllegalArgumentException are from the W5-b reviewer's compiler run (Kotlin 2.3.21). Read 20 Oct 2026. All outputs hand-traced, not run. Sim differs from the roadmap row, which says to reuse the staircase sim: see docs/sims/needed-ids.md. -->
 ## The question
 
 A shelf has 5 boxes, numbered 1 to 5, and you want to tick each box once. You write a rule that says "from 1 up to 5". Does box 5 get ticked? And how would you tick every third box, or tick the boxes from the top down?

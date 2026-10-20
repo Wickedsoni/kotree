@@ -1,21 +1,20 @@
 ---
 id: foundation/how-an-app-is-born/what-happens-when-i-tap-an-icon
 title: What happens between tapping an icon and seeing the app?
-status: shadow
+status: live
 difficulty: medium
 order: 33
 requires: [foundation/how-an-app-is-born/how-an-app-gets-installed, foundation/how-computers-work/what-is-an-os]
 summary: The phone starts a running copy of the app if none exists, the app sets itself up, and its first screen is drawn.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [hotel-bell-startup]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: developer.android.com/topic/performance/vitals/launch-time (cold, warm and hot start; cold start happens when the app launches for the first time since boot or since the system killed it; the system shows a blank starting window, creates the app process; the app process creates the app object, launches the main thread, creates the main activity, initializes the UI, draws the UI; after the first draw the system swaps the background window for the main activity; warm start is a subset of cold start, hot start has lower overhead and brings the host activity to the foreground; time to initial display is the time to display the first frame); developer.android.com/guide/components/fundamentals (each app runs in its own Linux process; the system starts the process when a component needs to run and shuts it down when it is no longer needed or when memory is needed; when the system starts a component it starts the process if it is not already running); developer.android.com/guide/components/processes-and-threads (the main thread is in charge of dispatching events to user interface widgets, including drawing events; Android might shut down a process when resources are needed by other processes); developer.android.com/guide/components/activities/intro-activities (one activity is the main activity, the first screen when the user launches the app). Own reasoning: the hotel pictures; the home screen passing the tap to the system; the slower first open after a restart fitting a cold start. Interview section: same launch-time page (cold, warm, hot; system tasks listed as load and launch, blank starting window, create process; five app-process steps; time to initial display) and fundamentals page (process started when a component needs it, shut down when no longer needed or memory is needed). Own reasoning: why the blank window helps; the card is listed before the room in the documentation but the page does not time the list strictly, so the text is order-neutral. General knowledge: the plain meaning of "process". Hand-traced, no code. -->
 ## The question
 
 You tap an app icon. A moment later the app's first screen appears. What did the phone do in that moment? Was the app already running and waiting for your tap, or did something start from nothing?

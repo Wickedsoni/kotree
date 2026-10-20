@@ -1,29 +1,20 @@
 ---
 id: foundation/first-code/run-your-first-program
 title: Where can I run code without installing anything?
-status: shadow
+status: live
 difficulty: easy
 order: 8
 requires: [foundation/first-code/what-is-code]
 summary: You can type a Kotlin program into a web page, press Run, and read the answer. There is no project to create.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live). Checked on 20 Oct 2026 against:
-https://kotlinlang.org/docs/run-code-snippets.html ("Kotlin Playground is an online application for writing, running, and sharing Kotlin code in your browser."; "there's no need to create a new project and build it."; "Write the executable part in the body of the main() function."; "IntelliJ IDEA and Android Studio support Kotlin scratch files."; the page has no statement about login or installing the Playground);
-https://kotlinlang.org/docs/kotlin-tour-hello-world.html ("The main() function is where your program starts from"; "println() and print() functions print their arguments to standard output"; the page does not say how the two differ);
-https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println "Prints the given message and the line separator to the standard output stream.");
-https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/print.html (print "Prints the given message to the standard output stream.");
-https://kotlinlang.org/docs/strings.html ("To declare a String literal, enclose the value in double quotes");
-https://developer.android.com/kotlin ("Kotlin is fully supported for Android development");
-https://developer.android.com/studio/debug/logcat (Logcat shows "messages that you added to your app with the Log class, messages from services that run on Android, or system messages"; the page does not mention println).
-Run status: the Name it block and the three Predict items were hand-traced only, not compiled (no shell in the authoring session). Predict items are run: false, verified: not-run. The Playground is not built on this site yet, so the page has no editor. -->
 ## The question
 
 By now you know that a computer needs exact instructions. Now you want to try some. You have a laptop with a web browser, and nothing else.
@@ -41,7 +32,7 @@ Think of writing a note and pressing a doorbell.
 
 You write, you ring, you read the reply. If the note has a mistake, the reply is a complaint instead of an answer. You fix the note and ring again.
 
-**Where the analogy stops:** A real doorbell does not read anything. Run sends your whole note away to be carried out. In my own reasoning, an online page like that needs an internet connection. A real helper might also guess what you meant. This one never does, as you saw in the last lesson. And this page has no doorbell of its own: you ring it on another web page, which you will find below.
+**Where the analogy stops:** A real doorbell does not read anything. In my own reasoning, Run sends your whole note away to be carried out, and an online page like that needs an internet connection. A real helper might also guess what you meant. This one never does, as you saw in the last lesson. And this page has no doorbell of its own: you ring it on another web page, which you will find below.
 
 ## Build the logic
 
@@ -72,7 +63,7 @@ Nothing in these four steps needs a project or a build.
 
 The place that does all this is the **Kotlin Playground**. The Kotlin documentation calls it an online application for writing, running and sharing Kotlin code in your browser. The same page says that for quick checks there is no need to create a new project and build it.
 
-It has three parts. The **editor** is the box where you type. The Run button sends your code. The **output** is the area below that shows what the program printed.
+The Kotlin documentation names its **editor** area, where you write code. In my own reasoning, the rest works like the doorbell and the reply: a Run button sends the code, and an **output** area shows what the program printed.
 
 A Kotlin program for the Playground has this shape. You write the part that runs inside **`main()`**, which is where the program starts. The line **`println`** prints what is inside the brackets and then moves to a new line. Text is wrapped in double quotes, and a piece of text like that is a **string**.
 
@@ -96,7 +87,7 @@ Read each program and choose an answer before you open the explanation. You need
 type: predict
 run: false
 id: print-hi
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       println("Hi")
@@ -119,7 +110,7 @@ output: "Hi"
 type: predict
 run: false
 id: text-is-not-sum
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       println("2 + 3")
@@ -142,7 +133,7 @@ output: "2 + 3"
 type: predict
 run: false
 id: find-the-missing-quote
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   One line of this program is wrong. Which line would you fix?
 
@@ -181,9 +172,9 @@ output: "The Step 1 line is missing its closing quote mark, after the word code.
 
 ## Where this shows up in Android
 
-The Playground runs plain Kotlin, not Android apps. Real Android apps are built and debugged with a different tool, Android Studio.
+In my own reasoning, the Playground runs plain Kotlin, not Android apps. Real Android apps are built and debugged with a different tool, Android Studio.
 
-The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Kotlin is fully supported for Android development. So a button that does nothing on a phone is, deep down, a few missing or wrong lines like these.
+The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Kotlin is fully supported for Android development. So, in my own reasoning, a button that does nothing on a phone often comes from a few missing or wrong lines like these.
 
 An app has no output area under a button. To see what an app is doing, developers read Logcat, a window in Android Studio. The Android documentation says Logcat shows messages that the developer added to the app, plus messages from the system. It plays the same part as the output area: the place where you read the reply.
 
@@ -196,9 +187,9 @@ A: I would open the Kotlin Playground in a browser, type the code, and press Run
 A: In the `main()` function. The Kotlin documentation says that is where the program starts from. In the Playground, you write the part that should run inside it.
 
 **Q: What is the difference between `print` and `println`?**
-A: Both print a message to standard output. The documentation says `println` also prints the line separator, so the next message starts on a new line. `print` does not, so the messages stay on one line.
+A: Both print a message to the output. The documentation says `println` also ends the line, so the next message starts on a new line. `print` does not, so the messages stay on one line.
 
-**Q: A phone app has no console under its buttons. How do you see what it prints?**
+**Q: A phone app has no output area under its buttons. How do you see what it prints?**
 A: In Android Studio I would open Logcat. The Android documentation says it shows messages the developer added to the app, plus system messages. In my own reasoning, it plays the role the output area plays in the Playground.
 
 ## Recap

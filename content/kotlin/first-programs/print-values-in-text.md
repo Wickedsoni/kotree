@@ -1,21 +1,20 @@
 ---
 id: kotlin/first-programs/print-values-in-text
 title: How do I put a value inside a sentence I print?
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [kotlin/first-programs/where-a-program-starts]
 summary: Write the sentence once with a marked blank for each value, and Kotlin fills the blanks when it prints.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/strings.html (string templates embed variables and expressions in a String literal; $ for a variable; ${} for an expression or for a variable next to other text; the + operator also combines strings but templates are usually easier to read and more idiomatic; "${language}Lang" prints KotlinLang); kotlinlang.org/docs/basic-syntax.html and kotlin-tour-hello-world.html (val; template expressions start with $); developer.android.com/develop/ui/compose/tutorial (Text(text = "Hello $name!") in MessageCard). Own reasoning: $name takes only the name, so .length stays plain text (derived from the strings page rule for ${}); what the screen shows without the $ in the Android section. Interview section: kotlinlang.org/docs/strings.html (the + operator creates a new String for each operation, which may not be beneficial in loops or when assembling many pieces; buildString and StringBuilder are the alternatives); kotlinlang.org/docs/characters.html (escape sequences table lists \$ as the dollar sign). Own reasoning: "$name" with an escaped dollar prints $name (derived from the escape rule, not run). Outputs hand-traced, not compiled. -->
 ## The question
 
 A sign-up page knows two facts about a person: the name Sam and the age 20. It must print "Hi, Sam, you are 20". Tomorrow the person is Ravi, who is 31, and the sentence must change by itself. How do you write one sentence that takes its values from somewhere else?
