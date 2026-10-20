@@ -25,13 +25,14 @@ import org.jetbrains.compose.web.dom.Text
 data class Crumb(val label: String, val href: String)
 
 /**
- * Breadcrumb trail. Each crumb except the last is a link that zooms out: [onSelect] gets its index and the default
- * navigation is cancelled, so the tree can fly the camera instead. The last crumb is plain text with aria-current.
+ * Breadcrumb trail. Each crumb except the last is a link to its [Crumb.href]. When [onSelect] is given it gets the
+ * index and the default navigation is cancelled (the tree can fly the camera instead); when it is null (the default)
+ * the link navigates normally. The last crumb is plain text with aria-current.
  */
 @Composable
 fun Breadcrumb(
     crumbs: List<Crumb>,
-    onSelect: (Int) -> Unit,
+    onSelect: ((Int) -> Unit)? = null,
     modifier: Modifier = Modifier,
     branch: String = "foundation",
 ) {
@@ -70,9 +71,11 @@ fun Breadcrumb(
                                 property("color", branchInk(branch).value().toString())
                                 property("text-decoration", "underline")
                             }.toAttrs {
-                                onClick {
-                                    it.preventDefault()
-                                    onSelect(index)
+                                if (onSelect != null) {
+                                    onClick {
+                                        it.preventDefault()
+                                        onSelect(index)
+                                    }
                                 }
                             }
                         ) { Text(crumb.label) }

@@ -6,7 +6,7 @@ import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.branchTint
 import dev.kotree.site.colorOnSurfaceVar
-import dev.kotree.site.layoutLessonTextVar
+import dev.kotree.site.layoutLessonWideVar
 import dev.kotree.site.shapeXlVar
 import dev.kotree.site.space3Var
 import dev.kotree.site.space6Var
@@ -40,7 +40,7 @@ fun LessonHeader(
     Header(
         modifier.styleModifier {
             property("box-sizing", "border-box")
-            property("max-width", layoutLessonTextVar.value())
+            property("max-width", layoutLessonWideVar.value())
             property("background-color", branchTint(branch).value().toString())
             property("border-radius", shapeXlVar.value())
             property("padding", space6Var.value())

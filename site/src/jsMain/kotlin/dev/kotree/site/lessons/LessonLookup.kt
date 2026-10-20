@@ -6,6 +6,7 @@ import dev.kotree.site.tree.model.Leaf
 import dev.kotree.site.tree.model.LeafStatus
 import dev.kotree.site.tree.model.Stem
 import dev.kotree.site.tree.model.treeData
+import dev.kotree.site.ui.layout.Crumb
 
 /** A leaf with the nodes above it, read from the compiled tree data (no fetch). */
 class LeafInfo(val bough: Bough, val branch: Branch, val stem: Stem, val leaf: Leaf) {
@@ -20,6 +21,25 @@ class LeafInfo(val bough: Bough, val branch: Branch, val stem: Stem, val leaf: L
 
     /** The up-next leaf of the branch when it comes after this one: shown as "Coming next" without a link. */
     val comingNext: Leaf? get() = inBranch.firstOrNull { it.order > leaf.order && it.status == LeafStatus.UPNEXT }
+
+    /**
+     * Breadcrumb data (ADR 006): Kotree / branch / stem / leaf. No bough crumb (the bough and its first branch can
+     * share a title). A crumb whose label equals the previous one is dropped.
+     */
+    val crumbs: List<Crumb> get() {
+        val all = listOf(
+            Crumb("Kotree", "/"),
+            Crumb(branch.title, "/#${branch.id}"),
+            Crumb(stem.title, "/#${branch.id}/${stem.slug}"),
+            Crumb(leaf.title, "/${leaf.id}"),
+        )
+        val out = ArrayList<Crumb>()
+        for (crumb in all) {
+            if (out.isNotEmpty() && out.last().label.equals(crumb.label, ignoreCase = true)) continue
+            out.add(crumb)
+        }
+        return out
+    }
 
     /** "Topic 2 of 5 in <stem>" for the header. */
     val progressLine: String get() = "Topic ${stem.leaves.indexOfFirst { it.id == leaf.id } + 1} of ${stem.leaves.size} in ${stem.title}"

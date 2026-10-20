@@ -13,7 +13,6 @@ import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.Tokens
 import dev.kotree.site.branchInk
-import dev.kotree.site.colorOnSurfaceMutedVar
 import dev.kotree.site.colorOnSurfaceVar
 import dev.kotree.site.colorOutlineVar
 import dev.kotree.site.fontUiVar
@@ -21,6 +20,7 @@ import dev.kotree.site.inBranch
 import dev.kotree.site.layoutLessonTextVar
 import dev.kotree.site.layoutLessonWideVar
 import dev.kotree.site.layoutPageGutterVar
+import dev.kotree.site.layoutRailWidthVar
 import dev.kotree.site.lessons.BlockData
 import dev.kotree.site.lessons.LeafInfo
 import dev.kotree.site.lessons.LessonData
@@ -38,14 +38,14 @@ import dev.kotree.site.tree.model.LeafStatus
 import dev.kotree.site.ui.core.Button
 import dev.kotree.site.ui.core.ButtonKind
 import dev.kotree.site.ui.layout.Breadcrumb
-import dev.kotree.site.ui.layout.Crumb
+import dev.kotree.site.ui.layout.NavItem
+import dev.kotree.site.ui.layout.SiteHeader
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.jetbrains.compose.web.dom.A
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Li
 import org.jetbrains.compose.web.dom.Main
-import org.jetbrains.compose.web.dom.Nav
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.Ul
@@ -86,53 +86,71 @@ fun LessonPage(id: String, preview: Boolean) {
         } else null
         onDispose { meta?.let { document.head?.removeChild(it) } }
     }
+    val wide = rememberWideLayout()
+    val ready = state is LessonState.Ready && !isExporting()
+    SiteHeader(NavItem.Lesson)
     Main(
         Modifier.inBranch(info.branch.id).styleModifier {
             property("box-sizing", "border-box")
-            property("max-width", layoutLessonWideVar.value())
+            if (wide) {
+                // text column + gap + rail, plus the gutter on both sides
+                property(
+                    "max-width",
+                    "calc(${layoutLessonWideVar.value()} + ${space12Var.value()} + ${layoutRailWidthVar.value()} + " +
+                        "${layoutPageGutterVar.value()} + ${layoutPageGutterVar.value()})"
+                )
+            } else {
+                property("max-width", layoutLessonWideVar.value())
+            }
             property("margin", "0 auto")
             property("padding", "${space8Var.value()} ${layoutPageGutterVar.value()} ${space12Var.value()}")
             property("font-family", fontUiVar.value())
             property("color", colorOnSurfaceVar.value())
         }.toAttrs()
     ) {
-        Breadcrumb(
-            crumbs = listOf(
-                Crumb("Kotree", "/"),
-                Crumb(info.bough.title, "/#${info.bough.id}"),
-                Crumb(info.branch.title, "/#${info.branch.id}"),
-                Crumb(info.stem.title, "/#${info.branch.id}/${info.stem.slug}"),
-            ),
-            onSelect = { window.location.href = listOf("/", "/#${info.bough.id}", "/#${info.branch.id}")[it] },
-            branch = info.branch.id,
-        )
+        Breadcrumb(crumbs = info.crumbs, branch = info.branch.id)
         if (preview) PreviewBanner(leaf.status)
-        Div(Modifier.styleModifier { property("margin", "${space4Var.value()} 0 ${space6Var.value()}") }.toAttrs()) {
-            LessonHeader(
-                title = leaf.title,
-                difficulty = leaf.difficulty.chip(),
-                branch = info.branch.id,
-                progressLine = info.progressLine,
-                videoUrl = leaf.video.orEmpty(),
-            )
-        }
         Div(
             Modifier.styleModifier {
-                property("box-sizing", "border-box")
-                property("max-width", layoutLessonTextVar.value())
-            }.toAttrs { id(LESSON_BODY_ID) }
+                if (wide) {
+                    property("display", "grid")
+                    property("grid-template-columns", "minmax(0, ${layoutLessonWideVar.value()}) ${layoutRailWidthVar.value()}")
+                    property("column-gap", space12Var.value())
+                }
+            }.toAttrs()
         ) {
-            when {
-                isExporting() -> Unit // the export bakes the static prose here
-                state is LessonState.Ready -> LessonBody(state.data, info, preview)
-                state is LessonState.Failed -> LoadFailed { retries += 1 }
-                else -> Div(Modifier.styleModifier { property("min-height", "calc(${space12Var.value()} * 8)") }.toAttrs()) {}
+            Div(Modifier.styleModifier { property("min-width", "0") }.toAttrs()) {
+                Div(Modifier.styleModifier { property("margin", "${space4Var.value()} 0 ${space6Var.value()}") }.toAttrs()) {
+                    LessonHeader(
+                        title = leaf.title,
+                        difficulty = leaf.difficulty.chip(),
+                        branch = info.branch.id,
+                        progressLine = info.progressLine,
+                        videoUrl = leaf.video.orEmpty(),
+                    )
+                }
+                Div(
+                    Modifier.styleModifier {
+                        property("box-sizing", "border-box")
+                        property("max-width", layoutLessonTextVar.value())
+                    }.toAttrs { id(LESSON_BODY_ID) }
+                ) {
+                    when {
+                        isExporting() -> Unit // the export bakes the static prose here
+                        state is LessonState.Ready -> LessonBody(state.data, info, preview)
+                        state is LessonState.Failed -> LoadFailed { retries += 1 }
+                        else -> Div(Modifier.styleModifier { property("min-height", "calc(${space12Var.value()} * 8)") }.toAttrs()) {}
+                    }
+                }
+                if (state is LessonState.Ready && !isExporting()) {
+                    if (preview && !state.data.notes.isNullOrEmpty()) ReviewerNotes(state.data.notes!!.toList())
+                    if (wide) LessonLinks(info, cards = true)
+                }
             }
+            LessonRail(info, wide, ready)
         }
-        if (state is LessonState.Ready && !isExporting()) {
-            if (preview && !state.data.notes.isNullOrEmpty()) ReviewerNotes(state.data.notes!!.toList())
-            LessonLinks(info)
-        }
+        // Narrow: previous / next already sit in the rail under the body, so only the way back is left here.
+        if (ready && !wide) LessonLinks(info, cards = false)
     }
 }
 
@@ -249,23 +267,12 @@ private fun SimHost(id: String, branch: String, preview: Boolean) {
 }
 
 @Composable
-private fun LessonLinks(info: LeafInfo) {
-    Nav(
-        Modifier.attrsModifier { attr("aria-label", "Lesson navigation") }.styleModifier {
-            property("display", "flex")
-            property("flex-wrap", "wrap")
-            property("gap", space4Var.value())
-            property("margin-top", space8Var.value())
-        }.toAttrs()
-    ) {
-        info.previousLive?.let { NavLink("Previous: ${it.title}", "/${it.id}", info.branch.id) }
-        info.nextLive?.let { NavLink("Next: ${it.title}", "/${it.id}", info.branch.id) }
-        info.comingNext?.let {
-            Div(Modifier.styleModifier { property("color", colorOnSurfaceMutedVar.value()); typo(Typo.Label) }.toAttrs()) {
-                Text("Coming next: ${it.title}")
-            }
+private fun LessonLinks(info: LeafInfo, cards: Boolean) {
+    Div(Modifier.styleModifier { property("margin-top", space8Var.value()) }.toAttrs()) {
+        if (cards) PrevNextCards(info)
+        Div(Modifier.styleModifier { property("margin-top", space4Var.value()) }.toAttrs()) {
+            NavLink("Back to the tree", "/#${info.leaf.id}", info.branch.id)
         }
-        NavLink("Back to the tree", "/#${info.leaf.id}", info.branch.id)
     }
 }
 
@@ -294,6 +301,7 @@ fun NotFoundContent(path: String) {
         document.title = "Not found · Kotree"
         onDispose { }
     }
+    SiteHeader(NavItem.Lesson)
     Main(
         Modifier.styleModifier {
             property("box-sizing", "border-box")
@@ -305,6 +313,7 @@ fun NotFoundContent(path: String) {
             typo(Typo.Body)
         }.toAttrs()
     ) {
+        if (info != null) Breadcrumb(crumbs = info.crumbs, branch = info.branch.id)
         P(Modifier.styleModifier { property("margin", "0 0 ${space3Var.value()}"); typo(Typo.Headline) }.toAttrs()) {
             Text(if (info != null) "This leaf has not grown yet." else "Not found")
         }

@@ -8,6 +8,12 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.Tokens
 import dev.kotree.site.colorOnSurfaceVar
 import dev.kotree.site.colorOutlineVar
+import dev.kotree.site.colorStatusLiveContainerVar
+import dev.kotree.site.colorStatusLiveVar
+import dev.kotree.site.colorStatusShadowContainerVar
+import dev.kotree.site.colorStatusShadowVar
+import dev.kotree.site.colorStatusUpnextContainerVar
+import dev.kotree.site.colorStatusUpnextVar
 import dev.kotree.site.fontUiVar
 import dev.kotree.site.shapeXsVar
 import dev.kotree.site.space1Var
@@ -29,7 +35,7 @@ enum class Difficulty(val label: String, val swatch: Int) {
 
 /** Leaf status (docs/00 section 7). */
 enum class LeafStatus(val label: String, val swatch: Int) {
-    Shadow("Planned", Tokens.Leaf.shadow),
+    Shadow("Coming soon", Tokens.Leaf.shadow),
     UpNext("Up next", Tokens.Leaf.upnext),
     Live("Live", Tokens.Leaf.medium),
 }
@@ -42,7 +48,7 @@ private fun swatchCss(rgb: Int): String = "rgb(${(rgb shr 16) and 0xFF}, ${(rgb 
  * Not interactive, so it takes no focus.
  */
 @Composable
-fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier) {
+fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier, ink: String? = null, fill: String? = null) {
     Div(
         modifier
             .styleModifier {
@@ -52,7 +58,8 @@ fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier) {
                 property("padding", "${space1Var.value()} ${space2Var.value()}")
                 property("border", "${Tokens.Elevation.borderPx}px solid ${colorOutlineVar.value()}")
                 property("border-radius", shapeXsVar.value())
-                property("color", colorOnSurfaceVar.value())
+                property("color", ink ?: colorOnSurfaceVar.value().toString())
+                if (fill != null) property("background-color", fill)
                 property("font-family", fontUiVar.value())
                 property("font-size", typeLabelSizeVar.value())
                 property("line-height", typeLabelLineVar.value())
@@ -82,4 +89,14 @@ fun Chip(text: String, swatchRgb: Int, modifier: Modifier = Modifier) {
 fun DifficultyChip(difficulty: Difficulty, modifier: Modifier = Modifier) = Chip(difficulty.label, difficulty.swatch, modifier)
 
 @Composable
-fun StatusChip(status: LeafStatus, modifier: Modifier = Modifier) = Chip(status.label, status.swatch, modifier)
+fun StatusChip(status: LeafStatus, modifier: Modifier = Modifier) {
+    // Status tokens (ADR 006): ink on its own container, text carries the meaning.
+    val ink: String
+    val fill: String
+    when (status) {
+        LeafStatus.Live -> { ink = colorStatusLiveVar.value().toString(); fill = colorStatusLiveContainerVar.value().toString() }
+        LeafStatus.UpNext -> { ink = colorStatusUpnextVar.value().toString(); fill = colorStatusUpnextContainerVar.value().toString() }
+        LeafStatus.Shadow -> { ink = colorStatusShadowVar.value().toString(); fill = colorStatusShadowContainerVar.value().toString() }
+    }
+    Chip(status.label, status.swatch, modifier, ink, fill)
+}

@@ -20,6 +20,8 @@ import dev.kotree.site.fontUiVar
 import dev.kotree.site.typeBodyLineVar
 import dev.kotree.site.typeBodySizeVar
 import dev.kotree.site.typeBodyWeightVar
+import dev.kotree.site.ui.topics.BENTO_HERO_CLASS
+import dev.kotree.site.ui.topics.BENTO_WIDE_CLASS
 import org.jetbrains.compose.web.css.CSSMediaQuery
 import org.jetbrains.compose.web.css.StylePropertyValue
 import org.jetbrains.compose.web.css.LineStyle
@@ -51,6 +53,22 @@ fun initBaseStyles(ctx: InitSilkContext) {
             Modifier
                 .outline(Tokens.Chrome.focusRingWidthPx.px, LineStyle.Solid, colorFocusRingVar.value())
                 .outlineOffset(Tokens.Chrome.focusRingOffsetPx.px)
+        }
+    }
+    // Bento spans (ADR 006): wide and hero cards span columns only where at least two columns fit.
+    val twoColumnsPx = 2 * Tokens.LayoutW.bentoColMin + Tokens.Spacing.s6
+    val twoColumns = CSSMediaQuery.MediaFeature("min-width", StylePropertyValue("${twoColumnsPx}px"))
+    ctx.stylesheet.registerStyle(".$BENTO_WIDE_CLASS") {
+        base { Modifier }
+        cssRule(twoColumns) { Modifier.styleModifier { property("grid-column", "span 2") } }
+    }
+    ctx.stylesheet.registerStyle(".$BENTO_HERO_CLASS") {
+        base { Modifier }
+        cssRule(twoColumns) {
+            Modifier.styleModifier {
+                property("grid-column", "span 2")
+                property("grid-row", "span 2")
+            }
         }
     }
     ctx.stylesheet.registerStyle("*") {
