@@ -11,17 +11,17 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **How Computers Work** (6)
 
-- >> What does a computer actually do all day? (easy)
-- - How can a computer store everything as 0s and 1s? (easy)
-- - How does a computer store a letter like A? (easy)
-- - How does the CPU follow instructions one at a time? (easy)
-- - Why does a phone have both memory and storage? (easy)
-- - Who decides which app gets the screen and the memory? (easy)
+- [x] What does a computer actually do all day? (easy)
+- [x] How can a computer store everything as 0s and 1s? (easy)
+- [x] How does a computer store a letter like A? (easy)
+- [x] How does the CPU follow instructions one at a time? (easy)
+- [x] Why does a phone have both memory and storage? (easy)
+- [x] Who decides which app gets the screen and the memory? (easy)
 
 **First Code** (3)
 
-- - Why does a computer need such exact instructions? (easy)
-- - Where can I run code without installing anything? (easy)
+- [x] Why does a computer need such exact instructions? (easy)
+- >> Where can I run code without installing anything? (easy)
 - - In what order does a computer run my lines? (easy)
 
 **Programming Thinking** (12)

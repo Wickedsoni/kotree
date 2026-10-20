@@ -1,21 +1,20 @@
 ---
 id: foundation/how-computers-work/how-letters-become-numbers
 title: How does a computer store a letter like A?
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [foundation/how-computers-work/what-is-a-bit]
 summary: A computer does not keep text as shapes. It keeps a number, and a shared list says which letter that number means.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://kotlinlang.org/docs/characters.html (every character has a numeric Unicode value; 'A'.code prints 65; arithmetic on characters follows Unicode values, so 'a' + 1 is 'b' and 'a' - 32 is 'A'; so the lowercase letter a is 32 more than A, which is 97). https://developer.android.com/jetpack/compose/text/emoji (without support for the latest emoji fonts, later emoji might show as a small square box called tofu). Unicode is named at overview level only, as the roadmap row asks. The table is a printed table, not a sim: a lookup table is a single rule (roadmap row says why sims is empty). The three Predict items are paper-and-pencil (verified: not-run). housekeeper: remove this comment before the leaf goes live (V12). -->
 ## The question
 
 You type the letter A in a message and press send. Your friend's phone shows an A. But inside a computer there are only tiny parts that are on or off.

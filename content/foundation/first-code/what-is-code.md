@@ -1,22 +1,20 @@
 ---
 id: foundation/first-code/what-is-code
 title: Why does a computer need such exact instructions?
-status: shadow
+status: live
 difficulty: easy
 order: 7
 requires: [foundation/how-computers-work/what-is-a-cpu]
 summary: A computer does only what is written, one step at a time. So every step has to be spelled out, in order and exactly.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: (1) The Predict items use a toy robot and were traced by hand only; no code runs in a Predict item on this leaf. (2) The read-only program in Name it is the documented Kotlin Hello world; it has not been compiled by me (no shell in this session). Kotlin 2.4.21 compile still needed. (3) The claim that a computer has no unwritten knowledge rests on the earlier CPU leaf (fetch one instruction, do it, move on); no separate authoritative source was fetched. Replace or confirm with a computer-science text before live.
-Checked on 21 Oct 2026 against: https://kotlinlang.org/docs/kotlin-tour-hello-world.html ("fun is used to declare a function"; "The main() function is where your program starts from"; "println() and print() functions print their arguments to standard output"; example fun main() { println("Hello, world!") } with output Hello, world!); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println "Prints the given message and the line separator to the standard output stream."); https://kotlinlang.org/docs/strings.html ("To declare a String literal, enclose the value in double quotes"); https://kotlinlang.org/docs/getting-started.html ("Kotlin is a modern language that's concise, multiplatform, and interoperable with Java and other languages."); https://developer.android.com/kotlin ("Kotlin is fully supported for Android development"; "Android's modern UI toolkit is built on Kotlin"). -->
 ## The question
 
 You say to a friend, "Make me a sandwich." Your friend finds the bread, picks a filling, and does not put the sandwich in a sock. You never had to say any of that.

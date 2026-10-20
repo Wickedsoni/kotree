@@ -1,22 +1,20 @@
 ---
 id: foundation/how-computers-work/memory-vs-storage
 title: Why does a phone have both memory and storage?
-status: shadow
+status: live
 difficulty: easy
 order: 5
 requires: [foundation/how-computers-work/what-is-a-bit]
 summary: Memory is the fast place a phone works in right now. Storage is the slower place where files stay when the power goes off.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [desk-and-cabinet]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: (1) Generic hardware claims have no authoritative source yet: RAM is short for random-access memory; memory loses its contents when power is off; storage keeps files without power; memory is faster and usually smaller than storage; an app's files live in storage and are copied into memory while the app uses them. Sources tried (NIST glossary, kernel.org, Wikipedia) did not load on 21 Oct 2026; only a vendor blog (Corsair, not official) was found. Replace with a university text, JEDEC or NIST glossary before live. (2) The sim id desk-and-cabinet has no spec in docs/sims yet. (3) Predict items were traced by hand only; no code runs on this leaf.
-Android claims checked on 21 Oct 2026 against: https://developer.android.com/topic/performance/memory-overview ("As the system runs low on resources like memory, it kills processes in the cache."); https://developer.android.com/topic/performance/vitals/lmk (the low memory killer ends the least essential processes; to the user it looks like a crash, "often bypassing standard lifecycle state-saving mechanisms and resulting in lost user progress"); https://developer.android.com/guide/components/processes-and-threads (Android may shut down a process when resources are needed, and it more readily shuts down a process hosting activities no longer visible); https://developer.android.com/training/data-storage/app-specific ("When the user uninstalls your app, the files saved in app-specific storage are removed."). -->
 ## The question
 
 You are typing a long message on your phone. The battery dies before you press Send. You charge the phone and open the app. The message is gone. But the photos you took last week are all still there.

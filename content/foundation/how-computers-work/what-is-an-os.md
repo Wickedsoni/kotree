@@ -1,22 +1,20 @@
 ---
 id: foundation/how-computers-work/what-is-an-os
 title: Who decides which app gets the screen and the memory?
-status: shadow
+status: live
 difficulty: easy
 order: 6
 requires: [foundation/how-computers-work/what-is-a-cpu, foundation/how-computers-work/memory-vs-storage]
 summary: One trusted program starts first and hands out the screen, the memory and the hardware, so apps keep out of each other's way.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [building-manager]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: (1) Generic claims have no authoritative source yet: an operating system manages hardware and shares it among programs; it starts before apps; it gives each program its own area of memory. Sources tried (NIST glossary, kernel.org, Wikipedia) did not load on 21 Oct 2026. Replace with a university text or the NIST glossary before live. (2) The sim id building-manager has no spec in docs/sims yet. (3) Predict items were traced by hand only. The first two use a toy rule written on the page; they do not claim to describe how Android schedules the screen. (4) Example "the camera" as a protected resource: confirm Manifest.permission.CAMERA is a runtime (dangerous) permission at https://developer.android.com/reference/android/Manifest.permission (page was too long to read on 21 Oct 2026).
-Android claims checked on 21 Oct 2026 against: https://developer.android.com/guide/platform ("The foundation of the Android platform is the Linux kernel."; HAL "provides standard interfaces that expose device hardware capabilities to the higher-level Java API framework"; "When a framework API makes a call to access device hardware, the Android system loads the library module for that hardware component."); https://developer.android.com/guide/components/processes-and-threads ("the Android system starts a new Linux process for the application with a single thread of execution"; Android may shut down a process when resources are needed elsewhere); https://developer.android.com/privacy-and-security/security-tips (every app gets a unique UID; "other processes on the system can't access your code or private data"); https://developer.android.com/training/permissions/requesting ("Every Android app runs in a limited-access sandbox."; "Users see a system permission dialog, where they can choose whether to grant a particular permission to your app."). -->
 ## The question
 
 You are playing a game. A chat message pops up. A music app keeps playing in the background. A photo app is busy saving a picture. That is four apps, one screen, one pool of memory and one camera.

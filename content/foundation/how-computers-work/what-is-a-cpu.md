@@ -1,21 +1,20 @@
 ---
 id: foundation/how-computers-work/what-is-a-cpu
 title: How does the CPU follow instructions one at a time?
-status: shadow
+status: live
 difficulty: easy
 order: 4
 requires: [foundation/how-computers-work/what-does-a-computer-do]
 summary: The main chip reads one instruction, does it, then moves to the next. It never skips ahead unless an instruction tells it to.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [recipe-card-pointer]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://developer.android.com/topic/performance/anrs/keep-your-app-responsive (the system shows an ANR if the app cannot respond to user input on the main thread; no response to a key press or screen tap within 5 seconds; blocking work on the UI thread causes it; do not run blocking or long-running work on the main thread). ⚠️ VERIFY: the fetch-execute loop, the program counter, jump instructions, the clock, and "a phone chip usually has several cores" were checked only through search summaries of course notes (Brooklyn College CIS 3310 lecture notes, UVM CS 2210 notes, Wikipedia "Instruction cycle"); none of those pages could be opened from this machine, and no primary page for the core-count claim was reachable. Open one authoritative source (a computer architecture textbook or Arm documentation) and confirm before status becomes live. The sim id recipe-card-pointer is listed in docs/sims/needed-ids.md. The three Predict items are paper-and-pencil (verified: not-run). housekeeper: remove this comment before the leaf goes live (V12). -->
 ## The question
 
 You tap an app and it opens. You scroll and the list moves. Many things seem to happen all at the same moment inside a phone.

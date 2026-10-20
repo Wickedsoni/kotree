@@ -1,21 +1,20 @@
 ---
 id: foundation/how-computers-work/what-does-a-computer-do
 title: What does a computer actually do all day?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: A computer takes something in, works on it step by step, and hands a result out. That happens again and again, all day.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [input-process-output]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://developer.android.com/develop/ui/views/touch-and-input/input-events (when a View such as a Button is touched, the framework calls onTouchEvent() on that object; buttons fire their on-click listeners when pressed). The sim id input-process-output is listed in docs/sims/needed-ids.md. The three Predict items are paper-and-pencil and were traced by hand (verified: not-run). housekeeper: this comment must be removed before the leaf goes live (V12). -->
 ## The question
 
 You tap a heart under a photo. A moment later the heart turns red. Phones feel clever, as if they think about what you want.

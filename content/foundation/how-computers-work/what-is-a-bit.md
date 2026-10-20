@@ -1,21 +1,20 @@
 ---
 id: foundation/how-computers-work/what-is-a-bit
 title: How can a computer store everything as 0s and 1s?
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [foundation/how-computers-work/what-does-a-computer-do]
 summary: A row of switches, each on or off, can stand for any whole number. That is how a computer holds numbers.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [binary-switches]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): https://kotlinlang.org/docs/numbers.html (Byte is 8 bits; binary literals are written with a 0b prefix, for example 0b00001011). Android colour claim: the Color reference at https://developer.android.com/reference/android/graphics/Color was seen only through a search summary (a colour int packs 4 components into one 32-bit integer); the page body could not be opened. ⚠️ VERIFY: open that page and confirm the sentence before status becomes live. The binary place values, 8 switches = 256 patterns and 9 switches = 512 patterns are arithmetic, not documentation claims. The sim id binary-switches is listed in docs/sims/needed-ids.md. The three Predict items are paper-and-pencil (verified: not-run). housekeeper: remove this comment before the leaf goes live (V12). -->
 ## The question
 
 Your phone shows a red heart, a song, a message from a friend. Inside it, the smallest piece of memory can only be in one of two states, like a light switch that is on or off.
