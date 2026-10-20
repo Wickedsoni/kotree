@@ -185,7 +185,7 @@ fun SideSheet(
                             event.preventDefault()
                             onClose()
                         } else if (event.key == "Tab") {
-                            trapTab(holder.element, event.nativeEvent)
+                            trapTab(holder.element, event.nativeEvent.unsafeCast<KeyboardEvent>())
                         }
                     }
                 }
