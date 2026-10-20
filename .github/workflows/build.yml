@@ -2,7 +2,13 @@ name: build
 
 on:
   push:
+    branches: [main, 'feat/**']
   pull_request:
+
+# A newer push to the same branch cancels the older run.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
