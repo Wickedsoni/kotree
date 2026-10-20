@@ -158,7 +158,7 @@ class VectorRenderer(
     private val trunkPiece: Piece = pieceOf(geometry.trunk)
     private val boughPieces: Array<Array<Array<Piece>?>> =
         Array(geometry.boughs.size) { arrayOfNulls<Array<Piece>>(Tokens.Zoom.splitSteps + 1) }
-    private val twigPaths: Array<dynamic> = Array<dynamic>(nodes.branchNodes.size) { i ->
+    private val twigPaths: Array<Any?> = Array<Any?>(nodes.branchNodes.size) { i ->
         val stems = nodes.branchNodes[i].branchGeo?.stems.orEmpty()
         if (stems.isEmpty()) {
             null
