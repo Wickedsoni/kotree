@@ -3,11 +3,13 @@
 > **Purpose:** how Kotree is built, served at `https://kotree.garvitmaheshwari.in`, deployed, and kept fast. Exact commands, settings, pipeline and budgets.
 > **Read this when:** setting up or changing the Kobweb project, the markdown pipeline, CI, deploy, DNS, asset URLs, or anything performance-related.
 > **Depends on:** `00-decisions.md` (wins conflicts; L25, L26, D15–D17, O1, O2 amended 18 Oct 2026), `02-design-system.md` (tokens, fonts), `03-information-architecture.md` (URLs, zoom levels, leaf states), `05` (sims), `06` (editor).
-> **Version:** v2.4 · 20 Oct 2026 · owner: `architect`. v2 replaces the `/kotree` sub-path and Hostinger-folder plan of v1. v2.1 adds challenge-block sync and validation (§6.2.1), the lesson Kotlin version rule (§1), and the two-file Three.js budget (§8). v2.2 (18 Oct 2026, author decisions) pins `LESSON_KOTLIN_VERSION = 2.4.21` (§1) and makes `generateTreeData` emit both `TreeData.kt` (read by the app) and `tree.json` (tool artifact at `/tree.json`, never fetched by the app) (§6.4), matching `docs/03` §4.
+> **Version:** v2.5 · 20 Oct 2026 · owner: `architect`. v2 replaces the `/kotree` sub-path and Hostinger-folder plan of v1. v2.1 adds challenge-block sync and validation (§6.2.1), the lesson Kotlin version rule (§1), and the two-file Three.js budget (§8). v2.2 (18 Oct 2026, author decisions) pins `LESSON_KOTLIN_VERSION = 2.4.21` (§1) and makes `generateTreeData` emit both `TreeData.kt` (read by the app) and `tree.json` (tool artifact at `/tree.json`, never fetched by the app) (§6.4), matching `docs/03` §4.
 
 v2.3 (18 Oct 2026, `architect`): every open verification mark from v2.2 checked against official sources (Kobweb docs and the `varabyte/kobweb` source on `main`, Vercel docs, Gradle, GitHub, Hostinger, Let's Encrypt). Items still open say exactly what is unknown and which Phase 0/6/7 check settles them.
 
 v2.4 (20 Oct 2026, `architect`): adds §6.7, the plan for exporting every live lesson page (answers `docs/03` §7.2 "docs/07 chooses"), the `verifyLessonExport` check, and `"trailingSlash": false` in `vercel.json` (decided in `docs/03` §7.2, missing here until now). Every open check across docs 00-10 is listed with its test in `docs/11-phase0-checklist.md`.
+
+v2.5 (20 Oct 2026, `architect`): Phase 3 S1 probe results (`docs/reviews/P3-probes.md`) and **ADR 005** (`docs/adr/005-lesson-content-delivery.md`). P0-7 failed (4,190 B gzip per Markdown lesson in the main bundle), so lessons are no longer Kobweb Markdown pages: the build renders each live leaf to JSON on the JVM, one dynamic lesson page renders it, `addExtraRoute` exports one HTML file per live leaf, and `emitLessonPages` bakes head tags, static prose and the JSON into it (§6.2, §6.7). Also: `kobweb export` can exit 0 on a failed build (§3, §5.4); P0-3a/P0-3b/P0-4/U4/U5 results recorded (§6.2); new rules V11, V12.
 
 ## Changes from verification (18 Oct 2026)
 
@@ -15,11 +17,13 @@ v2.4 (20 Oct 2026, `architect`): adds §6.7, the plan for exporting every live l
 |---|---|---|
 | V1 | Kobweb pin candidate is **0.25.1** (not 0.23.x). Its version block sets Kotlin 2.4.10 and compose-runtime 1.12.0. Kobweb CLI latest is 0.9.23. | github.com/varabyte/kobweb/releases , github.com/varabyte/kobweb-cli/releases |
 | V2 | R1 keeps `{{{ SimHost("<sim-id>") }}}` as the **primary** form. The block parser passes the trimmed text through unchanged and adds `()` only when the text ends in a letter or digit. The generated wrapper is now a fallback, used only if the Phase 0 smoke test fails. | `KobwebCallBlockParser.kt`, `KobwebCall.kt` |
-| V3 | `syncLessons` no longer adds `routeOverride`. Slugs keep their hyphens (`what-is-null.md` → `what-is-null`), and folders map to path segments as they are. **New Phase 0 check:** the Kotlin package and function names generated for hyphenated or keyword folder names (§6.2). | `markdown/util/RouteUtils.kt`, `ConvertMarkdownTask.kt` |
+| V3 | (Settled 20 Oct 2026: P0-3a failed, see V8; moot for lessons under ADR 005.) `syncLessons` no longer adds `routeOverride`. Slugs keep their hyphens (`what-is-null.md` → `what-is-null`), and folders map to path segments as they are. **New Phase 0 check:** the Kotlin package and function names generated for hyphenated or keyword folder names (§6.2). | `markdown/util/RouteUtils.kt`, `ConvertMarkdownTask.kt` |
 | V4 | 404 page: Kobweb exports **no** `404.html` by itself. Kotree adds a page with route `/404`, which the export rule writes to `404.html`, and registers the same composable through `ctx.router.setErrorPage` in `@InitKobweb` (§4). | `KobwebExportTask.kt`, `AppBlock.kt`, Kobweb routing docs, Vercel custom-404 guide |
 | V5 | The bundle-growth measurement moves to a **Phase 0 spike** with 50 synthetic leaves. Previously it started at the pilot leaf and had to be decided before about 20 leaves were live (§8). | Generated Markdown Kotlin is added to the `jsMain` source set (`KobwebxMarkdownPlugin.kt`) |
 | V6 | New deploy risk: Vercel's "Uploads per day (Free) = 5000" (§5.6). | vercel.com/docs/limits |
-| V7 | (20 Oct 2026) Lesson pages are **static routes**, so the export writes them without `addExtraRoute`. The markdown plugin writes `@Page("<routeWithSlug>")` for each file, and a kebab-case path has no `{...}` segment. `addExtraRoute` is kept only for a future dynamic lesson page (§6.7). | `KotlinRenderer.kt` and `AppBlock.kt` at tag `v0.25.1`; Kobweb exporting docs |
+| V7 | (20 Oct 2026) ~~Lesson pages are static routes, exported without `addExtraRoute`.~~ **Superseded the same day by ADR 005:** one dynamic lesson page, exported once per live leaf with `addExtraRoute` (§6.7). | `KotlinRenderer.kt` and `AppBlock.kt` at tag `v0.25.1`; Kobweb exporting docs |
+| V8 | (20 Oct 2026) S1 probes: P0-3a FAIL (file names not sanitised: `fun What-suspend-meansPage`), P0-3b PASS (`<route>.html`), P0-4 PASS, U4 PASS, U5 PASS, P0-7 FAIL (4,190 B gzip per leaf). `kobweb export --notty` returned exit 0 on four failed builds (CLI 0.9.23, Windows). | `docs/reviews/P3-probes.md` |
+| V9 | (20 Oct 2026) Export snapshot = whole document right after `navigate(...)` with no extra wait; generated `main` clears `#_kobweb-root` then renders and routes by `window.location`; `AppGlobals.isExporting` exists. These shape ADR 005. | `KobwebExportTask.kt`, `templates/MainTemplate.kt` at `v0.25.1`; Kobweb exporting docs |
 
 Shared names used here: site origin `https://kotree.garvitmaheshwari.in`, site root `/` (no base path); zoom levels **Canopy, Bough, Branch, Stem, Leaf** (defined in `docs/03`); colours, fonts and spacing come only from `docs/02` tokens.
 
@@ -105,7 +109,7 @@ Keep the `server.files` values the template generates (script file names follow 
 | Dev server with live reload | `kobweb run` | Yes. Open `http://localhost:8080/`. |
 | Dev via Gradle (watch) | `../gradlew kobwebStart -t` / stop: `../gradlew kobwebStop` | Yes |
 | Static export | `kobweb export --layout static` | Yes. Without `--layout`, CLI 0.9.19+ opens an interactive layout menu, so always pass it. |
-| Export in CI (no TTY) | `kobweb export --notty --layout static` | Yes (Kobweb GitHub-workflow guide). CLI 0.9.16+ exits with an error code on failure in `--notty` mode. In CI the guide downloads the CLI zip from `varabyte/kobweb-cli` releases; Kotree **pins** the version (latest 0.9.23 on 18 Oct 2026) instead of fetching "latest". |
+| Export in CI (no TTY) | `rm -rf .kobweb/site && kobweb export --notty --layout static 2>&1 \| tee export.log; test -f .kobweb/site/index.html && ! grep -q "Failed to export" export.log` | Command: yes (Kobweb GitHub-workflow guide; the CI guide downloads the CLI zip from `varabyte/kobweb-cli` releases and Kotree **pins** 0.9.23). **Exit code: not trustworthy.** The CLI notes say 0.9.16+ exits non-zero on failure in `--notty` mode, but the S1 probe (20 Oct 2026, CLI 0.9.23 via `kobweb.bat` on Windows) saw exit 0 on four runs that printed `BUILD FAILED` and `Failed to export a Kobweb site.` So every script and workflow deletes the old export first and checks the file and the log as shown. ⚠️ VERIFY (`docs/11` P4-4): repeat on the Ubuntu CI runner; even if Linux exits non-zero, keep the checks. Gate tests that need a reliable exit code (validators) run `../gradlew :site:validateContent` directly. |
 | Test the export locally | `kobweb run --env prod --layout static` | Yes |
 | Browser cache key for CI | `./gradlew -q :site:kobwebBrowserCacheId` (from repo root) | Yes |
 | Content validation | `../gradlew :site:validateContent` | Kotree task, defined in §6.4 |
@@ -130,7 +134,7 @@ The site is served at the root of its own subdomain (L25). **No base path is use
 | Assets | `public/fonts`, `public/tree`, `public/img` export to the site root; reference as `/fonts/...`, `/tree/...`, `/img/...`. Inside static `.css` files relative `url(...)` is also fine. |
 | External | Kotlin Playground (`docs/06`) and YouTube use absolute `https://` URLs. |
 | Sitemap, canonical, Open Graph | Built from one constant `SITE_ORIGIN = "https://kotree.garvitmaheshwari.in"` + route. The origin string appears only there. |
-| 404 | Kobweb's export writes **no** `404.html` by itself (`KobwebExportTask.kt` has no error-page export). The export path rule (`AppBlock.kt` `RouteConfig`) is: route `/a/b` → `a/b.html`, `/a/b/` → `a/b/index.html`, `/` → `index.html`. So Kotree adds one page, `pages/NotFound.kt` with `@Page("404")`, which gives route `/404` and the file `404.html`. The same composable is registered with `ctx.router.setErrorPage { ... }` inside an `@InitKobweb` function (Kobweb routing docs), so client-side navigation to an unknown route looks the same. Vercel: "Emit a `404.html` file to your Output Directory and it will be served as the 404 page when a route does not match any other static file" (https://vercel.com/kb/guide/custom-404-page, read 18 Oct 2026). ⚠️ VERIFY two things the sources do not state. (1) Does `@Page("404")` in the root `pages` package resolve to `/404`? Phase 0 check: `test -f site/.kobweb/site/404.html` after export. (2) Does Vercel answer with HTTP status 404 (not 200)? Phase 7 check: `curl -s -o /dev/null -w "%{http_code}" https://<preview-url>/does-not-exist` must print `404`. If it prints 200, apply the guide's `routes` pattern (`{ "src": "/(.*)", "status": 404, "dest": "/404.html" }`) and first read the `routes` section of the `vercel.json` reference to see how it combines with `cleanUrls` and `headers`. Not checked yet, because it is needed only in that case. |
+| 404 | Kobweb's export writes **no** `404.html` by itself (`KobwebExportTask.kt` has no error-page export). The export path rule (`AppBlock.kt` `RouteConfig`) is: route `/a/b` → `a/b.html`, `/a/b/` → `a/b/index.html`, `/` → `index.html`. So Kotree adds one page, `pages/NotFound.kt` with `@Page("404")`, which gives route `/404` and the file `404.html`. The same composable is registered with `ctx.router.setErrorPage { ... }` inside an `@InitKobweb` function (Kobweb routing docs), so client-side navigation to an unknown route looks the same. Vercel: "Emit a `404.html` file to your Output Directory and it will be served as the 404 page when a route does not match any other static file" (https://vercel.com/kb/guide/custom-404-page, read 18 Oct 2026). (1) `@Page("404")` in the root `pages` package resolves to `/404`: **PASS 20 Oct 2026** (P0-4, `404.html` exported). ⚠️ VERIFY what the sources do not state: (2) Does Vercel answer with HTTP status 404 (not 200)? Phase 7 check: `curl -s -o /dev/null -w "%{http_code}" https://<preview-url>/does-not-exist` must print `404`. If it prints 200, apply the guide's `routes` pattern (`{ "src": "/(.*)", "status": 404, "dest": "/404.html" }`) and first read the `routes` section of the `vercel.json` reference to see how it combines with `cleanUrls` and `headers`. Not checked yet, because it is needed only in that case. |
 
 Acceptance criteria:
 - [ ] Cold load of `/` and of a deep lesson URL renders with fonts, sprites and styles; DevTools Network shows **zero 404s**.
@@ -173,7 +177,7 @@ Why:
 
 | Workflow | Trigger | Steps |
 |---|---|---|
-| `build.yml` | push to any branch except `main`, and `pull_request` | Checkout, Temurin 17, `setup-gradle`, Playwright cache, `:site:validateContent`, `kobweb export --notty --layout static`, copy `site/build/tree.json` to `site/.kobweb/site/tree.json` (§6.4), `./gradlew :site:verifyLessonExport` (§6.7), budget checks (§8). No secrets. |
+| `build.yml` | push to any branch except `main`, and `pull_request` | Checkout, Temurin 17, `setup-gradle`, Playwright cache, `:site:validateContent`, the export command with its success check (§3; the exit code alone is not trusted), `./gradlew :site:copyTreeJson` (§6.4), `./gradlew :site:emitLessonPages` (§6.7, ADR 005), `./gradlew :site:verifyLessonExport` (§6.7), budget checks (§8). No secrets. |
 | `preview.yml` | `pull_request` (same-repo branches) | Same build, then the three preview commands (§3); comment the preview URL on the PR. Uses `pull_request`, **never `pull_request_target`**, so fork PRs get no secrets (public repo); fork PRs get `build.yml` only. |
 | `deploy.yml` | push to `main` | Same build, `validateContent` slug check against the live sitemap (§6.4), then the three production commands (§3). `concurrency: deploy` so two pushes never race. |
 
@@ -190,10 +194,13 @@ Why:
   "git": { "deploymentEnabled": false },
   "headers": [
     { "source": "/fonts/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/tree/(.*)",  "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
+    { "source": "/tree/(.*)",  "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/lessons/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
   ]
 }
 ```
+
+- `/lessons/<id>.json` (ADR 005) is data for the lesson page, so search engines index the page, not the JSON. It keeps Vercel's default caching (not versioned in its name, like HTML).
 
 - All keys exist in Vercel's `vercel.json` reference (https://vercel.com/docs/project-configuration/vercel-json and .../git-configuration, read 18 Oct 2026). Verified meanings:
   - `"framework": null` selects "Other".
@@ -244,14 +251,42 @@ Sources: https://vercel.com/docs/plans/hobby (updated 14 Sep 2026), https://verc
 /content/<branch>/_branch.md   ├─> generateTreeData ─┬> build/generated/kotree/kotlin/.../TreeData.kt  (compiled into the site; the app reads only this)
 /content/<branch>/<stem>/_stem.md ┘                   └> build/tree.json  (tool artifact, copied to export root as /tree.json; never fetched by the app)
                                            │
-/content/<branch>/<stem>/<leaf>.md ──> syncLessons ─> build/kotree/markdown/<branch>/<stem>/<leaf>.md ─> Kobweb markdown plugin ─> lesson pages
-                                          └──────> build/generated/kotree/kotlin/.../ChallengeWidgets.kt  (compiled into the site, §6.2.1)
-                                     validateContent runs before both and fails the build on any error
+/content/<branch>/<stem>/<leaf>.md (status: live only)
+   ├─> LiveLessonRoutes (ValueSource, configuration time) ─> addExtraRoute per live leaf (§6.7)
+   └─> renderLessons (JVM) ─┬> build/generated/kotree/resources/public/lessons/<id>.json  (served and exported as /lessons/<id>.json)
+                            ├> build/kotree/lessons-static/<id>.html  (static prose for emitLessonPages)
+                            └> build/generated/kotree/kotlin/.../lesson/LessonConfig.kt  (LESSON_KOTLIN_VERSION only)
+kobweb export ─> .kobweb/site/<id>.html (snapshot of the one lesson page) ─> emitLessonPages (head tags, static prose, inline JSON, sitemap.xml) ─> verifyLessonExport
+                                     validateContent runs before generateTreeData and renderLessons and fails the build on any error
 ```
+
+**ADR 005 (20 Oct 2026):** lesson text and challenge data are not compiled into `kotree.js`. The Kobweb markdown plugin is not used for lessons.
 
 `/content` stays at the repo root (L17, `00` §8). It is never copied by hand into `site/`.
 
-### 6.2 `syncLessons` (Gradle task in `site/build.gradle.kts`)
+### 6.2 `renderLessons` (replaces `syncLessons`, ADR 005)
+
+**Task.** A task class in `buildSrc` (`B/LessonRenderer.kt`, `B/LessonJson.kt`; a class, not a `Sync` with lambdas: the S1 probe saw lambda edits reported `UP-TO-DATE`). Inputs: `@InputDirectory ../content`, `LESSON_KOTLIN_VERSION`. Outputs: the three paths in §6.1. It reuses `loadContent` from `docs/14` §3.4, takes only `status: live` leaves (D16), and deletes its outputs first.
+
+| Step | Rule |
+|---|---|
+| 1. Split | Cut the body at: an exact SIM marker line (R1 regex below) → `{"t":"sim"}`; a ```` ```challenge ```` block (already valid by CH1-CH10, §6.2.1) → `{"t":"predict"}` or `{"t":"fix"}` with the `docs/06` §3 fields; a ```` ```kotlin ```` fence → `{"t":"code"}` with `runnable` by the `docs/06` §1 rule. |
+| 2. Prose | Each run of Markdown between cuts → one `{"t":"html"}` block, rendered by commonmark-java (GFM tables extension, `escapeHtml(true)`). |
+| 3. Write | Lesson JSON schema 1 (ADR 005 §1), deterministic; static body (prose plus escaped `<pre><code>` for code, no answers); `LessonConfig.kt`. |
+| 4. Wire | `kotlin.sourceSets.jsMain { resources.srcDir(...); kotlin.srcDir(...) }` from the task outputs, so `kobweb run` serves the JSON and the export copies it as a public resource. ⚠️ VERIFY (`docs/11` P4-3): `test -f site/.kobweb/site/lessons/<id>.json` after export and the JSON loads in `kobweb run`. Fallback: `emitLessonPages` copies the JSON into the export, and the dev server path uses `src/jsMain/resources/public/lessons/` (gitignored). |
+
+New `validateContent` rules (message format `docs/14` §3.2):
+
+| Rule | Fails when |
+|---|---|
+| V11 | A stem or leaf slug is `index` or starts with a digit. `index` would sit beside folder index files under `cleanUrls`; a leading digit breaks any generated Kotlin name if a Markdown page ever goes through the plugin again (P0-3a). No current slug is affected (grep, 20 Oct 2026). Runs on roadmaps, so it lands with V1-V10 in Phase 3 S2-A. |
+| V12 | A live leaf body contains raw HTML (an HTML block or inline tag) other than an exact SIM marker line. `renderLessons` escapes HTML, so it would show as text. Phase 4. |
+
+**Kobweb markdown plugin facts (S1 probe, 20 Oct 2026; kept for any future Markdown page, not used by lessons):** folder names are sanitised (`null-safety` → package `null_safety`; the soft keyword `suspend` compiles); **file names are not** (`what-suspend-means.md` → `fun What-suspend-meansPage()`, compile error). A Markdown file that goes through the plugin must therefore be written with `-` → `_` in its file name and an absolute `routeOverride: /<route>` in its frontmatter (P0-3a fallback, proven: routes stayed hyphenated). `addSource(taskProvider)` reads the task output with no `dependsOn` (U4); `{{{ Widget("arg") }}}` compiles (U5); the route file shape is `<route>.html` (P0-3b); `@Page("404")` writes `404.html` (P0-4).
+
+The rest of this section (below, to §6.3) is the **superseded** `syncLessons` design (v2.4), kept for its R1 regex and the reasoning about HTML comments. Do not build it.
+
+#### 6.2-old `syncLessons` (superseded)
 
 Shape: `tasks.register("syncLessons")` with `inputs.dir("../content")`, `outputs.dir("build/kotree/markdown")` and a second output, the generated file of §6.2.1. Its action deletes the markdown output folder, then for each live leaf reads the file as text, applies rewrite R1 (sim marker) and R2 (challenge block) in that order, and writes the result. A plain copy task is not enough because R2 replaces a multi-line block, and Gradle's line `filter` sees one line at a time.
 
@@ -259,7 +294,7 @@ Shape: `tasks.register("syncLessons")` with `inputs.dir("../content")`, `outputs
 - Copy only files whose frontmatter has `status: live` (L5, D16: nothing unpublished becomes a page).
 - Destination `site/build/kotree/markdown/`, preserving `<branch>/<stem>/<leaf>.md`, so the route is `/<branch>/<stem>/<leaf>` at the site root. URL scheme is owned by `docs/03`; change both docs together.
 - Register it with `kobweb.markdown.addSource(syncLessons)`. `syncLessons` is the `TaskProvider` returned by `tasks.register`. `MarkdownBlock.kt` (main, read 18 Oct 2026) declares `addSource(dir: Directory, ...)`, `addSource(dirProvider: Provider<Directory>, ...)` and `addSource(taskProvider: TaskProvider<*>, targetPackage: String? = null)` (plus `Provider<String>` package overloads). The task's declared `outputs.dir` is what the plugin reads. Fallback if Phase 0 shows otherwise: `addSource(layout.buildDirectory.dir("kotree/markdown"))` with `dependsOn(syncLessons)`, or sync into `site/src/jsMain/resources/markdown/` and gitignore that folder.
-- Routes: hyphens are kept, so **no `routeOverride` is injected**. `RouteUtils.getSlug` (markdown plugin, main, read 18 Oct 2026) runs `camelCaseToKebabCase`, turns `_` into `-`, collapses repeated `-`, and trims leading and trailing `-`. The route is `/` + parent folder path + slug, so `kotlin/null-safety/what-is-null.md` → `/kotlin/null-safety/what-is-null`. ⚠️ VERIFY (Phase 0) what the sources leave open: `ConvertMarkdownTask` builds the generated Kotlin package from the folder path (`packageFromFile`) and the function name from the file name (`capitalizedNameWithoutExtension + "Page"`), but the sanitizing code was not visible. Phase 0 check: put fixtures `content/kotlin/null-safety/what-is-null.md` and a keyword-named stem `content/kotlin/when/object.md` through `syncLessons`, then run `kobweb export --notty --layout static` in `/site`. Pass = the build compiles and `site/.kobweb/site/kotlin/null-safety/what-is-null.html` and `site/.kobweb/site/kotlin/when/object.html` exist. Fail = `syncLessons` writes to safe file names and adds `routeOverride: /<branch>/<stem>/<leaf>` (an absolute override starting with `/` is used as-is, per `RouteUtils.getRoute`), and `curriculum-designer` is told which slugs to avoid.
+- Routes: hyphens are kept, so **no `routeOverride` is injected**. `RouteUtils.getSlug` (markdown plugin, main, read 18 Oct 2026) runs `camelCaseToKebabCase`, turns `_` into `-`, collapses repeated `-`, and trims leading and trailing `-`. The route is `/` + parent folder path + slug, so `kotlin/null-safety/what-is-null.md` → `/kotlin/null-safety/what-is-null`. Settled by P0-3a on 20 Oct 2026 (FAIL; result and fallback above). Original open question: `ConvertMarkdownTask` builds the generated Kotlin package from the folder path (`packageFromFile`) and the function name from the file name (`capitalizedNameWithoutExtension + "Page"`), but the sanitizing code was not visible. Phase 0 check: put fixtures `content/kotlin/null-safety/what-is-null.md` and a keyword-named stem `content/kotlin/when/object.md` through `syncLessons`, then run `kobweb export --notty --layout static` in `/site`. Pass = the build compiles and `site/.kobweb/site/kotlin/null-safety/what-is-null.html` and `site/.kobweb/site/kotlin/when/object.html` exist. Fail = `syncLessons` writes to safe file names and adds `routeOverride: /<branch>/<stem>/<leaf>` (an absolute override starting with `/` is used as-is, per `RouteUtils.getRoute`), and `curriculum-designer` is told which slugs to avoid.
 - **R1, sim marker rewrite (resolves `docs/05` C3).** Authors write only `<!-- SIM: sim-id -->` (`docs/04` §3.4; that doc is not changed). `/content` is never edited by the build. While writing each file, `syncLessons` replaces every line that matches exactly `^<!-- SIM: ([a-z0-9-]+) -->$` with the Kobweb block-widget line `{{{ SimHost("<sim-id>") }}}`. Kobweb's markdown plugin then compiles that line into a call to the `SimHost(id: String)` composable (`docs/05` §3.2), found through `imports.add(...)` (§6.3). `SimHost` then uses `SimEngineLoader` to load Matter.js or Three.js on demand (`docs/05` §3.1).
   - String argument: **verified from source** (`ext/kobwebcall/KobwebCallBlockParser.kt` and `KobwebCall.kt`, main, read 18 Oct 2026). A line starting with `{{{` and ending with `}}}` is a single-line block. The text between is trimmed, so spaces next to the braces are fine. The "no spaces" rule in the docs applies to the inline `${...}` form. A leading `.` is replaced by the project group, and `()` is appended only when the text ends in a letter or digit. Any other text, such as `SimHost("null-lunch-box")`, is emitted unchanged as a Kotlin call. The documented examples are bare names only, and the source read is `main`, not the 0.25.1 tag. Phase 0 smoke test: one fixture with `{{{ SimHost("null-lunch-box") }}}` compiles and renders the frame. Fallback only if that fails: `generateTreeData` writes one argument-free `@Composable` wrapper per sim ID (`fun Sim_null_lunch_box() = SimHost("null-lunch-box")`), and the filter writes `{{{ Sim_null_lunch_box }}}`. Authors see no difference either way.
   - HTML comments: the markdown plugin's `html` handler parses HTML blocks with Jsoup and renders only text and element nodes (`handlers/MarkdownHandlers.kt`). So a comment that is not rewritten produces no output (inferred from source; the docs say nothing). That is why the rule below exists.
@@ -271,7 +306,9 @@ Shape: `tasks.register("syncLessons")` with `inputs.dir("../content")`, `outputs
 
 Authors write Predict-the-output and Fix-the-bug challenges only as the fenced ```` ```challenge ```` YAML block of `docs/06` §3 (fields and counts are owned by `docs/06`). This replaces the `<!-- CHALLENGE -->` plain-Markdown form; `docs/04` must be aligned by its owner.
 
-**How `syncLessons` turns a block into a widget (R2):**
+**ADR 005 (20 Oct 2026): steps 3, 4 and 5 below are superseded.** No `ChallengeWidgets.kt` is generated and no `{{{ }}}` line is written: `renderLessons` (§6.2) puts each parsed block into the lesson JSON as a `predict` or `fix` block with the `docs/06` §3 field names, and the lesson page renders it with `PredictOutput` / `FixBug` (the `ui/lesson/*` components; `docs/06` names them `PredictCard` / `FixCard`). `LESSON_KOTLIN_VERSION` moves to the generated `LessonConfig.kt`. Steps 1, 2 and 6, the version rules and CH1-CH10 stay.
+
+**How `syncLessons` turned a block into a widget (R2, v2.4; steps 3-5 superseded):**
 
 | Step | Rule |
 |---|---|
@@ -309,16 +346,18 @@ Rejected: `{{{ PredictCard(...) }}}` with all fields inline. The parser passes a
 
 Warnings (printed, build continues): `UNVERIFIED` on a non-live leaf (`docs/06` §5); `verified` older than `LESSON_KOTLIN_VERSION` on a live leaf (listed as "re-run on <pin>").
 
-### 6.3 Kobweb markdown configuration (`kobweb { markdown { ... } }`)
+### 6.3 Kobweb markdown configuration (`kobweb { markdown { ... } }`) — not used for lessons (ADR 005)
 
-| Setting (documented) | Kotree use |
+Lessons no longer pass through the markdown plugin, so none of the settings below is configured for them. The lesson layout is the dynamic lesson page (§6.7); callout styling for blockquotes lives in `LessonProseStyle`; `sitemap.xml` is written by `emitLessonPages`. If no other page uses Markdown, Phase 4 removes the `kobwebx.markdown` plugin and `kobwebx-markdown` library from `site/build.gradle.kts` and records the bundle change in §8.1. The table is kept as the v2.4 record.
+
+| Setting (documented) | Kotree use (v2.4, superseded) |
 |---|---|
 | `defaultLayout.set(...)` | The lesson layout from `docs/04` (header, sections). The Watch-the-video button and video section render **only when `video` is non-empty** (§6.5). Leaf frontmatter has no `layout` key. |
 | `imports.add(...)` | Packages of lesson widgets (sim host, Playground block, and the generated challenge wrappers in `dev.kotree.site.lessons`, §6.2.1) so the lines `syncLessons` writes, such as `{{{ SimHost("null-lunch-box") }}}` and `{{{ Challenge_kotlin__null_safety__what_is_null__nullable_length }}}`, resolve. Authors never write this form; they write `<!-- SIM: null-lunch-box -->` or a ```` ```challenge ```` block and the sync rewrites (§6.2) produce it. Widget names are owned by `docs/05` and `docs/06`. |
 | `handlers.blockquote.set(...)` | Optional: callouts ("Trick to remember") via `SilkCalloutBlockquoteHandler` if `docs/04` asks for them. |
 | `process.set { entries -> ... }` | Build-time list of all lesson entries (`filePath`, `route`, `frontMatter`): used to cross-check that every page matches a roadmap leaf, and to emit `sitemap.xml` data. |
 
-Lesson pages read their metadata with `rememberPageContext().markdown!!.frontMatter` (needs `kobwebx-markdown`).
+~~Lesson pages read their metadata with `rememberPageContext().markdown!!.frontMatter`.~~ The lesson page reads metadata from the compiled `TreeData` and the body from the lesson JSON (ADR 005 §2).
 
 ### 6.4 `generateTreeData` and `validateContent`
 
@@ -346,12 +385,12 @@ Lesson pages read their metadata with `rememberPageContext().markdown!!.frontMat
 - [ ] A leaf file with `status: upnext` or `status: shadow` produces no page.
 - [ ] With no `upnext: true`, each branch's glowing leaf is its first non-live roadmap leaf; adding `upnext: true` to another non-live leaf moves the glow there.
 - [ ] A live leaf with `video: ""` shows no video button or section anywhere; setting a URL shows both after the next deploy.
-- [ ] Each `validateContent` error case above has a fixture under `site/src/test/fixtures/` and fails with a message naming the file and line.
-- [ ] A live leaf containing `<!-- SIM: null-lunch-box -->` renders the `SimHost` frame at exactly that place; the source file in `/content` is unchanged after the build; a misspelled marker (for example `<!-- SIM:null-lunch-box -->`) fails `validateContent`.
-- [ ] A live leaf with the `nullable-length` Predict block of `docs/06` §3.2 renders a Predict card at exactly that place; `ChallengeWidgets.kt` contains `Challenge_kotlin__null_safety__what_is_null__nullable_length`; the synced Markdown contains no ```` ```challenge ```` fence; the file in `/content` is unchanged.
+- [ ] Each `validateContent` error case above has a fixture under `buildSrc/src/test/resources/fixtures/` (`docs/14` §3.4) and fails with a message naming the file and line.
+- [ ] A live leaf containing `<!-- SIM: null-lunch-box -->` renders the `SimFrame`/`SimHost` frame at exactly that place (its lesson JSON has `{"t":"sim","id":"null-lunch-box"}` between the neighbouring `html` blocks); the source file in `/content` is unchanged after the build; a misspelled marker (for example `<!-- SIM:null-lunch-box -->`) fails `validateContent`.
+- [ ] A live leaf with the `nullable-length` Predict block of `docs/06` §3.2 renders a Predict card at exactly that place; its lesson JSON has a `predict` block with `"id": "nullable-length"` and no `html` block contains the text `challenge`; `grep -c nullable-length site/.kobweb/site/kotree.js` is 0 (ADR 005: no lesson data in the bundle); the file in `/content` is unchanged.
 - [ ] Each rule CH1–CH10 has a failing fixture; a live leaf with `verified: "UNVERIFIED: ..."` fails, the same leaf as `status: shadow` only warns.
 - [ ] The Playground block on that card sends `data-version` equal to `LESSON_KOTLIN_VERSION`.
-- [ ] Editing `/content` while `kobweb run` (or `../gradlew kobwebStart -t`) is running updates the page after reload. Verified basis: Gradle continuous build watches the file inputs of the requested tasks, and "Gradle only watches for changes to files inside the project directory" (https://docs.gradle.org/current/userguide/continuous_builds.html, read 18 Oct 2026). The Gradle root is the repo root (§2.2), so `/content` is inside it, and `syncLessons` declares `inputs.dir("../content")`. Known gap from the same page: "newly created input directories or filtered files may not trigger a build", so after adding a **new** leaf file or stem folder, restart `kobweb run`.
+- [ ] Editing `/content` while `kobweb run` (or `../gradlew kobwebStart -t`) is running updates the page after reload. Verified basis: Gradle continuous build watches the file inputs of the requested tasks, and "Gradle only watches for changes to files inside the project directory" (https://docs.gradle.org/current/userguide/continuous_builds.html, read 18 Oct 2026). The Gradle root is the repo root (§2.2), so `/content` is inside it, and `syncLessons` declares `inputs.dir("../content")`. Known gap from the same page: "newly created input directories or filtered files may not trigger a build", so after adding a **new** leaf file or stem folder, restart `kobweb run`. Under ADR 005 the watched task is `renderLessons` (its `@InputDirectory ../content`); a changed lesson shows after reload because the page fetches `/lessons/<id>.json` in dev.
 
 ### 6.7 Exporting every live lesson page (answers `docs/03` §7.2)
 
@@ -364,14 +403,40 @@ Lesson pages read their metadata with `rememberPageContext().markdown!!.frontMat
 | E3 | `ExportBlock` also has `filter: Property<ExportFilterContext.() -> Boolean>` ("invoked for every page to test if it should be exported"; `ExportFilterContext` has `route`). | same file |
 | E4 | The markdown plugin writes each Markdown file as a page annotated `@Page("<route>")`, where the route is `routeOverride` or `routeWithSlug`. A path made of kebab-case slugs has no `{...}` segment, so every lesson page is a **static** route. | `tools/gradle-plugins/extensions/markdown/.../KotlinRenderer.kt` (tag `v0.25.1`) |
 
-**Decision.** Each live leaf is one static page, so the export discovers and writes it on its own. **Kotree does not call `addExtraRoute` for lessons.** The live list has one source: `syncLessons` copies only `status: live` files (§6.2, D16), and `generateTreeData` writes the same live set into `TreeData.kt` and `tree.json` (§6.4). A new check, `verifyLessonExport`, proves after every export that the exported lesson files equal that set.
+| E5 | The export loads each route with `navigate("<url>?_kobwebIsExporting=true...")` and no further wait, then saves the whole document (`content()`). Data fetched after the load event is not in the snapshot. | `application/.../tasks/KobwebExportTask.kt` (tag `v0.25.1`) |
+| E6 | The generated `main` removes every child of `#_kobweb-root` before the first render ("poor man's hydration") and routes by `window.location` (with `.html` stripped). Nodes outside `#_kobweb-root` stay. | `application/.../templates/MainTemplate.kt` (tag `v0.25.1`) |
+| E7 | `AppGlobals.isExporting` is true while the export renders a page. | Kobweb exporting docs |
 
-Why not `addExtraRoute` for every live leaf (the first idea in `docs/03` §7.2):
-- The routes are already static (E4). Adding them again asks the export to "re-export a copy of an existing route" (E2) to the same file: double snapshot work and no gain.
-- `addExtraRoute` takes plain `String`s at Gradle **configuration** time. `generateTreeData` runs later, at execution time, so its output cannot feed the call. The build script would need a second parse of `/content`.
-- Rejected also: a `filter` that drops non-live routes (E3). Non-live leaves never become pages, so there is nothing to filter.
+**Decision (v2.5, ADR 005; replaces the v2.4 "one static Markdown page per leaf, no `addExtraRoute`").** One dynamic page `K/pages/Lesson.kt` with `@Page("/{branch}/{stem}/{leaf}")` renders every lesson. The export writes one file per live leaf through `addExtraRoute`, and `emitLessonPages` finishes each file. The live list still has one parser (`buildSrc` `LeafParser`, D16) and two consumers: `LiveLessonRoutes` at configuration time and `generateTreeData`/`renderLessons` at execution time.
 
-**`verifyLessonExport`** (Gradle task in `site/build.gradle.kts`, run as a CI step after `kobweb export` and the `tree.json` copy, §5.4; it can also run locally):
+```kotlin
+// site/build.gradle.kts (Phase 4)
+val liveRoutes: List<String> = providers.of(LiveLessonRoutes::class) {          // Kotree ValueSource in buildSrc, not a Kobweb API
+    parameters.contentDir.set(rootProject.layout.projectDirectory.dir("content"))
+}.get()                                                                            // sorted, e.g. "/kotlin/null-safety/what-is-null"
+kobweb { app { export {
+    liveRoutes.forEach { addExtraRoute(it, exportPath = it.removePrefix("/") + ".html") }
+} } }
+```
+
+- `exportPath` is explicit so the shape stays `<route>.html` (P0-3b PASS) whatever the default does.
+- A `ValueSource` is used because `org.gradle.configuration-cache=true` (`gradle.properties`) and Gradle documents tracking of file **contents** read at configuration time but not of directory listings (a new leaf file). ⚠️ VERIFY (`docs/11` OD-3): export, add a new live leaf file, export again; the second export has its HTML.
+- During the export the page renders `<div id="kt-lesson-body">` empty and does not fetch (E5, E7), so snapshots are deterministic.
+
+**`emitLessonPages`** (task class in `buildSrc` `B/LessonPages.kt`, Jsoup; runs after the export and `copyTreeJson`, §5.4):
+
+| Step | Rule |
+|---|---|
+| 1. For each live leaf | Open `site/.kobweb/site/<id>.html`. Set `<title>` (`<leaf title> · Kotree`), `<meta name="description">` = `summary`, `<link rel="canonical">` and `og:title`, `og:description`, `og:url` from `SITE_ORIGIN` + route (§4). |
+| 2. Body | Replace the children of `#kt-lesson-body` with `site/build/kotree/lessons-static/<id>.html` (fails if the element is missing or not empty). |
+| 3. Data | Append `<script type="application/json" id="kt-lesson-data">` with the lesson JSON to `<head>` (outside `#_kobweb-root`, so E6 keeps it); `<` is written as `<`. |
+| 4. Once | Write `sitemap.xml` (`/` plus each live route); add `<meta name="robots" content="noindex">` to `404.html`; copy `/lessons/*.json` only if P4-3 failed (§6.2 step 4). |
+
+On the client (ADR 005 §2): body from `#kt-lesson-data` when its `id` matches (direct load, synchronous, no flash after the E6 clear), else `fetch("/lessons/<id>.json")` (in-app navigation and `kobweb run`).
+
+Why not the v2.4 design: a Markdown page per leaf costs 4,190 B gzip of the shared bundle (P0-7). Rejected also: a `filter` that drops non-live routes (E3); non-live leaves are never routes.
+
+**`verifyLessonExport`** (Gradle task in `site/build.gradle.kts`, run as a CI step after `kobweb export`, the `tree.json` copy and `emitLessonPages`, §5.4; it can also run locally):
 
 | Step | Rule |
 |---|---|
@@ -379,35 +444,23 @@ Why not `addExtraRoute` for every live leaf (the first idea in `docs/03` §7.2):
 | 2. Actual set | Every `*.html` file exactly three path segments deep whose first folder is a branch slug from `docs/00` §5. |
 | 3. Fail when | An expected file is missing ("live leaf `<id>` was not exported"), or an actual file is not expected ("`<path>` exported but its leaf is not live"). Print both lists. |
 | 4. Also fail when | `sitemap.xml` lists a lesson URL that is not in the expected set, or misses one that is. |
+| 5. Per page (ADR 005) | Each expected file has exactly one `script#kt-lesson-data` whose JSON `id` equals the leaf and `schema` is 1, a non-empty `#kt-lesson-body`, and a canonical URL equal to `SITE_ORIGIN` + route; `site/.kobweb/site/lessons/<id>.json` exists for every live leaf and for no other; `404.html` has `robots` `noindex`; no other exported page contains `kt-lesson-data`. |
 
 **Shadow and up-next leaves.**
-- They have no file in `/content` (shadow), or a file that is not `status: live` (up-next draft). `syncLessons` skips both, so there is no page, no route, no exported HTML and no sitemap entry.
-- A request for `/<branch>/<stem>/<shadow-leaf>` finds no file. Vercel serves `404.html` (§4) with HTTP 404. The `NotFound` composable reads the browser path (`window.location.pathname`, not the route Kobweb rendered), looks it up in the compiled `TreeData`, and for a known shadow or up-next leaf shows the shadow stub of `docs/03` §7.4: "This leaf has not grown yet.", the stem's `why` line, and a link to `/#<branch>/<stem>`. Any other path shows the plain "Not found". No soft 200, no redirect.
-- In-app navigation to such a path reaches the same composable through `ctx.router.setErrorPage` (§4).
-- ⚠️ VERIFY (Phase 4, checked again on a Vercel preview in Phase 7). Unknown: which page Kobweb's client router shows after hydration when `404.html` is served at another path: the `/404` page or the error page. Both call the same composable, and the composable reads `window.location.pathname`, so the stub should be right either way. Test: open `/kotlin/null-safety/<a-shadow-leaf>` on the preview. The stub text must be visible, the console must show no error, and `curl -s -o /dev/null -w "%{http_code}"` on that URL must print `404`.
+- They have no file in `/content` (shadow), or a file that is not `status: live` (up-next draft). `LiveLessonRoutes` and `renderLessons` skip both, so there is no route string, no exported HTML, no JSON and no sitemap entry.
+- A request for `/<branch>/<stem>/<shadow-leaf>` finds no file. Vercel serves `404.html` (§4) with HTTP 404. On start the client router routes by `window.location` (E6), so it matches the dynamic lesson page, which finds the id is not `LIVE` in `TreeData` and renders the same shadow stub content as `NotFound` (`docs/03` §7.4): "This leaf has not grown yet.", the stem's `why` line, and a link to `/#<branch>/<stem>`. Any other unknown path reaches `NotFound` (plain "Not found"). No soft 200, no redirect.
+- In-app navigation to such a path reaches the lesson page directly (same stub), or `ctx.router.setErrorPage` for other unknown routes (§4).
+- ⚠️ VERIFY (Phase 4, checked again on a Vercel preview in Phase 7). Unknown: that the router picks the dynamic lesson page (not the `/404` page) when `404.html` is served at a three-segment path. Both paths render the same stub composable, which reads the path, so the stub should be right either way. Test: open `/kotlin/null-safety/<a-shadow-leaf>` on the preview. The stub text must be visible, the console must show no error, and `curl -s -o /dev/null -w "%{http_code}"` on that URL must print `404`.
 - Un-publishing a live leaf would remove its page. The sitemap slug check (§6.4, hard rule 6) fails the deploy, so it cannot happen silently.
 
-**Contingent path: one dynamic lesson page.** This applies only if ADR 005 (§8) replaces the per-leaf pages with one `/{branch}/{stem}/{leaf}` page, or if check 1 below still fails after the `docs/11` P0-3 fallbacks (safe file names plus `routeOverride`; fix the expected file shape) have been tried. Then the build script registers one extra route per live leaf:
-
-```kotlin
-// site/build.gradle.kts — ONLY if ADR 005 picks a dynamic lesson page
-kobweb { app { export {
-    liveLessonRoutes(rootProject.file("content")).forEach { route ->   // "/kotlin/null-safety/what-is-null"
-        addExtraRoute(route, exportPath = route.removePrefix("/") + ".html")
-    }
-} } }
-```
-
-- `liveLessonRoutes` is Kotree's own function (not a Kobweb API). It lives with `generateTreeData`'s parser in `/buildSrc` (one parser for both, so the live list cannot drift) and returns the sorted routes of `status: live` leaves.
-- `exportPath` is given explicitly so the file shape stays `<route>.html` whatever the default does.
-- ⚠️ VERIFY (only on this path). Unknown: whether reading `/content` at configuration time is tracked by the Gradle configuration cache, so that a publish is not served from a stale cache. Test: run the export twice and flip one leaf to `live` in between. The second export must contain its HTML file.
-- `verifyLessonExport` is unchanged and still runs.
+(The v2.4 "contingent path: one dynamic lesson page" is now the main path above.)
 
 **Acceptance checks:**
-- [ ] **Check 1 (Phase 0).** With fixtures for 2 live leaves (`kotlin/null-safety/what-is-null`, `kotlin/when/object`) and 1 shadow leaf file, run `kobweb export --notty --layout static` in `/site`. Then `test -f site/.kobweb/site/kotlin/null-safety/what-is-null.html`, `test -f site/.kobweb/site/kotlin/when/object.html`, and the shadow leaf's `.html` must be absent.
-- [ ] Publishing one leaf (`shadow` → `live`) adds exactly one lesson `.html` and one sitemap URL to the export.
-- [ ] A fixture where a live leaf's file is deleted from the export after the export run makes `verifyLessonExport` fail with "live leaf `<id>` was not exported".
-- [ ] `grep -n addExtraRoute site/build.gradle.kts` finds nothing, unless ADR 005 chose the dynamic page.
+- [x] **Check 1 (Phase 0), DONE 20 Oct 2026** with the Markdown-page design (`docs/reviews/P3-probes.md`): `<route>.html` shape PASS, shadow file absent; generated names needed the P0-3a fallback. Re-run in Phase 4 on the ADR 005 page with the pilot leaf plus one synthetic live leaf on a scratch copy.
+- [ ] Publishing one leaf (`shadow` → `live`) adds exactly one lesson `.html`, one `/lessons/<id>.json` and one sitemap URL to the export, and `kotree.js` grows only by that leaf's live `TreeData` fields (ADR 005 cost table).
+- [ ] A fixture where a live leaf's file is deleted from the export after the export run makes `verifyLessonExport` fail with "live leaf `<id>` was not exported"; a page whose `#kt-lesson-body` is empty fails step 5.
+- [ ] `grep -n addExtraRoute site/build.gradle.kts` shows only the `liveRoutes.forEach` line.
+- [ ] Direct load of a lesson makes no request to `/lessons/`; "Open lesson" from the tree makes exactly one.
 - [ ] Vercel preview (Phase 7): `curl -s -o /dev/null -w "%{http_code}" https://<preview-url>/kotlin/null-safety/what-is-null` prints `200`; the same URL with a trailing `/` answers `308` to the slashless form; a shadow leaf URL prints `404` and shows the stub.
 
 ---
@@ -441,7 +494,7 @@ Measured on the production export, desktop, Chrome, Lighthouse "desktop" preset,
 | LCP | ≤ 2.0 s | Lighthouse |
 | CLS | ≤ 0.05 | Lighthouse |
 | Total Blocking Time | ≤ 200 ms | Lighthouse |
-| Main site JS (Kotlin/JS bundle) | ≤ 400 KB gzip | CI size check: `gzip -9 -c site/.kobweb/site/<script>.js \| wc -c`, where the file name is the one in `conf.yaml` `server.files.prod.script` (`kotree.js` in §2.3). It is one unhashed file (§5.5), and the `.map` is excluded. ⚠️ VERIFY: no official Kobweb source gives a baseline size. Phase 0 measures the template app plus Silk, then the Phase 0 spike below. Lower the budget if the result is far under. |
+| Main site JS (Kotlin/JS bundle) | ≤ 400 KB gzip | CI size check: `gzip -9 -c site/.kobweb/site/<script>.js \| wc -c`, where the file name is the one in `conf.yaml` `server.files.prod.script` (`kotree.js` in §2.3). It is one unhashed file (§5.5), and the `.map` is excluded. Measured (§8.1): 277,917 B after Phase 1; lesson text is kept out of it by ADR 005. |
 | `TreeData` share of the bundle | ≤ 60 KB gzip at 500 leaves | Size diff when content grows |
 | Fonts (Roboto Flex + JetBrains Mono, woff2, Latin subset, only the axes `docs/02` uses) | ≤ 250 KB total | File size check |
 | Tree sprites / images on home | ≤ 150 KB total | File size check |
@@ -464,7 +517,15 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 
 **Phase 1 update (20 Oct 2026, `docs/reviews/P1-acceptance.md`).** After tokens, fonts, the base components and the `/kitchen-sink` page, `kotree.js` is **277,917 B gzip** (+37,227 B over the 240,690 B prototype; 247,676 B without the kitchen sink, so the sink costs about 30 KB). That is over the +25 KB point where the architect must look and under the +40 KB fail line. Decision (orchestrator, 20 Oct 2026): accept for now because the kitchen sink is the only large item and Phase 3 will measure the real lesson cost; if the Phase 3 projection is over budget, the first cut is to drop `/kitchen-sink` from the production build, then ADR 005. Headroom is now about 122 KB of the 400 KB budget.
 
-**Consequence for the bundle spike (§8, 50 synthetic leaves).** The baseline already uses about 235 KB of the 400 KB budget, leaving about 159 KB. If the per-leaf cost projects over that headroom, ADR 005 must decide the lesson design before the pilot leaf. Part of the baseline is Kotlin/JS runtime and Compose HTML and will not grow, but the spike must measure it, not assume it.
+**Phase 3 S1 bundle spike (P0-7, 20 Oct 2026, `docs/reviews/P3-probes.md`).** 50 synthetic Markdown leaves (about 8,100 B of real prose each, 6 headings, a 15-line Kotlin block, one `PredictOutput` and one `FixBug` with literal data), compiled by the Kobweb markdown plugin:
+
+| N leaves | `kotree.js` raw B | gzip -9 B |
+|---|---|---|
+| 0 (scratch copy) | 975,783 | 278,899 |
+| 10 | 1,145,130 | 320,962 |
+| 50 | 1,827,990 | 488,421 |
+
+Per leaf c50 = **4,190 B gzip** (c10 = 4,206 B). Projection 277,917 + 482 × 4,190 + 40,000 = **2,337,690 B**, 5.8 × the budget; 19 leaves fit. **FAIL → ADR 005** (lessons out of the bundle). Projection under ADR 005: 277,917 + T 40,000 (reserve) + lesson runtime ≤ 15,000 + 482 × ≤ 120 B live `TreeData` fields = **about 390,757 B**; levers if over 380,000 are listed in ADR 005. Record after Phase 4: `kotree.js` with the lesson runtime, and the per-live-leaf growth.
 | Frame time while panning/zooming | ≤ 16.7 ms p95 (60 fps), canvas draw ≤ 8 ms | Performance panel, 10 s pan/zoom script |
 | Click on a leaf → popup visible | ≤ 100 ms | Performance panel |
 | Matter.js (physics engine) | 0 bytes on home and on pages with no `physics` sim; on other pages loaded on demand (script tag, when the first sim nears the viewport), ≤ 30 KB gzip, cached once per visit (`docs/05` §3.1, §6.3) | Network panel; file size check on `/vendor/` |
@@ -477,7 +538,7 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 
 A PR that breaks a budget is not merged until it is fixed or this table is changed with a reason.
 
-**Known risk (open, `architect`; fact confirmed 18 Oct 2026).** Kobweb's markdown plugin writes a Kotlin file per Markdown page, and `KobwebxMarkdownPlugin.kt` adds that generated folder to the `jsMain` Kotlin source set (`kotlin.srcDir(convertTask.map { it.getGenDir() })`). The generated challenge wrappers (§6.2.1) are Kotlin too. So every lesson's text and challenge data lands in the **one** main bundle, which every page, including home, downloads. No official Kobweb source documents per-page code splitting. At about 480 detailed leaves this very probably exceeds 400 KB gzip. That is an estimate; the per-leaf cost is unmeasured.
+**Known risk (closed 20 Oct 2026: measured by P0-7, resolved by ADR 005; text kept as the record).** Kobweb's markdown plugin writes a Kotlin file per Markdown page, and `KobwebxMarkdownPlugin.kt` adds that generated folder to the `jsMain` Kotlin source set (`kotlin.srcDir(convertTask.map { it.getGenDir() })`). The generated challenge wrappers (§6.2.1) are Kotlin too. So every lesson's text and challenge data lands in the **one** main bundle, which every page, including home, downloads. No official Kobweb source documents per-page code splitting. At about 480 detailed leaves this very probably exceeds 400 KB gzip. That is an estimate; the per-leaf cost is unmeasured.
 
 **Phase 0 spike (V5; replaces "measure from the pilot leaf, decide before ~20 leaves"):**
 
@@ -486,7 +547,7 @@ A PR that breaks a budget is not merged until it is fixed or this table is chang
 3. Per-leaf cost = difference / 50. Projected total = baseline + 480 × per-leaf cost.
 4. If the projection is ≤ 400 KB, keep this design. If it is over, ADR 005 must pick a design before the pilot leaf.
 
-Candidates for ADR 005, not decided here: lesson bodies served as static files and fetched at runtime by one dynamic-route page (Kobweb documents `{...}` dynamic routes; the export then needs the `addExtraRoute` path of §6.7); or raising the budget with a reason.
+Result: over budget (§8.1). ADR 005 chose lesson JSON plus one dynamic lesson page exported per live leaf with `addExtraRoute` (§6.7).
 
 ---
 
@@ -496,9 +557,9 @@ Candidates for ADR 005, not decided here: lesson bodies served as static files a
 |---|---|---|
 | 001 | Kobweb as the framework | Phase 0; pin Kobweb version, JDK 17, package `dev.kotree.site`, and `LESSON_KOTLIN_VERSION = 2.4.21` (§1, author decision 18 Oct 2026; re-check the Playground version list first). |
 | 002 | Vercel hosting, built and deployed from GitHub Actions; `kotree` CNAME at Hostinger | §5.1–5.3. |
-| 003 | Content outside `site/`, synced at build time; tree data as generated Kotlin for the app plus a `tree.json` tool artifact from the same generator; one static page per live leaf, no `addExtraRoute`, checked by `verifyLessonExport` | §6, §6.4, §6.7. |
-| 004 | Challenge blocks rewritten at sync time into generated widgets | §6.2.1. |
-| 005 | Lesson content vs one-bundle size | Written after the Phase 0 spike (§8), only if 480 leaves are projected over 400 KB gzip. |
+| 003 | Content outside `site/`, read at build time; tree data as generated Kotlin for the app plus a `tree.json` tool artifact from the same generator; validators | §6.4; written at Phase 3 S2 exit (`docs/14` §3.5). Lesson delivery is ADR 005, not 003. |
+| 004 | ~~Challenge blocks rewritten at sync time into generated widgets~~ | Not written: superseded by ADR 005 (challenge data travels in the lesson JSON). The number stays unused. |
+| 005 | Lesson content delivery | **Written 20 Oct 2026:** `docs/adr/005-lesson-content-delivery.md` (P0-7 failed). |
 
 ---
 
@@ -523,6 +584,9 @@ Candidates for ADR 005, not decided here: lesson bodies served as static files a
 - Kobweb routing (slugs, `@Page`, `setErrorPage`): https://kobweb.varabyte.com/docs/concepts/foundation/routing
 - Kobweb source on `main` (read 18 Oct 2026), under `tools/gradle-plugins/`: `extensions/markdown/.../MarkdownBlock.kt` (`addSource`, `imports`), `.../KobwebxMarkdownPlugin.kt` (generated sources added to `jsMain`), `.../tasks/ConvertMarkdownTask.kt`, `.../util/RouteUtils.kt` (slugs, `routeOverride`), `.../ext/kobwebcall/KobwebCallBlockParser.kt` and `KobwebCall.kt` (`{{{ }}}`), `.../handlers/MarkdownHandlers.kt` (handler names, HTML), `application/.../tasks/KobwebExportTask.kt` (no 404 export, unhashed JS), `application/.../extensions/AppBlock.kt` (export paths, `includeSourceMap`). Base: https://github.com/varabyte/kobweb/tree/main/tools/gradle-plugins
 - Kobweb source at tag `v0.25.1` (read 20 Oct 2026): `application/.../extensions/AppBlock.kt` (`addExtraRoute(route: String, exportPath: String? = null)`, `filter`, default export path) and `extensions/markdown/.../KotlinRenderer.kt` (`@Page("<route>")` per Markdown file). Base: https://github.com/varabyte/kobweb/tree/v0.25.1/tools/gradle-plugins
+- Kobweb source at tag `v0.25.1` (read 20 Oct 2026 for ADR 005): `application/.../tasks/KobwebExportTask.kt` (snapshot after `navigate` with no extra wait, `content()`, dynamic routes filtered, extra routes added, public resources copied) and `application/.../templates/MainTemplate.kt` (`#_kobweb-root` children removed before render, routing by `window.location`). `AppGlobals.isExporting`: https://kobweb.varabyte.com/docs/concepts/foundation/exporting
+- Gradle configuration cache, undeclared file reads tracked by content; `providers.fileContents`, `ValueSource`: https://docs.gradle.org/current/userguide/configuration_cache_requirements.html (read 20 Oct 2026)
+- Compose HTML `ref` in `attrs` (DOM element once on enter, `onDispose`): Compose Multiplatform HTML tutorial "Using Effects" (read 20 Oct 2026)
 - Gradle Java compatibility (9.8.1: JVM 17–27): https://docs.gradle.org/current/userguide/compatibility.html ; continuous build: https://docs.gradle.org/current/userguide/continuous_builds.html
 - GitHub Actions billing (free for public repos on standard runners): https://docs.github.com/en/billing/concepts/product-billing/github-actions
 - Vercel: fair use (commercial definition): https://vercel.com/docs/limits/fair-use-guidelines ; `vercel build`: https://vercel.com/docs/cli/build ; build settings / Skip Build Step: https://vercel.com/docs/builds/configure-a-build ; `vercel.json`: https://vercel.com/docs/project-configuration/vercel-json ; git config: https://vercel.com/docs/project-configuration/git-configuration ; custom 404: https://vercel.com/kb/guide/custom-404-page ; add a domain: https://vercel.com/docs/domains/working-with-domains/add-a-domain ; CAA: https://vercel.com/kb/guide/a-record-and-caa-with-vercel ; changelog: https://vercel.com/changelog/cli-deployment-limits-removed

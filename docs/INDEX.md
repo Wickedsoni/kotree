@@ -15,6 +15,7 @@
 | How agents work, model/effort routing, pipelines | `09-agent-workflow.md` | — |
 | Build order and master prompts | `10-build-phases.md` | — |
 | Phase 1 plan: tokens, fonts, components, kitchen-sink | `13-phase1-plan.md` | `architect`, `ui-engineer` |
+| Phase 3 plan: content pipeline, generator, validators V1-V10, stems and leaves on the tree | `14-phase3-plan.md` | `architect`, `ui-engineer`, `housekeeper` |
 | Open facts to test in Phase 0 and later (every VERIFY, with test and fallback) | `11-phase0-checklist.md` | `architect`, `reviewer` |
 | Author's personal study timeline (not a spec) | `my-timeline.md` | — |
 | Review reports | `docs/reviews/` | `reviewer` |

@@ -4,7 +4,7 @@
 > **Read this when:** you build or review the tree canvas, camera, overlays, navigation, the content generator, the lesson page's links back to the tree, anything that reads `TreeData`, or a script or agent that reads `tree.json`.
 > **Depends on:** `docs/00-decisions.md` (wins every conflict; §2 L4, L6, L25, L26; §3 D1–D4, D10–D12, D15–D17; §5; §7; §8), `docs/01-vision-and-principles.md` (P1, P2, P4), `docs/02-design-system.md` (all colour, type, spacing and motion tokens), `docs/07-technical-architecture.md` (build pipeline, export, deploy).
 > **Principles used:** P1 (open by default), P2 (honest empty space), P4 (the map explains itself: at Canopy zoom the visible labels are bough names).
-> **Revised:** 18 Oct 2026 for L25 (subdomain `https://kotree.garvitmaheshwari.in`, root `/`, no base path), L26 (optional video), D15 (up-next override), D16 (live list = leaf frontmatter). Bough titles in §1 approved by the author. Verified 18 Oct 2026 (§7.2): no decision changed; one consequence added (Kobweb export skips dynamic routes, so each live lesson is exported as its own route). Revised again 18 Oct 2026 (author decision): the app reads tree data compiled in as generated `TreeData.kt` (no runtime fetch); the same generator also emits `tree.json` as a tool artifact (§4.1).
+> **Revised:** 18 Oct 2026 for L25 (subdomain `https://kotree.garvitmaheshwari.in`, root `/`, no base path), L26 (optional video), D15 (up-next override), D16 (live list = leaf frontmatter). Bough titles in §1 approved by the author. Verified 18 Oct 2026 (§7.2): no decision changed; one consequence added (Kobweb export skips dynamic routes, so each live lesson is exported as its own route). Revised again 18 Oct 2026 (author decision): the app reads tree data compiled in as generated `TreeData.kt` (no runtime fetch); the same generator also emits `tree.json` as a tool artifact (§4.1). Revised 20 Oct 2026 (`architect`): §7.2 file shape settled by P0-3b; lesson delivery by ADR 005 (one dynamic lesson page, per-leaf exported HTML plus `/lessons/<id>.json`); `lessons` and `sitemap.xml` reserved (§7.3); V11 noted. URL scheme unchanged.
 
 This doc defines **no colours, fonts or spacing values**. Colours are referenced by token name only: the branch accent is `color.branch.<slug>`; leaf-state, bark and shadow colours are the tokens `docs/02` defines for those roles.
 
@@ -378,7 +378,9 @@ The site is `https://kotree.garvitmaheshwari.in` (L25), hosted on Vercel via a H
 | `/#<branch>` | Tree, flown to that branch | Always |
 | `/#<branch>/<stem>` | Tree, flown to that stem | Always |
 | `/#<branch>/<stem>/<leaf>` | Tree, flown to that leaf, popup open | Leaf is `live` or `upnext`; for a shadow leaf, falls back to its stem |
-| `/<branch>/<stem>/<leaf>` | Lesson page | Leaf is `live` |
+| `/<branch>/<stem>/<leaf>` | Lesson page (one exported HTML file per live leaf, ADR 005) | Leaf is `live` |
+| `/lessons/<branch>/<stem>/<leaf>.json` | Lesson body data fetched by the lesson page on in-app navigation; `noindex` (ADR 005, `docs/07` §5.5) | Leaf is `live` |
+| `/sitemap.xml` | `/` plus every live lesson URL (`docs/07` §6.7) | Always |
 | `/tree.json` | Tool artifact (§4.1); the app never fetches it | Always |
 | anything else | 404 page | — |
 
@@ -391,16 +393,16 @@ Canonical lesson URLs have **no trailing slash**.
 Verified 18 Oct 2026:
 - **Kobweb routes** come from files: package path plus kebab-cased file name, or `@Page(routeOverride = ...)`; dynamic segments use `{name}` and are read with `ctx.route.params.getValue("name")`. Navigation is `ctx.router.navigateTo("/path")` (inside widgets, `rememberPageContext()`). A custom 404 is set with `ctx.router.setErrorPage { }` in an `@InitKobweb` function. Source: https://kobweb.varabyte.com/docs/concepts/foundation/routing . The routing docs do not mention base paths; with root `/` none is needed (L25).
 - **Static export** is `kobweb export --layout static`, output `.kobweb/site`; the exported HTML refers to root-absolute assets such as `/mysite.js`. **Dynamic routes are skipped by the export** unless added one by one with `addExtraRoute("/path", exportPath = "...")` in the build script (the docs' example maps `/users/default/posts/0` to `users/index.html`). Source: https://kobweb.varabyte.com/docs/concepts/foundation/exporting
-- **Consequence (important):** a single dynamic page `/{branch}/{stem}/{leaf}` would produce no exported file for any lesson. So every live leaf needs its own exported file. `docs/07` §6.7 decided (20 Oct 2026): each lesson gets a fixed `@Page` route from the markdown plugin, so the export already writes it; `addExtraRoute` is only a backup if a dynamic lesson page is chosen (ADR 005). Shadow and up-next leaves get no file, which already matches the 404 rule in §6.
+- **Consequence (important):** a single dynamic page `/{branch}/{stem}/{leaf}` produces no exported file for any lesson unless each instance is added. **Decided by ADR 005 (20 Oct 2026, after P0-7 failed):** one dynamic lesson page `@Page("/{branch}/{stem}/{leaf}")`; the build registers `addExtraRoute(route, exportPath = "<branch>/<stem>/<leaf>.html")` for every live leaf, then `emitLessonPages` adds the leaf's title, description, canonical URL, static prose and lesson JSON to that file (`docs/07` §6.7). The URL scheme above is unchanged. Shadow and up-next leaves get no route string and no file, which matches the 404 rule in §7.4; the lesson page itself also shows the shadow stub for a non-live id reached in the app.
 - **Vercel** serves `foo.html` at `/foo` when `"cleanUrls": true` is set in `vercel.json`, redirecting `/foo.html` to `/foo` with 308; `"trailingSlash": false` makes `/foo/` redirect to `/foo`. Source: https://vercel.com/docs/project-configuration/vercel-json . Decision: set both (`cleanUrls: true`, `trailingSlash: false`) so there is exactly one canonical URL; `docs/07` already carries `cleanUrls` (its §5.1).
 
-⚠️ VERIFY (Phase 0, owned by `docs/07`): the file name Kobweb actually writes for a route such as `/kotlin/null-safety/what-is-null` (`kotlin/null-safety/what-is-null.html` or `.../what-is-null/index.html`). The docs we could read do not say; only the `exportPath = "users/index.html"` example hints at folders. Test (see `docs/07` §6.7 and `docs/11`): export a sample lesson page, run `kobweb export --layout static`, list `.kobweb/site`; with `exportPath` set explicitly we choose the shape ourselves (prefer the `foo.html` shape with `cleanUrls`). Then deploy a preview to Vercel and request `/kotlin/null-safety/what-is-null` with `curl -I`: expect 200 with no redirect, and `/…/what-is-null/` expect 308 to the non-slash form.
+Settled 20 Oct 2026 (`docs/11` P0-3b, `docs/reviews/P3-probes.md`): the export writes `kotlin/null-safety/what-is-null.html` (the `<route>.html` shape), and ADR 005 sets `exportPath` explicitly to that shape anyway. Still open, Vercel half only (`docs/11` P7-2): on a preview, `curl -I /kotlin/null-safety/what-is-null` gives 200 with no redirect and `/…/what-is-null/` gives 308 to the slashless form.
 
 Rejected: query string `?at=kotlin` (reaches the server and CDN cache keys for no gain); real pages per branch/stem (`/kotlin`): extra exported pages and a second way to show the same tree (L6); leaf ID without stem (`/kotlin/what-is-null`): stem is part of the ID in docs/00 §8.
 
 ### 7.3 Reserved first segments
 
-No branch slug may be any of: `assets`, `fonts`, `images`, `kitchen-sink`, `about`, `progress`, `api`, `tree.json`, `404`, or any name starting with `_`. Validation V7 enforces this.
+No branch slug may be any of: `assets`, `fonts`, `images`, `kitchen-sink`, `about`, `progress`, `api`, `tree.json`, `404`, `lessons`, `sitemap.xml`, or any name starting with `_`. Validation V7 enforces this. (`lessons` and `sitemap.xml` added 20 Oct 2026 for ADR 005.) No stem or leaf slug may be `index` or start with a digit (V11, `docs/07` §6.2).
 
 ### 7.4 404 page
 
@@ -479,8 +481,9 @@ Measured on the author's laptop, Chrome, production build.
 
 | Risk | Mitigation |
 |---|---|
-| Vercel serving `/a/b/c` without `.html` | Settled in §7.2 by `cleanUrls: true` + `trailingSlash: false`; only Kobweb's emitted file name is still ⚠️ VERIFY (§7.2 Phase 0 test) |
-| Kobweb skips dynamic routes on export (verified, §7.2) | Each live leaf gets a fixed `@Page` route so the export writes it; `addExtraRoute` is the backup (`docs/07` §6.7) |
+| Vercel serving `/a/b/c` without `.html` | Settled in §7.2 by `cleanUrls: true` + `trailingSlash: false`; Kobweb's file name `<route>.html` confirmed 20 Oct 2026 (P0-3b); preview check in Phase 7 (P7-2) |
+| Kobweb skips dynamic routes on export (verified, §7.2) | ADR 005: `addExtraRoute` per live leaf for the one dynamic lesson page; `verifyLessonExport` proves one file per live leaf (`docs/07` §6.7) |
+| Lesson text in the one main bundle (P0-7: 4,190 B gzip per leaf, 19 leaves fit) | ADR 005: lesson bodies travel as JSON beside the app, not in `kotree.js` |
 | Strict title/difficulty match (V5) slows small wording fixes | Fix goes through `curriculum-designer`, one roadmap edit; keeps one source of truth |
 | Stale `upnext: true` left on a leaf after publishing | V9 fails the build; `housekeeper` removes the flag in the publish commit |
 | V8 relies on git history instead of a list file (D16) | Shallow CI clones may hide history; `docs/07` fixes where the check runs |

@@ -120,7 +120,7 @@ Rejected: a CDN (`unpkg`, `jsDelivr`): third-party request, privacy, and a secon
 | Registry | `SimRegistry.kt` | `id → factory`. One entry per spec in `docs/sims/`. |
 | One sim | `<SimName>Sim.kt` + `<SimName>Config` | All tunable numbers from the spec live in **one named config object** (`sim-engineer` rule), with the same names and values as the spec's parameter table. |
 
-**Marker to widget.** Authors write `<!-- SIM: sim-id -->` (`docs/04` §3.4, §4.3). The page renders `SimHost("sim-id")` at that place. Settled in `docs/07` §6.2: `syncLessons` rewrites the marker at sync time into a Kobweb block-widget line (for example `{{{ SimHost("null-lunch-box") }}}`, with a documented argument-free fallback); `/content` is never changed.
+**Marker to widget.** Authors write `<!-- SIM: sim-id -->` (`docs/04` §3.4, §4.3). The page renders `SimHost("sim-id")` at that place. Settled in ADR 005 and `docs/07` §6.2: `renderLessons` cuts the body at the exact marker line (regex in `docs/07` §6.2 R1) and writes a `{ "t": "sim", "id": "sim-id" }` block into the leaf's lesson JSON (`/lessons/<id>.json`; the JSON also lists all IDs in `sims`). The one lesson page (`K/pages/Lesson.kt`) walks the blocks in a single composition and, for a `sim` block, renders `SimFrame` hosting `SimHost(id)`; until a sim exists (before Phase 5) it shows a placeholder frame. No Kobweb Markdown widget line is generated, and `/content` is never changed. The sim's Kotlin code stays in the main bundle (§3.1); the JSON carries only the ID. A sim in the exported static HTML is only its surrounding text (Try this, What you should notice), because the static body holds the `html` blocks and no widget; `SimHost` mounts when the page hydrates.
 
 ### 3.3 Rendering rules
 

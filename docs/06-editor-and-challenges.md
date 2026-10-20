@@ -2,8 +2,8 @@
 
 > **Purpose:** how runnable Kotlin, Predict-the-output and Fix-the-bug work on lesson pages, how their data is written in Markdown (the fenced `challenge` block), and how every expected output is verified.
 > **Read this when:** writing or reviewing challenges, building the Playground block or challenge cards, or deciding what a lesson may promise about Android behaviour.
-> **Depends on:** `00` (D8, D9, L15, §10), `01` §3.4-3.5, `04` (section names, written content of challenges), `05` (Sims), `07` §6.3 (widget imports) and the challenge sync and validation rule in `07` §6.
-> **Version:** v1 · amended 18 Oct 2026 (challenge format is the only one; L15 conflict banner removed because `docs/00` is amended; Kotlin 2.4.21 pinned).
+> **Depends on:** `00` (D8, D9, L15, §10), `01` §3.4-3.5, `04` (section names, written content of challenges), `05` (Sims), `07` §6.2 and §6.2.1 (`renderLessons`, challenge validation CH1-CH10) and `docs/adr/005-lesson-content-delivery.md` (how the lesson page renders the blocks).
+> **Version:** v1 · aligned with ADR 005 on 20 Oct 2026 (§3 delivery, E3, E6) · amended 18 Oct 2026 (challenge format is the only one; L15 conflict banner removed because `docs/00` is amended; Kotlin 2.4.21 pinned).
 
 **Android scope (L15 amended, D8).** There is no Android emulator and no Android simulator in the browser. Android behaviour is shown through reference videos, animations and Sims (`docs/05`) that show how behaviour changes when the code changes. This document promises **real Kotlin execution only**.
 
@@ -44,7 +44,7 @@ Endpoints (Read in source; the host default is in `webpack.config.js`: `https://
 | Item | Decision |
 |---|---|
 | Script | `https://unpkg.com/kotlin-playground@1/dist/playground.min.js`, loaded from a plain absolute `https://` URL (matches `07` §3 "External"). The README uses `https://unpkg.com/kotlin-playground@1`, and `package.json` `main` is `dist/playground.min.js`, so the full path resolves. Current library version at check time: 1.34.0. |
-| When loaded | Only on pages with `playground: true` (frontmatter, `00` §8.2), injected when the first code block nears the viewport (matches `07` perf budget "0 bytes on pages with `playground: false`"). |
+| When loaded | Only on pages whose lesson JSON has `"playground": true` (from frontmatter, `00` §8.2; ADR 005), injected when the first code block nears the viewport (matches `07` perf budget "0 bytes on pages with `playground: false`"). |
 | Never | Bundled into the Kobweb JS (size budget), or loaded on the tree/home screens. |
 | Init | From the CDN script the function is `KotlinPlayground(selector, options)`; from NPM it is imported as `playground` and called as `playground(selector, options)`. Per the JSDoc in `src/index.js` it returns a Promise of an array of instances. The README also documents a `getInstance` callback exposing `execute()` and `getCode()`. Auto-attach with `<code class="kotlin-code">` is also documented; we call the function ourselves so the offline fallback (§2.3) can decide first. |
 
@@ -80,9 +80,20 @@ Playground server dependency: code runs on JetBrains' servers, so a public lesso
 
 ## 3. Challenge data format in lesson Markdown
 
-**This is the only challenge format.** A challenge is a fenced block whose info string is `challenge`. The body is YAML. Authors write nothing else to place a challenge: no HTML comment marker, no extra Markdown labels (`docs/04` §5). The `syncLessons` task (`07` §6) turns each block into a widget call (`PredictCard(...)` / `FixCard(...)`, registered through `imports.add(...)`, `07` §6.3), and `validateContent` checks the fields below (rule text is owned by `07`; the field rules are owned here). Read in source on 18 Oct 2026 (Kobweb `MarkdownHandlers.kt` in `varabyte/kobweb`, `tools/gradle-plugins/extensions/markdown/`): `code` is a replaceable build-script property of type `NodeScope.(FencedCodeBlock) -> String`; the default handler uses only the block text and ignores the info string; commonmark-java's `FencedCodeBlock` has `getInfo()` (so `challenge` can be told apart from `kotlin`). Not found in the Kobweb docs pages I read. ⚠️ VERIFY (scratch Kobweb project, Phase 6): override `code` in `build.gradle.kts`, return a `PredictCard(...)` call for `info == "challenge"`, build, and check the widget appears and plain `kotlin` blocks are unchanged. Fallback if it fails: the sync task rewrites the block into a `{{{ PredictCard(id = "...") }}}` call plus a generated data file. Authors only ever write the YAML below.
+**This is the only challenge format.** A challenge is a fenced block whose info string is `challenge`. The body is YAML. Authors write nothing else to place a challenge: no HTML comment marker, no extra Markdown labels (`docs/04` §5). `validateContent` checks the fields below (rule text CH1-CH10 is owned by `07` §6.2.1; the field rules are owned here). Authors only ever write the YAML below.
 
-On GitHub, or when the widget is missing, the block reads as plain YAML, so the answers and reasons are still readable.
+**How a block reaches the learner (ADR 005).** `renderLessons` (`07` §6.2) turns each `challenge` block into one entry in the leaf's lesson JSON, served at `/lessons/<id>.json`: `type: predict` becomes `{ "t": "predict", ... }` and `type: fix` becomes `{ "t": "fix", ... }`. The field names are exactly the ones in §3.1 to §3.3 (`id`, `code`, `run`, `generated`, `verified`, and `options` / `output` or `hints` / `expected` / `fix` / `explanation`); only the YAML key `type` is renamed `t` in JSON. A plain `kotlin` fence becomes `{ "t": "code", "lang": "kotlin", "code": ..., "runnable": ... }`, with `runnable` following the §1 rule. The lesson JSON also holds `playground` (the frontmatter flag). The one lesson page (`K/pages/Lesson.kt`) reads the JSON (inline `script#kt-lesson-data` on a direct load, otherwise one `fetch`) and renders the blocks in one Compose composition with the existing `ui/lesson` components:
+
+| JSON block | Component |
+|---|---|
+| `code`, `runnable` true and `playground` true | `EditorShell` (the Playground embed of §2) |
+| `code`, otherwise | `CodeBlock` (read-only highlighted code) |
+| `predict` | `PredictOutput` |
+| `fix` | `FixBug` |
+
+There is no Kobweb Markdown widget call, no `code` handler override and no generated challenge Kotlin. Challenge text, options, hints and answers are therefore not in `kotree.js`; they arrive with the lesson JSON. The static HTML of an exported leaf shows only the code (escaped `<pre><code>`) with no options, hints, answers or `why` text, so nothing spoils before the page's JavaScript runs.
+
+On GitHub the block reads as plain YAML in the source file, so the answers and reasons are still readable there. If the lesson JSON cannot load, the page shows "This lesson could not load." with a Retry button (not the offline message of §6).
 
 ### 3.1 Common fields
 
@@ -269,7 +280,8 @@ Supports `01` §3.5: tidy, confident, slightly wrong code.
 |---|---|---|
 | E1 | ~~Amend L15 and D8 in `docs/00` for the no-emulator ruling~~ **Done 18 Oct 2026.** | closed |
 | E2 | Run-time tests still open (§2.2, §2.3): the offline and server-down behaviour (read in source, never run), `execute()` on a highlight-only block, a CSS cap on the output area, the no-theme-attribute look on white, and the pre-flight `versions` check. URL, init function, `data-version`, option names, endpoints and the 2.4.21 offer are settled. | `architect`, Phase 6 |
-| E3 | Confirm by a scratch build that a Kobweb `code` handler override can emit the widget call (§3; the handler type and `getInfo()` were read in source). | `architect`, Phase 6 |
+| E3 | ~~Confirm that a Kobweb `code` handler override can emit the widget call.~~ **Obsolete 20 Oct 2026 (ADR 005):** no Markdown plugin is used for lessons; the lesson JSON and the block renderer replace it (§3). | closed |
 | E4 | ~~Confirm the Playground offers 2.4.21~~ **Done 18 Oct 2026** (§5: listed, `latestStable`). Remaining: mirror 2.4.21 in `docs/07` (it already does, `LESSON_KOTLIN_VERSION`) and check `kotlinc -version` on the author's machine. | `architect` |
 | E5 | `docs/10` Phase 6 prompt (line 91) says "first Android-behaviour animation named in `docs/06`"; no animation is named here. Change to "named in `docs/05`". | Orchestrator |
-| E6 | `07` §6 must sync and validate `challenge` blocks (fields in §3, including optional `run` and `generated`). | `architect` |
+| E6 | ~~`07` §6 must sync and validate `challenge` blocks.~~ **Done:** `renderLessons` writes them to the lesson JSON and CH1-CH10 validate them (`07` §6.2, §6.2.1; fields in §3, including optional `run` and `generated`). | closed |
+| E7 | Not answered by ADR 005, for `architect`: (1) how `renderLessons` decides `runnable` for a plain `kotlin` fence in Try it (by section heading, or an explicit marker); (2) how `EditorShell` hands a Compose-made element to `KotlinPlayground(...)` and disposes it; (3) where card state (`kotree.v1.challenge.*`) is read and written inside the block renderer (ADR 005 leaves it to Phase 6). | `architect`, Phase 6 |
