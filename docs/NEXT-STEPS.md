@@ -12,6 +12,7 @@
 
 - Tree-first prototype (docs/12) is built, pushed to https://github.com/Wickedsoni/kotree (3 commits on main) and passed S3 acceptance. Start it with `./gradlew :site:kobwebStart`, open http://localhost:8080/, stop with `./gradlew :site:kobwebStop`. Never use interactive `kobweb run` (opens looping console windows).
 - NOT pushed, uncommitted: docs/07 §8.1 and docs/11 P0-10 (baseline numbers, done), docs/reviews/S3-review.md (reviewer: FIX, 2 medium), plus a HALF-FINISHED fix run that was stopped mid-way: edits in Tokens.kt, TreeView.kt, camera/Camera.kt, overlay/Labels.kt and refreshed screenshots. Unverified: no clean build or browser check was run after those edits. Next: run `./gradlew clean :site:compileKotlinJs`, check the diff (`git diff`), finish S3-review.md items 1, 2, 3, 4, 7, 8, 9 (item 2: no label after branch click at z=4), then commit and push.
+- Vercel Hobby (20 Oct 2026): the author's YouTube channel is not monetised yet, so the free Hobby plan is fine for now. Revisit if the channel is monetised or the site gets ads (ask Vercel Support or upgrade).
 - Author decisions (20 Oct 2026): item 5 = use whole-number pixel scaling only (blit scale is an integer, as docs/12 §8 says); item 6 = nudge colliding bough labels apart (do not hide them). To be implemented after the current fix run finishes.
 - Still owed by the author: review of docs 00, 01, 02, 03, 04, 08 and the two proposals in docs/08 §8.1. Then Phase 1 (design tokens) and Phase 0b (docs/12 §4 deferred rows).
 

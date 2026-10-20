@@ -462,6 +462,8 @@ These close `docs/11` P0-10 for the prototype. They come from headless Chrome on
 | DOM nodes on the home page | 24 to 29 | Far below the 200-node test |
 | Geometry hash | `cecb906380417dd8` on every load | Deterministic |
 
+**Phase 1 update (20 Oct 2026, `docs/reviews/P1-acceptance.md`).** After tokens, fonts, the base components and the `/kitchen-sink` page, `kotree.js` is **277,917 B gzip** (+37,227 B over the 240,690 B prototype; 247,676 B without the kitchen sink, so the sink costs about 30 KB). That is over the +25 KB point where the architect must look and under the +40 KB fail line. Decision (orchestrator, 20 Oct 2026): accept for now because the kitchen sink is the only large item and Phase 3 will measure the real lesson cost; if the Phase 3 projection is over budget, the first cut is to drop `/kitchen-sink` from the production build, then ADR 005. Headroom is now about 122 KB of the 400 KB budget.
+
 **Consequence for the bundle spike (§8, 50 synthetic leaves).** The baseline already uses about 235 KB of the 400 KB budget, leaving about 159 KB. If the per-leaf cost projects over that headroom, ADR 005 must decide the lesson design before the pilot leaf. Part of the baseline is Kotlin/JS runtime and Compose HTML and will not grow, but the spike must measure it, not assume it.
 | Frame time while panning/zooming | ≤ 16.7 ms p95 (60 fps), canvas draw ≤ 8 ms | Performance panel, 10 s pan/zoom script |
 | Click on a leaf → popup visible | ≤ 100 ms | Performance panel |

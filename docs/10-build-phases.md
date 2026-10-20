@@ -41,7 +41,8 @@ Text below is the original Phase 0 definition. In the tree-first order, the scaf
 
 ## Phase 1 — Design tokens and core components
 
-**Order:** runs after the tree-first milestone (`docs/12`). Start by running the Phase 1 rows of `docs/12` §4 (P0-5, P0-6, P0-8, P0-11, P0-12), then replace the constants in `Tokens.kt` with the final `docs/02` tokens (or `StyleVariable`s per `docs/02` §3.1), keeping the token names the tree already uses. The tree must look the same or better afterwards.
+**Plan:** `docs/13-phase1-plan.md` (3 sessions, branch `phase-1-tokens`, file ownership, acceptance).
+**Order:** runs after the tree-first milestone (`docs/12`). Start by running the Phase 1 rows of `docs/12` §4 (P0-5, P0-6, P0-8, P0-11, P0-12) and the contrast script, then add the final `docs/02` tokens to `Tokens.kt` and `StyleVariable`s per `docs/02` §3.1 without renaming anything the tree uses (add, never rename). The tree must look the same or better afterwards (geometry hash unchanged).
 
 **Goal:** the visual language exists in code: colours, type, shapes, motion and the base components, shown on a private `/kitchen-sink` page.
 **Agents:** `ui-engineer` (tokens, components), `reviewer` (design-system conformance), `fixer`.
@@ -49,7 +50,7 @@ Text below is the original Phase 0 definition. In the tree-first order, the scaf
 **Acceptance:** no hardcoded values outside the token file; contrast meets `docs/02`; reduced-motion respected.
 
 > **Master prompt**
-> Phase 1 of Kotree. Read `docs/02-design-system.md` and `docs/07`. Implement the design tokens and the component list from `docs/02` §components in `/site`, plus a `/kitchen-sink` page that shows every token and component. Split the work so at least 3 `ui-engineer` runs go in parallel on separate files: (1) tokens + fonts, (2) layout components, (3) lesson and challenge components. Then `reviewer` checks conformance and `fixer` applies mechanical items. No hardcoded colours, fonts or spacing outside the token file. Report in 150 words.
+> Phase 1 of Kotree. Read `docs/02-design-system.md` and `docs/07`. Implement the design tokens and the component list from `docs/02` §components in `/site`, plus a `/kitchen-sink` page that shows every token and component. Read `docs/13` and follow it. Use three `ui-engineer` owners on separate files, never more than 3 at once: (1) tokens + fonts in S1 (its token declarations are frozen first), then (2) layout components and (3) lesson and challenge components in parallel in S2. Then `reviewer` checks conformance and `fixer` applies mechanical items. No hardcoded colours, fonts or spacing outside the token file. Report in 150 words.
 
 ---
 

@@ -3,7 +3,7 @@
 > **Purpose:** the single list of design tokens (colour, type, shape, motion, spacing), the pixel-tree rules and the UI component list.
 > **Read this when:** you write any CSS/Kobweb style, draw the tree, or add a component.
 > **Depends on:** `docs/00-decisions.md` (L7, L9-L12, D5, D6, D13, §6, §7). Zoom levels and routes: `docs/03`.
-> **Rule:** no hardcoded colour, font or spacing anywhere else. Code refers to token names only. Token names are dotted here (`color.branch.kotlin`) and become CSS custom properties with dashes (`--color-branch-kotlin`) by the fixed rule in §3.1 (Silk `StyleVariable`, name rule read from the Kobweb source; one digit-name case and whether `StyleVariable.name` is public are ⚠️ VERIFY with Phase 0 tests).
+> **Rule:** no hardcoded colour, font or spacing anywhere else. Code refers to token names only. Token names are dotted here (`color.branch.kotlin`) and become CSS custom properties with dashes (`--color-branch-kotlin`) by the fixed rule in §3.1 (Silk `StyleVariable`, name rule read from the Kobweb source and probed 20 Oct 2026: digit names get no dash, see §3.1; `StyleVariable.name` is public).
 > **Verified:** 18 Oct 2026 (sources inline in §3 and §4). **Changes from verification:** none; every decision in 00 and every value in this doc held. **Added 18 Oct 2026:** token-to-CSS-variable name rule (§3.1) and layout widths incl. the narrowest `SimFrame` (§4.5).
 
 ---
@@ -33,7 +33,7 @@
 
 Each branch has **three** tokens: `color.branch.<slug>` (the **ink**: text, buttons, borders; every one measured ≥ 4.5:1 on white), `color.branch.<slug>.tint` (container fill = ink mixed 12% into white, computed, not typed) and `color.on-branch` (`#FFFFFF`, text on an ink-filled button). Names below use the branch slug from `docs/00` §5 unchanged (dashes stay dashes; mapping rule in §3.1).
 
-Contrast ratios were computed against `#FFFFFF` (WCAG relative luminance).
+Contrast ratios were computed against `#FFFFFF` (WCAG relative luminance). Since 20 Oct 2026 `scripts/check-tokens.py` also checks every ink on its own 12% tint (sRGB mix) at >= 4.5; the tint stays 12% (author answer 2, `docs/13` §8) and inks that failed were darkened within their hue (`architecture-data`, `networking`; see §2.4 for `feedback.correct`). Every other pair passes (`docs/reviews/P1-probes.md`).
 
 | Token (`color.branch.…`) | Ink | Contrast | Psychology and why this hue |
 |---|---|---|---|
@@ -42,13 +42,13 @@ Contrast ratios were computed against `#FFFFFF` (WCAG relative luminance).
 | `android-core` | `#1B2F7A` | 12.1 | **Navy.** Same blue family as Kotlin (same bough) but much darker: depth, the platform underneath your code. |
 | `ui` | `#C2185B` | 5.9 | **Magenta-pink.** Creativity, expression, things you can see and touch. The only pink. |
 | `concurrency` | `#7A5A00` | 6.4 | **Dark gold.** Time, motion, "things happening at once"; yellow is the classic signal for caution, which fits races and deadlocks. Bright gold fill `#E0A100` is not allowed for text (fails contrast); use ink or tint. |
-| `architecture-data` | `#2E7D4F` | 5.1 | **Green (accepted).** Growth and structure: layers that hold up. |
+| `architecture-data` | `#2C774B` | 5.46 (4.65 on tint) | **Green (accepted).** Growth and structure: layers that hold up. Darkened 20 Oct 2026 (was `#2E7D4F`, 4.30 on its tint). |
 | `app-networking` | `#01579B` | 7.4 | **Deep sky blue.** Reach outward to servers; sky, requests travelling. Kept darker and bluer than networking teal. |
 | `kmp` | `#4A7000` | 5.8 | **Lime-olive green (accepted green family).** Sharing code across platforms: living, spreading growth. Yellower than architecture green. |
 | `dsa` | `#A84A00` | 5.8 | **Orange (accepted).** Energy and problem solving. Burnt orange so text passes contrast. |
 | `daa` | `#7B3FC4` | 6.3 | **Purple (accepted).** Abstraction and depth of thought. |
 | `os` | `#B3261E` | 6.5 | **Crimson.** Authority, the kernel, resources that must not run out; red = system-level, handle with care. |
-| `networking` | `#00796B` | 5.3 | **Teal (accepted).** Connection and flow. |
+| `networking` | `#007669` | 5.53 (4.67 on tint) | **Teal (accepted).** Connection and flow. Darkened 20 Oct 2026 (was `#00796B`, 4.49 on its tint). |
 | `testing` | `#C0392B` | 5.4 | **Coral red.** Bugs and failing checks demand attention; the colour a red test turns. Lighter and warmer than `os`. |
 | `profiling` | `#5E4AE3` | 5.9 | **Indigo-violet.** Measuring, insight, looking inside. Bluer-violet than `daa`. |
 | `native-ndk` | `#8A4B2A` | 6.7 | **Rust / sienna.** Metal, close to the hardware, C/C++ heritage. Redder and more saturated than `foundation`. |
@@ -88,7 +88,7 @@ Acceptance: a leaf's state is identifiable without colour via shape cue as well:
 
 ### 2.4 Feedback colours (chrome)
 
-`color.feedback.correct` `#2E7D32`, `color.feedback.wrong` `#B3261E`, `color.feedback.hint` `#7A5A00`; each with a `.tint`. Used in Predict-the-output and Fix-the-bug (D9). Always accompanied by an icon and text.
+`color.feedback.correct` `#2C7730` (5.54 on white, 4.71 on its tint; darkened 20 Oct 2026 from `#2E7D32`, which gave 4.36), `color.feedback.wrong` `#B3261E`, `color.feedback.hint` `#7A5A00`; each with a `.tint`. Used in Predict-the-output and Fix-the-bug (D9). Always accompanied by an icon and text.
 
 ---
 
@@ -106,7 +106,7 @@ Verified facts (18 Oct 2026):
 - **JetBrains Mono** is OFL 1.1 ("Copyright 2020 The JetBrains Mono Project Authors"), free for commercial and non-commercial use, no Reserved Font Name seen. The repo builds `.ttf`, `.otf`, `woff2` and variable files; the default build has ligatures, and a "NL" build has none. Sources: https://github.com/JetBrains/JetBrainsMono , https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/OFL.txt
 - Decision: ligatures stay off for learners via `font-variant-ligatures: none` so `->` and `!=` show as typed (standard CSS). Fallback if a browser ignores it: ship the NL build.
 - Bundling rule: ship each font's `OFL.txt` next to its files in `/fonts/` (the OFL requires the licence with every copy).
-- ⚠️ VERIFY (Phase 0): the full Roboto Flex variable file is large. Test: subset with fontTools to Latin plus `wght`, `opsz` (pin the other axes), write woff2, and record the byte size in `docs/07`. Budget: the UI font under 150 KB and the code font under 100 KB. If over, pin `opsz` and use static weights 400/600/700.
+- Verified 20 Oct 2026 (P0-8, `docs/reviews/P1-probes.md`): subset to Latin, axes `wght` 400-800 and `opsz` 14-32 for Roboto Flex: `roboto-flex-v1.woff2` 43,640 B; `jetbrains-mono-v1.woff2` (`wght` 400-700) 34,492 B; total 78,132 B against the 250 KB budget. Latin only, so glyphs such as arrows fall back to system fonts.
 
 Hosting: self-host the font files from `/fonts/` (no third-party request, `font-display: swap`). Rejected: Google Fonts CDN (extra request, privacy); a second display font (L10 allows one UI font).
 
@@ -120,13 +120,13 @@ Decisions for Kotree: declare tokens as `StyleVariable`s in one `Tokens.kt`, set
 
 | Step | Rule | Example |
 |---|---|---|
-| 1. CSS name | token name: replace every `.` with `-`, add `--` in front | `color.branch.android-core.tint` becomes `--color-branch-android-core-tint` |
+| 1. CSS name | token name: replace every `.` with `-`, add `--` in front. **Digit exception:** no dash before a digit | `color.branch.android-core.tint` becomes `--color-branch-android-core-tint`; `space.2` becomes `--space2` (not `--space-2`) |
 | 2. Kotlin property | split the token on `.` and `-`, camelCase the parts, add `Var` | `colorBranchAndroidCoreTintVar` |
 | 3. Check | Kobweb's kebab-casing of step 2 must give back step 1 | `color-branch-android-core-tint` |
 
 - Only colour, font, shape, spacing, type-size and `layout.*` tokens become variables. Spring and timing numbers (`motion.*`) stay plain Kotlin constants.
-- Code that must read a variable by string (the sim colour reader, `docs/05` §3.3) builds the name from the Kotlin object, `"--" + colorOnSurfaceVar.name`, and never types the string, so a wrong guess about this rule cannot break it. ⚠️ VERIFY `name` is public (the source uses it inside the same module).
-- ⚠️ VERIFY (Phase 0, 15 min, digit names): the kebab step on digits is unread. Declare `colorBranchKotlinVar`, `colorBranchAndroidCoreTintVar` and `space2Var`, run the dev site, select any element inside the root `@App` wrapper in DevTools and run `getComputedStyle($0).getPropertyValue("--space-2")` (then the other two). Expect `8px`, `#3b5bdb` (hex case may differ) and the tint. If `space2Var` gives another name (for example `--space2`), add the observed name to this table; the token name stays the contract.
+- Code that must read a variable by string (the sim colour reader, `docs/05` §3.3) builds the name from the Kotlin object, `"--" + colorOnSurfaceVar.name`, and never types the string. Verified 20 Oct 2026 (P0-6): `name` is public and `"--" + colorOnSurfaceVar.name` gives `--color-on-surface`.
+- **Digit exception (probed 20 Oct 2026, P0-5, Chrome 155).** Kobweb adds no dash before a digit: `space2Var` becomes `--space2`; `--space-2` is empty. `--color-branch-kotlin` and `--color-branch-android-core-tint` match the rule. So step 1 holds for letters only: for a token part that is a digit, the CSS name joins it to the previous part without a dash (`space.2` becomes `--space2`, `space.12` becomes `--space12`). The token name stays the contract; code uses the Kotlin `*Var` (`space2Var`) and never types the CSS name.
 - Any `calc` on variables must use Silk's `calc { }` (arithmetic on variables fails silently).
 
 | Token | Size / line height (px) | Weight | Use |
@@ -174,15 +174,15 @@ White-only, so separation is by outline and tint, not shadow: `elevation.0` none
 | `motion.camera` | 600-900 ms ease-in-out | Canopy, Bough, Branch, Stem, Leaf transitions |
 | `motion.pulse` | 1.6 s sine, opacity 0.35-0.8 | `upnext` glow |
 
-Spring numbers verified 18 Oct 2026 against the Compose Material 3 `ExpressiveMotionTokens` source (`SpringDefaultSpatialDamping` 0.8f / `Stiffness` 380f; `SpringDefaultEffects` 1.0f / 1600f; fast spatial 0.6f / 800f; slow spatial 0.8f / 200f; fast effects 1.0f / 3800f; slow effects 1.0f / 800f): https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ExpressiveMotionTokens.kt . The older "standard" scheme is spatial 0.9 / 700 (https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md); we use the expressive one. Note these are Compose spring parameters (damping ratio, stiffness, mass 1), not CSS values: CSS has no spring. ⚠️ VERIFY (Phase 0): implement one spring helper (a small Kotlin integrator driven by `requestAnimationFrame`, or a precomputed CSS `linear()` easing) and check that the 0.8 / 380 popup settles in about 0.5-0.7 s; camera uses `motion.camera`, not a spring. Tune by eye if not. Honour `prefers-reduced-motion`: instant cut for camera, static halo for pulse. Acceptance: no animation over 900 ms blocks input.
+Spring numbers verified 18 Oct 2026 against the Compose Material 3 `ExpressiveMotionTokens` source (`SpringDefaultSpatialDamping` 0.8f / `Stiffness` 380f; `SpringDefaultEffects` 1.0f / 1600f; fast spatial 0.6f / 800f; slow spatial 0.8f / 200f; fast effects 1.0f / 3800f; slow effects 1.0f / 800f): https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ExpressiveMotionTokens.kt . The older "standard" scheme is spatial 0.9 / 700 (https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md); we use the expressive one. Note these are Compose spring parameters (damping ratio, stiffness, mass 1), not CSS values: CSS has no spring. Measured 20 Oct 2026 (P0-12): 0.8 / 380 settles (within 0.5 px on a 100 px move) in **0.37 s**, not the earlier 0.5-0.7 s estimate (omega = sqrt(380) = 19.5 rad/s, decay 15.6 per s); the spring values are not tuned. Expect about 0.3-0.5 s for this spring. `Spring.cssLinear()` builds a CSS `linear()` easing and its duration from the spring; `Button` uses it for the shape morph. Camera uses `motion.camera`, not a spring. Honour `prefers-reduced-motion`: instant cut for camera, static halo for pulse. Acceptance: no animation over 900 ms blocks input.
 
 ### 4.5 Layout widths (lesson page, desktop-first L8; settled 18 Oct 2026, Q5)
 
 | Token | Value | Use |
 |---|---|---|
 | `layout.viewport.min` | 1024 px | narrowest **supported** browser width. Below it the page still scrolls and works, but is not designed, tested or budgeted (L8, `docs/00` §9). |
-| `layout.lesson.text` | 624 px, centred | prose column. At `type.body` (18 px Roboto Flex) a character averages roughly 9 px, so about 68 characters per line, inside the 62-72 rule of §3. ⚠️ VERIFY (Phase 0): render one paragraph and count characters per line; adjust the token (not the rule) if outside 62-72. |
-| `layout.lesson.wide` | 720 px, centred | blocks that break out of the prose column: `SimFrame`, `CodeBlock`, `Editor`, `PredictOutput` / `FixBug`. It is `layout.lesson.text` plus `space.12` (48) each side. |
+| `layout.lesson.text` | 544 px, centred (`Tokens.LayoutW.lessonText`; 544 = 68 x 8) | prose column. Measured 20 Oct 2026 (P0-11, headless Chrome 155, 18 px Roboto Flex, 5 full lines): 624 px gave an average of 77.8 characters per line (76-81), outside the 62-72 rule of §3; 544 px gives 68.2 (64-73). The token changed from 624 to 544, not the rule. |
+| `layout.lesson.wide` | 720 px, centred | blocks that break out of the prose column: `SimFrame`, `CodeBlock`, `Editor`, `PredictOutput` / `FixBug`. Unchanged because `SimFrame` needs 720. It no longer equals `layout.lesson.text` plus `space.12` each side (544 + 96 = 640): the break-out is 88 px each side (720 - 544 = 176), set by the two widths, not by a spacing token. |
 | `layout.page.gutter` | `space.8` (32) each side | page padding |
 
 **Narrowest supported `SimFrame` width = 720 CSS px** (`layout.lesson.wide`). Why: 720 + 2 x 32 gutter = 784, which is below the 1024 px viewport floor, so at every supported viewport (1024 to any larger size) the frame is exactly 720 x 405 CSS px, because `layout.lesson.wide` is a maximum **and** the column always has room for it. Sim scale is therefore always 1 (world unit = CSS px, `docs/05` §2.2), and a 44 x 44 world-unit body is 44 x 44 CSS px. Rejected: a fluid frame (scale varies, every spec would have to re-check hit sizes); a 560 px frame (needs bodies of at least 57 world units, breaks the existing `null-lunch-box` sizes). Outside the supported range (viewport under 1024) the frame shrinks with `width: 100%`, keeping 16:9; nothing is promised there.
@@ -203,7 +203,7 @@ Spring numbers verified 18 Oct 2026 against the Compose Material 3 `ExpressiveMo
 | Component | Tokens | Notes and acceptance |
 |---|---|---|
 | `TreeCanvas` | `color.bark`, `color.leaf.*`, `color.fruit`, `world.px` | pixelated; keyboard-pannable; text alternative lists visible branches |
-| `ZoomControls` (+, -, reset, Start here) | `shape.full`, `color.branch.foundation` | keyboard operable; focus ring visible |
+| `ZoomControls` (+, -, reset: `shape.full`; Start here: `shape.blob`, per §4.1, settled 20 Oct 2026) | `color.branch.foundation` | keyboard operable; focus ring visible |
 | `Breadcrumb` | `type.label`, branch ink | each crumb is a link that zooms out |
 | `BranchPanel` | `color.branch.<slug>`, `.tint`, `shape.xl`, `type.display` | opens at Branch zoom; stems, glyph, progress |
 | `StemLabel` | `color.leaf.shadow.label`, `type.label` | gray from day one (D3) |
@@ -234,8 +234,8 @@ Spring numbers verified 18 Oct 2026 against the Compose Material 3 `ExpressiveMo
 
 | # | Item |
 |---|---|
-| V1 | **Settled** 18 Oct 2026: Roboto Flex is OFL 1.1 with 13 axes and is the M3E default type scale (Wear OS guide; m3.material.io unreadable by tools). Open: woff2 size after subsetting (§3, Phase 0). |
+| V1 | **Settled** 18 Oct 2026: Roboto Flex is OFL 1.1 with 13 axes and is the M3E default type scale (Wear OS guide; m3.material.io unreadable by tools). **Closed** 20 Oct 2026: woff2 sizes 43,640 B and 34,492 B (§3). |
 | V2 | **Settled**: JetBrains Mono OFL 1.1; ship `OFL.txt` with the files. |
-| V3 | **Settled** for springs (ExpressiveMotionTokens). Shape-morph: pattern confirmed, radii are ours. Open: spring helper settle time (§4.4, Phase 0). |
-| V4 | **Settled** 18 Oct 2026: name rule in §3.1. Open only: kebab-casing of digit names such as `space2Var`, and that `StyleVariable.name` is public (§3.1, Phase 0). |
-| V5 | **Settled** 18 Oct 2026: narrowest supported `SimFrame` width 720 px (§4.5). Open: characters per line at 624 px (Phase 0 count). |
+| V3 | **Settled** for springs (ExpressiveMotionTokens). Shape-morph: pattern confirmed, radii are ours. **Closed** 20 Oct 2026: settle time 0.37 s (§4.4). |
+| V4 | **Settled** 18 Oct 2026: name rule in §3.1. **Closed** 20 Oct 2026: digit exception recorded and `StyleVariable.name` is public (§3.1). |
+| V5 | **Settled** 18 Oct 2026: narrowest supported `SimFrame` width 720 px (§4.5). **Closed** 20 Oct 2026: 624 px gave 77.8 characters per line, so `layout.lesson.text` is 544 px (68.2); `SimFrame` stays 720 (§4.5). |

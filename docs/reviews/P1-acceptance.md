@@ -1,0 +1,30 @@
+# Phase 1 acceptance (S3, 20 Oct 2026)
+
+Method: headless Chrome 155, 1440x900, DPR 1, dev server from `./gradlew :site:kobwebStart` (stopped after), CDP driver scripts kept outside the repo. Screenshots in `docs/reviews/phase1/` (`ks-*`, `emu-*`). Export by Kobweb CLI 0.9.23, `kobweb export --notty --layout static`. Result per bullet of `docs/13` section 5.
+
+| Bullet | Result | Evidence |
+|---|---|---|
+| No hardcoded values | PASS | `bash scripts/check-hardcoded.sh` prints `clean`, exit 0 (scans the new `KitchenSink.kt`). |
+| Contrast | PASS | `python scripts/check-tokens.py`: 0 failures, rerun in S3; no token changed in S3. Ratios shown on the page are computed from the `Int` constants. |
+| White only | PASS | CDP `prefers-color-scheme: dark`: `/` and `/kitchen-sink` root `rgb(255, 255, 255)` (`emu-dark-home.png`, `emu-dark-ks.png`). `grep -r prefers-color-scheme site/src` is empty. |
+| Reduced motion | PASS | Emulated `reduce`: Button `transition-duration` 0s (0.322s without), spring box 0s and it jumps at once, pressed Button radius switches to 16px with no transition, tree camera fly is an instant cut (screenshot 100 ms after click equals the settled one; with motion on they differ). `ProgressCounter` has no animation. Shots: `emu-reduced-motion.png`, `emu-fly-*.png`. |
+| Keyboard | PASS (re-checked 20 Oct after fix) | Tab walk of 38 stops: every stop has `outline: 3px solid rgb(59, 91, 219)`, offset 2 px; all buttons and links 44 px high. Escape closes `LeafPopup` (checked with and without video; popup takes focus on open). **Fails:** the `Copy` button and the code `pre` focus ring is clipped by the `CodeBlock` frame (`overflow: hidden`), see `ks-focus-copy.png`. Owner: `ui/lesson/CodeBlock.kt`. Smaller notes: radio inputs are 13 px but their label row is 44 px; after Escape focus falls to the body, it does not return to the opener. **Fix evidence:** `CodeBlock` frame no longer sets `overflow: hidden`; Copy and `pre` rings (3 px, offset 2) are fully visible, `ks-focus-copy-after.png` and `ks-focus-pre-after.png` (1440x900, looked at). `LeafPopup` stores the opener and focuses it on Escape and on Close; headless Chrome: with and without video, both ways, `document.activeElement` returned to the opener button, dialog gone. The two failures above are resolved. |
+| Hover, focus, pressed | PASS | These live inside `Button` and cannot be forced from a page, so they were driven with real input: hover layer 8% (`color(srgb 1 1 1 / 0.08)`), pressed layer 12% and radius 999px to 16px, focus ring as above. The sink shows default and disabled statically. |
+| Bundle | PASS (cap), architect to look | `gzip -9 -c site/.kobweb/site/kotree.js \| wc -c`: (a) main before Phase 1 **240,690**; (b) after S1 **252,441** (+11,751, probe page included); (c) after S3 with `KitchenSink.kt` **277,917** (+37,227, 15.5%); (d) after S3 with `KitchenSink.kt` temporarily removed **247,676** (+6,986). Above +25 KB so `architect` looks, under the +40 KB fail line. Cause: the sink is the only page that uses every component, so dead-code elimination keeps them only there. A real lesson page will pull in the same code, so (d) understates the eventual cost. Fonts 78,132 B, separate. |
+| Tree unchanged | PASS | Console `geometry hash cecb906380417dd8` on every load. `git diff --stat -- site/src/jsMain/kotlin/dev/kotree/site/tree` empty. Home screenshot `ks-home.png`: 5 bough labels, black pixel tree. Export exit 0, no Kotlin `w:` or `e:`. Webpack still prints per-module source-map warnings for library modules (same kind as `S1-gates.md` and `P1-probes.md`, not counted); the Kotlin warning gate is zero: `./gradlew clean :site:compileKotlinJs --no-build-cache --rerun-tasks` prints no `w:` or `e:`. |
+| Kitchen-sink screenshots reviewed by `reviewer` | PENDING reviewer | I looked at them (top, colour, branches, type, shape, motion, buttons, chips, layout, lesson, challenges, popup, focus, both emulation modes). Page layout is clean, no overlap. A self-check is not the reviewer PASS. |
+| Not linked, not in sitemap, noindex | PASS | No link to `/kitchen-sink` anywhere in `site/src` except the page itself. Kobweb emits no `sitemap.xml` and no `robots.txt` (`ls` after export). Per-page noindex is a `<meta name="robots" content="noindex">` added to `document.head` while the page is mounted and removed on dispose. After export `grep -c noindex` is 2 in `kitchen-sink.html` (the export snapshots the rendered DOM, so the tag is in the static file) and 0 in `index.html`. Kobweb's own per-page head API was not found; this route needs no new dependency. `robots.txt` was not needed. |
+
+## Other S3 results
+
+- Feedback icons in `PredictOutput.kt` (used by `FixBug.kt` through `FeedbackBox`): the text glyphs are replaced by constant inline SVG paths (tick, arrow, question mark) set through `innerHTML`; stroke is `currentColor`, so the colour still comes from the feedback tokens; size is `type.body` line height; `aria-hidden` kept. Checked after acting: 4 icons render, stroke `rgb(44, 119, 48)`.
+- `K/pages/dev/*` deleted (TokenProbe, LayoutPreview, LessonPreview).
+- Hidden until acting: before any click, the page text and `textContent` contain none of the predict reason, predict output, fix, explanation or the two hints; after choosing B and pressing "Run it to check" only the chosen reason and the output appear; hints appear one at a time; "Show me one fix" shows after both hints.
+- Spring numbers shown on the page (371 ms spatial, 322 ms fast, 511 ms slow as CSS easing) match `P1-probes.md` (about 0.37 s settle).
+
+## Outside my files
+
+1. `ui/lesson/CodeBlock.kt`: focus ring of `Copy` and `pre` is clipped by the frame. Suggested: do not clip the ring (move `overflow: hidden` to an inner wrapper, or inset the ring).
+2. `docs/07` section 8.1: add the bundle numbers above. `docs/02` section 3.1: digit names have no dash (`--space2`), from P0-5.
+3. `ui/layout/LeafPopup.kt`: return focus to the opener on close (optional).
+4. A stray file `E:\tmp_export.log` (a failed `kobweb` call at drive root, a path mistake). Delete by hand; the safety check refused removal.
