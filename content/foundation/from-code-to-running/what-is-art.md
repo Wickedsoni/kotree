@@ -1,21 +1,20 @@
 ---
 id: foundation/from-code-to-running/what-is-art
 title: How does an Android phone run Kotlin code?
-status: shadow
+status: live
 difficulty: medium
 order: 29
 requires: [foundation/from-code-to-running/what-is-the-jvm, foundation/how-computers-work/what-is-an-os]
 summary: A phone does not run Kotlin as you wrote it. The code is rewritten into a compact form that the phone's own program runs.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [phone-kitchen-two-ways]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): developer.android.com/guide/platform (each app runs in its own process with its own instance of ART; ART executes DEX files, a bytecode format designed for Android with a minimal memory footprint; AOT and JIT compilation; build tools such as d8 produce DEX); developer.android.com/topic/performance/baselineprofiles/overview (without a profile, code is JIT-compiled in memory after being interpreted, or written to an odex file in the background when the device is idle; after install or update the first runs are suboptimal; the version table); developer.android.com/build/jdks (the JVM is not used on Android devices or emulators; bytecode is generated for Java and Kotlin source); developer.android.com/tools/d8 (d8 compiles Java bytecode into DEX bytecode); developer.android.com/guide/components/fundamentals (each process has its own VM, so app code runs in isolation). Not reached: source.android.com. Own reasoning is labelled in the text. -->
 
 ## The question
 

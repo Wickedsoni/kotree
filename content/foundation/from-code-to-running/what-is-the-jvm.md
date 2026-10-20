@@ -1,21 +1,20 @@
 ---
 id: foundation/from-code-to-running/what-is-the-jvm
 title: How can the same Kotlin code run on many different computers?
-status: shadow
+status: live
 difficulty: medium
 order: 28
 requires: [foundation/from-code-to-running/compiler-vs-interpreter]
 summary: Compile once into a shared in-between form, and a helper program on each computer can run it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [bytecode-adapters]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/faq.html (fetched 20 Oct 2026): "When targeting the JVM, Kotlin produces Java-compatible bytecode."; "When targeting native, Kotlin will produce platform-specific code (via LLVM)."; "Kotlin is 100% compatible with the JVM". kotlinlang.org/docs/native-overview.html: Kotlin/Native is "a technology for compiling Kotlin code to native binaries that can run without a virtual machine". kotlinlang.org/docs/command-line.html: kotlinc hello.kt -include-runtime -d hello.jar; java -jar hello.jar. kotlinlang.org/docs/gradle-compiler-options.html: jvmTarget is the "Target version of the generated JVM bytecode". developer.android.com/build/jdks: the JDK contains "The Java Virtual Machine (JVM), an interpreter that executes Java applications"; "The JVM is not used on Android devices or emulators."; "Note that not all functions are available on Android." developer.android.com/tools/d8: d8 compiles "Java bytecode into DEX bytecode that runs on Android devices". Chips follow different steps, and one JVM per kind of computer: general programming knowledge. Outputs hand-traced, not run. -->
 ## The question
 
 You write one Kotlin program on a Windows laptop. Your friend runs it on a Mac. A server in an office runs it on a third kind of machine. You wrote it once. How can all three run it?

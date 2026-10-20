@@ -110,3 +110,41 @@ Optional (not FIX): line 89 is 27 words with two ideas; split after "ID number."
 ## After the FIX items
 
 Re-check only that the edited lines match the New text. No answer key changes. All four leaves become PASS once their FIX items are applied.
+
+## Re-check (20 Oct 2026, independent; covers W4-a and W4-b)
+
+Method: read all 8 leaves in full and compared every New text in W4-a and W4-b line by line; no Kotlin was run (hand-traced; no answer key, output string or code changed except the two added comment lines). Non-ASCII and `!` scan of all 8 leaves: zero hits. `validateContent` not re-run. SOURCES comments left to `housekeeper`. Android claim checked again: "Activities, services, and content providers that you include in your source but don't declare in the manifest aren't visible to the system and, consequently, can never run" is on developer.android.com/guide/components/fundamentals, so the new line 206 wording in `what-is-an-app-file` is supported.
+
+| Leaf | Re-check |
+|---|---|
+| `check-code-you-did-not-write` | PASS (W4-a items 1-3 applied exactly; lines 68, 91, 122) |
+| `what-is-a-compiler` | PASS (items 1-3 applied; lines 77, 171, 172) |
+| `compiler-vs-interpreter` | PASS (items 1-5 applied; lines 21, 72, 128, 164, 166, 170, 171) |
+| `what-is-the-jvm` | PASS (items 1-5 applied; lines 73, 75, 77, 133, 198) |
+| `what-is-art` | PASS (items 1-3 applied; lines 38, 213, table rows 102-103) |
+| `what-is-an-app-file` | FIX (1 item, mechanical) |
+| `what-happens-when-i-build` | FIX (1 item, mechanical) |
+| `how-an-app-gets-installed` | PASS (item 1 applied; line 85) |
+
+### what-is-an-app-file: FIX
+
+All W4-b items applied exactly (lines 37, 91, 92, 93, 171, 206). One new problem comes from item 3.
+1. Line 93. The inserted permissions clause makes the sentence 32 words with a list nested inside a list, and `components` is still used one sentence before **component** is defined. Old: `The documentation says it must declare the app's components, the **permissions** the app needs, which are the things it asks the phone to let it use, and the hardware and software features it requires. A **component** is a building block that the system can start.` New: `A **component** is a building block that the system can start, such as a screen of the app. The documentation says the manifest must declare the app's components and the hardware and software features it requires. It must also declare the **permissions** the app needs, which are the things it asks the phone to let it use.` Keep the last sentence of the line (`For the main kinds of component, ...`) after it. (mechanical)
+Optional (not FIX): line 194 (Tricks) still says `A part that is not on the label card is a part the phone cannot start`; it is the same wide claim narrowed elsewhere. Suggest `A screen that is not on the label card cannot be started.`
+
+### what-happens-when-i-build: FIX
+
+All W4-b items applied exactly (lines 38, 95, 207). Line 38 is now three sentences.
+1. Line 38. The new text keeps `a key, which is a secret code that only the maker holds`. The next leaf (`how-an-app-gets-installed` line 85) now teaches that with Play App Signing Google keeps the key, and the debug stamp in this leaf is a default key from the build tools. The two leaves contradict each other. Old: `A real stamp here is a digital mark made with a key, which is a secret code that only the maker holds.` New: `A real stamp here is a digital mark made with a key, which is a secret code.` (mechanical)
+Optional (not FIX): line 85 label "Real builds have many more tasks than four"; line 195 is 31 words.
+
+### Leaves with PASS: remaining notes (none blocks)
+
+- `check-code-you-did-not-write`: line 91 runs straight into the line 92 heading with no blank line (it was like that before; renders correctly). Line 207 `the third Predict item in a shop` is unclear; consider `the third Predict item above`.
+- `compiler-vs-interpreter`: line 72 label sentence is 28 words; acceptable.
+- `what-is-the-jvm`: line 73 quotes "interpreter" one sentence before it is defined (it is already bold and defined in the required leaf `compiler-vs-interpreter`); acceptable.
+- `what-is-art`: lines 91, 93, 202 are still long (optional in the first pass; unchanged).
+- `how-an-app-gets-installed`: line 89 is 27 words (optional, unchanged).
+
+## Final (orchestrator, 21 Oct 2026)
+The two Re-check FIXes were applied as specified and validateContent passes: all 8 leaves PASS.

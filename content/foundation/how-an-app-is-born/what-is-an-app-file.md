@@ -1,21 +1,20 @@
 ---
 id: foundation/how-an-app-is-born/what-is-an-app-file
 title: What is inside an app file on a phone?
-status: shadow
+status: live
 difficulty: easy
 order: 30
 requires: [foundation/from-code-to-running/what-is-art]
 summary: An app is one sealed file that holds translated code, pictures, text and a label card telling the phone what is inside.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [flat-pack-app-box]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): developer.android.com/guide/components/fundamentals (an APK is an archive file with an .apk suffix that devices use to install the app; the SDK tools compile code, data and resource files into an APK or an Android App Bundle; the system must read AndroidManifest.xml to know a component exists); developer.android.com/guide/topics/manifest/manifest-intro (the manifest must declare components, permissions and required hardware and software features; icon and label attributes on application; a component not declared in the manifest cannot be started); developer.android.com/studio/debug/apk-analyzer (AndroidManifest.xml is normally a binary file inside the APK; classes.dex; resources.arsc holds configuration-specific values such as translations); developer.android.com/guide/app-bundle (a bundle is a publishing format that defers APK generation and signing to Google Play); developer.android.com/build/building-cmdline (unlike an APK, you cannot deploy an app bundle directly to a device); developer.android.com/build (all new apps submitted after August 2021 are required to use AABs); developer.android.com/studio/publish/app-signing (all APKs must be signed with a certificate before they are installed). Not reached: source.android.com. Own reasoning is labelled in the text. -->
 
 ## The question
 
@@ -90,7 +89,7 @@ Inside it you find these piles.
 
 - The compiled code is the code after it has been translated for the phone. It is stored in **DEX** files. DEX, short for Dalvik Executable format, is a compact code form made for Android. The phone's own program for running apps executes it.
 - The **resources** are the images, the text and the other files the app uses that are not code. One resource file keeps values that change with the phone's settings, such as the same text in each language.
-- The **manifest** is the label card. Its file name is `AndroidManifest.xml`. The documentation says it must declare the app's components, the **permissions** the app needs, which are the things it asks the phone to let it use, and the hardware and software features it requires. A **component** is a building block that the system can start. For the main kinds of component, such as a screen of the app, the system can't start one that the manifest does not list.
+- The **manifest** is the label card. Its file name is `AndroidManifest.xml`. A **component** is a building block that the system can start, such as a screen of the app. The documentation says the manifest must declare the app's components and the hardware and software features it requires. It must also declare the **permissions** the app needs, which are the things it asks the phone to let it use. For the main kinds of component, such as a screen of the app, the system can't start one that the manifest does not list.
 
 The manifest also carries the app's icon and name. In the documentation's example, the `application` entry sets `android:icon` and `android:label`, and both point to resources, a picture and a piece of text. So the manifest names the picture and the words, and the resources hold them.
 

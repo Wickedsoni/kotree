@@ -1,21 +1,20 @@
 ---
 id: foundation/how-an-app-is-born/what-happens-when-i-build
 title: What happens when I press Build?
-status: shadow
+status: live
 difficulty: medium
 order: 31
 requires: [foundation/how-an-app-is-born/what-is-an-app-file, foundation/from-code-to-running/what-is-a-compiler]
 summary: Pressing Build runs a line of steps that translate your code, pack everything into one file and stamp it with a signature.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [bakery-build-line]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): developer.android.com/build (the Android build system compiles app resources and source code and packages them into APKs or Android App Bundles; the build system can sign automatically; the debug version is signed with a default key; the release version is not signed unless a signing configuration is defined); developer.android.com/build/jdks (bytecode is generated for compiled Java and Kotlin source); developer.android.com/tools/d8 (d8 compiles Java bytecode into DEX bytecode, used by Android Studio and the Android Gradle plugin); developer.android.com/build/building-cmdline (build tasks run through Gradle; two build types, debug and release; the output of each build must be signed before it is deployed; the debug build is signed with a debug key; bundletool converts compiled code and resources into app bundles); developer.android.com/build/gradle-build-overview (applying the Android Gradle plugin registers the tasks needed to build an APK); developer.android.com/studio/publish/app-signing (Android requires all APKs to be digitally signed with a certificate before they are installed or updated; most app stores do not accept a debug certificate). Not reached: a page that lists numbered build steps, and source.android.com. The four-station picture below is my own summary of those pages. -->
 
 ## The question
 
@@ -35,7 +34,7 @@ Think of a bakery line.
 - The house stamp is a plain stamp. Every test box gets it automatically.
 - The shop's own stamp is a private stamp. A box meant for customers needs it.
 
-**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a key, which is a secret code that only the maker holds. Test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point.
+**Where the analogy stops:** A bakery stamp is ink. A real stamp here is a digital mark made with a key, which is a secret code. Test boxes get the house stamp without being asked, so in daily work you never see the stamp station missing. The animation takes the stamp away to make a point.
 
 ## See it move
 

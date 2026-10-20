@@ -1,21 +1,20 @@
 ---
 id: foundation/from-code-to-running/what-is-a-compiler
 title: How does my code become instructions the CPU understands?
-status: shadow
+status: live
 difficulty: easy
 order: 26
 requires: [foundation/first-code/what-is-code, foundation/debugging-mindset/reading-error-messages]
 summary: A compiler checks your whole program first, then translates it into steps a machine can follow. If a rule breaks, nothing runs.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [translator-box]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/faq.html (fetched 20 Oct 2026): "When targeting the JVM, Kotlin produces Java-compatible bytecode."; "When targeting native, Kotlin will produce platform-specific code (via LLVM)." kotlinlang.org/docs/command-line.html: kotlinc hello.kt -include-runtime -d hello.jar; the -d option is the output path for generated class files. developer.android.com/build: "The Android build system compiles app resources and source code and packages them". developer.android.com/studio/run: "If you receive build-time or compile-time errors, inspect the tree and select an element to read the error output". A chip follows only its own instructions: textbook, and the earlier what-is-a-cpu lesson. Outputs hand-traced, not run. -->
 ## The question
 
 You type a few lines of Kotlin and press Run. The main chip of your computer has never heard of Kotlin, because it only follows its own tiny steps. Still, your program runs. And sometimes a message appears before anything starts. What happens to your text in between?

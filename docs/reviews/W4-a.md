@@ -83,3 +83,6 @@ After this, PASS.
 - Roadmap Challenges `F:` / `F(ai):` tasks for these leaves are not delivered as Fix the bug because `playground` is false; accepted W3 pattern (the debugging leaf delivers the `F(ai):` ideas as Predict items).
 - `housekeeper` at go-live: strip the line-18 SOURCES comments; keep the SIM markers.
 - Do not paste real compiler messages later (`docs/04` §5.4): none are quoted now.
+
+## Re-check (orchestrator, 21 Oct 2026)
+All FIXes applied (see W4-b.md Re-check): PASS.

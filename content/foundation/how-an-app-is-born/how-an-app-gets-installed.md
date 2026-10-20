@@ -1,21 +1,20 @@
 ---
 id: foundation/how-an-app-is-born/how-an-app-gets-installed
 title: How does an app get from a store onto my phone?
-status: shadow
+status: live
 difficulty: easy
 order: 32
 requires: [foundation/how-an-app-is-born/what-happens-when-i-build]
 summary: The store packs an app for your phone, your phone checks its seal, and then it sets the app up in a private space.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [parcel-to-phone]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 20 Oct 2026): developer.android.com/guide/app-bundle (Google Play uses your app bundle to generate and serve optimized APKs for each device configuration, so only the code and resources needed for a specific device are downloaded; the installed package is the base APK plus configuration APKs; partial installs of sideloaded apps that are missing one or more required split APKs fail on all Google-certified devices and devices running Android 10 or higher); developer.android.com/studio/publish/app-signing (Android requires that all APKs be digitally signed with a certificate before they are installed on a device or updated; when installing an update the system compares the certificates and allows the update if they match; with Play App Signing, Google manages the app signing key and uses it to sign the APKs for distribution); developer.android.com/guide/components/fundamentals (each app lives in its own security sandbox; the system assigns each app a unique Linux user ID; permissions on the app's files let only that user ID access them); developer.android.com/build/android-build-structure (the manifest is read by the Android package manager); developer.android.com/build/building-cmdline (an app bundle cannot be deployed directly to a device). Not reached: source.android.com. Own reasoning is labelled in the text. -->
 
 ## The question
 

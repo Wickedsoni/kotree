@@ -44,20 +44,20 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] What is an error message trying to tell me? (easy)
 - [x] How can code run without errors and still be wrong? (easy)
 - [x] How do I find a bug without guessing? (medium)
-- - How do I check code that someone else, or an AI, wrote for me? (medium)
+- [x] How do I check code that someone else, or an AI, wrote for me? (medium)
 
 **From Code to Running** (4)
 
-- - How does my code become instructions the CPU understands? (easy)
-- - Why do some languages translate everything first and others line by line? (easy)
-- - How can the same Kotlin code run on many different computers? (medium)
-- - How does an Android phone run Kotlin code? (medium)
+- [x] How does my code become instructions the CPU understands? (easy)
+- [x] Why do some languages translate everything first and others line by line? (easy)
+- [x] How can the same Kotlin code run on many different computers? (medium)
+- [x] How does an Android phone run Kotlin code? (medium)
 
 **How an App Is Born** (5)
 
-- - What is inside an app file on a phone? (easy)
-- - What happens when I press Build? (medium)
-- - How does an app get from a store onto my phone? (easy)
+- [x] What is inside an app file on a phone? (easy)
+- [x] What happens when I press Build? (medium)
+- [x] How does an app get from a store onto my phone? (easy)
 - - What happens between tapping an icon and seeing the app? (medium)
 - - How do I run my own first app on a real phone? (easy)
 
@@ -1058,7 +1058,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - >> How do I save a snapshot of my project that I can return to later? (medium)
 - - How can I try an idea without breaking my working code? (medium)
 - - What do I do when git says two changes collide? (hard)
-- - How does my code get to GitHub and into a teammate's project? (hard)
+- [x] How does my code get to GitHub and into a teammate's project? (hard)
 
 **Android Studio and IntelliJ** (3)
 

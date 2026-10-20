@@ -14,6 +14,15 @@
 - **Author one-time step (Vercel MCP in the cloud box lacks team access, 403):** Vercel dashboard -> Add New Project -> import `Wickedsoni/kotree` -> Framework Preset **Other**, Root Directory `./`, Build Command empty (override on), Install Command empty (override on), Output Directory `.` -> Deploy. Then Settings -> Git -> **Production Branch = `site-dist`**, and Settings -> Git -> **Ignored Build Step** = `[ "$VERCEL_GIT_COMMIT_REF" != "site-dist" ]` (so pushes to `main` do not trigger a useless build). Later: add the domain `kotree.garvitmaheshwari.in` (CNAME in Hostinger).
 - After that, every push to `main` that passes CI updates the live site automatically.
 
+## STATUS after Wave 4 (21 Oct 2026, newest; read this first)
+
+- **Done:** 31 of 482 leaves live (Foundation 31/34). Wave 4: `debugging-mindset/check-code-you-did-not-write`, `from-code-to-running/{what-is-a-compiler, compiler-vs-interpreter, what-is-the-jvm, what-is-art}`, `how-an-app-is-born/{what-is-an-app-file, what-happens-when-i-build, how-an-app-gets-installed}`. Reviews: `docs/reviews/W4-a.md`, `W4-b.md`.
+- **Foundation left (3):** `first-code/run-your-first-program` (shadow, blocked, NEEDS-ME), `how-an-app-is-born/what-happens-when-i-tap-an-icon`, `how-an-app-is-born/run-your-first-app`.
+- **Next 8 leaves:** those two Foundation leaves, then the first six of the Kotlin branch (`content/kotlin/_roadmap.md`, stem `first-programs` and onward; the first Kotlin leaf is `where-a-program-starts`, an existing shadow pilot draft: have lesson-writer finish it). Branch order after Foundation: Kotlin, then the order in `docs/my-topics.md`.
+- **Deploy:** unchanged (see DEPLOY section); CI publish to `site-dist` works; author's one-time Vercel import still pending unless done.
+- **curriculum-designer todo:** reword roadmap Sim cells to match leaves for `find-a-bug-without-guessing`, `what-happens-when-i-build`, `what-is-an-app-file` (rule 5: only that agent edits roadmaps).
+- **Pipeline and tips:** unchanged (Wave 2 section). Recurring FIXes now: define jargon before use (also Android terms), label own-reasoning claims, one-sentence Recap, <=5 sentences per Question, no 'on the screen' claims that are untrue.
+
 ## STATUS after Wave 3 (21 Oct 2026, newest; read this first)
 
 - **Done:** 23 of 482 leaves live (Foundation 23/34). Wave 3: `programming-thinking/{what-is-a-list, loop-over-a-list, what-is-a-function, function-inputs-and-outputs, trace-code-by-hand}` and `debugging-mindset/{reading-error-messages, what-is-a-bug, find-a-bug-without-guessing}`. Reviews: `docs/reviews/W3-a.md`, `W3-b.md`.

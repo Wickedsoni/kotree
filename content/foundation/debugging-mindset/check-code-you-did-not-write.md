@@ -1,21 +1,20 @@
 ---
 id: foundation/debugging-mindset/check-code-you-did-not-write
 title: How do I check code that someone else, or an AI, wrote for me?
-status: shadow
+status: live
 difficulty: medium
 order: 25
 requires: [foundation/debugging-mindset/find-a-bug-without-guessing]
 summary: A clean look and a neat comment do not prove code works. Check one known answer, then odd inputs, before you accept it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: developer.android.com/studio/gemini/faq (fetched 20 Oct 2026): "Some of the responses might be inaccurate, so double-check information in the responses."; "it can generate output that sounds plausible but is factually incorrect. We recommend that you validate all output from Gemini before you use it."; "Use discretion and carefully test all code for errors, bugs, and vulnerabilities before relying on it." kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/get.html: get throws IndexOutOfBoundsException if the index is less than zero or greater than or equal to the size. kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/list-of.html: listOf() returns an empty read-only list. Review steps, tracing and edge cases: textbook and own reasoning. Outputs hand-traced, not run. -->
 ## The question
 
 A teammate, or an AI tool, sends you a tidy block of code. The names are clear, and a neat comment on top says what it does. You are tired, and it looks right. How do you find out whether it really does what the comment says?

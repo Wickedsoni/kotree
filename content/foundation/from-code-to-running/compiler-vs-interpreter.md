@@ -1,21 +1,20 @@
 ---
 id: foundation/from-code-to-running/compiler-vs-interpreter
 title: Why do some languages translate everything first and others line by line?
-status: shadow
+status: live
 difficulty: easy
 order: 27
 requires: [foundation/from-code-to-running/what-is-a-compiler]
 summary: A compiler translates the whole program before it runs. An interpreter translates and runs one step at a time. Kotlin compiles first.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [translation-lanes]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/command-line.html (fetched 20 Oct 2026): kotlinc compiles hello.kt; "Run the compiler with the -Xrepl compiler option to have an interactive shell. In this shell, you can type any valid Kotlin code and see the results."; "A Kotlin script is a Kotlin source file (.kts) with top-level executable code." The page does not say how the shell or scripts work inside. kotlinlang.org/docs/faq.html: "When targeting the JVM, Kotlin produces Java-compatible bytecode." developer.android.com/build/jdks: "The Java Virtual Machine (JVM), an interpreter that executes Java applications. You use the JVM to run the Android Studio IDE and the Gradle build tool." developer.android.com/studio/run: "If you receive build-time or compile-time errors, inspect the tree and select an element to read the error output". Which other languages are usually interpreted, and the two-lane cost model: general programming knowledge, not from the Kotlin documentation. Outputs hand-traced, not run. -->
 ## The question
 
 A friend learning another language says, "My program printed two lines and then stopped with an error." In Kotlin, a typo usually shows up before anything prints. Both of you wrote a typo. Why do two languages behave so differently?
