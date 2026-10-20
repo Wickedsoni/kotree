@@ -22,7 +22,7 @@ A storage screen adds up the sizes of two video files. One file is 2 billion in 
 
 ## Mental model
 
-Think of a café with two kinds of container.
+Think of a coffee shop with two kinds of container.
 
 - The small cup holds a drink up to a mark on its side. The mark reads 2,147,483,647.
 - The big jug holds much more. Its mark reads 9,223,372,036,854,775,807.
@@ -79,7 +79,7 @@ The order slip is an **explicit conversion**: a call to a function such as `toLo
 
 When an answer is past the top mark, **overflow** happens. The documentation says the result wraps around because the value no longer fits, and that the compiler does not automatically produce an error.
 
-| Café object | In Kotlin |
+| Coffee shop object | In Kotlin |
 |---|---|
 | Small cup | `Int` |
 | Big jug | `Long` |

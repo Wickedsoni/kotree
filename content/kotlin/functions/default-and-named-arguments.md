@@ -18,7 +18,7 @@ upnext: false
 <!-- SOURCES: https://kotlinlang.org/docs/functions.html (default arguments, named arguments in any order, name every argument after the first skipped one, Unit return type optional); https://developer.android.com/develop/ui/compose/kotlin (drawSquare with defaults and named arguments, Text(text = ...), most Compose libraries use default arguments). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a syntax rule, and the editor is enough. -->
 ## The question
 
-A café order has three questions: the drink, the size and the milk. Most customers want a medium size and regular milk. Making everyone answer all three every time is slow, and making them remember the order of the boxes is worse. How can a function let you skip the answers you do not care about, and still make it clear which answer is which?
+A coffee order has three questions: the drink, the size and the milk. Most customers want a medium size and regular milk. Making everyone answer all three every time is slow, and making them remember the order of the boxes is worse. How can a function let you skip the answers you do not care about, and still make it clear which answer is which?
 
 ## Mental model
 
@@ -26,7 +26,7 @@ Think of ordering a coffee from a slip with three boxes.
 
 - The slip is the order form. Its boxes are drink, size and milk.
 - The barista is the one who makes the drink from the slip.
-- The house default is what the café prints beside a box: "size: medium" and "milk: regular".
+- The house default is what the coffee shop prints beside a box: "size: medium" and "milk: regular".
 - If you leave a box with a house default empty, you get the default.
 - You can fill the boxes from the top, in order. Or you can write a box's name on the slip, such as "milk: oat", so the barista knows which box your answer belongs to.
 
@@ -68,7 +68,7 @@ A **default value** is a value written beside a parameter with an equals sign. T
 
 A **named argument** is an argument written as `name = value`. The documentation says that when you use named arguments, you can list them in any order. It also says that after the first skipped argument, you must name all subsequent arguments.
 
-| Café | In Kotlin |
+| Coffee shop | In Kotlin |
 |---|---|
 | The slip | The function |
 | A box | A parameter |
@@ -212,7 +212,7 @@ output: |
 
 Reading a call such as `drawSquare(30, 5, Color.Red)` is hard, because you cannot tell what the numbers mean. **Jetpack Compose** is the modern toolkit for building Android UI. Its Kotlin page shows the clearer form, `drawSquare(sideLength = 30, thickness = 5, edgeColor = Color.Red)`, and calls it self-documenting.
 
-The same page says most Compose libraries use default arguments. It shows `Text(text = "Hello, Android!")` and says that by specifying only the `text` parameter, you document that you want the default values for all the others. That is the café slip: you fill the one box that matters and leave the rest to the house defaults.
+The same page says most Compose libraries use default arguments. It shows `Text(text = "Hello, Android!")` and says that by specifying only the `text` parameter, you document that you want the default values for all the others. That is the coffee slip: you fill the one box that matters and leave the rest to the house defaults.
 
 ## Recap
 

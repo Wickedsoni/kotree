@@ -217,7 +217,7 @@ output: |
 
 A volume bar on a phone should reach its highest level. **Jetpack Compose** is the modern toolkit for building Android UI. Its slider page sets the range of values a slider can take with `valueRange = 0f..50f`, and describes that parameter as the range of values the slider can take.
 
-The numbers there are decimals, but the two dots mean the same thing: from the start value to the end value, both included. This next part is our own reasoning: if a slider's range stopped just short of its end value, the thumb could never reach the top of the bar, and nothing would report an error.
+The numbers there are decimals, but the two dots mean the same thing: from the start value to the end value, both included. This next part is our own reasoning: if a slider's range stopped one step short of its end value, the thumb could never reach the top of the bar, and nothing would report an error.
 
 ## Recap
 
