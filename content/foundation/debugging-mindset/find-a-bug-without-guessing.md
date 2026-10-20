@@ -1,21 +1,20 @@
 ---
 id: foundation/debugging-mindset/find-a-bug-without-guessing
 title: How do I find a bug without guessing?
-status: shadow
+status: live
 difficulty: medium
 order: 24
 requires: [foundation/debugging-mindset/what-is-a-bug, foundation/programming-thinking/trace-code-by-hand]
 summary: Check the middle of your program, then halve the search each time. You find the one bad line in a few checks.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [fuse-halving-search]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (println prints its arguments and adds a line break; string templates); kotlinlang.org/docs/numbers.html (division between integer values returns an integer); developer.android.com/studio/debug (line breakpoint pauses the app at a line; while paused you can examine variables, evaluate expressions and continue line by line; Log class messages help you understand execution flow and tell you what part of your app failed; remove debug log messages and stack trace print calls when ready to publish). The halving idea is textbook (binary search); the fuse analogy and the link to programs are our own reasoning. Not compiled: no kotlinc here; every output traced by hand twice. -->
 
 ## The question
 

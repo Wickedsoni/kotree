@@ -14,6 +14,14 @@
 - **Author one-time step (Vercel MCP in the cloud box lacks team access, 403):** Vercel dashboard -> Add New Project -> import `Wickedsoni/kotree` -> Framework Preset **Other**, Root Directory `./`, Build Command empty (override on), Install Command empty (override on), Output Directory `.` -> Deploy. Then Settings -> Git -> **Production Branch = `site-dist`**, and Settings -> Git -> **Ignored Build Step** = `[ "$VERCEL_GIT_COMMIT_REF" != "site-dist" ]` (so pushes to `main` do not trigger a useless build). Later: add the domain `kotree.garvitmaheshwari.in` (CNAME in Hostinger).
 - After that, every push to `main` that passes CI updates the live site automatically.
 
+## STATUS after Wave 3 (21 Oct 2026, newest; read this first)
+
+- **Done:** 23 of 482 leaves live (Foundation 23/34). Wave 3: `programming-thinking/{what-is-a-list, loop-over-a-list, what-is-a-function, function-inputs-and-outputs, trace-code-by-hand}` and `debugging-mindset/{reading-error-messages, what-is-a-bug, find-a-bug-without-guessing}`. Reviews: `docs/reviews/W3-a.md`, `W3-b.md`.
+- **Deploy:** see the DEPLOY section below. CI publishes the verified export to `site-dist` on every `main` push; the author must do the one-time Vercel import (the cloud Vercel connector returned 403). Check the latest Actions run (build + publish) at the start of each session.
+- **Next 8 leaves:** `debugging-mindset/check-code-you-did-not-write`, then the `from-code-to-running` stem: what-is-a-compiler, compiler-vs-interpreter, what-is-the-jvm, what-is-art, then `how-an-app-is-born`: what-is-an-app-file, what-happens-when-i-build, how-an-app-gets-installed. Then what-happens-when-i-tap-an-icon, `run-your-first-app` finish Foundation.
+- **curriculum-designer todo:** reword the roadmap Sim cell of `find-a-bug-without-guessing` (fuse, not pipes; see W3-b).
+- **Pipeline and tips:** unchanged from Wave 2 below.
+
 ## STATUS after Wave 2 (21 Oct 2026, newest; read this first)
 
 - **Mode:** decision L31 (autonomous publishing). Waves of ~8 leaves, one wave per session; user says `resume`. Every wave is pushed to `main` and to branch `claude/kotree-foundation-build-auo9uz` (user asked that `main` always be current).

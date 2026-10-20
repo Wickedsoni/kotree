@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/loop-over-a-list
 title: How do I do something to every item in a list?
-status: shadow
+status: live
 difficulty: medium
 order: 18
 requires: [foundation/programming-thinking/counting-loops, foundation/programming-thinking/what-is-a-list]
 summary: Do the same step to every value in a row. A running total starts at zero and grows by one value per round.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [basket-checkout-loop]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/control-flow.html (For loops: "for (item in collection) print(item)"; shoppingList sample with items Milk, Bananas, Bread; "to iterate through an array or a list with an index, use the indices property"; ranges 1..<6); kotlinlang.org/docs/kotlin-tour-collections.html (lists keep order; listOf; [] access); kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/get.html (names size and the IndexOutOfBoundsException rule); developer.android.com/develop/ui/compose/mental-model (Greeting(names: List<String>) with for (name in names): "takes in a list of names and generates a greeting for each user"); developer.android.com/develop/ui/compose/lists (messages.forEach in a Column, MessageRow). Own reasoning: cart total symptom, wipe-the-display bug. Outputs hand-traced, not run (no kotlinc). -->
 ## The question
 
 A shopping app shows a cart with 4 items. At the bottom it must show the total price. Next week the same cart holds 40 items.

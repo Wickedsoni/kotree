@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/trace-code-by-hand
 title: How can I know what code prints before I run it?
-status: shadow
+status: live
 difficulty: medium
 order: 21
 requires: [foundation/programming-thinking/loop-over-a-list, foundation/programming-thinking/function-inputs-and-outputs]
 summary: Write down what each line does to your numbers, one row at a time, and you can name the output without a computer.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [trace-table-stepper]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/functions.html (fun keyword, parameters as name: Type, return, calling a function; sample double(x: Int)); kotlinlang.org/docs/basic-syntax.html (var, println); kotlinlang.org/docs/control-flow.html (for, while); developer.android.com/studio/debug (debugger pauses at a line; examine variables, continue line by line); developer.android.com/develop/ui/compose/state (State in an app is any value that can change over time). Tracing as a method is textbook. Not compiled: no kotlinc here; every output traced by hand twice. -->
 
 ## The question
 

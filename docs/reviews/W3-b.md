@@ -108,3 +108,14 @@ Optional (not FIX): the Notice table already shows the halving numbers, so Guess
 ## After the FIX items
 
 Re-check only that the edited lines match the New text. No answer key changes. Leaf 3 may go live as is. Leaves 1, 2 and 4 become PASS once their FIX items are applied.
+
+## Re-check (20 Oct 2026)
+
+Method: grep and read of every edited line against the New text above. No leaf edited; SOURCES comments left to `housekeeper`. No answer keys, output blocks or `why` correctness changed. W3-a fixes were already committed (7100586); W3-b fixes are in the working tree.
+
+- `trace-code-by-hand`: PASS. Items 1, 2, 3 match the New text (lines 33, 34, 244, 246). "helper" and "output" now mapped before use. No new jargon; no sentence over the limit.
+- `reading-error-messages`: PASS. Item 1 (line 128, "purse" removed, dashboard wording), item 2 (lines 61, 201, 226, "did the program start"), item 3 (line 94 and new line 102) match. The new paragraph is three short sentences; line 2 matches the snippet.
+- `find-a-bug-without-guessing`: PASS. Item 1 (string template bolded and defined, line 87), item 2 (lines 123, 127, 160, 228; no "loop"/"range" left in prose, only the id `print-inside-the-loop`), item 3 (lines 47, 73: "up to 15") match.
+- W3-a `loop-over-a-list`: PASS (lines 90, 105 match). `what-is-a-function`: PASS (lines 84, 209 match; composable functions and annotation bold once). `function-inputs-and-outputs`: PASS (lines 96, 208, 216 match; Jetpack Compose explained before use).
+
+Remaining fixes: none. Optional items from the first review are unchanged and still optional.

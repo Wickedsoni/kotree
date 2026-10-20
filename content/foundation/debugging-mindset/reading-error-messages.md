@@ -1,21 +1,20 @@
 ---
 id: foundation/debugging-mindset/reading-error-messages
 title: What is an error message trying to tell me?
-status: shadow
+status: live
 difficulty: easy
 order: 22
 requires: [foundation/programming-thinking/what-is-a-type]
 summary: An error message names what went wrong and where. Learn to read the line number and the key word first.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/exceptions.html (exception is thrown, interrupts normal execution; stack trace definition; sample first line "Exception in thread "main" java.lang.ArithmeticException: This is an arithmetic exception!" and the at lines with Main.kt:3; the program throw ArithmeticException(...)); developer.android.com/codelabs/basic-android-kotlin-compose-update-data-room ("Unresolved reference: itemsRepository", "Notice the type mismatch error"); developer.android.com/studio/debug/stacktraces (list of method calls with filenames and line numbers; click filenames to open source). Exact compile-error wording varies by Kotlin version, so the lesson names the words only in plain terms. Not compiled: no kotlinc here. -->
 
 ## The question
 

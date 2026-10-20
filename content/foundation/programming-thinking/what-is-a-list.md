@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/what-is-a-list
 title: How do I keep many values under one name?
-status: shadow
+status: live
 difficulty: easy
 order: 17
 requires: [foundation/programming-thinking/what-is-a-variable]
 summary: Keep many values in a row under one name. Each one has a number, and the first one is number 0.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [post-office-boxes]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/list-operations.html (get() and [index]; "If the list size is less than the specified index, an exception is thrown"); kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/get.html (IndexOutOfBoundsException if index is less than zero or greater than or equal to size); kotlinlang.org/docs/kotlin-tour-collections.html (lists store items in the order added; listOf; indexed access operator []); kotlinlang.org/docs/collection-elements.html (first element has position 0, last is size - 1; first() and last()); developer.android.com/develop/ui/compose/mental-model (Greeting(names: List<String>) sample); developer.android.com/develop/ui/compose/lists (MessageList(messages: List<Message>)). Own teaching device, not in the docs: door number = boxes walked past. Outputs hand-traced, not run (no kotlinc). -->
 ## The question
 
 A music app has five songs saved. You want the third one. Do you make five separate names, one for each song?

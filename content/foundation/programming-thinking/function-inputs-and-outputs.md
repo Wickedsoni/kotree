@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/function-inputs-and-outputs
 title: How does a function take something in and hand something back?
-status: shadow
+status: live
 difficulty: medium
 order: 20
 requires: [foundation/programming-thinking/what-is-a-function]
 summary: A function can take values in and hand a value back. Showing a value on screen is not the same as handing it back.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/kotlin-tour-functions.html ("Each parameter must have a type, and multiple parameters must be separated by commas"; "The return type is written after the function's parentheses (), separated by a colon :"; "The return keyword is used to exit or return something from a function"; sum(x: Int, y: Int): Int sample prints 3; Unit: "If your function doesn't return a useful value, then its return type is Unit. Unit is a type with only one value"; named arguments: "If you do include parameter names, then you can write the parameters in any order"); kotlinlang.org/docs/functions.html (double(x: Int): Int sample, double(5) is 10; "Declare function parameters using Pascal notation: name: Type"); developer.android.com/develop/ui/compose/mental-model ("composable functions that take in data and emit UI elements"; "Composable functions can accept parameters, which let the app logic describe the UI"). Derived, not run: val kept: Int = showDouble(4) is refused because the function hands back Unit; without parameter names the order of arguments decides. Roadmap says none for a sim: the idea is a contract, so a before/after table is used. Outputs hand-traced, not run (no kotlinc). -->
 ## The question
 
 A program asks a helper step for double 4. The helper shows 8 on the screen. The program now wants to add 1 to that 8, and it cannot.

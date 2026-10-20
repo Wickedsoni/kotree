@@ -1,21 +1,20 @@
 ---
 id: foundation/debugging-mindset/what-is-a-bug
 title: How can code run without errors and still be wrong?
-status: shadow
+status: live
 difficulty: easy
 order: 23
 requires: [foundation/debugging-mindset/reading-error-messages]
 summary: A program can run with no error and still give the wrong answer. The computer follows your lines, not your wishes.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/exceptions.html (an exception interrupts the normal execution of the program); kotlinlang.org/docs/basic-syntax.html (println prints its arguments and adds a line break); kotlinlang.org/docs/control-flow.html (if, else, comparison); developer.android.com/studio/debug/stacktraces (a stack trace generates when an app crashes because of an error or an exception). The three kinds of failure (will not run, crashes, wrong answer) and the word bug are textbook, not from an official page. Not compiled: no kotlinc here; every output traced by hand twice. -->
 
 ## The question
 

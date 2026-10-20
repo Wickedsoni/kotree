@@ -1,21 +1,20 @@
 ---
 id: foundation/programming-thinking/what-is-a-function
 title: How do I give a set of steps a name and reuse it?
-status: shadow
+status: live
 difficulty: easy
 order: 19
 requires: [foundation/programming-thinking/what-is-a-variable]
 summary: Write a set of steps once, give it a name, and run it each time you say that name.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-20
+updatedOn: 2026-10-20
 sims: [recipe-card-call]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/kotlin-tour-functions.html ("You can declare your own functions in Kotlin using the fun keyword"; hello() sample prints Hello, world!; "Function parameters are written within parentheses ()"; "The body of a function is written within curly braces {}"); kotlinlang.org/docs/basic-syntax.html ("An entry point of a Kotlin application is the main function"); developer.android.com/develop/ui/compose/mental-model ("build your user interface by defining a set of composable functions that take in data and emit UI elements"; "All composable functions must have this annotation"). Own reasoning: copy-paste drift symptom, "a function runs only when called" (language semantics, textbook level). Outputs hand-traced, not run (no kotlinc). -->
 ## The question
 
 A game plays a ding and shows a star each time the player scores. That happens in ten places in the code. You could copy the two steps ten times. Then the day the star changes shape, you must find all ten copies.

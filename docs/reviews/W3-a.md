@@ -71,3 +71,6 @@ After this, PASS. Optional (owner or `curriculum-designer`): the roadmap `F:` ta
 - Answer position: keys are a, b, c, then c, b, a (list leaf mixes well); function leaves also mix a, c, b. No pattern problem this wave.
 - Housekeeper at go-live: strip the line-18 SOURCES comment from each leaf; keep the `<!-- SIM: ... -->` markers; the three sims (`post-office-boxes`, `basket-checkout-loop`, `recipe-card-call`) remain one-line entries in `docs/sims/needed-ids.md` and do not block under L31.
 - `basket-checkout-loop` Try this item 2 needs a "starting number" control in the built sim (the spec line in `needed-ids.md` has it; keep it).
+
+## Re-check (orchestrator, 21 Oct 2026)
+All three FIXes verified applied; PASS recorded in W3-b.md Re-check.
