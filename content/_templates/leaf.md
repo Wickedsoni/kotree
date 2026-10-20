@@ -191,6 +191,10 @@ explanation: "<Optional, one sentence.>"
 <!-- Reading and pictures only. No emulator, no app to run. Name one real symptom and say which part of the lesson explains it.
 Theory leaves (DSA, DAA, OS, networking) must name the app symptom here. -->
 
+## Say it in an interview
+
+<!-- Decision L33. 3 to 4 questions an interviewer really asks about this topic, each followed by a model answer in plain words (2 to 4 short sentences, easy to say aloud). Cover the WHY and the trade-off, not only the definition. Label inferred points "my own reasoning". For DSA, DAA and OS leaves add a following "## Practise on these" section with real LeetCode and HackerRank problems (number, title, difficulty, one line on what each trains). -->
+
 ## Recap
 
 <!-- Exactly three lines. Each line is one sentence under 20 words. -->
