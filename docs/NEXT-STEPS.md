@@ -19,6 +19,10 @@
 - **GitHub MCP connector** in the author's local Claude Code has an expired token (401); `gh` CLI is logged in and works. Cloud sessions use their own repo access.
 - **Credits:** the author wants Anthropic cloud credits used; sessions launched from the local orchestrator may bill to the Pro plan. Prefer sessions started on claude.ai/code.
 
+## Phase 4 build done, 21 Oct 2026 (branch `feat/phase4-lesson-page`, not merged)
+
+Lesson delivery of ADR 005 is built and no leaf is live. Read the "Phase 4 addendum" at the end of `docs/adr/005-lesson-content-delivery.md` (decisions on the five open gaps, handoffs). Preview a draft: `./gradlew :site:kobwebStart` then open `http://localhost:8080/preview/<branch>/<stem>/<leaf>` (not linked, noindex, dev only; `-Pkotree.preview=false` turns it off). Export: `kobweb export --notty --layout static`, then `./gradlew :site:copyTreeJson :site:emitLessonPages :site:verifyLessonExport`. Still to do: Phase 5 sims, Phase 6 Playground (no leaf with a runnable block goes live before it), Phase 7 `vercel.json`, publishing the pilot leaf.
+
 ## Phase 3 done, 20 Oct 2026 (read this, then docs/INDEX.md)
 
 **Repo:** https://github.com/Wickedsoni/kotree (public, `main`). Everything below is committed and pushed. Work on `main`; the orchestrator makes small conventional commits; agents never commit. Author is on Windows; git identity for this repo is `Wickedsoni` (noreply).

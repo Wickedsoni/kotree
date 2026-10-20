@@ -402,7 +402,7 @@ Rejected: query string `?at=kotlin` (reaches the server and CDN cache keys for n
 
 ### 7.3 Reserved first segments
 
-No branch slug may be any of: `assets`, `fonts`, `images`, `kitchen-sink`, `about`, `progress`, `api`, `tree.json`, `404`, `lessons`, `sitemap.xml`, or any name starting with `_`. Validation V7 enforces this. (`lessons` and `sitemap.xml` added 20 Oct 2026 for ADR 005.) No stem or leaf slug may be `index` or start with a digit (V11, `docs/07` §6.2).
+No branch slug may be any of: `assets`, `fonts`, `images`, `kitchen-sink`, `about`, `progress`, `api`, `tree.json`, `404`, `lessons`, `lessons-preview`, `preview`, `sitemap.xml`, or any name starting with `_`. Validation V7 enforces this. (`lessons` and `sitemap.xml` added 20 Oct 2026 for ADR 005.) No stem or leaf slug may be `index` or start with a digit (V11, `docs/07` §6.2).
 
 ### 7.4 404 page
 

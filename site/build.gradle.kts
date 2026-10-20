@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kobweb.application)
-    alias(libs.plugins.kobwebx.markdown)
 }
 
 group = "dev.kotree.site"
@@ -115,7 +114,6 @@ kotlin {
             implementation(libs.compose.html.core)
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
-            implementation(libs.kobwebx.markdown)
         }
     }
 }
