@@ -167,7 +167,7 @@ output: "In the filing cabinet (storage)"
 
 ## Common mistakes
 
-- **Treating memory and storage as the same thing.** Both are counted in GB, and shop labels sometimes use the word "memory" for storage. So more GB feels like more GB. Ask one question instead: does it keep data with no power? On this page, memory always means the desk.
+- **Treating memory and storage as the same thing.** Both are counted in GB, and people often say "memory" when they mean storage. So more GB feels like more GB. Ask one question instead: does it keep data with no power? On this page, memory always means the desk.
 - **Thinking an open app has saved its work.** The words are on the screen, so they feel safe. But the screen shows the desk. Look for a Save step, or an app that says it saves for you.
 - **Thinking saving moves the work off the desk.** A real paper leaves the desk when it is filed. On a phone, saving makes a copy, so the same data can sit in both places.
 
@@ -177,18 +177,18 @@ Picture a form you are filling in. You switch to the camera to scan something, t
 
 While you were away, the form lived on the desk. The Android documentation says that when the system runs low on memory, it ends the apps it was keeping out of sight.
 
-Android's own notes on this add that, to the user, it looks as if the app crashed. The app often gets no chance to save, so progress is lost.
+Android's own notes on this say the app is ended at once, often without its normal save steps, so progress can be lost.
 
-Storage has a similar rule. The Android documentation says that when the user uninstalls an app, the files saved in the app's own storage are removed. So a game's saved level survives a power cut, but not an uninstall.
+Storage has a similar rule. The Android documentation says that when the user uninstalls an app, the files saved in the app's own storage are removed. So a level the game keeps in its own storage survives a power cut, but not an uninstall.
 
 ## Recap
 
-1. Memory is the fast desk. It forgets everything when the power goes off.
-2. Storage is the filing cabinet. It is slower, holds more, and keeps files without power.
-3. Saving copies work from the desk to the cabinet. Unsaved work lives only on the desk.
+1. Memory is the fast desk, and it forgets everything when the power goes off.
+2. Storage is the filing cabinet: slower, roomier, and it keeps files without power.
+3. Saving copies work from the desk to the cabinet, so unsaved work lives only on the desk.
 
 ## You can now
 
 - Explain why unsaved work disappears when the battery dies but photos stay, using the desk and the cabinet.
 - Predict what is left in memory and in storage after the power is pulled.
-- Sort everyday items on a phone into memory or storage.
+- Sort an installed game and an unsaved message into memory or storage.

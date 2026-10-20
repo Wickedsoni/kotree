@@ -63,7 +63,7 @@ Nothing in these four steps needs a project or a build.
 
 ### Name it
 
-The place that does all this is the **Kotlin Playground**. The Kotlin documentation calls it an online application for writing, running and sharing Kotlin code in your browser, and says there is no need to create a new project and build it.
+The place that does all this is the **Kotlin Playground**. The Kotlin documentation calls it an online application for writing, running and sharing Kotlin code in your browser. The same page says that for quick checks there is no need to create a new project and build it.
 
 It has three parts. The **editor** is the box where you type. The Run button sends your code. The **output** is the area below that shows what the program printed.
 
@@ -154,7 +154,7 @@ output: |
 
 1. **Write.** Copy the program from the first Predict item into the editor. Change the text between the quote marks to `My first program ran`. Keep the quote marks.
 2. **Run.** Press Run. The output area shows `My first program ran` on one line.
-3. **Break.** Change exactly one thing: change `println` to `printn`. Press Run again. The program does not run, and the editor shows an error message instead of your text.
+3. **Break.** Change exactly one thing: change `println` to `printn`. Press Run again. The program does not run, and you see an error message instead of your text.
 4. **Fix.** Change `printn` back to `println` and press Run. You should see `My first program ran` again. The error was one wrong letter in a word the helper has to know.
 
 ## Fix the bug
@@ -233,8 +233,8 @@ An app has no output area under a button. To see what an app is doing, developer
 ## Recap
 
 1. The Kotlin Playground lets you type a program, press Run, and read the output in your browser.
-2. The reply is what the program prints. Text goes between double quotes.
-3. An error is a reply too. Fix the line it points to and run again.
+2. The reply is what the program prints, and text goes between double quotes.
+3. An error is a reply too, so fix the line it points to and run again.
 
 ## You can now
 
