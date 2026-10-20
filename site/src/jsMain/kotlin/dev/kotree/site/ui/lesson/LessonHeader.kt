@@ -6,7 +6,6 @@ import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.branchTint
 import dev.kotree.site.colorOnSurfaceVar
-import dev.kotree.site.layoutLessonWideVar
 import dev.kotree.site.shapeXlVar
 import dev.kotree.site.space3Var
 import dev.kotree.site.space6Var
@@ -40,7 +39,6 @@ fun LessonHeader(
     Header(
         modifier.styleModifier {
             property("box-sizing", "border-box")
-            property("max-width", layoutLessonWideVar.value())
             property("background-color", branchTint(branch).value().toString())
             property("border-radius", shapeXlVar.value())
             property("padding", space6Var.value())
@@ -58,7 +56,7 @@ fun LessonHeader(
         ) {
             DifficultyChip(difficulty)
             if (progressLine.isNotBlank()) {
-                P(Modifier.styleModifier { property("margin", "0"); typo(Typo.Label) }.toAttrs()) { Text(progressLine) }
+                P(Modifier.styleModifier { property("margin", "0"); property("font-variant-numeric", "tabular-nums"); typo(Typo.Label) }.toAttrs()) { Text(progressLine) }
             }
         }
         if (videoUrl.isNotBlank()) {
