@@ -8,7 +8,18 @@
 - Nothing is published. No site code exists yet (`/site` not created). Git repo exists (created in the IDE) but **nothing is committed or pushed**. The author will push later.
 - Open `⚠️ VERIFY` marks in docs 00-10: about 53 (each has a test). Roadmap marks (~287) are checked per leaf before it goes live.
 
-## Phase 3 done, 20 Oct 2026 (read this first, then docs/INDEX.md)
+## STATUS 21 Oct 2026 (newest; read this first)
+
+- **Decisions:** bundle budget is now **600 KB gzip** (L30, supersedes the 400 KB figure everywhere else). `/topics` is built and linked from the tree (`pages/Topics.kt`; answers "add /topics" below). Author wants a pilot lesson for **every** branch drafted as `shadow`, then publishes one at a time after saying "I understood X".
+- **On `main`:** Phase 3 complete; `/topics`; 17 shadow pilot drafts (the up-next leaf of each branch, all `status: shadow`, validators pass); `docs/my-topics.md` (full 482-leaf list); `.gitignore` fix (the `**/build/` rule had hidden `buildSrc/src/main`, now negated).
+- **In flight:** branch `feat/phase4-lesson-page` (cloud session): ADR 005 lesson delivery, lesson JSON, a hidden noindex preview route for reading shadow drafts. Check `git fetch` and `origin/feat/phase4-lesson-page`; if it exists, review (`reviewer`), merge into `main`, run `cd site && ../gradlew :site:validateContent` and the export, push. If it never reported back, treat its branch as unreviewed.
+- **Pilot leaf correction:** the Kotlin up-next leaf is `kotlin/first-programs/where-a-program-starts`, not `what-is-null`.
+- **Drafts need before publishing:** specs for 11 sim ids (`input-process-output`, `tests-lamps`, `measure-bars`, `app-house-doors`, `snapshot-tray`, `declarative-vs-steps`, `main-thread-queue`, `request-parcel-pipe`, `shared-or-platform-bins`, `step-counter-bars`, `linear-search-shelf`); Try-it / Fix-the-bug sections missing on networking, profiling, tools, kmp pilots; every Kotlin block re-run on 2.4.21 (only 2.4.0 / 2.4.20 were available); the VERIFY comments at the top of each draft; `challenge-builder` to verify outputs.
+- **Next (cloud-friendly, in order):** (1) merge `feat/phase4-lesson-page`; (2) `physics-designer` sim specs for the 11 ids; (3) `challenge-builder` verification of challenges; (4) when the author says "I understood <leaf>": `reviewer` PASS, `housekeeper` flips that leaf to `live`, export, push. Hard rule 1 stands: no leaf goes live without that.
+- **GitHub MCP connector** in the author's local Claude Code has an expired token (401); `gh` CLI is logged in and works. Cloud sessions use their own repo access.
+- **Credits:** the author wants Anthropic cloud credits used; sessions launched from the local orchestrator may bill to the Pro plan. Prefer sessions started on claude.ai/code.
+
+## Phase 3 done, 20 Oct 2026 (read this, then docs/INDEX.md)
 
 **Repo:** https://github.com/Wickedsoni/kotree (public, `main`). Everything below is committed and pushed. Work on `main`; the orchestrator makes small conventional commits; agents never commit. Author is on Windows; git identity for this repo is `Wickedsoni` (noreply).
 
