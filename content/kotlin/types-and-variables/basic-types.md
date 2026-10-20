@@ -203,13 +203,13 @@ The codelab then writes `val amount = amountInput.toDoubleOrNull() ?: 0.0` to tu
 ## Say it in an interview
 
 **What are the sizes and limits of `Int` and `Long`?**
-`Int` takes 32 bits, the on-or-off switches a number is stored in, and holds -2,147,483,648 to 2,147,483,647. `Long` takes 64 bits and holds -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. The Kotlin numbers page lists both. For a plain whole number, Kotlin infers `Int` if it fits and `Long` if it does not.
+`Int` takes 32 bits, the on-or-off switches a number is stored in, and holds -2,147,483,648 to 2,147,483,647. `Long` takes 64 bits and holds -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. The Kotlin numbers page lists both. For a plain whole number, Kotlin picks `Int` if it fits and `Long` if it does not.
 
 **Why is `5 / 2` equal to `2`?**
 The documentation says division between integer values always returns an integer, and the compiler discards the fractional part. To keep the .5, write `5.0 / 2`, which is a `Double`.
 
 **What happens when an `Int` goes past its maximum?**
-General knowledge: it wraps around, so `Int.MAX_VALUE + 1` gives -2147483648. If a count can pass about two billion, use a `Long`. The trade-off is memory: a `Long` is 64 bits and an `Int` is 32.
+General knowledge: it wraps around, so the largest `Int`, 2147483647, plus 1 gives -2147483648. My run of Kotlin 2.3.21 printed that. If a count can pass about two billion, use a `Long`. The trade-off is memory: a `Long` is 64 bits and an `Int` is 32.
 
 **Should money be stored in a `Double`?**
 General knowledge: usually not. A `Double` holds many decimals only approximately, and `0.1 + 0.2` prints `0.30000000000000004`. Real code often keeps cents in a `Long`, or uses `BigDecimal`, a type made for exact decimal numbers.

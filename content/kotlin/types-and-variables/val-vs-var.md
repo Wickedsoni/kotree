@@ -214,7 +214,7 @@ The collections page says to use `val` as much as possible for safer and more ro
 No. A `val` stops the name from being reassigned. The collections page shows a list you can add to, assigned to a `val`. Adding to it is allowed, and only giving the name a different list is refused. So `val` locks the tag, not what is inside.
 
 **In Compose, `var name by remember { mutableStateOf("") }` uses `var`. Could it use `val`?**
-In another form, yes. Compose keeps the text a person types in state, which is a value the screen reads. The Compose state page lists three equivalent ways to declare it, and one is `val mutableState = remember { mutableStateOf(default) }`. There the `val` keeps the name fixed and the value inside the state changes. My own reasoning: with `by`, the code writes `name = it`, so that form needs a `var`.
+In another form, yes. Compose keeps the text a person types in state, which is a value the screen reads. The Compose state page lists three equivalent ways to declare it, and one is `val mutableState = remember { mutableStateOf(default) }`. There the `val` keeps the name fixed and the value inside the state changes. My own reasoning: in the line with `var`, the example later writes `name = it`, which gives `name` the new text, so that form needs a `var`.
 
 ## Recap
 

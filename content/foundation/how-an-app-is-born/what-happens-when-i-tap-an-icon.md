@@ -203,7 +203,7 @@ The launch-time page lists the system's tasks as: load and launch the app, show 
 My own reasoning: it answers the tap at once, so the phone does not look frozen while the process is made. The cost is that slow work in the five steps keeps the blank window up longer. The documentation measures this wait as time to initial display, the time to show the first frame.
 
 **Is an app always running in the background?**
-No. The documentation says the system starts the process when a component needs it. It may shut the process down when it is no longer needed or when memory is needed for other apps. So the next tap may be a cold start.
+No. The documentation says the system starts the process when any of the app's parts need to run. It may shut the process down when it is no longer needed or when memory is needed for other apps. So the next tap may be a cold start.
 
 ## Recap
 

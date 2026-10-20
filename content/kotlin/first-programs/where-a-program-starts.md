@@ -209,14 +209,14 @@ My own reasoning: once the system has started a component, the rules from this l
 **What is the entry point of a Kotlin program, and what forms can it take?**
 The entry point is the `main` function. The Kotlin documentation shows two forms: `fun main()` and `fun main(args: Array<String>)`. The second accepts a variable number of `String` arguments, which are pieces of text handed to the program when it starts. Both start the program.
 
-**Does `main` have to sit inside a class, like in Java?**
-No. In Kotlin, `main` can be a top-level function, which means a function written straight in the file, not inside any class. The Kotlin documentation's examples do exactly that.
+**Does `main` have to sit inside a class?**
+No. In Kotlin, `main` can be a top-level function, which means a function written straight in the file. It is not wrapped in a **class**, which is a named container that can hold code. The Kotlin documentation's examples do exactly that. General knowledge: some other languages need that wrapper.
 
 **Does a function written above `main` run first?**
 No. Only a call decides when a function runs. The order in the file is not the order of running. A function that nobody calls never runs.
 
 **Why does an Android app have no `main`?**
-The Android documentation says Android apps don't have a single entry point: there's no `main()` function. Each component is an entry point, and the system decides which one to start. My own reasoning: the trade-off is that your code can be entered at a screen, a service or a broadcast, so you cannot assume one fixed start.
+The Android documentation says Android apps don't have a single entry point: there's no `main()` function. Each component is an entry point, and the system decides which one to start. My own reasoning: the trade-off is that your code can be entered at any component, such as a screen, so you cannot assume one fixed start.
 
 ## Recap
 
