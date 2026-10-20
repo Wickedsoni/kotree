@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/functions.html (default arguments, named arguments in any order, name every argument after the first skipped one, Unit return type optional); https://developer.android.com/develop/ui/compose/kotlin (drawSquare with defaults and named arguments, Text(text = ...), most Compose libraries use default arguments). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a syntax rule, and the editor is enough. -->
+<!-- SOURCES: https://kotlinlang.org/docs/functions.html (default arguments, named arguments in any order, name every argument after the first skipped one, Unit return type optional); https://developer.android.com/develop/ui/compose/kotlin (drawSquare with defaults and named arguments, Text(text = ...), most Compose libraries use default arguments; "This feature reduces the need for overloaded functions"); the interview facts about when a default is evaluated and a default using an earlier parameter are from the W5-b reviewer's compiler run (Kotlin 2.3.21). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a syntax rule, and the editor is enough. -->
 ## The question
 
 A coffee order has three questions: the drink, the size and the milk. Most customers want a medium size and regular milk. Making everyone answer all three every time is slow, and making them remember the order of the boxes is worse. How can a function let you skip the answers you do not care about, and still make it clear which answer is which?
@@ -76,7 +76,7 @@ A **named argument** is an argument written as `name = value`. The documentation
 | Filling the boxes from the top | Passing arguments by position |
 | Writing "milk: oat" | A named argument, `milk = "oat"` |
 
-In the text inside quotes below, `$drink` is replaced by the value of `drink`. This function prints and hands nothing back, so no return type is written. The documentation says the return type is optional only for a function that returns `Unit`.
+In the text inside quotes below, `$drink` is replaced by the value of `drink`. This function prints and hands nothing back, so its return type is `Unit`. The documentation says you may leave out the type only for such a function.
 
 ```kotlin
 fun order(drink: String, size: String = "medium", milk: String = "regular") {
@@ -213,6 +213,20 @@ output: |
 Reading a call such as `drawSquare(30, 5, Color.Red)` is hard, because you cannot tell what the numbers mean. **Jetpack Compose** is the modern toolkit for building Android UI. Its Kotlin page shows the clearer form, `drawSquare(sideLength = 30, thickness = 5, edgeColor = Color.Red)`, and calls it self-documenting.
 
 The same page says most Compose libraries use default arguments. It shows `Text(text = "Hello, Android!")` and says that by specifying only the `text` parameter, you document that you want the default values for all the others. That is the coffee slip: you fill the one box that matters and leave the rest to the house defaults.
+
+## Say it in an interview
+
+**When is a default value worked out?**
+On every call that leaves the argument out, not once when the function is written. In the reviewer's compiler run, a default that counted upward gave 1 and then 2 on two calls. The functions page shows the same idea: the default's `println` runs only when the argument is left out.
+
+**Can a default use an earlier parameter?**
+Yes. In the reviewer's run, `fun f(a: Int, b: Int = a * 2)` compiled and worked. My own reasoning: this fits the left-to-right order in which the boxes are filled.
+
+**Why use default values instead of several functions with the same name?**
+The Compose Kotlin page says default arguments reduce the need for overloaded functions, which are several functions with one name and different inputs. It also says one function with defaults saves redundant code and is clearer to read. The trade-off is that the one function has more boxes to understand.
+
+**What is the rule after you skip an argument?**
+The documentation says that after the first skipped argument, you must name all subsequent arguments. Position no longer tells Kotlin which box a value is for. The names do.
 
 ## Recap
 

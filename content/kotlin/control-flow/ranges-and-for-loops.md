@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 10
 requires: [kotlin/control-flow/if-as-an-expression]
-summary: A Kotlin range says where to start, where to stop and how big each step is. Some forms include the stop number and some leave it out.
+summary: A Kotlin range says where to start, where to stop and how big each step is. Some forms leave the stop number out.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/ranges.html (range definition, .., ..<, downTo, step, last element of a progression); https://kotlinlang.org/docs/control-flow.html (for loops over ranges); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/until.html (until excludes the end); https://developer.android.com/develop/ui/compose/components/slider (valueRange = 0f..50f). Read 20 Oct 2026. All outputs hand-traced, not run. Sim differs from the roadmap row, which says to reuse the staircase sim: see docs/sims/needed-ids.md. -->
+<!-- SOURCES: https://kotlinlang.org/docs/ranges.html (range definition, .., ..<, downTo, step, last element of a progression); https://kotlinlang.org/docs/control-flow.html (for loops over ranges); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/until.html (until excludes the end); https://developer.android.com/develop/ui/compose/components/slider (valueRange = 0f..50f). Interview section: same pages; empty 5..1 and step 0 IllegalArgumentException are from the W5-b reviewer's compiler run (Kotlin 2.3.21). Read 20 Oct 2026. All outputs hand-traced, not run. Sim differs from the roadmap row, which says to reuse the staircase sim: see docs/sims/needed-ids.md. -->
 ## The question
 
 A shelf has 5 boxes, numbered 1 to 5, and you want to tick each box once. You write a rule that says "from 1 up to 5". Does box 5 get ticked? And how would you tick every third box, or tick the boxes from the top down?
@@ -218,6 +218,20 @@ output: |
 A volume bar on a phone should reach its highest level. **Jetpack Compose** is the modern toolkit for building Android UI. Its slider page sets the range of values a slider can take with `valueRange = 0f..50f`, and describes that parameter as the range of values the slider can take.
 
 The numbers there are decimals, but the two dots mean the same thing: from the start value to the end value, both included. This next part is our own reasoning: if a slider's range stopped one step short of its end value, the thumb could never reach the top of the bar, and nothing would report an error.
+
+## Say it in an interview
+
+**Does `1 until 5` include 5?**
+No. The standard library describes `until` as a range up to but excluding the end value, and `..<` does the same. Two dots, as in `1..5`, include the end. My own reasoning: when you walk positions from 0, `..<` is the safer form, because the last position is one less than the count.
+
+**What does `for (i in 5..1)` print?**
+Nothing. The range is empty, because `..` only counts upward. The documentation says to use `downTo` instead of `..` to go in reverse order. In a compiler run by the reviewer, the loop ran zero times and gave no error.
+
+**What happens with `step 0`?**
+In the reviewer's compiler run, `1..9 step 0` threw `IllegalArgumentException` with the message "Step must be positive, was: 0." The direction comes from `downTo`, not from the sign of the step. So the step is a size, and it must be above zero.
+
+**What is the last number of `1..9 step 3`?**
+It is 7. The ranges page shows a step of 3 over this kind of range stopping at 7. My own reasoning: the next number would be 10, which is past 9, so the walk ends. A step can therefore skip the end value.
 
 ## Recap
 

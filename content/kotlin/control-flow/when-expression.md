@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (when as expression and statement, first matching branch, else, commas, in ranges, exhaustiveness); https://developer.android.com/develop/ui/compose/animation/value-based (when (state) giving a Dp). Read 20 Oct 2026. All outputs hand-traced, not run. Guard conditions left out on purpose (Kotlin 2.2 and later). -->
+<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (when as expression and statement, first matching branch, else, commas, in ranges, exhaustiveness); https://developer.android.com/develop/ui/compose/animation/value-based (when (state) giving a Dp). Read 20 Oct 2026. All outputs hand-traced, not run. Interview section: same control-flow page (when compares in order; statement need not be exhaustive; expression must; guard conditions need a subject and no comma conditions); https://kotlinlang.org/docs/whatsnew22.html (guard conditions stable in Kotlin 2.2.0, per W5-b review). Guard conditions are only mentioned in the interview section, no code. -->
 ## The question
 
 A ticket machine hands out numbered tickets. Ticket 1 goes to the first lane, ticket 2 to the second lane, tickets 3 and 4 to the third lane, and tickets 5 to 9 to the later lane. Everything else goes to a spare lane. You could write a question for each case, one under the other, but the pile grows fast. Is there a tidier way to say "look at this number and pick one of these answers"?
@@ -33,7 +33,7 @@ Think of a sorting office.
 
 The letter slides along the rail and meets the labels one at a time. It drops into the first chute whose label fits. Then it is gone from the rail.
 
-**Where the analogy stops:** A real letter falls into a chute and cannot be in two places. In code, each label is a separate question asked from the top, so two labels can both fit, and only the first one is ever asked about that letter.
+**Where the analogy stops:** A real letter falls into a chute and cannot be in two places. In code, each label is a separate question asked from the top, so two labels can both fit, but the walk stops at the first one that fits and the second is never asked.
 
 ## See it move
 
@@ -80,7 +80,7 @@ Idea A feels right if you picture every label getting a turn. But one letter can
 
 **`when`** is the Kotlin word for the sorting office. The Kotlin documentation says it compares its argument against each branch in order until one branch condition is satisfied. The value after the word `when`, in round brackets, is the **subject**: the letter. Each line of the form `label -> answer` is a **branch**: a chute. A comma lists several labels for one branch. The word `in` followed by `5..9` checks whether the number is in the stretch from 5 to 9, with both ends included. The word `else` is the bin.
 
-The documentation says you can use `when` as an expression or as a statement. As an expression it returns a value, and you must cover all possible cases. The value of the first matching branch becomes the value of the whole expression. For a number subject, the `else` branch is how you cover all the cases.
+The documentation says you can use `when` as an expression or as a **statement**, which is a line that does a job and gives no value. As an expression it returns a value, and you must cover all possible cases. The value of the first matching branch becomes the value of the whole expression. For a number subject, the `else` branch is how you cover all the cases.
 
 | Sorting office | In Kotlin |
 |---|---|
@@ -234,7 +234,23 @@ output: |
 
 A box on screen can be in one of two states, Collapsed or Expanded, and its border should be thin in one and gone in the other. **Jetpack Compose** is the modern toolkit for building Android UI. Its animation page picks the border width with a `when` on the state. One branch reads `BoxState.Collapsed -> 1.dp` and the other reads `BoxState.Expanded -> 0.dp`, where `dp` is a unit of size on the screen.
 
-The page says to specify the target values for each of the states. That is the sorting office: the state is the letter, and each width is the answer in a tray. This next part is our own reasoning: a `when` that listed only one state would leave the other state with no width, which is why Kotlin asks you to cover every case.
+The page says to specify the target values for each of the states. That is the sorting office: the state is the letter, and each width is the answer in a tray. There is no `else` there, because `BoxState` is an **enum**, a fixed list of names, and the two branches already cover both of them (general knowledge).
+
+This next part is our own reasoning: with the two widths swapped, an expanded box would show a thin border and a collapsed box none. A `when` that listed only one state would leave the other state with no width, which is why Kotlin asks you to cover every case.
+
+## Say it in an interview
+
+**Does a Kotlin `when` fall through like a Java `switch`?**
+No (a Java `switch` can fall through, which is general knowledge). The documentation says `when` compares its argument with each branch in order until one is satisfied. The first match runs and the walk stops, so you do not write `break`. My own reasoning: this removes the bug of forgetting to stop.
+
+**Why does the order of branches matter?**
+The first match wins. A wide label above a narrow one hides the narrow one, so the narrow branch can never run. Put the narrow label first.
+
+**When must a `when` have an `else`?**
+The documentation says a `when` used as an expression must cover all possible cases, and a `when` used as a statement does not. With a number subject, `else` is how you cover them. The trade-off is that an expression can never be left with no value.
+
+**What are guard conditions?**
+A guard condition is an extra `if` after the main condition, in the same branch. The documentation says it works only when the `when` has a subject, and not with several conditions joined by commas. It is stable since Kotlin 2.2. It lets one branch check both the kind of value and one more fact.
 
 ## Recap
 

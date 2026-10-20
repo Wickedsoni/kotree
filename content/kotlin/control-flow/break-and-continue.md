@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/returns.html (break terminates the nearest enclosing loop, continue proceeds to the next step of the nearest enclosing loop); https://kotlinlang.org/docs/control-flow.html (break and continue exist in loops). Read 20 Oct 2026. All outputs hand-traced, not run. Android section is own reasoning, no Android page cited. Sim differs from the roadmap row, which says to reuse the spoon-and-pot sim: see docs/sims/needed-ids.md. -->
+<!-- SOURCES: https://kotlinlang.org/docs/returns.html (break terminates the nearest enclosing loop, continue proceeds to the next step of the nearest enclosing loop; labels such as break@loop; non-local break and continue valid in lambdas of inline functions; return@forEach similar to continue; the "only when a loop encloses the call" detail is from the W5-b reviewer's compiler run); https://kotlinlang.org/docs/control-flow.html (break and continue exist in loops). Read 20 Oct 2026. All outputs hand-traced, not run. Android section is own reasoning, no Android page cited. Sim differs from the roadmap row, which says to reuse the spoon-and-pot sim: see docs/sims/needed-ids.md. -->
 ## The question
 
 A search screen goes through a list of 100 names to find one person. It finds her at name number 3 and keeps checking the other 97. On another screen, one name in the list is blank, and that name must be skipped while the rest are shown. How do you tell a job that goes through a list to stop early, and how do you tell it to skip only one turn?
@@ -78,7 +78,7 @@ Idea A feels right, because skipping sounds like a kind of stopping. But the jun
 
 ### Name it
 
-A job that does the same steps for each item in turn is a **loop**. One pass through the steps for a single letter is a **round**. The Kotlin documentation says **`break`** terminates the nearest enclosing loop. It also says **`continue`** proceeds to the next step of the nearest enclosing loop. With only one loop in the program, the nearest enclosing loop is that loop.
+A job that does the same steps for each item in turn is a **loop**. One pass through the steps for a single letter is a **round**, which programmers call an **iteration**. The Kotlin documentation says **`break`** terminates the nearest enclosing loop. It also says **`continue`** proceeds to the next step of the nearest enclosing loop. With only one loop in the program, the nearest enclosing loop is that loop.
 
 The sign `==` asks "is this equal to that?". It gives yes or no, so it works as the question inside an `if`, which runs its steps only when the answer is yes.
 
@@ -227,6 +227,20 @@ output: |
 No Android page is cited in this section. This part is our own reasoning.
 
 Picture a contacts screen that shows names from a list. One contact has a blank name. If the code uses `break` on a blank name, every row after it is missing, and nothing reports an error. If it uses `continue`, only the blank row is left out. That is the second Predict item, in a screen.
+
+## Say it in an interview
+
+**What is the difference between `break` and `continue`?**
+The documentation says `break` terminates the nearest enclosing loop, and `continue` proceeds to the next step of the nearest enclosing loop. So `continue` skips one iteration and `break` ends all of them. My own reasoning: using the wrong one is a quiet bug, because nothing reports an error.
+
+**Does the code after the loop still run after a `break`?**
+Yes. `break` ends only the loop, not the function or the program. The line after the loop runs as normal, as in the `Done` example. My own reasoning: this is why you can use `break` to leave early and still finish the job.
+
+**In nested loops, which loop does `break` end?**
+The nearest enclosing one. The documentation says a `break` with a label, such as `break@loop`, jumps to the point right after the loop marked with that label. That lets you leave an outer loop from an inner one. The trade-off is code that is harder to follow, so use it sparingly (my own reasoning).
+
+**Can you use `break` or `continue` inside `forEach`?**
+The documentation says non-local `break` and `continue` are valid in lambdas passed to inline functions. In the reviewer's compiler run, they compiled only when a loop encloses the `forEach` call. A `return@forEach` also works like `continue`, and the documentation notes that local returns are similar to `continue`.
 
 ## Recap
 

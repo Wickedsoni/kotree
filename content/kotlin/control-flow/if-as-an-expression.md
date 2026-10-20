@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (if as an expression, else required, last expression of a block, else if); https://developer.android.com/develop/ui/compose/animation/value-based (animateFloatAsState with an if value). Read 20 Oct 2026. All outputs hand-traced, not run. No sim: roadmap row says a single rule, and Foundation's fork sim covers the flow. -->
+<!-- SOURCES: https://kotlinlang.org/docs/control-flow.html (if as an expression, else required, last expression of a block, else if); https://developer.android.com/develop/ui/compose/animation/value-based (animateFloatAsState with an if value). Read 20 Oct 2026. All outputs hand-traced, not run. Interview section: same control-flow page (if as expression, ternary purpose, else required, block value); statement-only if is general knowledge. No sim: roadmap row says a single rule, and Foundation's fork sim covers the flow. -->
 ## The question
 
 A weather screen has one message box. When it rains, the box must hold "Take an umbrella". When it does not, the box must hold "Enjoy the sun". You already know how to make a program choose between two paths. Could the choice itself hand you the sentence, so you can drop it straight into the box?
@@ -67,7 +67,7 @@ Idea A is how a real machine behaves, which is why it feels right. But then the 
 
 An **expression** is a piece of code that works out to a value. The Kotlin documentation says you can write `if` as an expression, which lets you assign its returned value directly to a variable. In this form, an `else` branch is required.
 
-The yes-or-no question inside the round brackets is the **condition**. Each side of the machine is a **branch**. The word `else` starts the second branch, and `val` makes a name that keeps its value. The documentation says each branch can be a block, where the value of the last expression becomes the result. It also says the `if` expression serves the same purpose as the ternary operator, a short question-mark form found in other languages.
+The yes-or-no question inside the round brackets is the **condition**. Each side of the machine is a **branch**. The word `else` starts the second branch, and `val` makes a name that keeps its value. The documentation says each branch can be a **block**, which is a group of steps between curly braces. The value of the last expression in the block becomes the result. It also says the `if` expression serves the same purpose as the ternary operator, a short question-mark form found in other languages.
 
 | Vending machine | In Kotlin |
 |---|---|
@@ -212,7 +212,21 @@ output: |
 
 A part of a screen should look faded when it is switched off. **Jetpack Compose** is the modern toolkit for building Android UI. Its animation page shows a line that picks the alpha, which is how see-through something is. The line reads `if (enabled) 1f else 0.5f`.
 
-The page says the alpha is an animation value between the provided values, `1f` or `0.5f` in this case. That is the machine from this lesson. The condition is `enabled`, and the two sides are the two see-through levels. This next part is our own reasoning: if the `else` side were missing, the screen would have no level to use when the part is switched off.
+The page says the alpha is an animation value between the provided values, `1f` or `0.5f` in this case. That is the machine from this lesson. The condition is `enabled`, and the two sides are the two see-through levels. This next part is our own reasoning: if the two levels were swapped, a switched-on part would look faded. If the `else` side were missing, the screen would have no level to use when the part is switched off.
+
+## Say it in an interview
+
+**Does Kotlin have a ternary operator?**
+No. The Kotlin documentation says `if` can be used as an expression, and that this serves the same purpose as the ternary operator found in other languages. So you write `val drink = if (cold) "tea" else "coffee"`. The upside is that there is one tool, not two, for choosing a value.
+
+**Why must an `if` that gives a value have an `else`?**
+The documentation says an `else` branch is required in that form. My own reasoning: if one path gave no value, the name on the left could end up empty. Kotlin stops that before the program runs.
+
+**What is the value of a branch that is a block?**
+It is the last expression in the block. Lines before it are side jobs, such as `println("Long wait")`. They run, but they are not the value.
+
+**When can you leave the `else` out?**
+When the `if` is only a statement, which means it does a job and nobody uses its value (general knowledge). The `else` is required only when the `if` is used as a value. This is the trade-off: a value needs every path covered, and a job does not.
 
 ## Recap
 

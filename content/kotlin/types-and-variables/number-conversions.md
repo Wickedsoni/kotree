@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/numbers.html (integer types table, explicit number conversions, L suffix, mixed Int and Long arithmetic, overflow); https://kotlinlang.org/docs/java-interop.html (Java long maps to Kotlin Long). Read 20 Oct 2026. All outputs hand-traced, not run. -->
+<!-- SOURCES: https://kotlinlang.org/docs/numbers.html (integer types table, explicit number conversions, L suffix, mixed Int and Long arithmetic, overflow); https://kotlinlang.org/docs/java-interop.html (Java long maps to Kotlin Long). Interview section: same numbers page (narrowing conversion "may not preserve the original numeric value"; overflow wraps; no automatic compiler error); toInt() of 3000000000L = -1294967296 from the W5-b reviewer's compiler run. Read 20 Oct 2026. All outputs hand-traced, not run. -->
 ## The question
 
 A storage screen adds up the sizes of two video files. One file is 2 billion in size and the other is 1 billion, and the screen shows a negative total. In another place in the same app, you try to put a small whole number into a slot made for a bigger kind of number, and Kotlin refuses to run. Why does Kotlin refuse, and why did the total turn negative?
@@ -41,7 +41,7 @@ The staff will not move a drink from the small cup into the jug on their own, ev
 **Try this:**
 1. Pour the small cup into the jug without an order slip, then pour again with one.
 2. Fill the small cup to its mark, then add one more drop.
-3. Do the same with the jug.
+3. Put the same amount in the jug, add one more drop, and see how much room is left.
 
 **What you should notice:** The jug accepts the small cup's drink only with an order slip, and a small cup that gets one drop past its mark wraps around to the bottom.
 
@@ -73,7 +73,7 @@ Idea A feels kind. But the Kotlin documentation says numeric types are not stand
 
 ### Name it
 
-A whole number that fits in the small cup has the type **`Int`**. The Kotlin documentation lists its range as -2,147,483,648 to 2,147,483,647. The jug is the type **`Long`**, with a range up to 9,223,372,036,854,775,807.
+A whole number that fits in the small cup has the type **`Int`**. The Kotlin documentation lists its smallest and largest values as -2,147,483,648 and 2,147,483,647. The jug is the type **`Long`**, with a range up to 9,223,372,036,854,775,807.
 
 The order slip is an **explicit conversion**: a call to a function such as `toLong()` that gives you a copy of the number in another type. The documentation lists `toByte()`, `toShort()`, `toInt()`, `toLong()`, `toFloat()` and `toDouble()`. A number written with an `L` after it, such as `1000000000L`, is a `Long`. The documentation calls this the `L` suffix.
 
@@ -134,7 +134,7 @@ options:
     why: "The cup is full to its mark. One more drop does not spill. The number wraps around to the bottom of the range."
   - id: c
     text: "The program stops with an error"
-    why: "You may have expected a warning, as with a spill. The documentation says the compiler does not automatically produce an error on overflow."
+    why: "You may have expected an error, as with a spill. The documentation says the compiler does not automatically produce an error on overflow."
 output: |
   -2147483648
 ```
@@ -213,10 +213,24 @@ A storage screen lists videos and shows the total space they use. Picture a tota
 
 Code in an Android app can call code written in Java. The Kotlin documentation says a Java `long` arrives in Kotlin as a `Long`. So a Java method that returns a `long` gives your Kotlin code a `Long`. This next part is our own reasoning: if you keep the running total in an `Int`, it wraps once it passes about 2 billion, and the screen shows a negative size.
 
+## Say it in an interview
+
+**Why does Kotlin not turn an `Int` into a `Long` for you?**
+The Kotlin documentation says numeric types are not subtypes of one another, and that Kotlin requires explicit conversions to avoid silent data loss and unexpected behavior. The cost is a few extra characters, such as `toLong()`. My own reasoning: the same rule works in both directions, so you never have to remember which direction is the safe one.
+
+**What do you get when you add 1 to the largest `Int`?**
+You get `-2147483648`. The documentation says the result wraps around because the value no longer fits in `Int`. It also says the compiler does not automatically produce an error, so nothing warns you. The trade-off is that the check is left to you.
+
+**How do you add two big `Int` sizes without wrapping?**
+Convert each number to `Long` first, then add, as in `first.toLong() + second`. Writing `(first + second).toLong()` is too late, because the sum already wrapped in an `Int`. My own reasoning: the slip must come before the sum.
+
+**What does `toInt()` do to a `Long` that is too big?**
+The documentation says a value converted to a smaller numeric type may not keep its original value. In a compiler run by the reviewer, `3000000000L.toInt()` gave `-1294967296`, the same number as the wrapped sum. So going from big to small is where you take the risk on purpose.
+
 ## Recap
 
 1. Kotlin makes you write `toLong()` before an `Int` can go where a `Long` is expected.
-2. An `Int` that goes past 2,147,483,647 wraps around to a negative number without any error.
+2. An `Int` sum past 2,147,483,647 wraps around to a negative number, and nothing reports an error.
 3. Convert each number to `Long` before you add them, not after.
 
 ## You can now
