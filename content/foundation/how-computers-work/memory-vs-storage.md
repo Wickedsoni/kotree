@@ -175,7 +175,9 @@ output: "In the filing cabinet (storage)"
 
 Picture a form you are filling in. You switch to the camera to scan something, then come back. The form is empty.
 
-While you were away, the form lived on the desk. The Android documentation says that as the system runs low on resources like memory, it kills processes in the cache. A process here is an app that is running, together with the memory it was given. The low memory page adds that, to the user, this looks like the app crashed, and it often skips the usual steps for saving state, so progress is lost.
+While you were away, the form lived on the desk. The Android documentation says that when the system runs low on memory, it ends the apps it was keeping out of sight.
+
+Android's own notes on this add that, to the user, it looks as if the app crashed. The app often gets no chance to save, so progress is lost.
 
 Storage has a similar rule. The Android documentation says that when the user uninstalls an app, the files saved in the app's own storage are removed. So a game's saved level survives a power cut, but not an uninstall.
 

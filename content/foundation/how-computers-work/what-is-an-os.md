@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 6
 requires: [foundation/how-computers-work/what-is-a-cpu, foundation/how-computers-work/memory-vs-storage]
-summary: One trusted program starts first and hands out the screen, the memory and the hardware, so apps never trample each other.
+summary: One trusted program starts first and hands out the screen, the memory and the hardware, so apps keep out of each other's way.
 video: ""
 publishedOn:
 updatedOn:
@@ -35,7 +35,7 @@ Think of an apartment building with a manager.
 
 Tenants never walk into each other's flats. If a tenant wants the noticeboard, or anything else shared, they ask the manager.
 
-**Where the analogy stops:** A building manager is a person who stands outside and watches. The program that does this job is software. It runs on the same processor as the apps, and it starts before any of them. Also, a building has fixed flats. On a phone, a flat is made when an app starts and handed back when the app is gone.
+**Where the analogy stops:** A building manager is a person who stands outside and watches. The program that does this job is software. It runs on the same processor (the CPU) as the apps, and it starts before any of them. Also, a building has fixed flats. On a phone, a flat is made when an app starts and handed back when the app is gone. And some things are shared on purpose: Android lets apps share parts of memory that hold the same system code, but not the private working area of each app.
 
 ## See it move
 
@@ -46,7 +46,7 @@ Tenants never walk into each other's flats. If a tenant wants the noticeboard, o
 2. Drag one app towards another app's flat. See what the manager does.
 3. Press "Remove the manager" and let the apps ask again.
 
-**What you should notice:** With the manager, each app gets its own flat and a turn on the noticeboard; with the manager removed, apps land on the same flat and the same board and their things overlap.
+**What you should notice:** With the manager, each app gets its own flat and a turn on the noticeboard. With the manager removed, apps land on the same flat and their things overlap.
 
 ## Build the logic
 
@@ -81,7 +81,7 @@ The trusted program is the **operating system**, or OS for short. It manages the
 
 The core of an operating system is its **kernel**. The Android documentation says the foundation of Android is the Linux kernel.
 
-A running app, together with the memory the OS has given it, is a **process**. The Android documentation says that when one of an app's parts starts and the app has nothing else running, the system starts a new process for that app.
+A running app, together with the memory the OS has given it, is a **process**. The Android documentation says that when an app starts and has nothing else running, the system starts a new process for it.
 
 When an app needs something outside its own area, such as information about you, the OS asks you first. That is a **permission**.
 
@@ -191,7 +191,7 @@ output: "A message from the system, where you choose whether to allow it"
 
 ## Where this shows up in Android
 
-You install a new photo app and open it. A small box appears, asking if the app may use your camera. That box comes from the system, not from the app. It is the manager asking you before it hands over a key. The Android documentation says every Android app runs in a limited-access sandbox, and an app that needs something outside it must ask.
+You install a new photo app and open it. A small box appears, asking if the app may use your camera. That box comes from the system, not from the app. It is the manager asking you before it hands over a key. The Android documentation says every Android app runs in a limited-access area, which it calls a **sandbox**, and an app that needs something outside it must ask.
 
 The same manager explains a second symptom. You switch from a game to the camera and back, and the game starts from the title screen. Android may shut down a process when other processes need the resources more, so the manager took back a flat. Anything the game had not saved went with it.
 

@@ -58,7 +58,7 @@ The computer follows one instruction at a time, as you saw with the CPU. So why 
 - B. It has no unwritten knowledge. It has the steps it was given, and nothing else.
 - C. It could guess, but it chooses not to.
 
-Idea A feels right because some apps seem to guess well. But behind each of those, people wrote exact steps for the guessing. Idea C gives the computer a choice it does not have. Idea B is the answer.
+Idea A feels right because some apps do accept a sloppy note. But the guessing was built in ahead of time, as exact steps written by people. The computer that runs it still follows exact steps. Idea C gives the computer a choice it does not have. Idea B is the answer.
 
 ### Build
 
@@ -179,7 +179,7 @@ output: "The robot cannot do step 2, because it does not know the word"
 
 ## Common mistakes
 
-- **Expecting the computer to figure out what you meant.** Spell-check and voice assistants feel like mind-reading. But people wrote exact steps for those too. Next time, ask: which step did I leave out?
+- **Expecting the computer to figure out what you meant.** Spell-check and voice assistants feel like mind-reading. But their guessing was built from exact steps too. Next time, ask: which step did I leave out?
 - **Skipping steps that feel too small to write.** To you, "put cheese on the bread" hides picking up the cheese. The robot has no hidden steps. Write each one.
 - **Treating one wrong letter as a small slip.** A person reads "chese" and moves on. The robot reads an unknown word and stops. In code, a single character can be the whole problem.
 
@@ -187,7 +187,7 @@ output: "The robot cannot do step 2, because it does not know the word"
 
 Think of a Like button in an app that does nothing when you tap it. Somebody wrote the order slip for that tap. If a step is missing, or a word is wrong, the app does what the slip says, and the slip says nothing useful.
 
-Android apps are written in code like the program above. The Android documentation says Kotlin is fully supported for Android development, and that Android's modern UI toolkit is built on Kotlin. So the exactness you met here is the same exactness behind every screen on a phone.
+Android apps are written in code like the program above. The Android documentation says Kotlin is fully supported for Android development. So the exactness you met here is the same exactness behind every screen on a phone.
 
 ## Recap
 

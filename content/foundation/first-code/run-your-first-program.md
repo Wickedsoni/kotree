@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 8
 requires: [foundation/first-code/what-is-code]
-summary: You can type a Kotlin program into a web page, press Run, and read the answer. No project and no setup.
+summary: You can type a Kotlin program into a web page, press Run, and read the answer. There is no project to create.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: (1) NOT COMPILED OR RUN: no shell in this session. Every kotlin block and every challenge block here is UNVERIFIED until run on Kotlin 2.4.21 (docs/06 section 5). The Break step (println misspelled as printn) and the Fix the bug program (missing closing quote) are expected to fail to compile; confirm by running, and do not quote the message. (2) Roadmap note: confirm that the Kotlin Playground still embeds and runs without login and without anything to install on the publish date. play.kotlinlang.org did not load from this session. The body says only what kotlinlang.org says: it is an online application in the browser, and you need no project or build. (3) The body says Run needs an internet connection; this follows from the Playground being an online application (docs/06 section 2.3), not from a sentence in kotlinlang.org. (4) The sim list is empty on purpose: the roadmap row says the live Playground on the page is the demo.
+<!-- ⚠️ VERIFY: (1) NOT COMPILED OR RUN: no shell in this session. Every kotlin block and every challenge block here is UNVERIFIED until run on Kotlin 2.4.21 (docs/06 section 5). The Break step (println misspelled as printn) and the Fix the bug program (missing closing quote) are expected to fail to compile; confirm by running, and do not quote the message. (2) Roadmap note: confirm that the Kotlin Playground still embeds and runs without login and without anything to install on the publish date. play.kotlinlang.org did not load from this session. The body says only what kotlinlang.org says: it is an online application in the browser, and you need no project or build. (3) The body says Run needs an internet connection; this follows from the Playground being an online application (docs/06 section 2.3), not from a sentence in kotlinlang.org. (4) Try it holds no code fence: how a Try it fence becomes runnable is open (docs/06 E7), so step 1 points at the first Predict item. (5) The sim list is empty on purpose: the roadmap row says the live Playground on the page is the demo.
 Checked on 21 Oct 2026 against: https://kotlinlang.org/docs/run-code-snippets.html ("Kotlin Playground is an online application for writing, running, and sharing Kotlin code in your browser."; "there's no need to create a new project and build it."; "Write the executable part in the body of the main() function."); https://kotlinlang.org/docs/kotlin-tour-hello-world.html ("The main() function is where your program starts from"; "println() and print() functions print their arguments to standard output"); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println "Prints the given message and the line separator to the standard output stream."); https://kotlinlang.org/docs/strings.html ("To declare a String literal, enclose the value in double quotes"); https://developer.android.com/kotlin ("Android's modern UI toolkit is built on Kotlin."); https://developer.android.com/studio/debug/logcat (Logcat shows "messages that you added to your app with the Log class"; the page does not mention println). -->
 ## The question
 
@@ -152,14 +152,7 @@ output: |
 
 ## Try it
 
-1. **Write.** Type this program into the editor.
-
-```kotlin
-fun main() {
-    println("My first program ran")
-}
-```
-
+1. **Write.** Copy the program from the first Predict item into the editor. Change the text between the quote marks to `My first program ran`. Keep the quote marks.
 2. **Run.** Press Run. The output area shows `My first program ran` on one line.
 3. **Break.** Change exactly one thing: change `println` to `printn`. Press Run again. The program does not run, and the editor shows an error message instead of your text.
 4. **Fix.** Change `printn` back to `println` and press Run. You should see `My first program ran` again. The error was one wrong letter in a word the helper has to know.
@@ -233,9 +226,9 @@ For this code, question 3 and question 4 have short answers: no null values are 
 
 The Playground runs plain Kotlin, not Android apps. A real Android app is built with Android Studio, which you meet in the last lesson of this part of the course.
 
-The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Android's modern UI toolkit is built on Kotlin. So a button that does nothing on a phone is, deep down, a few missing or wrong lines like these.
+The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Kotlin is fully supported for Android development. So a button that does nothing on a phone is, deep down, a few missing or wrong lines like these.
 
-An app has no output area under a button. To see what an app is doing, developers read Logcat, a window in Android Studio. The Android documentation says Logcat shows messages that you added to your app with the Log class, plus system messages. It plays the same part as the output area: the place where you read the reply.
+An app has no output area under a button. To see what an app is doing, developers read Logcat, a window in Android Studio. The Android documentation says Logcat shows messages that the developer added to the app, plus messages from the system. It plays the same part as the output area: the place where you read the reply.
 
 ## Recap
 
