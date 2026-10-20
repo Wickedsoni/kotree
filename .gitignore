@@ -2,6 +2,8 @@
 .gradle/
 build/
 **/build/
+# the buildSrc Kotlin package is named ...build (source, not output)
+!buildSrc/src/**/build/
 /site/.kobweb/*
 !/site/.kobweb/conf.yaml
 .kotlin/
@@ -24,3 +26,4 @@ local.properties
 .env
 .env.*
 !.env.example
+.claude/worktrees/
