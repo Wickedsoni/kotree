@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/types-overview.html (table of basic types and their definitions; everything is an object in the sense that you can call members on any variable); kotlinlang.org/docs/numbers.html (Int range; Int inferred if the value fits, otherwise Long; Double by default for floating-point literals; Float with f; numeric types are not subtypes of one another and need explicit conversions; 5 / 2 is 2; toInt, toDouble); kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/to-int.html (fractional part is rounded down towards zero); kotlinlang.org/docs/booleans.html (true and false); kotlinlang.org/docs/characters.html (single quotes; a Char is not a numeric type); kotlinlang.org/docs/kotlin-tour-basic-types.html (types tell the compiler what you are allowed to do); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (amountInput String, toDoubleOrNull, tipInput converted to Double, null when the field is empty). Own reasoning: why a price in an Int is wrong; the Android symptom. Outputs hand-traced, not compiled. -->
+<!-- SOURCES: kotlinlang.org/docs/types-overview.html (table of basic types and their definitions; everything is an object in the sense that you can call members on any variable); kotlinlang.org/docs/numbers.html (Int range; Int inferred if the value fits, otherwise Long; Double by default for floating-point literals; Float with f; numeric types are not subtypes of one another and need explicit conversions; 5 / 2 is 2; toInt, toDouble); kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/to-int.html (fractional part is rounded down towards zero); kotlinlang.org/docs/booleans.html (true and false); kotlinlang.org/docs/characters.html (single quotes; a Char is not a numeric type); kotlinlang.org/docs/kotlin-tour-basic-types.html (types tell the compiler what you are allowed to do); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (amountInput String, toDoubleOrNull, tipInput converted to Double, null when the field is empty). Interview section: kotlinlang.org/docs/numbers.html (Int and Long minimum and maximum values and bit sizes in the integer types table; division between integer values returns an integer and the compiler discards the fractional part; Int inferred if the value fits, otherwise Long). General knowledge, not from the Kotlin pages: Int overflow wraps around (Int.MAX_VALUE + 1 is -2147483648); a Double is approximate (0.1 + 0.2 prints 0.30000000000000004, a K2 run in review W5-a); money is often kept in a Long of cents or in BigDecimal. Own reasoning: why a price in an Int of whole units is wrong; the Android symptom. Outputs hand-traced, not compiled. -->
 ## The question
 
 Maya is writing a shop app. It must keep her age, the price 19.99, whether she is a student, her grade letter and her name. Are all five the same kind of thing? Which kind of value should each one be, and what goes wrong if you pick the wrong kind?
@@ -67,7 +67,7 @@ Each container label is a **type**: a rule about what kind of value a name can h
 
 Kotlin's types for these five facts are below.
 
-- **`Int`** holds whole numbers. Its range runs from -2,147,483,648 to 2,147,483,647.
+- **`Int`** holds whole numbers. Its smallest value is -2,147,483,648 and its largest is 2,147,483,647.
 - **`Double`** holds numbers with a fractional part. It is the type Kotlin picks for a number written with a point.
 - **`Boolean`** holds one of two values, `true` or `false`.
 - **`Char`** holds a single character, written in single quotes. The documentation says `Char` is not a numeric type.
@@ -185,12 +185,12 @@ output: "Int, Double, Char, String"
 - Count it: Int. Measure it: Double. On or off: Boolean.
 - Single quotes hold one character. Double quotes hold text.
 - A 3 in quotes is text, not a number.
-- Money has a part after the point, so it never goes in the egg box.
+- A price with cents does not fit an `Int` of whole units. The cents are cut off.
 
 ## Common mistakes
 
 - **Thinking every number is a number and the type does not matter.** All of them look like digits, so one container seems enough. But `5 / 2` and `5.0 / 2` give different answers. Choose the container for the job.
-- **Storing a price in an `Int`.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. Use a `Double` when the value has a part after the point.
+- **Storing a price in an `Int` of whole units.** A price looks like a count of coins. Converting 19.99 to an `Int` leaves 19. A `Double` keeps the .99 here. General knowledge, not from the Kotlin pages: a `Double` holds many decimals only approximately, so real money code often keeps cents in a `Long`, or uses `BigDecimal`, a type made for exact decimal numbers.
 - **Putting quotes around a number.** `"20"` looks like twenty. It is a `String`, a row of characters. My own reasoning: the type tells Kotlin what you may do with it, so arithmetic on text is not on offer.
 - **Treating a digit character as a number.** `'7'` shows a digit. The documentation says `Char` is not a numeric type.
 
@@ -198,7 +198,21 @@ output: "Int, Double, Char, String"
 
 The Android Tip Time codelab builds a screen with **Jetpack Compose**, the toolkit for building Android screens in Kotlin. The screen has a box where a person types the bill. The box gives the app its text, so the code holds it in a line like `var amountInput by remember { mutableStateOf("") }`. The words `remember` and `mutableStateOf` are Compose's way of keeping a value. The empty quotes mean the starting value is a `String`.
 
-The codelab then writes `val amount = amountInput.toDoubleOrNull() ?: 0.0` to turn that text into a `Double`. For its tip box, the codelab says the result could be null if the text field is empty, so the code supplies 0.0. My own reasoning: the typed 19.99 arrives as text, so the app cannot work out a tip until it is turned into a number.
+The codelab then writes `val amount = amountInput.toDoubleOrNull() ?: 0.0` to turn that text into a `Double`. For its tip box, the codelab says the result could be `null`, which means no number, if the text field is empty. The `?:` mark means "otherwise use": if there is no number, the code uses 0.0. My own reasoning: the typed 19.99 arrives as text, so the app cannot work out a tip until it is turned into a number.
+
+## Say it in an interview
+
+**What are the sizes and limits of `Int` and `Long`?**
+`Int` takes 32 bits, the on-or-off switches a number is stored in, and holds -2,147,483,648 to 2,147,483,647. `Long` takes 64 bits and holds -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. The Kotlin numbers page lists both. For a plain whole number, Kotlin infers `Int` if it fits and `Long` if it does not.
+
+**Why is `5 / 2` equal to `2`?**
+The documentation says division between integer values always returns an integer, and the compiler discards the fractional part. To keep the .5, write `5.0 / 2`, which is a `Double`.
+
+**What happens when an `Int` goes past its maximum?**
+General knowledge: it wraps around, so `Int.MAX_VALUE + 1` gives -2147483648. If a count can pass about two billion, use a `Long`. The trade-off is memory: a `Long` is 64 bits and an `Int` is 32.
+
+**Should money be stored in a `Double`?**
+General knowledge: usually not. A `Double` holds many decimals only approximately, and `0.1 + 0.2` prints `0.30000000000000004`. Real code often keeps cents in a `Long`, or uses `BigDecimal`, a type made for exact decimal numbers.
 
 ## Recap
 

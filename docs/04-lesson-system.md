@@ -20,7 +20,7 @@ A lesson page has two kinds of parts. **Authored** parts are written in the leaf
 | 1 | Breadcrumb `Kotree › Bough › Branch › Stem` | Layout | Tree data (`docs/03` §6.3) | Always |
 | 2 | Title, difficulty chip ("Easy topic" / "Medium topic" / "Hard topic"), progress line | Layout | Frontmatter `title`, `difficulty`; counts (`docs/03` §8) | Always |
 | 3 | **Watch the video** button | Layout | Frontmatter `video` | Only when `video` is non-empty (L26) |
-| 4 | Authored body: the 12 sections in §4 | Authored | The leaf file | Always (some sections may be left out, §4) |
+| 4 | Authored body: the 13 sections in §4 | Authored | The leaf file | Always (some sections may be left out, §4) |
 | 5 | **Video section** (click-to-load player, `docs/07` §6.5) | Layout | Frontmatter `video` | Only when `video` is non-empty (L26) |
 | 6 | "I finished this" toggle (the wording of `docs/03` §6.1 and §9) | Layout | Local storage (`docs/03` §9) | When local storage works |
 | 7 | Previous / Next, "Back to the tree" | Layout | Tree data (`docs/03` §6.3) | Always |
@@ -147,9 +147,9 @@ Never say AI is bad. Say: the person who can check it is the person who stays in
 
 ---
 
-## 4. The twelve body sections
+## 4. The thirteen body sections
 
-Heading names are exact (`## ` level). Order is fixed. The same twelve names appear in `content/_templates/leaf.md`.
+Heading names are exact (`## ` level). Order is fixed. The same thirteen names appear in `content/_templates/leaf.md`.
 
 | # | Heading | Required? | Job |
 |---|---|---|---|
@@ -163,8 +163,9 @@ Heading names are exact (`## ` level). Order is fixed. The same twelve names app
 | 8 | `## Tricks to remember` | Always | Memory aids (L13). |
 | 9 | `## Common mistakes` | Always | Known wrong turns, as clues. |
 | 10 | `## Where this shows up in Android` | Always | Link to a real app symptom. |
-| 11 | `## Recap` | Always | Three lines. |
-| 12 | `## You can now` | Always | Self-test abilities (`docs/01` §6.2). |
+| 11 | `## Say it in an interview` | Always | 3 to 4 real interviewer questions with short plain-words model answers (why and trade-off). Decision L33. |
+| 12 | `## Recap` | Always | Three lines. |
+| 13 | `## You can now` | Always | Self-test abilities (`docs/01` §6.2). |
 
 A section that may be left out is **removed with its heading**. A heading with no content never ships. A theory leaf with `playground: false` has no Try it and no Fix the bug; its Predict the output items are paper-and-pencil (count steps, trace a table): `challenge` blocks with `run: false`, with the answers written in the block.
 
@@ -410,8 +411,8 @@ Extra writing rules for lessons:
 
 ## 9. Acceptance criteria for this system
 
-- [ ] `content/_templates/leaf.md` has the frontmatter of `docs/00` §8.2 and exactly the twelve `## ` headings of §4, in the same order and with the same names. (Check with: list lines starting `## ` in the template and compare to the table in §4.)
-- [ ] The worked example in §10 has the same twelve headings (the optional three are present because the example has a sim and runnable code).
+- [ ] `content/_templates/leaf.md` has the frontmatter of `docs/00` §8.2 and exactly the thirteen `## ` headings of §4, in the same order and with the same names. (Check with: list lines starting `## ` in the template and compare to the table in §4.)
+- [ ] The worked example in §10 has the same thirteen headings (the optional three are present because the example has a sim and runnable code).
 - [ ] The template explains in a comment that `video: ""` means no video button and no video section, and that the author never writes a Video heading.
 - [ ] The template has no Capstone section and no previous/next section.
 - [ ] The template and the worked example use `challenge` blocks (`docs/06` §3) and contain no `<!-- CHALLENGE -->` comment.

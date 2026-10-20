@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (val is assigned a value only once and cannot be reassigned; var can be reassigned; x += 1); kotlinlang.org/docs/kotlin-tour-hello-world.html (read-only variables with val, mutable with var, "You can't change a read-only variable once you have given it a value"); kotlinlang.org/docs/collections-overview.html (write operations on a mutable collection are still possible when it is assigned to a val; reassigning a val collection is a compilation error; "Use val as much as possible for safer and more robust code"); developer.android.com/develop/ui/compose/state (var name by remember { mutableStateOf("") }; TextField updates when its value parameter changes; changes to value make the functions that read it run again). Own reasoning: a val line cannot sit in the place that reassigns it in the Compose example; var for a name that never changes still runs. Outputs hand-traced, not compiled. Sim differs from the roadmap row: mugs and tags, not jars. -->
+<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (val is assigned a value only once and cannot be reassigned; var can be reassigned; x += 1); kotlinlang.org/docs/kotlin-tour-hello-world.html (read-only variables with val, mutable with var, "You can't change a read-only variable once you have given it a value"); kotlinlang.org/docs/collections-overview.html (write operations on a mutable collection are still possible when it is assigned to a val; reassigning a val collection is a compilation error; "Use val as much as possible for safer and more robust code"); developer.android.com/develop/ui/compose/state (var name by remember { mutableStateOf("") }; TextField updates when its value parameter changes; changes to value make the functions that read it run again). Own reasoning: a val line cannot sit in the place that reassigns it in the Compose example; var for a name that never changes still runs. Outputs hand-traced, not compiled. Sim differs from the roadmap row: mugs and tags, not jars. Interview section: same basic-syntax, collections and Compose state pages; the Compose state page lists three equivalent MutableState declarations: val mutableState = remember { mutableStateOf(default) }, var value by remember { mutableStateOf(default) }, val (value, setValue) = remember { mutableStateOf(default) }. Own reasoning: fewer places to look with a val; the by form needs a var because of name = it. -->
 ## The question
 
 A game keeps two facts. The title, Space Run, never changes. The number of lives starts at 3 and drops each time the player is hit. Both facts need a name in the program. Should both names behave the same way, or should one of them be locked?
@@ -192,15 +192,29 @@ output: "Moon Walk: 6 steps left"
 
 ## Common mistakes
 
-- **Thinking `val` means the value can never change inside.** The word read-only sounds like frozen. The collections page says write operations on a mutable collection are still possible when it is assigned to a `val`. The tag is locked, and the tea can still change. Ask what the name points at.
+- **Thinking `val` means the value can never change inside.** The word read-only sounds like frozen. The Kotlin collections page shows a list you can add to, assigned to a `val`. Adding to it is allowed. Only giving the name a different list is refused. The tag is locked, and the tea can still change. Ask what the name points at.
 - **Using `var` everywhere, to be safe.** It feels safe because it always compiles. But then any step can change any name. Use `val` first and let the program tell you when a `var` is needed.
 - **Using `val` for a counter.** A counter looks like a fact you set once. It changes every round. If a name must point at a new number, give it a whiteboard tag.
 
 ## Where this shows up in Android
 
-The Android documentation for **Jetpack Compose**, the toolkit for building Android screens in Kotlin, keeps the text a person types in a line like `var name by remember { mutableStateOf("") }`. The words `remember` and `mutableStateOf` are Compose's way of keeping a value. Here only the first word, `var`, matters.
+**Jetpack Compose** is the toolkit for building Android screens in Kotlin. Its Android documentation keeps the text a person types in a line like `var name by remember { mutableStateOf("") }`. The words `remember` and `mutableStateOf` are Compose's way of keeping a value. Here only the first word, `var`, matters.
 
-The text in a box changes as the person types, so its name needs a whiteboard tag. My own reasoning: in the same example, `onValueChange = { name = it }` hands the new text to `name`, and that kind of reassignment is refused for a `val`. The page also warns what happens when the state is not updated: you try to enter text and nothing happens, because the box updates when its `value` changes.
+The text in a box changes as the person types. In this line, the name itself is given a new value each time, so it needs a whiteboard tag. My own reasoning: in the same example, `onValueChange = { name = it }` hands the new text to `name`, and that kind of reassignment is refused for a `val`. The page also warns what happens when the state is not updated: you try to enter text and nothing happens, because the box updates when its `value` changes.
+
+## Say it in an interview
+
+**What is the difference between `val` and `var`?**
+A `val` is assigned a value only once and cannot be reassigned. A `var` can be reassigned. The Kotlin documentation calls them read-only and mutable variables.
+
+**Why prefer `val`?**
+The collections page says to use `val` as much as possible for safer and more robust code. My own reasoning: with a `val`, no later line can change which value the name means, so there are fewer places to look when a value is wrong. The trade-off: when a value must change, such as a counter, you need a `var`.
+
+**Is `val` the same as immutable?**
+No. A `val` stops the name from being reassigned. The collections page shows a list you can add to, assigned to a `val`. Adding to it is allowed, and only giving the name a different list is refused. So `val` locks the tag, not what is inside.
+
+**In Compose, `var name by remember { mutableStateOf("") }` uses `var`. Could it use `val`?**
+In another form, yes. Compose keeps the text a person types in state, which is a value the screen reads. The Compose state page lists three equivalent ways to declare it, and one is `val mutableState = remember { mutableStateOf(default) }`. There the `val` keeps the name fixed and the value inside the state changes. My own reasoning: with `by`, the code writes `name = it`, so that form needs a `var`.
 
 ## Recap
 

@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: developer.android.com/topic/performance/vitals/launch-time (cold, warm and hot start; cold start happens when the app launches for the first time since boot or since the system killed it; the system shows a blank starting window, creates the app process; the app process creates the app object, launches the main thread, creates the main activity, initializes the UI, draws the UI; after the first draw the system swaps the background window for the main activity; warm start is a subset of cold start, hot start has lower overhead and brings the host activity to the foreground; time to initial display is the time to display the first frame); developer.android.com/guide/components/fundamentals (each app runs in its own Linux process; the system starts the process when a component needs to run and shuts it down when it is no longer needed or when memory is needed; when the system starts a component it starts the process if it is not already running); developer.android.com/guide/components/processes-and-threads (the main thread is in charge of dispatching events to user interface widgets, including drawing events; Android might shut down a process when resources are needed by other processes); developer.android.com/guide/components/activities/intro-activities (one activity is the main activity, the first screen when the user launches the app). Own reasoning: the hotel pictures; the home screen passing the tap to the system; the slower first open after a restart fitting a cold start. Hand-traced, no code. -->
+<!-- SOURCES: developer.android.com/topic/performance/vitals/launch-time (cold, warm and hot start; cold start happens when the app launches for the first time since boot or since the system killed it; the system shows a blank starting window, creates the app process; the app process creates the app object, launches the main thread, creates the main activity, initializes the UI, draws the UI; after the first draw the system swaps the background window for the main activity; warm start is a subset of cold start, hot start has lower overhead and brings the host activity to the foreground; time to initial display is the time to display the first frame); developer.android.com/guide/components/fundamentals (each app runs in its own Linux process; the system starts the process when a component needs to run and shuts it down when it is no longer needed or when memory is needed; when the system starts a component it starts the process if it is not already running); developer.android.com/guide/components/processes-and-threads (the main thread is in charge of dispatching events to user interface widgets, including drawing events; Android might shut down a process when resources are needed by other processes); developer.android.com/guide/components/activities/intro-activities (one activity is the main activity, the first screen when the user launches the app). Own reasoning: the hotel pictures; the home screen passing the tap to the system; the slower first open after a restart fitting a cold start. Interview section: same launch-time page (cold, warm, hot; system tasks listed as load and launch, blank starting window, create process; five app-process steps; time to initial display) and fundamentals page (process started when a component needs it, shut down when no longer needed or memory is needed). Own reasoning: why the blank window helps; the card is listed before the room in the documentation but the page does not time the list strictly, so the text is order-neutral. General knowledge: the plain meaning of "process". Hand-traced, no code. -->
 ## The question
 
 You tap an app icon. A moment later the app's first screen appears. What did the phone do in that moment? Was the app already running and waiting for your tap, or did something start from nothing?
@@ -26,7 +26,7 @@ Think of ringing the bell at a hotel front desk.
 
 - You are the guest. The tap is the bell.
 - The manager at the desk is the Android system.
-- A room is a private place for the app to run in. It is the app's process.
+- A room is a private place for the app to run in. It stands for a running copy of the app.
 - A blank welcome card in the doorway is what the guest sees while the room is being made ready.
 - The staff in the room do their jobs in a fixed order. One waiter handles everything the guest sees and touches.
 - The lounge is the first screen of the app. The lights coming on are the first draw.
@@ -67,17 +67,17 @@ Idea A is the common guess. It is sometimes true, which is why the second tap wa
 1. You ring the bell. This is the tap. My own simplification: the page I read starts at the system, so I leave out the home screen handing your tap on.
 2. The manager checks whether the app already has a room open.
 3. If a room is open, the manager takes you to it. Fewer jobs are needed, so it is quicker.
-4. If no room is open, the manager gets a new one ready.
-5. At once, the manager hangs the blank welcome card in the doorway.
+4. If no room is open, the manager starts getting a new one ready.
+5. Straight away, the manager hangs the blank welcome card in the doorway. The documentation lists the card before the room is made. My own reasoning: the two happen close together.
 6. In the room, the staff do five jobs in order. They set up the desk book, call the waiter, open the lounge, set out the furniture and switch on the lights.
 7. When the lights come on, the manager takes down the card. You see the lounge.
 8. Later the manager may close a room that is not needed, so the next ring starts again from step 4.
 
 ### Name it
 
-A **process** is a running app together with the memory the system gave it. The Android documentation says each app runs in its own Linux process. It says the system starts the process when any of the app's parts need to run, and shuts it down when it is no longer needed or when the system must get memory back for other apps.
+A **process** is a running app together with the memory the system gave it. That plain meaning is general knowledge, not a quote from the Android pages. The Android documentation says that by default each app runs in its own Linux process. It says the system starts the process when any of the app's parts need to run. It shuts the process down when it is no longer needed, or when the system must get memory back for other apps.
 
-A start with no process is a **cold start**. The documentation says it means an app starting from scratch, such as the first launch since the phone booted or since the system killed the app. A start where the process is already there is lighter. The documentation says a **warm start** does a subset of the cold start's work, and a **hot start** has lower overhead still, because the system brings the app's main screen to the foreground.
+A start with no process is a **cold start**. The documentation says it means an app starting from scratch, such as the first launch since the phone booted or since the system killed the app. A start where the process is already there is lighter. The documentation says a **warm start** does a subset of the cold start's work. A **hot start** has lower overhead still, because the system brings the app's main screen to the foreground.
 
 At the start of a cold start the system shows a **starting window**, which the documentation describes as a blank window shown immediately after launch. Then the app process takes five steps, in the order the documentation gives them.
 
@@ -121,7 +121,7 @@ options:
   - id: c
     text: "Initialize the UI"
     correct: true
-    why: "The furniture is set out just before the lights come on. The documentation lists initializing the UI as the step right before drawing it."
+    why: "The furniture is set out right before the lights come on. The documentation lists initializing the UI as the step right before drawing it."
 output: "Initialize the UI"
 ```
 
@@ -141,7 +141,7 @@ options:
   - id: b
     text: "A blank starting window"
     correct: true
-    why: "The manager hangs the welcome card right after launch. The documentation says the system shows a blank starting window while the process is created."
+    why: "The manager hangs the welcome card right after launch. The documentation says the system shows a blank starting window immediately after launch."
   - id: c
     text: "The home screen, as if nothing was tapped"
     why: "You may have thought the phone ignores the tap until it is ready. The documentation says the system shows the blank window for the app immediately."
@@ -190,6 +190,20 @@ output: "Less work is needed, because the app is already partly or fully set up 
 You restart your phone and tap an app. It takes longer to appear than it did the day before. My own reasoning: this fits a cold start, because after a restart no room is open for the app yet.
 
 Android measures the wait. The documentation calls it time to initial display, the time it takes to display the first frame of the app's UI. It says the Android Framework reports it automatically for every app.
+
+## Say it in an interview
+
+**What are cold, warm and hot starts?**
+A cold start is an app starting from scratch, with no process yet. A warm start does a subset of that work. A hot start has lower overhead still, because the system only brings the app's screen to the foreground. The trade-off is time: the more has to be built, the longer the wait.
+
+**What happens between the tap and the first frame on a cold start?**
+The launch-time page lists the system's tasks as: load and launch the app, show a blank starting window, and create the app process. Then the app process creates the app object, launches the main thread, creates the main activity, initializes the UI and draws it. After the first draw, the system swaps the blank window for the main activity.
+
+**Why does the system show a blank window first?**
+My own reasoning: it answers the tap at once, so the phone does not look frozen while the process is made. The cost is that slow work in the five steps keeps the blank window up longer. The documentation measures this wait as time to initial display, the time to show the first frame.
+
+**Is an app always running in the background?**
+No. The documentation says the system starts the process when a component needs it. It may shut the process down when it is no longer needed or when memory is needed for other apps. So the next tap may be a cold start.
 
 ## Recap
 

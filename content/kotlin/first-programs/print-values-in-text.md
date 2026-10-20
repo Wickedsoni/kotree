@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/strings.html (string templates embed variables and expressions in a String literal; $ for a variable; ${} for an expression or for a variable next to other text; the + operator also combines strings but templates are usually easier to read and more idiomatic; "${language}Lang" prints KotlinLang); kotlinlang.org/docs/basic-syntax.html and kotlin-tour-hello-world.html (val; template expressions start with $); developer.android.com/develop/ui/compose/tutorial (Text(text = "Hello $name!") in MessageCard). Own reasoning: $name takes only the name, so .length stays plain text (derived from the strings page rule for ${}); what the screen shows without the $ in the Android section. Outputs hand-traced, not compiled. -->
+<!-- SOURCES: kotlinlang.org/docs/strings.html (string templates embed variables and expressions in a String literal; $ for a variable; ${} for an expression or for a variable next to other text; the + operator also combines strings but templates are usually easier to read and more idiomatic; "${language}Lang" prints KotlinLang); kotlinlang.org/docs/basic-syntax.html and kotlin-tour-hello-world.html (val; template expressions start with $); developer.android.com/develop/ui/compose/tutorial (Text(text = "Hello $name!") in MessageCard). Own reasoning: $name takes only the name, so .length stays plain text (derived from the strings page rule for ${}); what the screen shows without the $ in the Android section. Interview section: kotlinlang.org/docs/strings.html (the + operator creates a new String for each operation, which may not be beneficial in loops or when assembling many pieces; buildString and StringBuilder are the alternatives); kotlinlang.org/docs/characters.html (escape sequences table lists \$ as the dollar sign). Own reasoning: "$name" with an escaped dollar prints $name (derived from the escape rule, not run). Outputs hand-traced, not compiled. -->
 ## The question
 
 A sign-up page knows two facts about a person: the name Sam and the age 20. It must print "Hi, Sam, you are 20". Tomorrow the person is Ravi, who is 31, and the sentence must change by itself. How do you write one sentence that takes its values from somewhere else?
@@ -177,9 +177,23 @@ output: |
 
 ## Where this shows up in Android
 
-**Jetpack Compose** is the toolkit for building Android screens in Kotlin. The Android Compose tutorial has a function called `MessageCard` that is passed a name. Its body is `Text(text = "Hello $name!")`. A **`Text`** call puts a piece of text on the screen.
+**Jetpack Compose** is the toolkit for building Android screens in Kotlin. The Android Compose tutorial has a piece of code called `MessageCard`. It is given a name and runs the line `Text(text = "Hello $name!")`. A **`Text`** call puts a piece of text on the screen.
 
-That line is a string template. For Sam the screen shows `Hello Sam!`. For Ravi the same line shows `Hello Ravi!`. My own reasoning: if you forget the `$`, the screen shows `Hello name!`, because the letters are then just text.
+That line is a string template. For Sam the screen shows `Hello Sam!`. For Ravi the same line shows `Hello Ravi!`. My own reasoning: if you forget the `$`, the screen shows `Hello name!`, because the letters are then ordinary text.
+
+## Say it in an interview
+
+**What is a string template?**
+It is a string with `$name` or `${expression}` marks that Kotlin fills in. The Kotlin documentation says templates let you embed variables and expressions directly inside a piece of text in quotes.
+
+**Why use a template instead of the plus sign?**
+Both work. The documentation says templates are usually easier to read and more idiomatic. It also says that with the plus sign, Kotlin creates a new `String` for each join, which may not be beneficial in loops or when you join many pieces.
+
+**When do you need `${ }` instead of `$`?**
+When you insert an expression, or when a variable sits right next to other text. The documentation's example is `"${language}Lang"`, which prints `KotlinLang`.
+
+**How do you print a literal dollar sign?**
+The Kotlin characters page lists `\$` as the escape sequence for a dollar sign. So `"\$name"` prints `$name` and does not fill in a value.
 
 ## Recap
 

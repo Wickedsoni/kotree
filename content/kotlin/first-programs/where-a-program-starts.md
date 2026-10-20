@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (entry point is the main function; println adds a line break); kotlinlang.org/docs/kotlin-tour-hello-world.html (main is where the program starts; a function body is written in curly braces); developer.android.com/guide/components/fundamentals (each component is an entry point; activity is the entry point for interacting with the user and one screen; Android apps do not have a single entry point and there is no main()). Textbook, no single official page: other functions run only when called, and a call returns to the next line. Own reasoning: last paragraph of the Android section. Hand-traced, not compiled. -->
+<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (entry point is the main function; println adds a line break); kotlinlang.org/docs/kotlin-tour-hello-world.html (main is where the program starts; a function body is written in curly braces); developer.android.com/guide/components/fundamentals (each component is an entry point; activity is the entry point for interacting with the user and one screen; Android apps do not have a single entry point and there is no main()). Textbook, no single official page: other functions run only when called, and a call returns to the next line. Second form of main: kotlinlang.org/docs/basic-syntax.html (fun main(args: Array<String>), a variable number of String arguments). Interview section: same pages; the "no class needed" answer rests on the top-level main in the documentation's examples. Own reasoning: last paragraph of the Android section; the trade-off sentence in the last interview answer. General knowledge: what "arguments" means. Hand-traced, not compiled. -->
 ## The question
 
 You open a file with three blocks of steps, and each block has its own name. You press Run. Which block does the computer start with: the first one in the file, the biggest one, or another? And what happens to the other two?
@@ -68,7 +68,7 @@ Idea B is the most common guess. It feels right because we read files from the t
 
 ### Name it
 
-The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function.
+The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function. It shows two forms: `fun main()` and `fun main(args: Array<String>)`. The second accepts a variable number of `String` arguments, which means pieces of text handed to the program when it starts (that plain meaning is general knowledge). Both start the program. This lesson uses the short form.
 
 A **function** is a named block of steps. You write one with the keyword `fun`, then its name, then `()`, then the steps inside curly braces `{ }`. The function named **`main`** is the front door.
 
@@ -203,6 +203,20 @@ Open an Android app's code and you will not find one front door. The Android doc
 An **activity** is one such component. The documentation calls it the entry point for interacting with the user, and says it represents a single screen. The Android system, which is the part of the phone that runs apps, decides which component to start.
 
 My own reasoning: once the system has started a component, the rules from this lesson still hold inside your code. A function runs when some line calls it, and steps run from top to bottom. So when a function in an app never seems to run, the first check is the same. Does some line, in code the system started, call it?
+
+## Say it in an interview
+
+**What is the entry point of a Kotlin program, and what forms can it take?**
+The entry point is the `main` function. The Kotlin documentation shows two forms: `fun main()` and `fun main(args: Array<String>)`. The second accepts a variable number of `String` arguments, which are pieces of text handed to the program when it starts. Both start the program.
+
+**Does `main` have to sit inside a class, like in Java?**
+No. In Kotlin, `main` can be a top-level function, which means a function written straight in the file, not inside any class. The Kotlin documentation's examples do exactly that.
+
+**Does a function written above `main` run first?**
+No. Only a call decides when a function runs. The order in the file is not the order of running. A function that nobody calls never runs.
+
+**Why does an Android app have no `main`?**
+The Android documentation says Android apps don't have a single entry point: there's no `main()` function. Each component is an entry point, and the system decides which one to start. My own reasoning: the trade-off is that your code can be entered at a screen, a service or a broadcast, so you cannot assume one fixed start.
 
 ## Recap
 

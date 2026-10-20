@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-hello-world.html (the body of a function is written within curly braces); kotlinlang.org/docs/control-flow.html (the condition of an if goes in parentheses and the action in curly braces); kotlinlang.org/docs/basic-syntax.html (single-line and block comments; block comments can be nested); kotlinlang.org/docs/coding-conventions.html (four spaces for indentation; omit semicolons whenever possible; semicolons are optional, so line breaks are significant); developer.android.com/develop/ui/compose/tutorial (Column arranges elements vertically; Column example with two Text calls). Own reasoning: indentation does not decide membership of a block (the pages give braces for blocks and list indentation as a style rule); an unclosed brace stops the file from compiling; the Android symptom. Outputs hand-traced, not compiled. -->
+<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-hello-world.html (the body of a function is written within curly braces); kotlinlang.org/docs/control-flow.html (the condition of an if goes in parentheses and the action in curly braces); kotlinlang.org/docs/basic-syntax.html (single-line and block comments; block comments can be nested); kotlinlang.org/docs/coding-conventions.html (four spaces for indentation; omit semicolons whenever possible; semicolons are optional, so line breaks are significant); developer.android.com/develop/ui/compose/tutorial (Column arranges elements vertically; Column example with two Text calls). Own reasoning: indentation does not decide membership of a block (the pages give braces for blocks and list indentation as a style rule); an unclosed brace stops the file from compiling; the Android symptom. Interview section: same coding-conventions and basic-syntax pages (four spaces; semicolons optional so line breaks are significant; nested block comments). Own reasoning: a badly indented file still compiles; why nested comments help. General knowledge: statement versus block. Outputs hand-traced, not compiled. -->
 ## The question
 
 A Kotlin file is full of curly braces, the { and } marks, and some sit inside others. One line is pushed far to the right, so it looks as if it belongs to the group of steps above it. Which braces belong together, and which lines sit inside which group? Does how far a line is pushed to the right decide it?
@@ -67,7 +67,7 @@ Idea B is a common guess, because tidy files do push inner slips to the right. I
 
 ### Name it
 
-A group of steps between `{` and `}` is a **block**. The Kotlin tour says the body of a function is written within curly braces. The documentation for `if` says the condition goes in parentheses and the action to take goes in curly braces.
+A group of steps between `{` and `}` is a **block**. The Kotlin tour says the steps of a function are written within curly braces. The documentation for `if` says the check goes in parentheses and the action to take goes in curly braces.
 
 An **`if`** runs the steps in its block only when the question in the parentheses `( )` is answered yes. In `if (hour < 12)` the question is "is hour smaller than 12?". The line `val hour = 9` gives the name `hour` to the number 9.
 
@@ -198,6 +198,20 @@ output: |
 **Jetpack Compose** is the toolkit for building Android screens in Kotlin, and its code is blocks inside blocks. The Android Compose tutorial uses `Column`, which it says lets you arrange elements vertically. Its example puts two `Text` calls, each of which shows a piece of text, between the braces of `Column`. One shows an author and the other shows a message body.
 
 My own reasoning: if a closing brace lands one line too early, the second `Text` is no longer inside `Column`. A screen can then look wrong, with a piece of text away from the rest, while the file still compiles. Counting the lids shows which block each call is in.
+
+## Say it in an interview
+
+**Does indentation matter in Kotlin, like in Python?**
+No. Braces decide which lines belong to a block. The coding conventions say to use four spaces for indentation, which is a style rule for people. My own reasoning: a badly indented file can still compile and mislead the reader, so keep it tidy.
+
+**Do you need semicolons?**
+No. The coding conventions say semicolons are optional and tell you to omit them whenever possible. They add that line breaks are therefore significant.
+
+**Can comments be nested?**
+Yes. The Kotlin basic syntax page says block comments can be nested. My own reasoning: this lets you comment out code that already holds a block comment.
+
+**What is the difference between a statement and a block?**
+A statement is one instruction, such as a `println` call. A block is a group of statements between `{` and `}`. This is general knowledge, in the plain words of this lesson.
 
 ## Recap
 

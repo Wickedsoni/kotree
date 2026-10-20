@@ -1,6 +1,7 @@
 package dev.kotree.site.ui.topics
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +66,9 @@ fun BranchCard(
     forceAll: Boolean,
     onOpenStem: (Stem) -> Unit,
 ) {
-    var showAll by remember(forceAll) { mutableStateOf(forceAll) }
+    var showAll by remember { mutableStateOf(forceAll) }
+    // A hash that points past the first six opens the disclosure; it never closes it again.
+    LaunchedEffect(forceAll) { if (forceAll) showAll = true }
     val ink = branchInk(branch.id).value().toString()
     val titleId = "${branch.id}-title"
     val stems = branch.stems.sortedBy { it.order }

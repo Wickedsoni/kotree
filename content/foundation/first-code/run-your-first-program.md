@@ -10,13 +10,20 @@ video: ""
 publishedOn:
 updatedOn:
 sims: []
-playground: true
+playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: (1) NOT COMPILED OR RUN: no shell in this session. Every kotlin block and every challenge block here is UNVERIFIED until run on Kotlin 2.4.21 (docs/06 section 5). The Break step (println misspelled as printn) and the Fix the bug program (missing closing quote) are expected to fail to compile; confirm by running, and do not quote the message. (2) Roadmap note: confirm that the Kotlin Playground still embeds and runs without login and without anything to install on the publish date. play.kotlinlang.org did not load from this session. The body says only what kotlinlang.org says: it is an online application in the browser, and you need no project or build. (3) The body says Run needs an internet connection; this follows from the Playground being an online application (docs/06 section 2.3), not from a sentence in kotlinlang.org. (4) Try it holds no code fence: how a Try it fence becomes runnable is open (docs/06 E7), so step 1 points at the first Predict item. (5) The sim list is empty on purpose: the roadmap row says the live Playground on the page is the demo.
-Checked on 21 Oct 2026 against: https://kotlinlang.org/docs/run-code-snippets.html ("Kotlin Playground is an online application for writing, running, and sharing Kotlin code in your browser."; "there's no need to create a new project and build it."; "Write the executable part in the body of the main() function."); https://kotlinlang.org/docs/kotlin-tour-hello-world.html ("The main() function is where your program starts from"; "println() and print() functions print their arguments to standard output"); https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println "Prints the given message and the line separator to the standard output stream."); https://kotlinlang.org/docs/strings.html ("To declare a String literal, enclose the value in double quotes"); https://developer.android.com/kotlin ("Android's modern UI toolkit is built on Kotlin."); https://developer.android.com/studio/debug/logcat (Logcat shows "messages that you added to your app with the Log class"; the page does not mention println). -->
+<!-- SOURCES (housekeeper strips this comment at go-live). Checked on 20 Oct 2026 against:
+https://kotlinlang.org/docs/run-code-snippets.html ("Kotlin Playground is an online application for writing, running, and sharing Kotlin code in your browser."; "there's no need to create a new project and build it."; "Write the executable part in the body of the main() function."; "IntelliJ IDEA and Android Studio support Kotlin scratch files."; the page has no statement about login or installing the Playground);
+https://kotlinlang.org/docs/kotlin-tour-hello-world.html ("The main() function is where your program starts from"; "println() and print() functions print their arguments to standard output"; the page does not say how the two differ);
+https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/println.html (println "Prints the given message and the line separator to the standard output stream.");
+https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/print.html (print "Prints the given message to the standard output stream.");
+https://kotlinlang.org/docs/strings.html ("To declare a String literal, enclose the value in double quotes");
+https://developer.android.com/kotlin ("Kotlin is fully supported for Android development");
+https://developer.android.com/studio/debug/logcat (Logcat shows "messages that you added to your app with the Log class, messages from services that run on Android, or system messages"; the page does not mention println).
+Run status: the Name it block and the three Predict items were hand-traced only, not compiled (no shell in the authoring session). Predict items are run: false, verified: not-run. The Playground is not built on this site yet, so the page has no editor. -->
 ## The question
 
 By now you know that a computer needs exact instructions. Now you want to try some. You have a laptop with a web browser, and nothing else.
@@ -34,7 +41,7 @@ Think of writing a note and pressing a doorbell.
 
 You write, you ring, you read the reply. If the note has a mistake, the reply is a complaint instead of an answer. You fix the note and ring again.
 
-**Where the analogy stops:** A real doorbell does not read anything. Run sends your whole note away to be carried out, and it needs an internet connection to do that. Also, a real helper might guess what you meant. This one never does, as you saw in the last lesson.
+**Where the analogy stops:** A real doorbell does not read anything. Run sends your whole note away to be carried out, so it needs an internet connection. A real helper might also guess what you meant. This one never does, as you saw in the last lesson. And this page has no doorbell of its own: you ring it on another web page, which you will find below.
 
 ## Build the logic
 
@@ -77,12 +84,19 @@ fun main() {
 
 This program prints `Hi`. The quote marks mark where the text begins and ends, and they are not printed.
 
+**Where you press Run today.** This page cannot run code for you. To ring the doorbell yourself, open the Kotlin Playground at `play.kotlinlang.org`, which is the address the Kotlin documentation gives. Paste the program above and press Run.
+
+The Kotlin documentation names one more quick way. IntelliJ IDEA and Android Studio support Kotlin scratch files, which run drafts on the fly. That needs an installed tool, so start with the Playground.
+
 ## Predict the output
+
+Read each program and choose an answer before you open the explanation. You need no editor for these.
 
 ```challenge
 type: predict
+run: false
 id: print-hi
-verified: "UNVERIFIED: compile not run"
+verified: not-run
 code: |
   fun main() {
       println("Hi")
@@ -98,115 +112,58 @@ options:
   - id: c
     text: "println(\"Hi\")"
     why: "You may have expected the line itself to come back. The reply is what the line prints, not the line."
-output: |
-  Hi
+output: "Hi"
 ```
 
 ```challenge
 type: predict
+run: false
 id: text-is-not-sum
-verified: "UNVERIFIED: compile not run"
+verified: not-run
 code: |
   fun main() {
       println("2 + 3")
   }
 options:
   - id: a
-    text: "5"
-    why: "You may have expected the computer to add. Anything between quotes is text and is copied as it is."
-  - id: b
     text: "2 + 3"
     correct: true
     why: "The quotes say copy this exactly. The helper behind the door copies the text and does no sums on it."
+  - id: b
+    text: "5"
+    why: "You may have expected the computer to add. Anything between quotes is text and is copied as it is."
   - id: c
     text: "The program stops, because 2 + 3 is not a word"
     why: "You may have thought text must be a word. Any characters between the quotes are fine."
-output: |
-  2 + 3
+output: "2 + 3"
 ```
 
 ```challenge
 type: predict
-id: two-lines
-verified: "UNVERIFIED: compile not run"
+run: false
+id: find-the-missing-quote
+verified: not-run
 code: |
+  One line of this program is wrong. Which line would you fix?
+
   fun main() {
-      println("Hello")
-      println("Kotlin")
+      println("Welcome")
+      println("Step 1: write the code)
+      println("Step 2: press Run")
   }
 options:
   - id: a
-    text: "Hello Kotlin on one line"
-    why: "You may have expected a space in between. println ends the line after each message, so each text gets its own line."
+    text: "The line with Welcome"
+    why: "You may have looked at the first line only. It has an opening quote and a closing quote, so it is complete."
   - id: b
-    text: "Hello on one line, then Kotlin on the next line"
-    correct: true
-    why: "Each println prints its message and then moves to a new line, so the replies stack under each other."
+    text: "The line with Step 2"
+    why: "You may have picked it because it is last. It has both quote marks, so nothing is missing."
   - id: c
-    text: "HelloKotlin on one line"
-    why: "You may have thought the texts would be glued together. println moves to a new line each time, so they are not."
-output: |
-  Hello
-  Kotlin
+    text: "The line with Step 1"
+    correct: true
+    why: "Text sits between two double quotes. This line opens a quote and never closes it, so Kotlin cannot tell where the text ends."
+output: "The Step 1 line is missing its closing quote mark, after the word code."
 ```
-
-## Try it
-
-1. **Write.** Copy the program from the first Predict item into the editor. Change the text between the quote marks to `My first program ran`. Keep the quote marks.
-2. **Run.** Press Run. The output area shows `My first program ran` on one line.
-3. **Break.** Change exactly one thing: change `println` to `printn`. Press Run again. The program does not run, and you see an error message instead of your text.
-4. **Fix.** Change `printn` back to `println` and press Run. You should see `My first program ran` again. The error was one wrong letter in a word the helper has to know.
-
-## Fix the bug
-
-```challenge
-type: fix
-id: fix-missing-quote
-verified: "UNVERIFIED: compile not run"
-code: |
-  fun main() {
-      // A short welcome card, printed one line at a time
-      println("Welcome to Kotree")
-      println("Today you run your first program")
-      println("Step 1: write the code)
-      println("Step 2: press Run")
-      println("Step 3: read the answer below")
-      println("You ran it yourself")
-      println("See you in the next lesson")
-  }
-hints:
-  - "Look at the lines that start with Step. One of them looks different at the end."
-  - "Text in Kotlin sits between two double quotes. Every opening quote needs a closing quote."
-expected: |
-  Welcome to Kotree
-  Today you run your first program
-  Step 1: write the code
-  Step 2: press Run
-  Step 3: read the answer below
-  You ran it yourself
-  See you in the next lesson
-fix: |
-  fun main() {
-      // A short welcome card, printed one line at a time
-      println("Welcome to Kotree")
-      println("Today you run your first program")
-      println("Step 1: write the code")
-      println("Step 2: press Run")
-      println("Step 3: read the answer below")
-      println("You ran it yourself")
-      println("See you in the next lesson")
-  }
-explanation: "Kotlin needs a closing double quote to know where the text ends. Without it, the program cannot run."
-```
-
-**Read it like a reviewer.** Answer in this order:
-1. What are the types?
-2. What runs, and in what order?
-3. What can be missing (null)?
-4. What can run twice?
-5. Would you accept this in review? Why or why not?
-
-For this code, question 3 and question 4 have short answers: no null values are in play, and nothing runs twice.
 
 ## Tricks to remember
 
@@ -224,11 +181,25 @@ For this code, question 3 and question 4 have short answers: no null values are 
 
 ## Where this shows up in Android
 
-The Playground runs plain Kotlin, not Android apps. A real Android app is built with Android Studio, which you meet in the last lesson of this part of the course.
+The Playground runs plain Kotlin, not Android apps. A real Android app is built with Android Studio, a tool you install on your computer.
 
 The lines you run here are the same kind of Kotlin that apps are written in. The Android documentation says Kotlin is fully supported for Android development. So a button that does nothing on a phone is, deep down, a few missing or wrong lines like these.
 
 An app has no output area under a button. To see what an app is doing, developers read Logcat, a window in Android Studio. The Android documentation says Logcat shows messages that the developer added to the app, plus messages from the system. It plays the same part as the output area: the place where you read the reply.
+
+## Say it in an interview
+
+**Q: How would you try a few lines of Kotlin quickly, without making a project?**
+A: I would open the Kotlin Playground in a browser, type the code, and press Run. The Kotlin documentation also names scratch files in IntelliJ IDEA and Android Studio. The trade-off is that the Playground needs an internet connection, while a scratch file needs an installed tool.
+
+**Q: Where does a Kotlin program start?**
+A: In the `main()` function. The Kotlin documentation says that is where the program starts from. Code outside it does not run by itself.
+
+**Q: What is the difference between `print` and `println`?**
+A: Both print a message to standard output. The documentation says `println` also prints the line separator, so the next message starts on a new line. `print` does not, so the messages stay on one line.
+
+**Q: A phone app has no console under its buttons. How do you see what it prints?**
+A: In Android Studio I would open Logcat. The Android documentation says it shows messages the developer added to the app, plus system messages. In my own reasoning, it plays the role the output area plays in the Playground.
 
 ## Recap
 
@@ -240,4 +211,4 @@ An app has no output area under a button. To see what an app is doing, developer
 
 - Explain where to run a first Kotlin program without installing anything.
 - Predict what a one-line `println` program prints.
-- Fix a program that stops because a piece of text is missing its closing quote.
+- Find the line in a short program whose text is missing its closing quote.

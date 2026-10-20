@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: developer.android.com/studio/intro (Android Studio is the official IDE for Android app development); developer.android.com/studio/projects/create-project (New Project screen; Empty Activity is the recommended starting point for Compose projects; Name, Package name, Save location, Minimum API level; Finish creates the project with some basic code and resources); developer.android.com/studio/debug/dev-options (tap Build Number seven times to enable Developer options; Build number sits under Settings, About phone on a Pixel and the location varies by maker; USB debugging lets the device communicate with the development machine through adb; menu path on Android 9 and higher is Settings, System, Advanced, Developer Options, USB debugging; Wireless debugging); developer.android.com/studio/run/device (plugged in over USB, click Run to build and run your app on the device; the RSA key dialog and unlocking the device; Troubleshoot Device Connections and Restart ADB server; Windows USB driver; wireless debugging on Android 11 and higher; adb devices); developer.android.com/studio/run (select the app in the run configurations menu, the device in the target device menu, click Run; the debug version is built by default and is for development only; no device means create an Android Virtual Device or connect a physical device). Own reasoning: no store or account step appears on the device page; the analogy. No code, no output. -->
+<!-- SOURCES: developer.android.com/studio/intro (Android Studio is the official IDE for Android app development); developer.android.com/studio/projects/create-project (New Project screen; Empty Activity is the recommended starting point for Compose projects; Name, Package name, Save location, Minimum API level; Finish creates the project with some basic code and resources); developer.android.com/studio/debug/dev-options (tap Build Number seven times to enable Developer options; Build number sits under Settings, About phone on a Pixel and the location varies by maker; USB debugging lets the device communicate with the development machine through adb; menu path on Android 9 and higher is Settings, System, Advanced, Developer Options, USB debugging; Wireless debugging); developer.android.com/studio/run/device (plugged in over USB, click Run to build and run your app on the device; the RSA key dialog and unlocking the device; Troubleshoot Device Connections and Restart ADB server; Windows USB driver; wireless debugging on Android 11 and higher; adb devices); developer.android.com/studio/run (select the app in the run configurations menu, the device in the target device menu, click Run; the debug version is built by default and is for development only; no device means create an Android Virtual Device or connect a physical device). Package name becomes the namespace and, by default, the application ID used for publishing, and the Minimum API level is the API level you want your app to support (developer.android.com/studio/projects/create-project). Interview section: same device, run and dev-options pages (Build number seven times; USB debugging and adb; adb devices; Troubleshoot Device Connections and Restart ADB server; debug version built by default for development only). Own reasoning: no store or account step appears on the device page; the order of the checks when the phone is missing; the analogy. No code, no output. -->
 ## The question
 
 You have read how an app is built, installed and started. Now you want to see your own app on your own phone. Do you need a store, a paid account, or something else? And what must you switch on first?
@@ -55,7 +55,7 @@ Idea A would be unsafe. Idea B is how apps reach other people, as in the install
 
 1. Install Android Studio on the laptop. The Android documentation calls it the official tool for Android app development.
 2. Choose New Project, then the Empty Activity template. This is the seed.
-3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. Android Studio makes a project with some basic code and resources.
+3. Fill in the Name, the Package name, the Save location and the Minimum API level, and press Finish. The documentation says that by default the Package name also becomes the app's application ID, which is the ID used for publishing. The Minimum API level is the oldest Android version you want your app to support. Android Studio makes a project with some basic code and resources.
 4. On the phone, make the hidden settings appear. Tap Build number seven times. On a Pixel it sits under Settings, then About phone.
 5. In the hidden settings, switch on USB debugging.
 6. Plug the phone into the laptop. The phone may ask whether to allow debugging from this computer. Unlock the phone and approve.
@@ -65,7 +65,7 @@ Idea A would be unsafe. Idea B is how apps reach other people, as in the install
 
 ### Name it
 
-**Android Studio** is the official **IDE**, which stands for Integrated Development Environment. An IDE is a program for writing code, and for building and running it. A **template** is a ready-made starting project. **Empty Activity** is the template the documentation recommends for new Compose projects. Compose is the toolkit for building Android screens in Kotlin.
+**Android Studio** is the official **IDE**, which stands for Integrated Development Environment. An IDE is a program for writing code, and for building and running it. A **template** is a ready-made starting project. **Empty Activity** is the template the documentation recommends for new Compose projects. **Compose** is the toolkit for building Android screens in Kotlin.
 
 **Developer options** is a hidden screen of settings on the phone. The documentation says you tap the Build number option seven times to turn it on. It adds that the screen might be located or named differently on some devices.
 
@@ -125,8 +125,8 @@ options:
     text: "Reinstall Android Studio"
     why: "You may have thought the tool is broken. The phone is still waiting for an answer, so nothing on the laptop can fix it."
   - id: b
-    text: "Publish the app to a store first"
-    why: "You may have thought the store is the only door. The device page does not list a store step, and the phone is waiting on a dialog."
+    text: "Switch USB debugging off and on again"
+    why: "You may have thought the switch got stuck. The setting is on, and the phone is still waiting for an answer to its question."
   - id: c
     text: "Unlock the phone and accept the question"
     correct: true
@@ -177,6 +177,20 @@ output: "No, he can switch on USB debugging, connect the phone and press Run"
 You plug in your phone, and Android Studio's device list stays empty. That is the symptom of steps 5 and 6. The documentation says the Troubleshoot Device Connections assistant gives step-by-step instructions, and that a Restart ADB server button is there if the phone still does not appear. It also says that running `adb devices` lists the device when it is connected.
 
 A second symptom. The app opens on your phone, but it is a development copy. The documentation says Android Studio builds the debug version by default, and that this version is for use only during development. Sealing it for other people is the job of the signing step from the earlier lessons.
+
+## Say it in an interview
+
+**What do you set up so Android Studio can put an app on your phone?**
+You switch on Developer options by tapping Build number seven times, then switch on USB debugging. On Windows you may also need a USB driver, if applicable. When you plug in, you unlock the phone and approve this computer. The documentation lists these steps.
+
+**What is adb?**
+It stands for Android Debug Bridge. The documentation says USB debugging lets your phone communicate with your computer through adb. Running `adb devices` lists the devices that are connected.
+
+**The phone does not show up in Android Studio. What do you check?**
+First, is the phone unlocked, and did you answer its question? Then open Tools, Troubleshoot Device Connections. If the phone still does not appear, the same assistant has a Restart ADB server button. The order is my own reasoning. The tools are from the documentation.
+
+**Is the app you press Run on the app you ship?**
+No. The documentation says Android Studio builds the debug version by default, and that it is for development only. The version for other people is signed, as in the earlier lessons. The trade-off: the debug version is quick to test with, but it is not meant to be released.
 
 ## Recap
 

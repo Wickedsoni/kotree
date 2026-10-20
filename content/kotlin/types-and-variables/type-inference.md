@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-basic-types.html ("Every variable and data structure in Kotlin has a type"; types tell the compiler what you are allowed to do; "Kotlin's ability to infer the type is called type inference"); kotlinlang.org/docs/basic-syntax.html (type inference section, val x = 5 and Int is inferred); kotlinlang.org/docs/numbers.html (Int inferred if the value fits, otherwise Long; L suffix; floating-point literals are Double by default; val oneBillion: Long = 1_000_000_000); kotlinlang.org/docs/characters.html (Kotlin infers Char from single quotes); kotlinlang.org/docs/booleans.html (Kotlin infers Boolean); kotlinlang.org/docs/faq.html (Kotlin is statically typed); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (tipPercent converted to a Double with no type written). Own reasoning: assigning text to a name first given a number is refused, because the pages say every variable has a type and the type limits what you may do; the pages show the refusal only for null into a String. Outputs hand-traced, not compiled. -->
+<!-- SOURCES: kotlinlang.org/docs/kotlin-tour-basic-types.html ("Every variable and data structure in Kotlin has a type"; types tell the compiler what you are allowed to do; "Kotlin's ability to infer the type is called type inference"); kotlinlang.org/docs/basic-syntax.html (type inference section, val x = 5 and Int is inferred); kotlinlang.org/docs/numbers.html (Int inferred if the value fits, otherwise Long; L suffix; floating-point literals are Double by default; val oneBillion: Long = 1_000_000_000); kotlinlang.org/docs/characters.html (Kotlin infers Char from single quotes); kotlinlang.org/docs/booleans.html (Kotlin infers Boolean); kotlinlang.org/docs/faq.html (Kotlin is statically typed); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (tipPercent converted to a Double with no type written). Own reasoning: assigning text to a name first given a number is refused, because the pages say every variable has a type and the type limits what you may do; the pages show the refusal only for null into a String. Interview section: kotlinlang.org/docs/faq.html (Kotlin is an open-source statically typed programming language); kotlinlang.org/docs/coding-conventions.html (coding conventions for libraries: always explicitly specify function return types and property types, to avoid accidentally changing the return type when the implementation changes). General knowledge: what "statically typed" means. Own reasoning: when inference helps and when a written type is a promise. Outputs hand-traced, not compiled. -->
 ## The question
 
 You write a line that gives a name the number 5. You never write what kind of value it is. Yet Kotlin treats the name as a whole number. How does Kotlin know, and does a name with no written kind hold anything you like?
@@ -201,6 +201,17 @@ output: "Line 4 is refused, so nothing runs"
 The Android Tip Time codelab builds a screen with **Jetpack Compose**, the toolkit for building Android screens in Kotlin. It has the line `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. The part on the right turns the typed text into a `Double`, or gives 0.0 when there is no number. No type is written after `tipPercent`. The codelab's own words are that this line converts the tip text to a `Double`, so `tipPercent` is a `Double`.
 
 The same codelab writes `val amount = amountInput.toDoubleOrNull() ?: 0.0`, and again no type is written. The app can then do number work with `amount`. My own reasoning: when an Android project has a line with no type, the right-hand side is where the type comes from. Reading that side tells you what the name holds.
+
+## Say it in an interview
+
+**Is Kotlin dynamically typed because you can leave the type out?**
+No. The Kotlin FAQ calls Kotlin statically typed, which means types are checked before the program runs (that meaning is general knowledge). The tour says every variable has a type, and that when you leave it out the compiler infers it. So the type is fixed before the program runs, and text put into a name inferred as `Int` is refused.
+
+**What types do `val a = 5` and `val b = 3_000_000_000` get?**
+`a` is an `Int`, because 5 fits. `b` is a `Long`, because it does not fit in an `Int`. The numbers page says Kotlin infers `Int` if the value fits, otherwise `Long`.
+
+**When should you write the type anyway?**
+When you want a type Kotlin would not pick, such as `val small: Long = 5`. The coding conventions also say libraries, which are code other people build on, should always write out the types of what their functions give back, so a change inside does not change them by accident. My own reasoning: for code only you read, inference saves noise. For code other people build on, a written type is a promise.
 
 ## Recap
 
