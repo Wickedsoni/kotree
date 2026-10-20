@@ -20,7 +20,7 @@ upnext: false
 
 A music app has five songs saved. You want the third one. Do you make five separate names, one for each song?
 
-That gets messy when the app holds fifty songs. How do you keep many values under one name? And how do you ask for the third one?
+That gets messy when the app holds fifty songs. How do you keep many values under one name, and how do you ask for the third one?
 
 ## Mental model
 
@@ -139,13 +139,13 @@ code: |
   }
 options:
   - id: a
-    text: "Start, then Cy, then End"
+    text: "Start, then it prints Cy, and then it prints End"
     why: "You may have taken door 3 to mean the third box. Door 3 would be a fourth box, and this wall has none."
   - id: b
-    text: "Start, then End"
+    text: "Start, then nothing for the missing box, and then End"
     why: "You may have expected a missing box to give a blank and let the program go on. A door with no box stops the program."
   - id: c
-    text: "Start, then the program stops before End"
+    text: "Start, then the program stops"
     correct: true
     why: "The wall has doors 0, 1 and 2. Door 3 has no box, so the program stops at that line and End never prints. Only Start appears in the normal output."
 output: "Start"

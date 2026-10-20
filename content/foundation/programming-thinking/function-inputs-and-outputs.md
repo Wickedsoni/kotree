@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/kotlin-tour-functions.html ("Each parameter must have a type, and multiple parameters must be separated by commas"; "The return type is written after the function's parentheses (), separated by a colon :"; "The return keyword is used to exit or return something from a function"; sum(x: Int, y: Int): Int sample prints 3; Unit: "If your function doesn't return a useful value, then its return type is Unit. Unit is a type with only one value"; named arguments: "If you do include parameter names, then you can write the parameters in any order"); kotlinlang.org/docs/functions.html (double(x: Int): Int sample, double(5) is 10; "Declare function parameters using Pascal notation: name: Type"); String + String joining is taught in what-is-a-type; developer.android.com/develop/ui/compose/mental-model ("composable functions that take in data and emit UI elements"; "Composable functions can accept parameters, which let the app logic describe the UI"). Derived, not run: val kept: Int = showDouble(4) is refused because the function hands back Unit; without parameter names the order of arguments decides. Roadmap says none for a sim: the idea is a contract, so a before/after table is used. Outputs hand-traced, not run (no kotlinc). -->
+<!-- SOURCES (housekeeper strips at go-live): kotlinlang.org/docs/kotlin-tour-functions.html ("Each parameter must have a type, and multiple parameters must be separated by commas"; "The return type is written after the function's parentheses (), separated by a colon :"; "The return keyword is used to exit or return something from a function"; sum(x: Int, y: Int): Int sample prints 3; Unit: "If your function doesn't return a useful value, then its return type is Unit. Unit is a type with only one value"; named arguments: "If you do include parameter names, then you can write the parameters in any order"); kotlinlang.org/docs/functions.html (double(x: Int): Int sample, double(5) is 10; "Declare function parameters using Pascal notation: name: Type"); developer.android.com/develop/ui/compose/mental-model ("composable functions that take in data and emit UI elements"; "Composable functions can accept parameters, which let the app logic describe the UI"). Derived, not run: val kept: Int = showDouble(4) is refused because the function hands back Unit; without parameter names the order of arguments decides. Roadmap says none for a sim: the idea is a contract, so a before/after table is used. Outputs hand-traced, not run (no kotlinc). -->
 ## The question
 
 A program asks a helper step for double 4. The helper shows 8 on the screen. The program now wants to add 1 to that 8, and it cannot.
@@ -47,9 +47,9 @@ Now you want to double the answer again. With the second machine, you pick up th
 
 You want to double 3, and then double the answer. The first machine only flashes 6. Can the program feed that answer into a machine again?
 
-- A. Yes, the machine remembers the 6 and passes it on.
-- B. Yes, the program reads the 6 from the light.
-- C. No, nothing dropped into the tray, so there is nothing to pass on.
+- A. Yes, because the machine remembers the 6 and passes it on by itself.
+- B. Yes, because the program can read the 6 off the light.
+- C. No, because nothing dropped into the tray.
 
 Idea A gives the machine a memory it was never built with. Idea B treats the light like the tray, but the light is for people. Idea C is the answer.
 
@@ -172,28 +172,28 @@ run: false
 id: swapped-arguments
 verified: not-run
 code: |
-  fun join(first: String, second: String): String {
-      return first + second
+  fun twiceFirst(first: Int, second: Int): Int {
+      return first + first + second
   }
 
   fun main() {
-      println(join("sun", "day"))
-      println(join("day", "sun"))
+      println(twiceFirst(1, 2))
+      println(twiceFirst(2, 1))
   }
 options:
   - id: a
-    text: "sunday, then sunday"
-    why: "You may have thought the machine sorts its inputs. The first argument goes into the first slot, so the order you give is the order you get."
+    text: "4, then 4"
+    why: "You may have thought the machine does not care which slot gets which coin. The first slot counts twice, so the order you give changes the answer."
   - id: b
-    text: "sunday, then daysun"
+    text: "4, then 5"
     correct: true
-    why: "The first call puts sun in the first slot and day in the second, so it hands back sunday. The second call swaps them and hands back daysun."
+    why: "The first call puts 1 in the first slot and 2 in the second, so it hands back 1 + 1 + 2, which is 4. The second call swaps them and hands back 2 + 2 + 1, which is 5."
   - id: c
-    text: "daysun, then sunday"
-    why: "You may have read the lines in reverse. The first line runs first, and it puts sun first."
+    text: "5, then 4"
+    why: "You may have read the lines in reverse. The first line runs first, and it puts 1 in the first slot."
 output: |
-  sunday
-  daysun
+  4
+  5
 ```
 
 ## Tricks to remember
