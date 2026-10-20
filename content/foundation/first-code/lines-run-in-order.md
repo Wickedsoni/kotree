@@ -188,7 +188,7 @@ output: |
 
 ## Common mistakes
 
-- **Thinking all the lines happen at the same time.** A program runs so fast that the results seem to appear together. But the chip works through the steps one after another. Next time, put your finger on the top line and move down one line at a time.
+- **Thinking all the lines happen at the same time.** A program runs so fast that the results seem to appear together. But the computer follows your lines one after another. Next time, put your finger on the top line and move down one line at a time.
 - **Expecting the computer to put the lines in a sensible order.** A friend would fix a muddled note without being asked. The clerk has only the queue, so the lines run as written. If the order is not what you want, move the line yourself.
 - **Starting at the line you care about.** It feels quicker to jump to the line that prints the odd result. But that line depends on everything ahead of it. Start at the top and trace down.
 
