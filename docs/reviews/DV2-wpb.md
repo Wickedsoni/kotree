@@ -17,7 +17,8 @@ Scripts run: `check-hardcoded.sh` clean, `check-tokens.py` 0 failures. No screen
 - `ZoomControls.kt` titles, Shortcuts button, `ShortcutsDialog.kt`, canvas cursors, `A11yNodes.kt` wording: not part of this task.
 
 ## Deviations and additions
-- New file `ui/layout/LinkButton.kt` (an `<a>` styled as a Button, same kinds). Used for Start here, Open lesson, Open in Topics, See on the tree. Not in the ADR component table.
+- `LinkButton` (an `<a>` styled as a Button, same kinds) lives at the end of `ui/layout/SideSheet.kt`, to avoid a new file. Used for Start here, Open lesson, Open in Topics, See on the tree. Not in the ADR component table.
+- Sheet rows do not repeat "Coming soon"; one muted line above the list explains the empty outline.
 - `SideSheet` has an extra `branch` parameter (tint, ink, focus ring); `NodeCard` has `clearHeader` (false for `LeafPopup` and the kitchen sink) and nullable `eyebrow` / `chips`.
 - `LeafPopup` now wraps `NodeCard` (same signature; no longer `shape.blob`).
 - `BentoGrid.kt` now holds `BranchGrid`; `BoughHeader`, `CardKind`, `WIDE_STEM_COUNT`, `BENTO_*` are gone. `layout.bento.col.min` is unused now (Tokens untouched).

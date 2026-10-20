@@ -12,6 +12,9 @@ import dev.kotree.site.tree.model.Difficulty
 import dev.kotree.site.tree.model.Leaf
 import dev.kotree.site.tree.model.LeafStatus
 import dev.kotree.site.tree.model.Stem
+import dev.kotree.site.typeLabelLineVar
+import dev.kotree.site.typeLabelSizeVar
+import dev.kotree.site.typeLabelWeightVar
 import dev.kotree.site.ui.core.Button
 import dev.kotree.site.ui.core.ButtonKind
 import dev.kotree.site.ui.core.ListRow
@@ -28,6 +31,7 @@ import org.jetbrains.compose.web.dom.Ul
 import dev.kotree.site.ui.core.LeafStatus as ChipStatus
 
 private const val SEPARATOR = " · "
+private const val SHADOW_NOTE = "Topics with an empty outline are coming soon."
 
 private fun difficultyText(d: Difficulty): String = when (d) {
     Difficulty.EASY -> "Easy"
@@ -63,6 +67,17 @@ fun StemSheet(branch: Branch, stem: Stem, titles: Map<String, String>, onClose: 
                 Text(stem.why)
             }
             Meter(stem.counts.live, stem.counts.total, "${stem.title} live topics", branch.id)
+            if (stem.leaves.any { it.status == LeafStatus.SHADOW }) {
+                P(
+                    Modifier.styleModifier {
+                        property("margin", "0")
+                        property("color", colorOnSurfaceMutedVar.value())
+                        property("font-size", typeLabelSizeVar.value())
+                        property("line-height", typeLabelLineVar.value())
+                        property("font-weight", typeLabelWeightVar.value())
+                    }.toAttrs()
+                ) { Text(SHADOW_NOTE) }
+            }
             Ul(
                 Modifier.styleModifier {
                     property("margin", "0 calc(-1 * ${space3Var.value()})")
@@ -85,7 +100,6 @@ private fun SheetLeafRow(branch: String, leaf: Leaf, titles: Map<String, String>
     val path = leaf.path.takeIf { live }
     val parts = buildList {
         add(difficultyText(leaf.difficulty))
-        if (leaf.status == LeafStatus.SHADOW) add("Coming soon")
         if (!live && leaf.requires.isNotEmpty()) add("Builds on: " + leaf.requires.joinToString(", ") { titles[it] ?: it })
     }
     if (leaf.status == LeafStatus.SHADOW) {
