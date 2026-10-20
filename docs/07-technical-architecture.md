@@ -495,7 +495,7 @@ Measured on the production export, desktop, Chrome, Lighthouse "desktop" preset,
 | LCP | ≤ 2.0 s | Lighthouse |
 | CLS | ≤ 0.05 | Lighthouse |
 | Total Blocking Time | ≤ 200 ms | Lighthouse |
-| Main site JS (Kotlin/JS bundle) | ≤ 400 KB gzip | CI size check: `gzip -9 -c site/.kobweb/site/<script>.js \| wc -c`, where the file name is the one in `conf.yaml` `server.files.prod.script` (`kotree.js` in §2.3). It is one unhashed file (§5.5), and the `.map` is excluded. Measured (§8.1): 277,917 B after Phase 1; lesson text is kept out of it by ADR 005. |
+| Main site JS (Kotlin/JS bundle) | ≤ 600 KB gzip (raised from 400 KB by the author on 21 Oct 2026; revisit if the first load feels slow on a phone) | CI size check: `gzip -9 -c site/.kobweb/site/<script>.js \| wc -c`, where the file name is the one in `conf.yaml` `server.files.prod.script` (`kotree.js` in §2.3). It is one unhashed file (§5.5), and the `.map` is excluded. Measured (§8.1): 277,917 B after Phase 1; lesson text is kept out of it by ADR 005. |
 | `TreeData` share of the bundle | ≤ 60 KB gzip at 500 leaves | Size diff when content grows |
 | Fonts (Roboto Flex + JetBrains Mono, woff2, Latin subset, only the axes `docs/02` uses) | ≤ 250 KB total | File size check |
 | Tree sprites / images on home | ≤ 150 KB total | File size check |

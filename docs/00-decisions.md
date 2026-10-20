@@ -48,6 +48,7 @@ The author documents his own learning on YouTube (3 videos/week). A leaf is **pu
 | L27 | Kotree is the author's **personal tree of growth**: a public record of his own learning journey, shared with the world; anyone else may use it to learn the same way. It is not a business. Use **free tiers** of every service (Vercel Hobby, GitHub free, Kotlin Playground); upgrade to paid plans only if usage requires it later (decided 18 Oct 2026). | Keeps cost at zero; fits the non-commercial limit of Vercel Hobby while the site earns nothing. |
 | L28 | Tree-first prototype (author, 20 Oct 2026): Phase 0 (scaffold) and Phase 2 (pixel tree) are merged into one early milestone that shows the tree with sample data. Phase 1 tokens are applied after it, not before; the prototype keeps all values in one token file so they can be swapped (hard rule 2 still holds). Phases 1 and 3 follow. |
 | L29 | Lesson voice (author, 20 Oct 2026): every lesson is industry-accurate (facts checked against official docs, hard rule 4) AND easy to say aloud, because the author explains it to himself and to a YouTube audience. Plain words, one everyday analogy with where it stops (`docs/04` §3.2), one idea per sentence, no unexplained jargon. |
+| L30 | Bundle budget (author, 21 Oct 2026): main `kotree.js` budget is **600 KB gzip** (was 400 KB). Not a hard performance law: revisit if first load is slow on a phone. Supersedes the 400 KB figure in `docs/07` §8, ADR 003 and ADR 005. |
 
 ---
 
