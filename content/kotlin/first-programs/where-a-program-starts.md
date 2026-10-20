@@ -5,22 +5,20 @@ status: shadow
 difficulty: easy
 order: 1
 requires: []
-summary: Every Kotlin program begins at one function named main. Other functions wait until main calls them.
+summary: A Kotlin program starts in one function named main. Other functions wait until a line calls them.
 video: ""
 publishedOn:
 updatedOn:
 sims: []
-playground: true
+playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: compile and run not done for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). Also unknown: what the Playground shows when a program has no main function (Fix the bug). -->
+<!-- SOURCES: kotlinlang.org/docs/basic-syntax.html (entry point is the main function; println adds a line break); kotlinlang.org/docs/kotlin-tour-hello-world.html (main is where the program starts; a function body is written in curly braces); developer.android.com/guide/components/fundamentals (each component is an entry point; activity is the entry point for interacting with the user and one screen; Android apps do not have a single entry point and there is no main()). Textbook, no single official page: other functions run only when called, and a call returns to the next line. Own reasoning: last paragraph of the Android section. Hand-traced, not compiled. -->
 ## The question
 
-You open a file that holds three small blocks of steps. Each block has its own name. You press Run.
-
-Which block does the computer start with? The first one in the file? The biggest one? And what happens to the other two?
+You open a file with three blocks of steps, and each block has its own name. You press Run. Which block does the computer start with: the first one in the file, the biggest one, or another? And what happens to the other two?
 
 ## Mental model
 
@@ -53,28 +51,30 @@ One room has the front door sign on it. The visitor arrives at the house.
 
 Which room does the visitor enter first?
 
-- A. The room that is listed first in the file.
-- B. The room behind the front door, which has a special name.
-- C. Every room at the same time.
+- A. Every room at the same time.
+- B. The room that is listed first in the file.
+- C. The room behind the front door, which has a special name.
 
-Idea A is the most common guess. It feels right because we read files from the top. Idea C is how some people picture a computer, but one visitor cannot be in three rooms. Idea B is how Kotlin works.
+Idea B is the most common guess. It feels right because we read files from the top. Idea A is how some people picture a computer, but one visitor cannot be in three rooms. Idea C is how Kotlin works.
 
 ### Build
 
 1. The computer needs one known place to start. Without it, it would not know where to begin.
 2. So everyone agrees on one fixed name for the front door.
 3. The visitor enters through that door and does its steps from top to bottom.
-4. A room with any other name does nothing until a step inside the door room (or inside another room that was visited) sends the visitor there.
+4. A room with any other name does nothing until a step sends the visitor there. That step can sit in the front-door room or in another room the visitor is already in.
 5. After the visitor finishes a room, they walk back to the step after the one that sent them in.
 6. When the last step of the front-door room is done, the visit is over.
 
 ### Name it
 
-The front door is called the **entry point**. In Kotlin, the entry point is a **function** named **`main`**. A function is a named block of steps. You write one with the keyword `fun`, then its name, then `()`, then the steps inside curly braces `{ }`.
+The front door is called the **entry point**. The Kotlin documentation says the entry point of a Kotlin application is the `main` function.
 
-A function that is not `main` runs only when some line **calls** it. To call a function, you write its name followed by `()`.
+A **function** is a named block of steps. You write one with the keyword `fun`, then its name, then `()`, then the steps inside curly braces `{ }`. The function named **`main`** is the front door.
 
-**`println`** is the Kotlin command that prints its text and then moves to the next line.
+A function with any other name runs only when some line **calls** it. To call a function, you write its name followed by `()`.
+
+**`println`** is the Kotlin command that prints its text and adds a line break, so the next thing you print starts on a new line. The documentation says the same.
 
 ```kotlin
 fun greet() {
@@ -88,16 +88,15 @@ fun main() {
 }
 ```
 
-This program has two functions. It starts in `main`, which is the second one in the file. It prints `Start`. Then the line `greet()` calls `greet`, which prints `Hello from greet`. Then `main` goes on and prints `End`.
-
-You may also see `fun main(args: Array<String>)`. The Kotlin documentation shows it as another form of `main` that accepts text arguments. This lesson uses the short form.
+This program has two functions. It starts in `main`, which is the second one in the file. It prints `Start`. Then the line `greet()` calls `greet`, which prints `Hello from greet`. Then `main` goes on and prints `End`. The output is three lines: `Start`, `Hello from greet`, `End`.
 
 ## Predict the output
 
 ```challenge
 type: predict
+run: false
 id: helper-above-main
-verified: "UNVERIFIED: compile and run not done"
+verified: not-run
 code: |
   fun first() {
       println("A")
@@ -127,8 +126,9 @@ output: |
 
 ```challenge
 type: predict
+run: false
 id: room-nobody-visits
-verified: "UNVERIFIED: compile and run not done"
+verified: not-run
 code: |
   fun secret() {
       println("Secret room")
@@ -139,83 +139,48 @@ code: |
   }
 options:
   - id: a
-    text: "Secret room, then Front door"
-    why: "You may have expected the room listed first to open first. The visitor enters at the front door, and no step sends it into secret."
-  - id: b
     text: "Front door"
     correct: true
     why: "The visitor enters through the front door and prints its text. No line calls secret, so that room stays empty."
+  - id: b
+    text: "Secret room, then Front door"
+    why: "You may have expected the room listed first to open first. The visitor enters at the front door, and no step sends it into secret."
   - id: c
     text: "Front door, then Secret room"
     why: "You may have thought every room gets visited in the end. A room is visited only when a step sends the visitor there."
 output: "Front door"
 ```
 
-## Try it
-
-1. **Write.** Type the program from Name it into the editor: the `greet` function, then `main`.
-2. **Run.** You should see three lines: `Start`, `Hello from greet`, `End`.
-3. **Break.** Delete the line `greet()` and nothing else. Run it again.
-4. **Fix.** You should now see only `Start` and `End`, because no step sends the visitor into the `greet` room. Type `greet()` back in the same place and run it. The three lines return.
-
-## Fix the bug
-
 ```challenge
-type: fix
-id: fix-misspelled-main
-verified: "UNVERIFIED: compile and run not done"
+type: predict
+run: false
+id: which-sign-is-the-door
+verified: not-run
 code: |
-  fun welcome() {
-      println("Welcome to the app")
-  }
-
-  fun countdown() {
-      println("3")
-      println("2")
-      println("1")
+  fun start() {
+      println("A")
   }
 
   fun mian() {
-      welcome()
-      countdown()
-      println("Go")
-  }
-hints:
-  - "Find the function that calls the other two. Read its name letter by letter."
-  - "Kotlin starts a program in a function named exactly main."
-expected: |
-  Welcome to the app
-  3
-  2
-  1
-  Go
-fix: |
-  fun welcome() {
-      println("Welcome to the app")
-  }
-
-  fun countdown() {
-      println("3")
-      println("2")
-      println("1")
+      println("B")
   }
 
   fun main() {
-      welcome()
-      countdown()
-      println("Go")
+      println("C")
   }
-explanation: "The front door must have the sign main. A function named mian is an ordinary room, so no visitor ever enters through it."
+options:
+  - id: a
+    text: "A, because start sounds like the place to begin"
+    why: "You may have trusted the word. The front door is the name main, and start is an ordinary room here."
+  - id: b
+    text: "B, because mian is almost main"
+    why: "You may have read the sign loosely. One wrong letter makes mian a different name, so it is an ordinary room."
+  - id: c
+    text: "C, because the sign on the door reads main"
+    correct: true
+    why: "The visitor enters through the door whose sign says main exactly. No line calls start or mian, so those rooms stay empty."
+output: "C"
 ```
-
-**Read it like a reviewer.** Answer in this order:
-1. What are the types?
-2. What runs, and in what order?
-3. What can be missing (null)?
-4. What can run twice?
-5. Would you accept this in review? Why or why not?
-
-For this code, question 3 has a short answer: this code has no null values in play. Question 4 is also short: nothing runs twice. Spend your time on question 2.
 
 ## Tricks to remember
 
@@ -226,18 +191,18 @@ For this code, question 3 has a short answer: this code has no null values in pl
 
 ## Common mistakes
 
-- **Thinking Kotlin runs the file from the first line down.** It feels right because we read a page from the top and because the first lessons showed a short program. Look for `main` first. That is where the visit starts.
+- **Thinking Kotlin runs the file from the first line down.** It feels right because we read a page from the top. Look for `main` first. That is where the visit starts.
 - **Putting a function above `main` and expecting it to run first.** The file order feels like a to-do list. Only the call decides when a function runs. A function above `main` waits like any other room.
-- **Writing a function and forgetting to call it.** The function looks finished, so it feels done. Check that some line in `main` (or in a function that `main` calls) says its name followed by `()`.
-- **Misspelling `main`.** One wrong letter looks harmless. Kotlin reads it as a different name, so the program has no front door. Read the name letter by letter when nothing runs.
+- **Writing a function and forgetting to call it.** The function looks finished, so it feels done. Check that some line in `main`, or in a function that `main` calls, says its name followed by `()`.
+- **Misspelling `main`.** One wrong letter looks harmless. Kotlin reads it as a different name, so the program has no front door. Read the name letter by letter.
 
 ## Where this shows up in Android
 
-Open a new Android project and search for `main()`. You will not find one in the code you write. The Android documentation says that Android apps do not have a single entry point and that there is no `main()` function.
+Open an Android app's code and you will not find one front door. The Android documentation says: "Android apps don't have a single entry point: there's no `main()` function". Instead, an app is made of **components**, which are parts of the app that the system can start. The documentation says each component is an entry point through which the system or a user can enter your app.
 
-Instead, the system starts a component of your app. An activity, which is one screen of your app, is one such entry point. So the Android system picks where the visit starts, but inside your code the same rules from this lesson hold. A function runs when something calls it, and steps go from top to bottom inside it.
+An **activity** is one such component. The documentation calls it the entry point for interacting with the user, and says it represents a single screen. The Android system, which is the part of the phone that runs apps, decides which component to start.
 
-If you follow a symptom like "my function never runs", this lesson gives the first check: does some line, in code the system started, actually call it?
+My own reasoning: once the system has started a component, the rules from this lesson still hold inside your code. A function runs when some line calls it, and steps run from top to bottom. So when a function in an app never seems to run, the first check is the same. Does some line, in code the system started, call it?
 
 ## Recap
 
@@ -249,4 +214,4 @@ If you follow a symptom like "my function never runs", this lesson gives the fir
 
 - Predict the order of lines printed by a program where a helper function sits above `main`.
 - Explain why a function that nobody calls prints nothing.
-- Fix a program where `main` is misspelled so that it runs.
+- Spot the function that is the entry point in a file with a near-miss name such as `mian`.
