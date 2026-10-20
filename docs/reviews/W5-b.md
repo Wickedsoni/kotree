@@ -141,3 +141,29 @@ ranges-and-for-loops: `down-to-by-three` 10, 7, 4, 1 (b); `dots-versus-until` 12
 break-and-continue: `skip-two-stop-five` 1, 3, 4 (c); `stop-where-skip-meant` 1, 2 (a); `stop-then-done` 1, 2, Done (b).
 declaring-functions: 14 (c); -7 (b); 12 (a).
 default-and-named-arguments: `greet-ana` Hi, Ana (c); `swap-by-name` -7 then 7 (a); `skip-the-size` tea, medium, oat then tea, small, regular (b).
+
+---
+
+# Re-check (20 Oct 2026, after commit c41b770)
+
+Reviewer: independent. No leaf edited. Method: diff of c41b770 against its parent; compiled and ran every leaf program again (all 24: unchanged results, 5 `// does not compile` blocks still fail, every Predict output equal); compiled the interview snippets (`val drink = if (cold) ...`, `first.toLong() + second` gives 4000000000, `(first + second).toLong()` gives -294967296, `3000000000L.toInt()` gives -1294967296, `fun f(a: Int, b: Int = a * 2)`, a counting default gives 1 then 2, `5..1` empty, `(1..9 step 3).last()` is 7, `step 0` throws "Step must be positive, was: 0.", `break@outer`, `return@forEach`, `continue` inside `forEach` inside a `for`); re-read kotlinlang.org returns, functions, ranges and developer.android.com Compose Kotlin pages. `./gradlew :site:validateContent`: `validateContent: ok`, BUILD SUCCESSFUL.
+
+All FIX items from the first review are applied exactly as written in all seven leaves (including `docs/sims/needed-ids.md` for the 7-to-12 chute; the sentence reads a little clumsily, "... 'a fifth chute ... overlaps ...' and drop into ...", acceptable). Every leaf has `## Say it in an interview` after "Where this shows up in Android" and before "Recap", with 3 or 4 questions and short plain answers. Facts in the answers match the pages (labels, non-local break and continue, local returns "similar to the use of `continue`", default evaluated only when omitted, defaults reduce overloads and redundant code, guard conditions, `last` of `1..9 step 3` is 7). Two new defects were introduced by the interview sections:
+
+A. Learner-facing text refers to "the reviewer". A public lesson must not (checklist 7 spirit; the reader does not know any reviewer). Lines: number-conversions 228 ("In a compiler run by the reviewer"), ranges-and-for-loops 228 and 231, break-and-continue 243, default-and-named-arguments 220 and 223. New wording, mechanical (`fixer`): replace "In the reviewer's compiler run" / "In a compiler run by the reviewer" / "In the reviewer's run" with "Running it with the Kotlin compiler shows that" (or "When you run it,"), and keep the SOURCES comment as is.
+B. break-and-continue line 242 to 243 (Q4): uses "lambdas", "inline functions" and `forEach`, none defined in the tree before this leaf (lambdas are a later stem, `content/kotlin/_roadmap.md` line 183). Checklist 3 violation, and the fresher cannot follow it. Fix (mechanical): delete Q4 (three questions remain, which satisfies checklist 11) or move it to the later lambdas leaf; also drop the matching SOURCES text if wanted.
+C. (minor, with A) ranges-and-for-loops line 231: `IllegalArgumentException` is undefined. Write "threw an error called `IllegalArgumentException`". Mechanical.
+
+## Per-leaf verdict
+
+| Leaf | Verdict |
+|---|---|
+| `kotlin/types-and-variables/number-conversions` | FIX: item A (line 228 only) |
+| `kotlin/control-flow/if-as-an-expression` | PASS |
+| `kotlin/control-flow/when-expression` | PASS |
+| `kotlin/control-flow/ranges-and-for-loops` | FIX: items A (lines 228, 231) and C (line 231) |
+| `kotlin/control-flow/break-and-continue` | FIX: items A (line 243) and B (Q4); fixing B removes A here |
+| `kotlin/functions/declaring-functions` | PASS |
+| `kotlin/functions/default-and-named-arguments` | FIX: item A (lines 220, 223) |
+
+Counts: 3 PASS, 4 FIX (all mechanical, `fixer` can do them; no owner decision left).
