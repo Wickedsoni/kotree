@@ -18,6 +18,7 @@ import dev.kotree.site.space4Var
 import dev.kotree.site.space6Var
 import dev.kotree.site.space8Var
 import org.jetbrains.compose.web.dom.Div
+import org.w3c.dom.HTMLElement
 
 private const val PROSE = "kt-prose"
 
@@ -32,10 +33,33 @@ fun Prose(html: String, modifier: Modifier = Modifier) {
             classes(PROSE)
             ref { element ->
                 element.innerHTML = html
+                markBoldLeads(element)
                 onDispose { }
             }
         }
     )
+}
+
+private const val LEAD_PARAGRAPH = "kt-lead-p"
+private const val LEAD_BOLD = "kt-lead-b"
+
+/**
+ * Generic: a paragraph that starts with a bold run followed by a line break and more text (the "**Question?**" then
+ * answer shape used by `## Say it in an interview`) gets the bold run on its own line. Other paragraphs are untouched.
+ */
+private fun markBoldLeads(root: HTMLElement) {
+    val paragraphs = root.querySelectorAll("p")
+    for (i in 0 until paragraphs.length) {
+        val p = paragraphs.item(i) as? HTMLElement ?: continue
+        val first = p.firstChild ?: continue
+        if (first.nodeName != "STRONG") continue
+        val after = first.nextSibling ?: continue
+        val breaks = after.nodeName == "BR" || (after.nodeName == "#text" && after.textContent.orEmpty().startsWith("\n"))
+        val hasMore = after.nodeName == "BR" || after.textContent.orEmpty().isNotBlank()
+        if (!breaks || !hasMore) continue
+        p.classList.add(LEAD_PARAGRAPH)
+        (first as? HTMLElement)?.classList?.add(LEAD_BOLD)
+    }
 }
 
 /** Rules for HTML inside `.kt-prose`. Registered through Silk's stylesheet, like the global rules in Base.kt. */
@@ -47,6 +71,8 @@ fun initProseStyles(ctx: InitSilkContext) {
     rule("", Modifier.styleModifier {
         property("box-sizing", "border-box")
         property("max-width", layoutLessonTextVar.value())
+        property("margin-left", "auto")
+        property("margin-right", "auto")
         property("color", colorOnSurfaceVar.value())
         typo(Typo.Body)
     })
@@ -62,6 +88,12 @@ fun initProseStyles(ctx: InitSilkContext) {
         property("font-weight", dev.kotree.site.typeTitleWeightVar.value())
     })
     rule(" p", Modifier.styleModifier { property("margin", "0 0 ${space3Var.value()}") })
+    rule(" .$LEAD_PARAGRAPH", Modifier.styleModifier { property("margin", "0 0 ${space4Var.value()}") })
+    rule(" .$LEAD_BOLD", Modifier.styleModifier {
+        property("display", "block")
+        property("margin", "0 0 ${space1Var.value()}")
+    })
+    rule(" .$LEAD_BOLD + br", Modifier.styleModifier { property("display", "none") })
     rule(" ul, .$PROSE ol", Modifier.styleModifier {
         property("margin", "0 0 ${space3Var.value()}")
         property("padding-left", space6Var.value())
