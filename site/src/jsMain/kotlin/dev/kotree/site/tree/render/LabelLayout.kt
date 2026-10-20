@@ -98,7 +98,7 @@ class LabelLayout(private val nodes: TreeNodes, private val g: dynamic) {
         return set
     }
 
-    private fun measure(text: String, style: Int): Double {
+    fun textWidth(text: String, style: Int): Double {
         val cache = if (style == LabelSet.STYLE_TITLE) titleWidths else widths
         val known = cache[text]
         if (known != null) return known
@@ -186,7 +186,7 @@ class LabelLayout(private val nodes: TreeNodes, private val g: dynamic) {
         val set = LabelSet(ordered.size)
         for ((i, c) in ordered.withIndex()) {
             val isLeaf = c.node.kind == Kind.LEAF
-            val w = measure(c.text, c.style) + 2.0 * pad
+            val w = textWidth(c.text, c.style) + 2.0 * pad
             val h = LabelFonts.lineHeight(c.style).toDouble()
             val axl = c.node.ax * sRef
             val ayl = c.node.ay * sRef

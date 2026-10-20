@@ -2,38 +2,44 @@ package dev.kotree.site.tree
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.Tokens
+import dev.kotree.site.colorSurfaceVar
+import dev.kotree.site.space4Var
 import dev.kotree.site.space6Var
 import dev.kotree.site.tree.camera.Camera
+import dev.kotree.site.tree.camera.FlyTarget
 import dev.kotree.site.tree.camera.Fly
+import dev.kotree.site.tree.camera.InputCallbacks
+import dev.kotree.site.tree.camera.ViewState
 import dev.kotree.site.tree.camera.ViewTracker
+import dev.kotree.site.tree.camera.ZoomLevel
 import dev.kotree.site.tree.camera.attachCameraInput
 import dev.kotree.site.tree.gen.generate
 import dev.kotree.site.tree.gen.geometryHash
 import dev.kotree.site.tree.gen.layoutReport
-import dev.kotree.site.tree.model.Difficulty
-import dev.kotree.site.tree.model.Leaf
+import dev.kotree.site.tree.hit.Kind
+import dev.kotree.site.tree.hit.Node
+import dev.kotree.site.tree.hit.TreeNodes
 import dev.kotree.site.tree.model.TreeData
-import dev.kotree.site.tree.overlay.LeafNodes
-import dev.kotree.site.tree.overlay.StemLabels
-import dev.kotree.site.tree.overlay.TreeLabels
-import dev.kotree.site.tree.overlay.cssRgb
-import dev.kotree.site.tree.overlay.splitProgress
-import dev.kotree.site.tree.render.PixelCanvas
-import dev.kotree.site.tree.render.TileCache
-import dev.kotree.site.ui.core.Difficulty as UiDifficulty
-import dev.kotree.site.ui.layout.LeafPopup
+import dev.kotree.site.tree.overlay.A11yNodes
+import dev.kotree.site.tree.overlay.NODE_ATTRIBUTE
+import dev.kotree.site.tree.render.FrameLoop
+import dev.kotree.site.tree.render.LabelFonts
+import dev.kotree.site.tree.render.VectorRenderer
+import dev.kotree.site.ui.layout.BranchNodeCard
+import dev.kotree.site.ui.layout.LeafNodeCard
+import dev.kotree.site.ui.layout.NavItem
+import dev.kotree.site.ui.layout.SiteHeader
+import dev.kotree.site.ui.layout.StemNodeCard
+import dev.kotree.site.ui.layout.ZoomControls
 import kotlinx.browser.document
 import kotlinx.browser.window
-import org.jetbrains.compose.web.dom.A
-import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Text
@@ -44,13 +50,27 @@ import kotlin.math.roundToInt
 
 private const val REPORT_WIDTH_PX = 1280
 private const val REPORT_HEIGHT_PX = 800
-private const val HOME_TEXT = "Home"
-private const val UP_NEXT_SUMMARY = "Coming next. The author is learning this now."
-private const val VIEW_LABEL = "Kotree. Drag to pan, scroll or plus and minus to zoom, Home to fit the tree."
+private const val VIEW_LABEL = "Kotree. Drag to pan, scroll or plus and minus to zoom, Home to fit the tree, Tab to move between nodes."
+private const val ROOTS = "roots"
+/** Escape without a card flies below the enter threshold of the current level, by this factor (below every leave threshold). */
+private const val ZOOM_OUT_FACTOR = 0.85
+/** Node card width in CSS px (6 x space.16). */
+private const val CARD_WIDTH_PX = Tokens.Spacing.s16 * 6
+
+/** A node card to show and where its node is on screen (CSS px) when it opened. */
+private class CardRequest(val node: Node, val anchorX: Double, val anchorY: Double)
+
+private class ElementHolder {
+    var element: HTMLElement? = null
+    var listSeen = false
+}
 
 /**
- * The whole tree, full size of its parent: generator, renderer, camera input, fly and labels (docs/12 §5).
- * Frames are drawn only when the camera changes (docs/12 §8).
+ * The whole tree, full size of its parent (ADR 006): a smooth vector canvas drawn by one requestAnimationFrame loop, a
+ * visually hidden button list for the keyboard, one node card for every click, the floating header and the zoom controls.
+ * Compose state is written only when the view (level, bough, branch, stem) or the open card changes, never per camera
+ * change. State is read only in child composables, never in this scope: reading it here would recompose the container and
+ * re-apply its attributes, which drops keyboard focus.
  */
 @Composable
 fun TreeView(data: TreeData) {
@@ -65,14 +85,110 @@ fun TreeView(data: TreeData) {
                 .forEach { line -> console.log(line) }
         }
     }
+    val nodes = remember(geometry) { TreeNodes(geometry, data) }
     val camera = remember(geometry) { Camera(geometry.bounds) }
     val fly = remember(camera) { Fly(camera) }
     val tracker = remember(geometry) { ViewTracker(geometry) }
-    // Not read in this scope: reading it here would recompose the container and re-apply its attributes,
-    // which drops keyboard focus. Only [Overlay] reads it.
-    val state = remember(camera) { mutableStateOf(camera.state) }
-    var container: Element? = null
-    var popupLeaf by remember(data) { mutableStateOf<Leaf?>(null) }
+    val canvas = remember(geometry) {
+        val c = document.createElement("canvas") as HTMLCanvasElement
+        c.setAttribute("aria-hidden", "true")
+        c.style.setProperty("position", "absolute")
+        c.style.setProperty("inset", "0")
+        c.style.setProperty("width", "100%")
+        c.style.setProperty("height", "100%")
+        c.style.setProperty("display", "block")
+        c
+    }
+    val renderer = remember(canvas) { VectorRenderer(canvas, geometry, nodes) }
+    val viewState = remember(geometry) { mutableStateOf(ViewState(ZoomLevel.Z0, null, null, null)) }
+    val loop = remember(renderer) { FrameLoop(camera, fly, tracker, renderer) { viewState.value = it } }
+    val card = remember(data) { mutableStateOf<CardRequest?>(null) }
+    val upNext = remember(data) { upNextIds(data) }
+    val holder = remember { ElementHolder() }
+
+    fun flyOrSet(t: FlyTarget, instant: Boolean) {
+        if (instant) camera.set(t.z, t.centre.x, t.centre.y) else fly.to(t)
+    }
+
+    /** Opens the right response for [node]: fly (stems and branches always, leaves only when [goto]) and show its card. */
+    fun activate(node: Node, goto: Boolean, instant: Boolean) {
+        val vw = camera.viewport.widthPx.toDouble()
+        val vh = camera.viewport.heightPx.toDouble()
+        when (node.kind) {
+            Kind.BOUGH -> {
+                tracker.unpin()
+                node.boughGeo?.let { flyOrSet(camera.boughTarget(it), instant) }
+                card.value = null
+            }
+            Kind.BRANCH -> {
+                tracker.pin(node.id)
+                node.branchGeo?.let { flyOrSet(camera.branchTarget(it, upNext[node.id]), instant) }
+                card.value = CardRequest(node, vw / 2.0, vh / 2.0)
+            }
+            Kind.STEM -> {
+                tracker.pin(node.branchId)
+                node.stemGeo?.let { flyOrSet(camera.stemTarget(it), instant) }
+                card.value = CardRequest(node, vw / 2.0, vh / 2.0)
+            }
+            else -> {
+                if (goto) {
+                    tracker.pin(node.branchId)
+                    node.leafGeo?.let { flyOrSet(camera.leafTarget(it), instant) }
+                    card.value = CardRequest(node, vw / 2.0, vh / 2.0)
+                } else {
+                    val s = camera.scale
+                    card.value = CardRequest(node, (node.ax - camera.cx) * s + vw / 2.0, (node.ay - camera.cy) * s + vh / 2.0)
+                }
+            }
+        }
+        loop.requestFrame()
+    }
+
+    /** From the Bough level the roots label and limb act as the Foundation branch; at the Canopy they fly to the roots. */
+    fun resolve(clicked: Node): Node {
+        val foundation = nodes.foundation
+        return if (clicked.kind == Kind.BOUGH && clicked.id == ROOTS && viewState.value.level >= ZoomLevel.Z1 && foundation != null) foundation else clicked
+    }
+
+    fun goHome() {
+        tracker.unpin()
+        card.value = null
+        fly.to(camera.homeTarget())
+    }
+
+    fun closeCard() {
+        val node = card.value?.node
+        card.value = null
+        val button = if (node == null) null else document.querySelector("[$NODE_ATTRIBUTE=\"${node.id}\"]") as? HTMLElement
+        (button ?: holder.element)?.focus()
+    }
+
+    fun zoomOutOneLevel() {
+        val enter = when (viewState.value.level) {
+            ZoomLevel.Z4 -> Tokens.Zoom.leafLeave
+            ZoomLevel.Z3 -> Tokens.Zoom.stemLeave
+            ZoomLevel.Z2 -> Tokens.Zoom.branchEnter
+            ZoomLevel.Z1 -> Tokens.Zoom.boughLeave
+            ZoomLevel.Z0 -> return
+        }
+        fly.to(FlyTarget(enter * ZOOM_OUT_FACTOR, Vec(camera.cx, camera.cy)))
+    }
+
+    fun onFocusNode(node: Node?) {
+        // The ring is for keyboard focus only, not for a button focused after a mouse click.
+        val visible = node != null && (document.activeElement as? Element)?.matches(":focus-visible") == true
+        renderer.focus = if (visible) node else null
+        if (visible && node != null) {
+            val s = camera.scale
+            val vw = camera.viewport.widthPx.toDouble()
+            val vh = camera.viewport.heightPx.toDouble()
+            val x = (node.ax - camera.cx) * s + vw / 2.0
+            val y = (node.ay - camera.cy) * s + vh / 2.0
+            val margin = Tokens.Space.hitAreaPx * 2.0
+            if (x < margin || y < margin || x > vw - margin || y > vh - margin) fly.to(FlyTarget(camera.z, Vec(node.ax, node.ay)))
+        }
+        loop.requestFrame()
+    }
 
     Div(
         Modifier.styleModifier {
@@ -82,68 +198,66 @@ fun TreeView(data: TreeData) {
             property("overflow", "hidden")
             property("touch-action", "none")
             property("user-select", "none")
-            property("background", cssRgb(Tokens.Color.surface))
+            property("background-color", colorSurfaceVar.value())
             property("outline", "none")
         }.toAttrs {
-            attr("tabindex", "0")
+            attr("tabindex", "-1")
             attr("role", "group")
             attr("aria-label", VIEW_LABEL)
             ref { el ->
-                val canvas = document.createElement("canvas") as HTMLCanvasElement
-                canvas.setAttribute("aria-hidden", "true")
-                canvas.style.position = "absolute"
-                canvas.style.setProperty("inset", "0")
-                canvas.style.width = "100%"
-                canvas.style.height = "100%"
-                PixelCanvas.applyPixelatedStyle(canvas)
+                holder.element = el
                 el.insertBefore(canvas, el.firstChild)
-                container = el
-                // Focus ring is an overlay element toggled imperatively (a state read here would recompose the
-                // container and drop focus; a plain outline would be painted under the canvas).
-                val ringPx = Tokens.Space.grid / 2
-                val ring = document.createElement("div") as HTMLElement
-                ring.style.setProperty("position", "absolute")
-                ring.style.setProperty("inset", "0")
-                ring.style.setProperty("box-sizing", "border-box")
-                ring.style.setProperty("border", "${ringPx}px solid ${cssRgb(Tokens.Color.onSurface)}")
-                ring.style.setProperty("pointer-events", "none")
-                ring.style.setProperty("display", "none")
-                ring.setAttribute("aria-hidden", "true")
-                el.appendChild(ring)
-                val onFocusIn: (org.w3c.dom.events.Event) -> Unit = {
-                    if (el.matches(":focus-visible")) ring.style.setProperty("display", "block")
-                }
-                val onFocusOut: (org.w3c.dom.events.Event) -> Unit = { ring.style.setProperty("display", "none") }
-                el.addEventListener("focus", onFocusIn)
-                el.addEventListener("blur", onFocusOut)
 
-                val painter = PixelCanvas(canvas, TileCache(geometry, data))
-                val ids = geometry.boughs.map { it.id }
-                var pending = false
-                fun paint() {
-                    pending = false
-                    val cam = camera.state
-                    val step = (splitProgress(cam.z) * Tokens.Zoom.splitSteps).roundToInt()
-                    painter.draw(cam, geometry.bounds, { step }, ids)
+                val measure: () -> Unit = {
+                    val r = el.getBoundingClientRect()
+                    camera.setViewport(Viewport(r.width.toInt(), r.height.toInt()))
                 }
-                camera.onChange = {
-                    state.value = camera.state
-                    el.setAttribute("data-z", (camera.z.asDynamic().toFixed(2) as String))
-                    if (!pending) {
-                        pending = true
-                        window.requestAnimationFrame { paint() }
-                    }
+                measure()
+                val observer: dynamic = js("Reflect").construct(js("ResizeObserver"), arrayOf<dynamic>(measure))
+                observer.observe(el)
+
+                // Start on the whole tree, or on the node named by the URL hash (unknown hash: the whole tree).
+                val first = camera.homeTarget()
+                camera.set(first.z, first.centre.x, first.centre.y)
+                val target = nodeFromHash(nodes)
+                if (target != null) activate(target, goto = true, instant = true)
+
+                val removeInput = attachCameraInput(
+                    el, canvas, camera, fly, loop,
+                    InputCallbacks(
+                        onClick = { x, y ->
+                            val hit = renderer.hitNode(x, y)
+                            if (hit != null) {
+                                activate(resolve(hit), goto = false, instant = false)
+                            } else {
+                                card.value = null
+                            }
+                        },
+                        onHome = { goHome() },
+                        onEscape = { if (card.value != null) closeCard() else zoomOutOneLevel() },
+                    ),
+                )
+                val removeHash = attachDeepLink(nodes) { node ->
+                    if (node == null) goHome() else activate(node, goto = true, instant = false)
                 }
-                val remove = attachCameraInput(el, camera, fly)
-                camera.homeTarget().let { camera.set(it.z, it.centre) } // start on a whole-pixel fit
-                camera.onChange?.invoke()
+
+                // Canvas text is measured with the web font: lay the labels out again once it has loaded.
+                val fonts: dynamic = document.asDynamic().fonts
+                if (fonts != null) {
+                    val refresh: (dynamic) -> Unit = { _ -> renderer.fontsChanged(); loop.requestFrame() }
+                    fonts.load(LabelFonts.label).then(refresh, refresh)
+                    fonts.load(LabelFonts.title).then(refresh, refresh)
+                }
+                PerfProbe.install { renderer.labelRects() }
+                loop.requestFrame()
+
                 onDispose {
-                    remove()
-                    el.removeEventListener("focus", onFocusIn)
-                    el.removeEventListener("blur", onFocusOut)
-                    container = null
-                    camera.onChange = null
+                    removeInput()
+                    removeHash()
+                    observer.disconnect()
+                    loop.dispose()
                     canvas.remove()
+                    holder.element = null
                 }
             }
         }
@@ -160,127 +274,100 @@ fun TreeView(data: TreeData) {
             property("white-space", "nowrap")
             property("border", "0")
         }.toAttrs()) { Text("Kotree") }
-        // Home first so it is first in tab order after the container.
-        HomeButton { tracker.unpin(); fly.to(camera.homeTarget()) }
-        TopicsLink()
-        Overlay(data, geometry, camera, fly, tracker, state, { popupLeaf = it }) {
-            // The focused label was removed on a level switch: keep focus inside the view.
-            val active = document.activeElement
-            if (active == null || active == document.body) (container as? HTMLElement)?.focus()
-        }
-        popupLeaf?.let { UpNextPopup(it) { popupLeaf = null } }
+        SiteHeader(
+            NavItem.Tree,
+            floating = true,
+            modifier = Modifier.styleModifier {
+                property("position", "absolute")
+                property("left", space4Var.value())
+                property("top", space4Var.value())
+            },
+        )
+        A11yNodes(
+            nodes = nodes,
+            view = viewState,
+            onActivate = { activate(resolve(it), goto = false, instant = false) },
+            onFocusNode = { onFocusNode(it) },
+            onListChanged = {
+                // The focused button was removed on a level switch: keep focus inside the view.
+                val active = document.activeElement
+                if (!holder.listSeen) {
+                    holder.listSeen = true
+                } else if (active == null || active == document.body) {
+                    holder.element?.focus()
+                }
+            },
+        )
+        CardHost(
+            card = card,
+            camera = camera,
+            onClose = { closeCard() },
+            onStem = { id -> nodes.byId[id]?.let { activate(it, goto = true, instant = false) } },
+        )
+        ZoomControls(
+            onZoomIn = { fly.cancel(); camera.zoomAtCentre(Tokens.Camera.keyZoomFactor) },
+            onZoomOut = { fly.cancel(); camera.zoomAtCentre(1.0 / Tokens.Camera.keyZoomFactor) },
+            onReset = { goHome() },
+            onStartHere = { nodes.byId[data.startHere]?.let { activate(it, goto = true, instant = false) } },
+            modifier = Modifier.styleModifier {
+                property("position", "absolute")
+                property("right", space4Var.value())
+                property("bottom", space4Var.value())
+            },
+        )
     }
 }
 
+/**
+ * The open node card, placed beside the node it came from: to the right of the anchor, to the left when there is no room
+ * (centred on narrow screens), always vertically centred and never off screen. Reads [card], so only this composable
+ * recomposes when a card opens or closes.
+ */
 @Composable
-private fun Overlay(
-    data: TreeData, geometry: TreeGeometry, camera: Camera, fly: Fly, tracker: ViewTracker, state: State<CameraState>,
-    onLeaf: (Leaf) -> Unit, onLevelSwitch: () -> Unit,
-) {
-    val view = tracker.update(state.value)
-    val upNextId = remember(data) { upNextIds(data) }
-    TreeLabels(
-        data = data,
-        geometry = geometry,
-        camera = state.value,
-        onBough = { tracker.unpin(); fly.to(camera.boughTarget(it)) },
-        onBranch = { _, branch -> tracker.pin(branch.id); fly.to(camera.branchTarget(branch, upNextId[branch.id])) },
-        onLevelSwitch = onLevelSwitch,
-    )
-    StemLabels(data, geometry, state.value, view) { tracker.pin(it.id.substringBefore('/')); fly.to(camera.stemTarget(it)) }
-    LeafNodes(data, geometry, state.value, view, onLeaf)
-}
-
-/** Up-next popup (docs/03 §6.2): the shared [LeafPopup] without "Open lesson", centred over the view. */
-@Composable
-private fun UpNextPopup(leaf: Leaf, onClose: () -> Unit) {
-    LeafPopup(
-        branch = leaf.id.substringBefore('/'),
-        title = leaf.title,
-        summary = UP_NEXT_SUMMARY,
-        difficulty = leaf.difficulty.toUi(),
-        onOpenLesson = null,
-        onClose = onClose,
-        modifier = Modifier.styleModifier {
-            property("position", "absolute")
-            property("left", "50%")
-            property("top", "50%")
-            property("transform", "translate(-50%, -50%)")
-            property("max-width", "calc(100% - ${space6Var.value()} * 2)")
-        },
-    )
+private fun CardHost(card: State<CardRequest?>, camera: Camera, onClose: () -> Unit, onStem: (String) -> Unit) {
+    val request = card.value ?: return
+    val node = request.node
+    key(node.id) {
+        val vw = camera.viewport.widthPx.toDouble()
+        val gap = Tokens.Spacing.s6.toDouble()
+        val fitsRight = request.anchorX + gap + CARD_WIDTH_PX <= vw - gap
+        val fitsLeft = request.anchorX - gap - CARD_WIDTH_PX >= gap
+        Div(
+            Modifier.styleModifier {
+                property("position", "absolute")
+                property("inset", "0")
+                property("display", "flex")
+                property("align-items", "center")
+                property("box-sizing", "border-box")
+                property("padding", space6Var.value())
+                property("pointer-events", "none")
+                if (fitsRight) {
+                    property("padding-left", "${request.anchorX + gap}px")
+                } else if (fitsLeft) {
+                    property("justify-content", "flex-end")
+                    property("padding-right", "${vw - request.anchorX + gap}px")
+                } else {
+                    property("justify-content", "center")
+                }
+            }.toAttrs()
+        ) {
+            val cardStyle = Modifier.styleModifier {
+                property("width", "${CARD_WIDTH_PX}px")
+                property("max-width", "100%")
+                property("pointer-events", "auto")
+            }
+            val leaf = node.leaf
+            val stem = node.stem
+            val branch = node.branch
+            when {
+                node.kind == Kind.LEAF && leaf != null && stem != null && branch != null -> LeafNodeCard(leaf, branch, stem, onClose, cardStyle)
+                node.kind == Kind.STEM && stem != null && branch != null -> StemNodeCard(stem, branch, onClose, cardStyle)
+                node.kind == Kind.BRANCH && branch != null -> BranchNodeCard(branch, { onStem(it.id) }, onClose, cardStyle)
+            }
+        }
+    }
 }
 
 /** Branch id to the full id of its up-next leaf (absent when every leaf is live). */
 private fun upNextIds(data: TreeData): Map<String, String> =
     data.boughs.flatMap { it.branches }.mapNotNull { b -> b.upNext?.let { b.id to it } }.toMap()
-
-private fun Difficulty.toUi(): UiDifficulty = when (this) {
-    Difficulty.EASY -> UiDifficulty.Easy
-    Difficulty.MEDIUM -> UiDifficulty.Medium
-    Difficulty.HARD -> UiDifficulty.Hard
-}
-
-/** Link to the plain topics list (/topics), placed right of the Home button. Focus ring comes from the global rule. */
-@Composable
-private fun TopicsLink() {
-    A(
-        "/topics",
-        Modifier.styleModifier {
-            property("position", "absolute")
-            property("left", "${Tokens.Space.grid * 4 + Tokens.Space.hitAreaPx * 2 + Tokens.Space.grid * 2}px")
-            property("top", "${Tokens.Space.grid * 4}px")
-            property("display", "inline-flex")
-            property("align-items", "center")
-            property("justify-content", "center")
-            property("box-sizing", "border-box")
-            property("min-width", "${Tokens.Space.hitAreaPx * 2}px")
-            property("min-height", "${Tokens.Space.hitAreaPx * 2}px")
-            property("padding", "0 ${Tokens.Space.grid * 4}px")
-            property("border", "${Tokens.Space.hairlinePx}px solid ${cssRgb(Tokens.Color.outline)}")
-            property("border-radius", "${Tokens.Space.hitAreaPx * 2}px")
-            property("background", cssRgb(Tokens.Color.surface))
-            property("color", cssRgb(Tokens.Color.onSurface))
-            property("text-decoration", "none")
-            property("font-family", Tokens.Type.fontUi.joinToString(", "))
-            property("font-size", "${Tokens.Type.labelSizePx}px")
-            property("line-height", "${Tokens.Type.labelLineHeightPx}px")
-            property("font-weight", "${Tokens.Type.labelWeight}")
-        }.toAttrs()
-    ) { Text("Topics") }
-}
-
-@Composable
-private fun HomeButton(onClick: () -> Unit) {
-    var focusRing by remember { mutableStateOf(false) }
-    val ring = Tokens.Space.grid / 2
-    Button(
-        Modifier.styleModifier {
-            property("position", "absolute")
-            property("left", "${Tokens.Space.grid * 4}px")
-            property("top", "${Tokens.Space.grid * 4}px")
-            property("min-width", "${Tokens.Space.hitAreaPx * 2}px")
-            property("min-height", "${Tokens.Space.hitAreaPx * 2}px")
-            property("padding", "0 ${Tokens.Space.grid * 4}px")
-            property("border", "${Tokens.Space.hairlinePx}px solid ${cssRgb(Tokens.Color.outline)}")
-            property("border-radius", "${Tokens.Space.hitAreaPx * 2}px")
-            property("background", cssRgb(Tokens.Color.surface))
-            property("color", cssRgb(Tokens.Color.onSurface))
-            property("cursor", "pointer")
-            property("font-family", Tokens.Type.fontUi.joinToString(", "))
-            property("font-size", "${Tokens.Type.labelSizePx}px")
-            property("line-height", "${Tokens.Type.labelLineHeightPx}px")
-            property("font-weight", "${Tokens.Type.labelWeight}")
-            property("outline", if (focusRing) "${ring}px solid ${cssRgb(Tokens.Color.onSurface)}" else "none")
-            property("outline-offset", "${ring}px")
-        }.toAttrs {
-            attr("type", "button")
-            attr("aria-label", "Fit the whole tree")
-            onClick { onClick() }
-            onFocus { focusRing = (it.nativeEvent.target as? Element)?.matches(":focus-visible") == true }
-            onBlur { focusRing = false }
-        }
-    ) {
-        Text(HOME_TEXT)
-    }
-}

@@ -4,7 +4,6 @@ import dev.kotree.site.Tokens
 import dev.kotree.site.tree.BranchGeo
 import dev.kotree.site.tree.TreeGeometry
 import dev.kotree.site.tree.Viewport
-import dev.kotree.site.tree.model.LeafStatus
 import dev.kotree.site.tree.model.TreeData
 import kotlin.math.max
 import kotlin.math.min
@@ -32,7 +31,7 @@ private class Box(val x0: Double, val y0: Double, val x1: Double, val y1: Double
  * (1280 x 800 by default), every stem label and leaf hit area must be at least [Tokens.Space.hitAreaPx]
  * square or wider, none may overlap another, and leaf hit areas keep a gap of
  * [Tokens.LayoutCheck.LEAF_GAP_MIN_PX] at the stem level. Returns the report lines; lines starting with "FAIL" are failures and the
- * last line is a summary. The caller logs them. Only live and up-next leaves are checked: shadow leaves are never drawn (D3).
+ * last line is a summary. The caller logs them. Every leaf is checked, shadow ones included (ADR 006: they are drawn and clickable).
  *
  * Label boxes are estimated from the title length; leaf hit boxes are max(hit area, leaf size at that zoom).
  */
@@ -50,13 +49,13 @@ fun layoutReport(
         viewport.heightPx / max(g.bounds.maxY - g.bounds.minY, 1.0),
     )
     val titles = HashMap<String, String>()
-    // Only live and up-next leaves are drawn and get a hit area (D3): shadow slots are not checked.
+    // Every leaf is drawn and clickable from the Stem level (ADR 006, Q1): shadow slots are checked like the others.
     val drawn = HashSet<String>()
     data.boughs.forEach { b ->
         b.branches.forEach { br ->
             br.stems.forEach { st ->
                 titles[st.id] = st.title
-                st.leaves.forEach { if (it.status != LeafStatus.SHADOW) drawn.add(it.id) }
+                st.leaves.forEach { drawn.add(it.id) }
             }
         }
     }
