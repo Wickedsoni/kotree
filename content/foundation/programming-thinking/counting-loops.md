@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 16
 requires: [foundation/programming-thinking/how-a-program-repeats]
-summary: A counting loop names its first and last number up front. It runs once for each number in between, last number included.
+summary: You name the first and last number up front. The program then repeats once for each number from the first to the last.
 video: ""
 publishedOn:
 updatedOn:
@@ -33,7 +33,7 @@ Think of climbing a staircase where every step has a number painted on it.
 
 You know the first step and the last step before you take a single step. So you also know how many numbers you will say. You never have to look up and ask "am I at the top yet?", because the painted numbers tell you.
 
-**Where the analogy stops:** A real staircase has a top step you can see, and a landing beyond it. A range of numbers is only a rule that hands out one number at a time. It is you who decides whether the last number counts. Also, a real staircase goes one step at a time. A rule for numbers can skip steps or go down.
+**Where the analogy stops:** A real staircase has a top step you can see, and a landing beyond it. A rule that hands out numbers gives you one number at a time. It is you who decides whether the last number counts. Also, a real staircase goes one step at a time. A rule for numbers can skip steps or go down.
 
 ## See it move
 
@@ -190,7 +190,11 @@ options:
   - id: c
     text: "3, 2, 1, 0, then Go"
     why: "You may have counted down to zero. This rule ends on step 1, so 0 is never visited."
-output: "3, 2, 1, then Go"
+output: |
+  3
+  2
+  1
+  Go
 ```
 
 ## Tricks to remember

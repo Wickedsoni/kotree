@@ -193,7 +193,9 @@ options:
   - id: c
     text: "true, then true"
     why: "You may have thought NOT keeps the light as it is. NOT flips it, so green becomes red."
-output: "true, then false"
+output: |
+  true
+  false
 ```
 
 ## Tricks to remember

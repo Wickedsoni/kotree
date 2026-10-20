@@ -18,7 +18,7 @@ upnext: false
 <!-- SOURCES (read 20 Oct 2026). Kotlin if, else, else if: https://kotlinlang.org/docs/control-flow.html ("To use if in Kotlin, add the condition to check within parentheses () and the action to take if the result is true within curly braces {}. You can use else and else if for additional branches and checks."; sample "if (heightAlice < heightBob) taller = heightBob" with no else). https://kotlinlang.org/docs/basic-syntax.html (if/else sample, maxOf). The control-flow page says nothing about the order of if / else if checks or about else being skipped when the condition is true, so the lesson teaches both as what a hand trace shows, not as a quoted rule. Android: https://developer.android.com/develop/ui/compose/state ("if you don't want to display the greeting if the name is empty, use the state in an if statement"); https://developer.android.com/develop/ui/compose/documentation ("Jetpack Compose is the modern toolkit for building Android UI"). No Kotlin compiler on the authoring machine: every output below is hand-traced, not run. -->
 ## The question
 
-You open a weather app. When it rains, the app shows an umbrella. When it does not, it shows a sun. The app never shows both.
+You open a weather app. When it rains, the app shows an umbrella, and when it does not, it shows a sun. It never shows both.
 
 How does a program decide which of two things to do? And what happens to the steps it did not choose?
 
@@ -35,7 +35,7 @@ Think of a small ball rolling down a garden path.
 
 The ball does not look at both paths. It reads the sign, the gate swings, and the ball takes one path.
 
-**Where the analogy stops:** A walker in a garden can look at the sky, change their mind and turn back. A program reads the sign once, with the values it holds at that moment, and goes. Also, a garden fork has two paths. A program can have a fork with only one path. Then the ball just rolls on when the answer is no.
+**Where the analogy stops:** A walker in a garden can look at the sky, change their mind and turn back. A program reads the sign once, with the values it holds at that moment, and goes. Also, a garden fork has two paths. A program can have a fork with only one path. Then the ball rolls on when the answer is no.
 
 ## See it move
 
@@ -136,7 +136,9 @@ options:
   - id: c
     text: "Warm, then Done"
     why: "You may have noticed that 30 is above 15 too. But the ball meets the above-25 sign first, and it leaves there."
-output: "Hot, then Done"
+output: |
+  Hot
+  Done
 ```
 
 ```challenge
@@ -168,7 +170,9 @@ options:
   - id: c
     text: "Warm, then Hot, then Done"
     why: "You may have expected both signs to run. Only one path is walked after a fork."
-output: "Warm, then Done"
+output: |
+  Warm
+  Done
 ```
 
 ```challenge
@@ -194,7 +198,7 @@ options:
     why: "The answer is no and the fork has no other path, so the ball rolls straight on. Only the Done step runs."
   - id: c
     text: "The program stops, because there is no else"
-    why: "You may have expected the missing path to be a problem. A fork with one path is allowed. The ball just rolls on."
+    why: "You may have expected the missing path to be a problem. A fork with one path is allowed. The ball rolls on."
 output: "Done"
 ```
 

@@ -1,5 +1,7 @@
 # Review W2-b: four programming-thinking shadow leaves
 
+VERDICT: FIX (all items mechanical; none needs the owner)
+
 Reviewer: independent (did not write the leaves). Gate: L31 (reviewer PASS before `live`), L29 voice, hard rules, `docs/04` §8 checklist, `docs/06` §3.
 Sources reached: kotlinlang.org (docs and spec), developer.android.com. Not reachable and not needed: play.kotlinlang.org, Wikipedia. No `kotlinc`, so nothing was run. Every output was re-traced by hand by me (see each leaf). No gradle was run.
 Policy applied: a SIM marker with no built sim does not block (L31 ruling); the `<!-- SOURCES ... -->` comment at line 18 is stripped by `housekeeper` at go-live and is not a FAIL. The `<!-- SIM: id -->` marker stays.
@@ -8,14 +10,14 @@ Policy applied: a SIM marker with no built sim does not block (L31 ruling); the 
 
 | Leaf | Verdict | Items |
 |---|---|---|
-| `yes-or-no-questions` | PASS | 0 FIX (optional notes only) |
-| `how-a-program-decides` | FIX | 2 mechanical |
-| `how-a-program-repeats` | FIX | 3 mechanical |
-| `counting-loops` | FIX | 1 mechanical |
+| `yes-or-no-questions` | FIX | 1 mechanical (Predict `output` format) |
+| `how-a-program-decides` | FIX | 4 mechanical |
+| `how-a-program-repeats` | FIX | 5 mechanical |
+| `counting-loops` | FIX | 3 mechanical |
 
-All FIX items are mechanical (`fixer` can do them). After they are applied, all four leaves are PASS with no re-trace needed, because no output or key changes. No owner decision blocks any leaf.
+All FIX items are mechanical (`fixer` can do them). After they are applied, all four leaves are PASS. Re-check only that the edited lines match the New text; no answer key changes. No owner decision blocks any leaf.
 
-Checked and OK on all four: frontmatter keys and order; `id` equals path; `title`, `difficulty`, `requires`, `fruit` equal the roadmap rows (`content/foundation/_roadmap.md` lines 77-96); `order` 13, 14, 15, 16 is correct (6 + 3 + 3 earlier leaves, then position in stem); `sims` equals the SIM marker (`[]`, `fork-and-gate`, `loop-track-gate`, `numbered-stairs-loop`, all listed in `docs/sims/needed-ids.md`); `playground: false` with every Predict `run: false` / `verified: not-run`, no Try it, no Fix the bug; headings in template order with exact names (yes-or-no has no See it move, the roadmap row says `none:` with a reason); summaries 18 to 22 words; prose 1,281 to 1,355 words (budget 900 to 1,600); one `kotlin` block each (limit 8); every kotlin block is a complete program; 3 Predict blocks each, 3 options, exactly one `correct`, a `why` on every option, YAML parses (checked with a parser); Recap is three lines under 20 words; no emoji, no non-ASCII, no `!` in prose, no video, capstone, previous/next or "coming soon" text; T4 banned words: zero hits except the two in the decides leaf below; every bold term is bold once; Notice, Guess and Build contain no Kotlin syntax; every "You can now" line has a matching Predict item; Android sections are reading-only and name a symptom.
+Checked and OK on all four: frontmatter keys and order; `id` equals path; `title`, `difficulty`, `requires`, `fruit` equal the roadmap rows (`content/foundation/_roadmap.md` lines 77-96); `order` 13, 14, 15, 16 is correct (6 + 3 + 3 earlier leaves, then position in stem); `sims` equals the SIM marker (`[]`, `fork-and-gate`, `loop-track-gate`, `numbered-stairs-loop`, all listed in `docs/sims/needed-ids.md`); `playground: false` with every Predict `run: false` / `verified: not-run`, no Try it, no Fix the bug; headings in template order with exact names (yes-or-no has no See it move, the roadmap row says `none:` with a reason); summaries 18 to 22 words; prose 1,281 to 1,355 words (budget 900 to 1,600); The question is 2 to 5 sentences (except decides, see its FIX 3); one `kotlin` block each (limit 8); every kotlin block is a complete program; 3 Predict blocks each, 3 options, exactly one `correct`, a `why` on every option, YAML parses (checked with a parser); Recap is three lines under 20 words; no emoji, no non-ASCII, no `!` in prose, no video, capstone, previous/next or "coming soon" text; T4 banned words: zero hits except the two in the decides leaf below; every bold term is bold once; Notice, Guess and Build contain no Kotlin syntax; every "You can now" line has a matching Predict item; Android sections are reading-only and name a symptom.
 
 ## Fact check (official pages, read 20 Oct 2026)
 
@@ -28,15 +30,17 @@ Checked and OK on all four: frontmatter keys and order; `id` equals path; `title
 | `var` declares variables that can be reassigned | kotlinlang.org/docs/basic-syntax.html | Matches |
 | Range definition; default step 1; `1..4` is 1, 2, 3, 4; `..` includes both ends; `..<` excludes the end; `downTo` for reverse; `0..8 step 2` gives 02468 | kotlinlang.org/docs/ranges.html | Matches |
 | `for (i in 1..6)` prints 123456 and `for (i in 1..<6)` prints 12345 | control-flow page | Matches; `1..<4` giving 1, 2, 3 follows from the second sample |
+| Comparison symbols `>`, `<`, `>=`, `<=`, `==`, `!=` | kotlinlang.org/docs/operator-overloading.html (table: `a > b` is `a.compareTo(b) > 0`, and so on; `a == b`, `a != b` via `equals`) | Matches |
+| `==` is structural equality (compares contents through `equals`), as opposed to `===` | kotlinlang.org/docs/equality.html | Matches in substance. The page states that classes override `equals()` to give structural equality; the leaf only says `==` asks a question, which is all it needs. |
 | Compose `Button` has `enabled`; "When false, this parameter makes the button appear unavailable and inactive." | developer.android.com/develop/ui/compose/components/button | Matches |
 | `if (name.isNotEmpty()) { Text("Hello, $name!") ... }` hides the greeting when the name is empty | developer.android.com/develop/ui/compose/state | Matches |
 | "Jetpack Compose is the modern toolkit for building Android UI" | developer.android.com/develop/ui/compose/documentation | Matches |
 | ANR when the app "can't respond to user input on the main thread--also known as the UI thread"; no response to key press or tap within 5 seconds; "Don't perform blocking or long-running operations on the app's main thread." | developer.android.com/topic/performance/anrs/keep-your-app-responsive | Matches. The page does not mention endless loops; the leaf says so and labels the link as its own reasoning. Good. |
 | `items(5)` with code comment "Add 5 items"; `messages.forEach` in a `Column`; no `for` loop on the page | developer.android.com/develop/ui/compose/lists | Matches (searched the page text for `for (`, no hit) |
 
-Could not verify from an official page (language semantics or textbook level, accepted, none blocks): an iteration is "one run of the body"; the loop "check comes first" is true of `while` (see repeats item 3); "put the strictest sign first" is teaching advice, correct for nested thresholds; `==` versus `=` wording.
+Could not verify from an official page (language semantics or textbook level, accepted, none blocks): an iteration is "one run of the body"; the loop "check comes first" is true of `while` (see repeats item 3); "put the strictest sign first" is teaching advice, correct for nested thresholds; `==` versus `=` wording; the `..<` operator's stability status (the control-flow page uses it with no experimental note, which is the evidence relied on).
 
-## Leaf 1: yes-or-no-questions: PASS
+## Leaf 1: yes-or-no-questions (`content/foundation/programming-thinking/yes-or-no-questions.md`): FIX
 
 Hand-trace (mine, independent):
 - Name it program: `age = 17`, `oldEnough = 17 >= 18 = false`; prints `false`; `false && true` = `false`; `false || true` = `true`; `!false` = `true`. Stated "false, false, true and true": correct.
@@ -47,13 +51,19 @@ Hand-trace (mine, independent):
 - `or-and-not`: `true || false` is `true`; `!true` is `false`. Key b correct.
 - Compile: the Name it program compiles (complete `main`, Boolean values, no unused or unreachable code).
 
+FIX list:
+1. Line 196 (`or-and-not`, `output`). `docs/06` §3.2: `output` is the exact stdout, multi-line with `|`. The program prints two lines; the sibling leaves in this stem (`expressions.md`, `what-is-a-type.md`) write multi-line prints as `|` blocks. Old: `output: "true, then false"` New: `output: |` followed by two indented lines, `true` and `false`. (mechanical)
+
+After this, PASS.
+
 Optional notes (not FIX, owner choice):
+- Line 169: the word "wrong" in `sign-says-18` option c describes a check in code, not the learner, so it is allowed (same reading as decides line 216).
 - Line 27 says "cinema door" while The question uses a club door. Same idea; one place name would sound cleaner aloud.
 - Line 33 ("A second turnstile in a row is a second question.") is never reused later. Harmless.
 - Line 208: "In maths, one equals sign is both a statement and a question" is a loose claim. A safer wording: "In maths class one equals sign is the only one you use, so it feels the same."
 - Line 214 gives two symptoms; only the second (button too early) and the exactly-18 case are explained below it. The first ("every box filled but the button stays grey") is not tied to a lesson part.
 
-## Leaf 2: how-a-program-decides: FIX
+## Leaf 2: how-a-program-decides (`content/foundation/programming-thinking/how-a-program-decides.md`): FIX
 
 Hand-trace (mine):
 - Name it, `temp = 20`: `20 > 25` false, `20 > 15` true, prints `Warm`, then `Done`. Correct as stated.
@@ -64,10 +74,12 @@ Hand-trace (mine):
 FIX list:
 1. Line 38 (Where the analogy stops). T4 banned word "just". Old: `Then the ball just rolls on when the answer is no.` New: `Then the ball rolls on when the answer is no.` (mechanical)
 2. Line 197 (`fork-with-one-path`, option c `why`). T4 banned word "just". Old: `A fork with one path is allowed. The ball just rolls on.` New: `A fork with one path is allowed. The ball rolls on.` (mechanical)
+3. Lines 21-23 (The question). It has 6 sentences; `docs/04` §4.1 allows 2 to 5. Old: `When it rains, the app shows an umbrella. When it does not, it shows a sun. The app never shows both.` New: `When it rains, the app shows an umbrella, and when it does not, it shows a sun. It never shows both.` (mechanical)
+4. Lines 139 and 171 (`output` of `temp-thirty` and `signs-in-wrong-order`). The programs print two lines, and `docs/06` §3.2 wants exact stdout (same reason as yes-or-no FIX 1). Old: `output: "Hot, then Done"` New: `output: |` then lines `Hot` and `Done`. Old: `output: "Warm, then Done"` New: `output: |` then lines `Warm` and `Done`. (mechanical; the option texts stay as they are)
 
 Optional (not FIX): line 218 is 27 words. Split: `Its state page has an example. When the name is empty, the greeting is hidden, and the check sits in an `if` statement.` Line 216 "The screen is wrong because" could read "The screen shows this because" (T5 spirit).
 
-## Leaf 3: how-a-program-repeats: FIX
+## Leaf 3: how-a-program-repeats (`content/foundation/programming-thinking/how-a-program-repeats.md`): FIX
 
 Hand-trace (mine):
 - Name it: `heat` 0, 1, 2 pass `heat < 3` (three `Stir`), `heat` 3 fails, then `Boiling`. Correct as stated. `heat = heat + 1` reassigns a `var`: compiles, no compiler warning.
@@ -81,13 +93,15 @@ FIX list:
 1. Line 37 (Where the analogy stops). The term "loop" is used twice before Name it defines and bolds it (line 86); Mental model must not use the Kotlin-side term (`docs/04` §4.2, §3.3, T2). Old: `A program has no stove. A loop only checks a number. Unless a step inside the loop changes that number, the check sees the same number every time, and the cook stirs for ever.` New: `A program has no stove. It only checks a number. Unless a step in the repeated part changes that number, the check sees the same number every time, and the cook stirs for ever.` (mechanical)
 2. Line 44 (Try this, item 1). "The gate" is an object that is not in the Mental model, so the text breaks the one-analogy rule and does not make sense with the sim off (`docs/04` §3.2, §4.3). Old: `Press Step and watch the spoon go round once. The gate checks the thermometer, and the stove adds one mark.` New: `Press Step and watch the spoon go round once. Before the stir, the thermometer is checked, and the stove adds one mark.` (mechanical; `sim-engineer` may still draw a gate, which is the cook's question)
 3. Line 196 (Tricks). Overgeneralised: a `do-while` loop runs its body before the check, and the control-flow page names both. Old: `The check comes first, so a loop can run zero times.` New: `The check comes first, so a `while` loop can run zero times.` (mechanical)
+4. Line 86 (Name it). "condition" is used three times and never bolded or defined on this page (`docs/04` §7: define each term at first use, even if an earlier leaf did; L29 jargon). Old: `The Kotlin documentation says that `while` checks the condition and, if it is satisfied, runs the code in its body and then returns to the condition check. The condition goes in round brackets.` New: `The yes-or-no question in the round brackets is the **condition**. The Kotlin documentation says that `while` checks the condition and, if the answer is yes, runs the code in its body and then returns to the condition check.` Keep the next sentence ("The steps go in curly braces and are called the **body**."). (mechanical)
+5. Line 8 (`summary`). It opens with the term "loop", which the title avoids (`docs/04` §2: no term the popup reader has not met). Old: `A loop checks a yes-or-no question, runs its steps, then checks again. It stops only when the answer changes to no.` New: `A program checks a yes-or-no question, runs its steps, then checks again. It stops only when the answer changes to no.` (mechanical; `summary` is not in the V5 equality set)
 
 Optional (not FIX):
 - Lines 82, 67: plain English "while" ("keeps stirring while the answer is yes", "for a while") sits in Build and Guess before the keyword appears. It reads as a good bridge and is not Kotlin syntax; left to the owner.
 - Line 208: "This part is our own reasoning." `docs/04` T3 uses "I" for the author. Consider "This part is my own reasoning, not the documentation's." Same in counting-loops line 215.
 - Sim note for `sim-engineer`: Try this items 2 and 3 say "press Run", but the one-line sim description in `docs/sims/needed-ids.md` names only Step. The built sim needs a Run control.
 
-## Leaf 4: counting-loops: FIX
+## Leaf 4: counting-loops (`content/foundation/programming-thinking/counting-loops.md`): FIX
 
 Hand-trace (mine):
 - Name it program: `i` = 1, 2, 3, 4, then `Done`. Correct.
@@ -95,10 +109,12 @@ Hand-trace (mine):
 - `last-number-printed` (`1..10`): last is 10. Key b correct.
 - `sum-misses-five` (`1..<5`): i = 1, 2, 3, 4; total 1 + 2 + 3 + 4 = 10. Key b correct; option c (4) is the believable "last number" slip.
 - `count-down-to-go`: `3 downTo 1` prints 3, 2, 1, then `Go`. Key b correct.
-- Compile: `..<` is stable (Kotlin 1.9 and later); all programs are complete.
+- Compile: `..<` appears without any experimental note in the control-flow sample (`for (i in 1..<6)`); all programs are complete `main` functions.
 
 FIX list:
 1. Line 36 (Where the analogy stops). The term "range" is used before Name it defines and bolds it (line 84). Old: `A range of numbers is only a rule that hands out one number at a time.` New: `A rule that hands out numbers gives you one number at a time.` (mechanical)
+2. Line 8 (`summary`). It contradicts itself: "each number in between, last number included" ("in between" excludes the ends) and leans on the unmet term "counting loop". Old: `A counting loop names its first and last number up front. It runs once for each number in between, last number included.` New: `You name the first and last number up front. The program then repeats once for each number from the first to the last.` (mechanical)
+3. Line 193 (`output` of `count-down-to-go`). The program prints four lines (`3`, `2`, `1`, `Go`). Old: `output: "3, 2, 1, then Go"` New: `output: |` then lines `3`, `2`, `1`, `Go`. (mechanical)
 
 Optional (not FIX): line 36 also introduces "a landing beyond it", a small second image; "A real staircase has a top step you can see." says the same without it. Common mistake 3 (line 207) could add what `3..1` gives (no numbers at all); the ranges page does not state it, so leave it out unless a run confirms it.
 

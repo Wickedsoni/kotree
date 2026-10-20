@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 15
 requires: [foundation/programming-thinking/how-a-program-decides]
-summary: A loop checks a yes-or-no question, runs its steps, then checks again. It stops only when the answer changes to no.
+summary: A program checks a yes-or-no question, runs its steps, then checks again. It stops only when the answer changes to no.
 video: ""
 publishedOn:
 updatedOn:
@@ -34,14 +34,14 @@ Think of a cook stirring soup until it boils.
 
 The cook checks, stirs, checks again, stirs again. When the answer to the question is no, the cook puts the spoon down.
 
-**Where the analogy stops:** A real stove warms the pot by itself, whatever the cook does. A program has no stove. A loop only checks a number. Unless a step inside the loop changes that number, the check sees the same number every time, and the cook stirs for ever. Also, a real cook can see the soup is nearly done. A program checks only at the start of each round.
+**Where the analogy stops:** A real stove warms the pot by itself, whatever the cook does. A program has no stove. It only checks a number. Unless a step in the repeated part changes that number, the check sees the same number every time, and the cook stirs for ever. Also, a real cook can see the soup is nearly done. A program checks only at the start of each round.
 
 ## See it move
 
 <!-- SIM: loop-track-gate -->
 
 **Try this:**
-1. Press Step and watch the spoon go round once. The gate checks the thermometer, and the stove adds one mark.
+1. Press Step and watch the spoon go round once. Before the stir, the thermometer is checked, and the stove adds one mark.
 2. Change the boiling mark from 3 to 5 and press Run.
 3. Switch the stove off and press Run.
 
@@ -83,7 +83,7 @@ Note what the question asks. It asks "should I keep going?", not "should I stop?
 
 ### Name it
 
-A set of steps that is repeated is a **loop**. The loop in the Build steps is a **`while`** loop. The Kotlin documentation says that `while` checks the condition and, if it is satisfied, runs the code in its body and then returns to the condition check. The condition goes in round brackets. The steps go in curly braces and are called the **body**. One run of the body is an **iteration**.
+A set of steps that is repeated is a **loop**. The loop in the Build steps is a **`while`** loop. The yes-or-no question in the round brackets is the **condition**. The Kotlin documentation says that `while` checks the condition and, if the answer is yes, runs the code in its body and then returns to the condition check. The steps go in curly braces and are called the **body**. One run of the body is an **iteration**.
 
 The number that the check reads must be able to change. A name that can hold a new value is made with **`var`**. The documentation says `var` declares variables that can be reassigned. The line `heat = heat + 1` is the stove: it gives `heat` a new value that is one more than the old one.
 
@@ -193,7 +193,7 @@ output: "5 times"
 - Check, stir, check again.
 - The check asks "keep going?", not "stop?".
 - No stove, no end. Something inside the loop has to change the number.
-- The check comes first, so a loop can run zero times.
+- The check comes first, so a `while` loop can run zero times.
 
 ## Common mistakes
 
