@@ -18,7 +18,7 @@ upnext: false
 <!-- SOURCES: kotlinlang.org/docs/command-line.html (fetched 20 Oct 2026): kotlinc compiles hello.kt; "Run the compiler with the -Xrepl compiler option to have an interactive shell. In this shell, you can type any valid Kotlin code and see the results."; "A Kotlin script is a Kotlin source file (.kts) with top-level executable code." The page does not say how the shell or scripts work inside. kotlinlang.org/docs/faq.html: "When targeting the JVM, Kotlin produces Java-compatible bytecode." developer.android.com/build/jdks: "The Java Virtual Machine (JVM), an interpreter that executes Java applications. You use the JVM to run the Android Studio IDE and the Gradle build tool." developer.android.com/studio/run: "If you receive build-time or compile-time errors, inspect the tree and select an element to read the error output". Which other languages are usually interpreted, and the two-lane cost model: general programming knowledge, not from the Kotlin documentation. Outputs hand-traced, not run. -->
 ## The question
 
-A friend learning another language says, "My program printed two lines and then stopped with an error." In Kotlin, your mistakes usually show up before anything prints. Both of you wrote a typo. Why do two languages behave so differently?
+A friend learning another language says, "My program printed two lines and then stopped with an error." In Kotlin, a typo usually shows up before anything prints. Both of you wrote a typo. Why do two languages behave so differently?
 
 ## Mental model
 
@@ -69,7 +69,7 @@ Idea A swaps the helpers. Idea C gives the helpers a skill neither has, because 
 
 ### Name it
 
-A **compiler** translates the whole program before it runs, and the translated copy is what runs. An **interpreter** reads a program and carries out each step as it goes, with no separate translated copy. Here are the plain versions of both ideas. Real tools often mix them.
+A **compiler** translates the whole program before it runs, and the translated copy is what runs. An **interpreter** reads a program and carries out each step as it goes, with no separate translated copy. These plain versions of both ideas, the table below and the point that real tools often mix them are general programming knowledge, not from the Kotlin documentation.
 
 | Question | Compile first | Interpret as you go |
 |---|---|---|
@@ -125,7 +125,7 @@ code: |
   fun main() {
       val sentences = 5
       val timesHeard = 3
-      // $sentences shows the value of sentences.
+      // $name shows a value. ${...} shows the result of a calculation.
       println("Print shop: $sentences")
       println("Live speaker: ${sentences * timesHeard}")
   }
@@ -161,14 +161,14 @@ output: |
 
 ## Where this shows up in Android
 
-Android Studio is the program most Android developers write their apps in. When you press Run, one of two things can happen. The app does not open, and the Build Output tab lists errors. Or the app opens and then closes. The first is the compile stage, and the second is the app running.
+Android Studio is the program most Android developers write their apps in. When you press Run, one of two things can happen. The app does not open, and the Build Output tab lists errors. Or the app opens and then closes. The first is the compile stage, and the second is the app running after it was built.
 
-The Android documentation says that if you receive build-time or compile-time errors, you can inspect the tree and select an element to read the error output. The same documentation describes the **Java Virtual Machine (JVM)** as "an interpreter that executes Java applications". It says you use the JVM to run Android Studio and the Gradle build tool, which builds your app. So one workflow holds both ideas, a compiler to translate and an interpreter to run. Matching the two symptoms to the two stages is our own reasoning.
+The Android documentation says that if you receive build-time or compile-time errors, you can inspect the tree and select an element to read the error output. The same documentation describes the **Java Virtual Machine (JVM)** as "an interpreter that executes Java applications". It says you use the JVM to run Android Studio and the Gradle build tool, which builds your app. So in one workflow, the build compiles your code, and the JVM, an interpreter, is what runs the build tools. Matching the two symptoms to the two stages (compile, then run) is our own reasoning.
 
 ## Recap
 
-1. A compiler translates everything before running; an interpreter translates and runs step by step.
-2. With compile first, a typo stops everything; with an interpreter, earlier lines can run first.
+1. A compiler translates everything first, and an interpreter translates as it runs.
+2. A typo stops everything with compile first, but earlier lines still run step by step.
 3. Kotlin compiles first, and many real systems combine both ways.
 
 ## You can now

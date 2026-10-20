@@ -74,7 +74,7 @@ Idea A sends part of the job on before anyone knows the rest is broken. Idea C t
 
 The text you type is **source code**. The tool that reads all of it, checks the rules and translates it is a **compiler**. A broken rule gives a **compile error**, which is the red note. The tiles are **instructions**: tiny steps such as "add these two numbers". The main chip, the **CPU**, follows them one at a time.
 
-What the tiles look like depends on where the program is meant to run. One target is the **JVM**, a program that runs **bytecode**. Bytecode is an in-between form that is the same on every kind of computer, so it is not yet the chip's own steps. The Kotlin documentation says: "When targeting the JVM, Kotlin produces Java-compatible bytecode." Another target is native. The documentation says: "When targeting native, Kotlin will produce platform-specific code (via LLVM)." That means steps for one kind of chip.
+What the tiles look like depends on where the program is meant to run. One target is the **JVM**, a program that runs **bytecode**. Bytecode is an in-between form that is the same on every kind of computer, so it is not yet the chip's own steps. That description is general knowledge, not from the Kotlin documentation. The Kotlin documentation says: "When targeting the JVM, Kotlin produces Java-compatible bytecode." Another target is native. The documentation says that when targeting native, Kotlin produces platform-specific code. That means steps for one kind of chip.
 
 On the command line, the Kotlin compiler is called `kotlinc`. The documentation compiles a file called `hello.kt` with `kotlinc hello.kt -include-runtime -d hello.jar`. It says the `-d` option gives the output path for the generated files. Compiling is its own step, and it happens before the program runs.
 
@@ -168,8 +168,8 @@ The Android documentation says the build system compiles app resources and sourc
 
 ## Recap
 
-1. A compiler reads all your source code first and checks every rule.
-2. If one rule breaks, nothing runs; if all pass, it translates your code into steps.
+1. A compiler reads all your source code first, checks every rule, then translates it.
+2. If one rule breaks, the compiler stops and nothing runs.
 3. Passing the compiler shows the rules hold, not that the program does what you meant.
 
 ## You can now

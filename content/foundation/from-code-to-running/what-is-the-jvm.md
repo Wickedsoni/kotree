@@ -70,11 +70,11 @@ Idea A works, but every change to the lamp has to be made three times. Idea B is
 
 ### Name it
 
-The shared in-between form is **bytecode**. The helper program is the **Java Virtual Machine**, or **JVM**: it runs bytecode on the computer where it is installed. The Android documentation describes the JVM as "an interpreter that executes Java applications". An interpreter is a program that carries out each step as it reads it. The documentation also says the Java Development Kit contains the JVM. The Kotlin documentation says: "When targeting the JVM, Kotlin produces Java-compatible bytecode." It also says: "Kotlin is 100% compatible with the JVM". Bytecode comes in versions, and a Kotlin compiler option called `jvmTarget` is described as the "Target version of the generated JVM bytecode".
+The shared in-between form is **bytecode**. The helper program is the **Java Virtual Machine**, or **JVM**: it runs bytecode on the computer where it is installed. The Android documentation describes the JVM as "an interpreter that executes Java applications". An **interpreter** is a program that carries out each step as it reads it. The Kotlin documentation says: "When targeting the JVM, Kotlin produces Java-compatible bytecode." It also says: "Kotlin is 100% compatible with the JVM". Bytecode comes in versions, and a Kotlin compiler option called `jvmTarget` is described as the "Target version of the generated JVM bytecode".
 
-The JVM is not a programming language. Kotlin and Java are languages. The JVM runs what their compilers produce. Each kind of computer needs a JVM made for it. That part is general knowledge, not spelled out in the Kotlin documentation.
+The JVM is not a programming language. Kotlin and Java are languages. The JVM runs what their compilers produce. Each kind of computer needs a JVM made for it. These four sentences are general knowledge, not spelled out in the Kotlin documentation.
 
-Kotlin does not always go through bytecode. The Kotlin documentation says: "When targeting native, Kotlin will produce platform-specific code (via LLVM)." Its native page says this code can run without a virtual machine, which is a helper program like the JVM. That version is built again for each kind of machine.
+Kotlin does not always go through bytecode. The Kotlin documentation says that when targeting native, Kotlin produces platform-specific code. Its native page says this code can run without a virtual machine, which is a helper program like the JVM. That version is built again for each kind of machine.
 
 The documentation shows the two steps for the JVM way with a file called `hello.kt`. The first command is the compiler, and the second runs the result: `kotlinc hello.kt -include-runtime -d hello.jar`, then `java -jar hello.jar`.
 
@@ -130,6 +130,7 @@ code: |
   fun main() {
       val machineKinds = 3
       val updates = 4
+      // $name shows a value. ${...} shows the result of a calculation.
       println("One build per machine: ${machineKinds * updates}")
       println("One shared build: $updates")
   }
@@ -194,7 +195,7 @@ output: "2"
 
 Android Studio is the program most Android developers write their apps in. The Android documentation says you use the JVM to run Android Studio and the Gradle build tool, which builds your app. It also says "The JVM is not used on Android devices or emulators." So your laptop has an adapter, and the phone does not use that one.
 
-A second tool bridges the gap. The Android documentation says `d8` is a command-line tool that Android Studio and the Android Gradle plugin use to compile your project's Java bytecode into **DEX** bytecode, the form that runs on Android devices. That documentation also notes that not all functions from the Java libraries are available on Android. A symptom would be code that works in a small Kotlin program on your laptop but is missing on the phone. That example is our own reasoning.
+A second tool bridges the gap. The Android documentation says `d8` is a command-line tool that Android Studio and the Android Gradle plugin use to compile your project's Java bytecode into **DEX** bytecode, the form that runs on Android devices. The page that describes the JVM also notes that not all functions in the Java libraries are available on Android. A symptom would be code that works in a small Kotlin program on your laptop but is missing on the phone. That example is our own reasoning.
 
 ## Recap
 

@@ -65,7 +65,7 @@ Idea A trusts the paint. Idea C checks only what the builder chose to check. Ide
 
 When someone other than the writer reads and checks code before it is accepted, that is a **code review**. Working through code by hand, one line at a time, is **tracing**. An example at the edge of what the code was built for, such as nothing at all, one item, or the biggest value, is an **edge case**.
 
-The code below is a **function**: a named set of steps that takes values in and hands one back. This one takes a **list**, which is a row of items kept in order. `List<Int>` is the type, meaning the kind of value, for a list of whole numbers, and `numbers[0]` is the first item of the list.
+The code below is a **function**: a named set of steps that takes values in and hands one back. This one takes a **list**, which is a row of items kept in order. `List<Int>` is the **type** for a list of whole numbers. A type is the kind of value. `numbers[0]` is the first item of the list.
 
 ```kotlin
 // Returns the highest number in the list.
@@ -88,8 +88,7 @@ fun main() {
 
 This prints `9`, then `7`, then `-2`. The third check matters: the code starts from the first item and not from 0, so a list of negative numbers still works. All three checks pass. That is still not proof, because there may be an example you did not try.
 
-Checking is not an insult to the writer. People and tools both slip, and the owner is the one who signs. The person who can check the work is the person who stays in the job.
-
+Checking is not an insult to the writer. People and tools both slip, and the owner is the one who signs.
 ## Predict the output
 
 Work these out on paper. Each function has a neat comment on top. Press "Show the answer" when you have a guess.
@@ -120,7 +119,7 @@ options:
     why: "5 is bigger than 2, so the first check hands back 5 straight away. The tap at the far end, c, is never tested."
   - id: c
     text: "2"
-    why: "You may have started at the middle check. The checks run from the top, and the first one already hands back an answer."
+    why: "You may have picked the middle number. The function never hands back b here. The first check is a > b, and it hands back a."
 output: "5"
 ```
 
