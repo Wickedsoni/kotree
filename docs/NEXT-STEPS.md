@@ -8,6 +8,12 @@
 - Nothing is published. No site code exists yet (`/site` not created). Git repo exists (created in the IDE) but **nothing is committed or pushed**. The author will push later.
 - Open `⚠️ VERIFY` marks in docs 00-10: about 53 (each has a test). Roadmap marks (~287) are checked per leaf before it goes live.
 
+## DEPLOY (21 Oct 2026): going live
+
+- CI (`.github/workflows/build.yml`) builds and verifies on every push; on `main` its `publish` job force-pushes the verified static export (+ `deploy/vercel.json`) to the branch **`site-dist`**. Vercel serves that branch with no build step, so no secrets or tokens are needed.
+- **Author one-time step (Vercel MCP in the cloud box lacks team access, 403):** Vercel dashboard -> Add New Project -> import `Wickedsoni/kotree` -> Framework Preset **Other**, Root Directory `./`, Build Command empty (override on), Install Command empty (override on), Output Directory `.` -> Deploy. Then Settings -> Git -> **Production Branch = `site-dist`**, and Settings -> Git -> **Ignored Build Step** = `[ "$VERCEL_GIT_COMMIT_REF" != "site-dist" ]` (so pushes to `main` do not trigger a useless build). Later: add the domain `kotree.garvitmaheshwari.in` (CNAME in Hostinger).
+- After that, every push to `main` that passes CI updates the live site automatically.
+
 ## STATUS after Wave 2 (21 Oct 2026, newest; read this first)
 
 - **Mode:** decision L31 (autonomous publishing). Waves of ~8 leaves, one wave per session; user says `resume`. Every wave is pushed to `main` and to branch `claude/kotree-foundation-build-auo9uz` (user asked that `main` always be current).
