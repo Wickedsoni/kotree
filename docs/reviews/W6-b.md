@@ -179,3 +179,26 @@ Note, no change required: the leaf correctly attributes "decimal digits (0-9)" t
 
 - Add one interview line to `list-vs-mutable-list` Q1 on true immutable lists for Compose (library `kotlinx.collections.immutable`). I did not verify that library in this review, so a writer must check the official page first.
 - Reword roadmap Sim cells as in Ruling 1.
+
+## Re-check
+
+Date 21 Oct 2026. Independent re-check after `fixer`. Method: `git diff` of all eight leaves against the FIX list, word counts, grep for first use of defined terms, `bash scripts/kt-run.sh` probe, `./gradlew :site:validateContent`.
+
+- Every FIX item is applied exactly as written (36 changed lines, nothing else changed). All 24 `verified:` markers are now `kotlin-2.4.21`; no `not-run` is left in the eight leaves. They match the run in this review (same 24 Predict blocks, blocks unchanged since).
+- The fixer added no code block. The one new code expression, `list.lastOrNull()` in index-out-of-bounds, was compiled and run on 2.4.21: `null` for an empty list, `2` for `listOf(1,2)`, same as `getOrNull(lastIndex)`. No warnings.
+- `validateContent: ok`, BUILD SUCCESSFUL.
+- Length (prose outside code and tables): everyday 1,235; strings-are-sequences 1,215; text-to-numbers 1,395; list-vs-mutable-list 1,577; index 1,499; sets 1,415; maps 1,471; pairs 1,432. All inside 900 to 1,600.
+- Checklist: new interview answers are 4 sentences or fewer, sentences short, labels ("General knowledge", "My own reasoning", "(general knowledge)") placed correctly. "interfaces", "iteration" and "Double" are bold once, at first use, with a definition; no unexplained "implementations", "extends" or "code points" is left. No internal-process wording added.
+
+| Leaf | Re-check |
+|---|---|
+| `kotlin/strings/strings-are-sequences` | PASS |
+| `kotlin/strings/everyday-string-functions` | PASS |
+| `kotlin/strings/text-to-numbers` | PASS |
+| `kotlin/collections/list-vs-mutable-list` | PASS (1,577 words; do not add text) |
+| `kotlin/collections/index-out-of-bounds` | PASS |
+| `kotlin/collections/sets` | PASS |
+| `kotlin/collections/maps` | PASS |
+| `kotlin/collections/pairs-and-destructuring` | PASS |
+
+VERDICT (re-check): PASS for all 8. Owner follow-ups in Rulings 1 and 2 are unchanged and not blocking.

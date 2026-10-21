@@ -1,21 +1,20 @@
 ---
 id: kotlin/strings/strings-are-sequences
 title: How do I get one character out of a String?
-status: shadow
+status: live
 difficulty: easy
 order: 22
 requires: [kotlin/types-and-variables/basic-types]
 summary: A String is a row of characters numbered from 0. Learn to read one, count them and find the last.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/strings.html ; https://kotlinlang.org/docs/characters.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-char/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/get-or-null.html ; https://developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip -->
 ## The question
 
 A game asks for the player's name and shows only its first letter inside a round badge. For the name Kotlin, the badge should show K. How does a program pick one letter out of a name? And what should happen when the program asks for a letter that is not there?

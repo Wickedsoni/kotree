@@ -1,21 +1,20 @@
 ---
 id: kotlin/strings/everyday-string-functions
 title: Which String functions do I need every day?
-status: shadow
+status: live
 difficulty: easy
 order: 23
 requires: [kotlin/strings/strings-are-sequences, kotlin/functions/declaring-functions]
 summary: String functions such as trim and uppercase hand back a new String and leave the original alone. Meet the everyday ones.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/strings.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/trim.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/uppercase.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/replace.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/split.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/contains.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/starts-with.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/is-blank.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/substring.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-string-builder/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/build-string.html ; https://developer.android.com/kotlin/common-patterns -->
 ## The question
 
 A user types the name " Sam " into a form, with a space before and after. Your code runs a clean-up step to remove the spaces, then prints the name. The spaces are still there. Why did the clean-up seem to do nothing?

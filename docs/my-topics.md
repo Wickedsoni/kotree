@@ -105,15 +105,15 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Strings** (3)
 
-- - How do I get one character out of a String? (easy)
-- - Which String functions do I need every day? (easy)
+- [x] How do I get one character out of a String? (easy)
+- [x] Which String functions do I need every day? (easy)
 - - How do I turn the text "42" into a number without crashing? (medium)
 
 **Collections** (6)
 
-- - Why can't I add an item to a List? (easy)
+- [x] Why can't I add an item to a List? (easy)
 - - Why does asking for item 5 crash a list of five items? (easy)
-- - How do I keep only unique values? (easy)
+- [x] How do I keep only unique values? (easy)
 - - How do I look up a value by its key? (easy)
 - - How do I unpack two values at once? (easy)
 - - When does Kotlin code use an Array instead of a List? (easy)

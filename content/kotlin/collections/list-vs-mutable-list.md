@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/list-vs-mutable-list
 title: Why can't I add an item to a List?
-status: shadow
+status: live
 difficulty: easy
 order: 25
 requires: [kotlin/types-and-variables/val-vs-var]
 summary: Kotlin has lists you can only read and lists you can change. Learn which is which, and why val does not decide.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [menu-board-cover]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/collections-overview.html ; https://kotlinlang.org/docs/constructing-collections.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-mutable-list/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/list-of.html ; https://developer.android.com/develop/ui/compose/state -->
 ## The question
 
 A café app shows today's menu as a row of dishes. One part of the code hands the menu to another part, and that part tries to add a new dish. Kotlin refuses to run it. A different row in the same file accepts the same request without a complaint. Why can one row take a new dish and the other cannot?

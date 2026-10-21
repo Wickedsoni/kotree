@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/sets
 title: How do I keep only unique values?
-status: shadow
+status: live
 difficulty: easy
 order: 27
 requires: [kotlin/collections/list-vs-mutable-list]
 summary: A Set holds each value once. Adding the same value twice changes nothing. See how it differs from a list.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/set-of.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/mutable-set-of.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-hash-set/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-linked-hash-set/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/to-set.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/distinct.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/ ; https://kotlinlang.org/docs/set-operations.html ; https://kotlinlang.org/docs/collections-overview.html ; https://developer.android.com/develop/ui/compose/components/app-bars-dynamic -->
 ## The question
 
 At a party door, a host ticks off names as guests arrive. Ana arrives, then Ben, then Ana again through the side door. How many guests are at the party? And what should the host do with the second Ana?
