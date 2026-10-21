@@ -76,6 +76,8 @@ Idea A mixes a real answer and a failure in one number, and a caller who forgets
 
 **`Result<T>`** is the parcel. The Kotlin documentation says it encapsulates a successful outcome with a value of type `T`, or a failure with an arbitrary `Throwable` exception. A **`runCatching`** call is the packer. The documentation says it calls the block, catches any `Throwable` thrown from it, and wraps it as a failure.
 
+The curly brackets after `runCatching` hold a small block of code that the function runs for you. That kind of block is called a lambda (general knowledge). `getOrElse`, `mapCatching` and `fold` take blocks like that too.
+
 `"x".toInt()` turns text into a whole number. The documentation says it throws a `NumberFormatException` when the text is not a valid number. The calls below open the parcel in different ways.
 
 ```kotlin

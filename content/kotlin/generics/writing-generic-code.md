@@ -178,7 +178,7 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a screen that shows a user's name, and another that shows a list of scores. Both need a holder for data that the screen can watch (general knowledge). The Android LiveData page shows `MutableLiveData<String>` and says LiveData is a wrapper that can be used with any data, including a `List`. That is one holder with a blank for the kind of data. Here `<String>` fills the blank. This lesson puts a blank on a function. A class gets a blank in the same way.
+Picture a screen that shows a user's name, and another that shows a list of scores. Both need a holder for data that the screen can watch. That holder is called LiveData (general knowledge). The Android LiveData page shows `MutableLiveData<String>`, a LiveData that you can change, and says LiveData is a wrapper that can be used with any data, including a `List`. That is one holder with a blank for the kind of data. Here `<String>` fills the blank. This lesson puts a blank on a function. A class gets a blank in the same way.
 
 ## Say it in an interview
 

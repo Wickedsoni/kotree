@@ -50,18 +50,18 @@ Kim hands in the parcel "price 5" for a pen. The receptionist checks that it is 
 What should happen when Kim hands in a parcel? Here are three ideas.
 
 - A. It goes straight to the shelf, with no check.
-- B. The receptionist checks it first, then shelves it only if it passes.
-- C. The receptionist keeps one copy on her desk and another on the shelf.
+- B. The receptionist keeps one copy on her desk and another on the shelf.
+- C. The receptionist checks it first, then shelves it only if it passes.
 
-Idea A lets a bad price in. Idea C makes two copies that can drift apart. Idea B is the answer.
+Idea A lets a bad price in. Idea B makes two copies that can drift apart. Idea C is the answer.
 
 Where should the answer to "label?" come from? Here are three ideas.
 
-- A. From a slot that was filled once, when the item was made.
-- B. From the other slots, worked out each time someone asks.
+- A. From the other slots, worked out each time someone asks.
+- B. From a slot that was filled once, when the item was made.
 - C. From whatever the last visitor was told.
 
-Idea A goes stale as soon as the price changes. Idea C mixes up visitors. Idea B is the answer.
+Idea B goes stale as soon as the price changes. Idea C mixes up visitors. Idea A is the answer.
 
 The receptionist is told to put the parcel into "price". But "price" is the name visitors use, and using it means going through the receptionist. What happens? Here are three ideas.
 

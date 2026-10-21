@@ -50,18 +50,18 @@ The machine has five buttons in a row: Tea, Coffee, Cocoa, Juice and Water. Mia 
 How should the program remember which button was pressed? Here are three ideas.
 
 - A. As free text typed by the user, such as "cocoa".
-- B. As one choice from a fixed row that the program itself defines.
-- C. As a number, such as 3.
+- B. As a number, such as 3.
+- C. As one choice from a fixed row that the program itself defines.
 
-Idea A lets "cocoa", "Cocoa" and "cocao" be three different drinks, and the typo shows up only when someone looks. Idea C works until someone sends 7, and then nobody remembers what 3 meant. Idea B is the answer.
+Idea A lets "cocoa", "Cocoa" and "cocao" be three different drinks, and the typo shows up only when someone looks. Idea B works until someone sends 7, and then nobody remembers what 3 meant. Idea C is the answer.
 
 When Soup arrives with no price line, what should the price sheet do? Here are three ideas.
 
-- A. Keep an "anything else" line at the bottom that gives a made-up price.
-- B. Keep exactly one line per button, so a missing line is spotted.
+- A. Keep exactly one line per button, so a missing line is spotted.
+- B. Keep an "anything else" line at the bottom that gives a made-up price.
 - C. Trust the cashier to notice.
 
-Idea A feels safe, but Soup is then priced by the "anything else" line and nobody is told. Idea C depends on one person's memory. Idea B is the answer.
+Idea B feels safe, but Soup is then priced by the "anything else" line and nobody is told. Idea C depends on one person's memory. Idea A is the answer.
 
 ### Build
 
@@ -113,16 +113,14 @@ This program is the price sheet, with one line per button.
 ```kotlin
 enum class Drink { TEA, COFFEE, COCOA }
 
-fun price(d: Drink): Int {
-    return when (d) {
+fun main() {
+    val drink = Drink.COFFEE
+    val price = when (drink) {
         Drink.TEA -> 2
         Drink.COFFEE -> 3
         Drink.COCOA -> 4
     }
-}
-
-fun main() {
-    println(price(Drink.COFFEE))
+    println(price)
 }
 ```
 
@@ -134,15 +132,13 @@ Kotlin refuses to run this one, because the price sheet must hand back a price a
 // does not compile
 enum class Drink { TEA, COFFEE, COCOA }
 
-fun price(d: Drink): Int {
-    return when (d) {
+fun main() {
+    val drink = Drink.COCOA
+    val price = when (drink) {
         Drink.TEA -> 2
         Drink.COFFEE -> 3
     }
-}
-
-fun main() {
-    println(price(Drink.COCOA))
+    println(price)
 }
 ```
 
@@ -186,16 +182,19 @@ verified: not-run
 code: |
   enum class Drink { TEA, COFFEE, COCOA }
 
-  fun label(d: Drink): String {
-      return when (d) {
+  fun main() {
+      val a = Drink.TEA
+      val b = Drink.COCOA
+      val first = when (a) {
           Drink.TEA -> "hot leaf"
           else -> "other"
       }
-  }
-
-  fun main() {
-      println(label(Drink.TEA))
-      println(label(Drink.COCOA))
+      val second = when (b) {
+          Drink.TEA -> "hot leaf"
+          else -> "other"
+      }
+      println(first)
+      println(second)
   }
 options:
   - id: a
@@ -221,18 +220,15 @@ verified: not-run
 code: |
   enum class Drink { TEA, COFFEE, COCOA }
 
-  fun price(d: Drink): Int {
-      return when (d) {
-          Drink.TEA -> 2
-          Drink.COFFEE -> 3
-          Drink.COCOA -> 4
-      }
-  }
-
   fun main() {
       var total = 0
       for (d in Drink.entries) {
-          total = total + price(d)
+          val price = when (d) {
+              Drink.TEA -> 2
+              Drink.COFFEE -> 3
+              Drink.COCOA -> 4
+          }
+          total = total + price
       }
       println(total)
   }

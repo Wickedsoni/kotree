@@ -209,13 +209,10 @@ run: false
 id: prize-from-the-net
 verified: not-run
 code: |
-  fun divide(a: Int, b: Int): Int {
-      return a / b
-  }
-
   fun main() {
+      val zero = 0
       val result = try {
-          divide(10, 0)
+          10 / zero
       } catch (e: ArithmeticException) {
           -1
       } finally {
@@ -230,7 +227,7 @@ options:
   - id: b
     text: "sweeper and then -1"
     correct: true
-    why: "The divide call falls and the net hands back -1 as the prize. The cleaner prints sweeper, and then println shows the prize."
+    why: "The division by zero falls and the net hands back -1 as the prize. The cleaner prints sweeper, and then println shows the prize."
   - id: c
     text: "sweeper and then 0"
     why: "You may have thought dividing by zero gives 0. It fails, and the net hands back -1."
@@ -251,11 +248,11 @@ output: |
 - **Catching `Exception` everywhere to be safe.** It feels like one net for every fall. It also catches falls you never expected, and the program carries on in a bad state. The Android coroutines page says to prefer catching specific types like `IOException` over `Exception` or `Throwable`. Catch only what you can deal with.
 - **Writing an empty catch.** The crash goes away, so it feels fixed. The failure is hidden, and the program carries on with a wrong result and no clue why. At least print the problem or hand back a clear value like -1.
 - **Putting the net under the wrong show.** The risky line is in one show and the net is under another, so a fall slips past. Put the net under the show that holds the line that can fall.
-- **Doing clean-up in the net.** Both run after a fall, so it looks the same. The net runs only after a matching fall. Put clean-up in `finally`, which runs every time.
+- **Thinking `try` cannot give a value, and using a `var` set in two places.** Many languages treat it as a statement only (general knowledge). The documentation says `try` is an expression, so `val prize = try { ... } catch (e: SomeException) { -1 }` gives the value straight to a `val`. Clean-up still belongs in `finally`, which runs every time.
 
 ## Where this shows up in Android
 
-Picture a button that shares a link. If no app on the phone can handle it, the app can close with the stopped dialog. The Android intents guide shows `try { startActivity(sendIntent) } catch (e: ActivityNotFoundException) { ... }`, with a comment to define what the app should do if no activity can handle the intent. That is a net written for one kind of fall, and the crash page says an unhandled exception is what crashes an app. The net here keeps the app open, but what goes inside it is the app's choice.
+Picture a button that shares a link. An **Intent** is a message that asks Android to start something, such as another app's screen (general knowledge). If no app on the phone can handle it, the app can close with the stopped dialog. The Android intents guide shows `try { startActivity(sendIntent) } catch (e: ActivityNotFoundException) { ... }`, with a comment to define what the app should do if no activity can handle the intent. That is a net written for one kind of fall, and the crash page says an unhandled exception is what crashes an app. The net here keeps the app open, but what goes inside it is the app's choice.
 
 ## Say it in an interview
 
