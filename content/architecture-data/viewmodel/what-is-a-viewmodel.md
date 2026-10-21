@@ -38,7 +38,7 @@ Think of a stage with a stage manager.
 
 When the new actor walks on, the actor asks the stage manager for the props. The audience never sees the stage manager.
 
-**Where the analogy stops:** A stage manager works the whole show and decides when props leave. A ViewModel is dropped only when the screen it belongs to is gone for good. Also, if the whole theatre burns down, which is the system ending the app, the props are lost too. The stage manager does not survive that.
+**Where the analogy stops:** A stage manager works the whole show and decides when props leave. A ViewModel is dropped only when the screen it belongs to is gone for good. Also, if the whole theatre burns down, which is the system ending the app, the props are lost too.
 
 ## See it move
 
@@ -126,7 +126,7 @@ Idea A fails because the screen's own objects are exactly what is thrown away. I
 
 A **configuration change** is a change to the device while the app runs, such as turning the screen sideways. The Android documentation says the system recreates the activity: it destroys the existing instance and creates a new one. It also says this clears any state kept as fields in the activity. An **activity** is the window that holds your screen.
 
-The keeper is a **ViewModel**. The documentation calls it a business logic or screen level state holder, and says its principal advantage is that it caches state and persists it through configuration changes. A **state holder** is an object that keeps the data a screen shows. Business logic means the rules that decide what the data is, such as adding one to a counter. The documentation says a ViewModel stays in memory until its owner disappears. For an activity, that is when it finishes. In Compose you ask for one with the `viewModel()` function.
+The keeper is a **ViewModel**. The documentation calls it a business logic or screen level state holder, and says its principal advantage is that it caches state and persists it through configuration changes. A **state holder** is an object that keeps the data a screen shows. Business logic means the rules, such as adding one to a counter. The documentation says a ViewModel stays in memory until its owner disappears. For an activity, that is when it finishes. In Compose you ask for one with the `viewModel()` function.
 
 It also says a ViewModel should not hold references to lifecycle-related things such as a `Context` (the Android class that gives access to information about the app's environment) or `Resources` (the class that gives access to the app's resources, such as strings and images), because it can live longer than the screen and a held reference would leak memory. A memory leak is memory that stays in use after nothing needs it (general knowledge).
 
@@ -137,7 +137,7 @@ It also says a ViewModel should not hold references to lifecycle-related things 
 | Stage manager | The ViewModel |
 | Prop | A piece of screen data |
 
-Here is a ViewModel for the counter. It needs the Android lifecycle library, so it cannot run on this page. A real screen also has to be told when the number changes, and this page leaves that out.
+Here is a ViewModel for the counter. A real screen also has to be told when the number changes, and this page leaves that out.
 
 ```kotlin
 // does not compile

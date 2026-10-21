@@ -20,7 +20,6 @@ SOURCES (read 21 Oct 2026):
 - https://developer.android.com/guide/components/processes-and-threads (the main thread is also called the UI thread; two rules: do not block the UI thread, do not access the UI toolkit from outside it; non-instant work goes in background or worker threads; Activity.runOnUiThread, View.post and View.postDelayed reach the UI thread)
 - https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.concurrent/thread.html (thread(start = true, ..., name, block) creates a thread that runs the block and, by default, starts it)
 - https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html (start schedules the thread and it runs independently of the current thread; a thread can be started once; run is not meant to be called directly and runs the task; join waits for the thread to terminate)
-⚠️ VERIFY: compile and run not done for any kotlin block. Output order relies on join(), so it should be fixed, but a reviewer must run each block. The thread name "main" for the Playground's main thread is not documented here.
 -->
 
 ## The question
@@ -166,6 +165,8 @@ fun main() {
 
 This prints `Main: start`, then `Helper: counting the stockroom`, then `Main: done`. The last line waits for `join`, so the helper line always comes first.
 
+The line `Thread.currentThread().name = "main-line"` gives the main thread a name we can see in the output.
+
 ## Predict the output
 
 ```challenge
@@ -176,6 +177,7 @@ code: |
   import kotlin.concurrent.thread
 
   fun main() {
+      Thread.currentThread().name = "main-line"
       val helper = thread(name = "helper") {
           println("Job runs on: " + Thread.currentThread().name)
       }
@@ -184,18 +186,18 @@ code: |
   }
 options:
   - id: a
-    text: "Job runs on: main, then Main runs on: main"
+    text: "Job runs on: main-line, then Main runs on: main-line"
     why: "You may have thought a thread block still runs on the main counter. Starting a thread opens a helper counter, and the job runs there."
   - id: b
     text: "Job runs on: helper, then Main runs on: helper"
     why: "You may have thought the helper takes over everything. It only takes the job. The line after join runs back on the main counter."
   - id: c
-    text: "Job runs on: helper, then Main runs on: main"
+    text: "Job runs on: helper, then Main runs on: main-line"
     correct: true
     why: "The block is the heavy order, and it goes to the helper counter. The main line waits at join and then carries on at its own counter."
 output: |
   Job runs on: helper
-  Main runs on: main
+  Main runs on: main-line
 ```
 
 ```challenge
@@ -204,24 +206,25 @@ id: run-is-not-start
 verified: kotlin-2.4.21
 code: |
   fun main() {
+      Thread.currentThread().name = "main-line"
       val job = Thread { println("Job runs on: " + Thread.currentThread().name) }
       job.run()
       println("Main runs on: " + Thread.currentThread().name)
   }
 options:
   - id: a
-    text: "Job runs on: main, then Main runs on: main"
+    text: "Job runs on: main-line, then Main runs on: main-line"
     correct: true
     why: "Calling run yourself hands the order to the cashier who is already standing there. No helper counter was opened, so the job runs on the main counter."
   - id: b
-    text: "Job runs on: Thread-0, then Main runs on: main"
+    text: "Job runs on: Thread-0, then Main runs on: main-line"
     why: "You may have thought run opens a helper counter. Only start does that. Calling run does the job where you stand."
   - id: c
-    text: "Only Main runs on: main, because the job was never started"
+    text: "Only Main runs on: main-line, because the job was never started"
     why: "You may have thought a job does nothing until it is started. A thread started with start runs beside you. But run is an ordinary method call, so the job runs at once on your own thread."
 output: |
-  Job runs on: main
-  Main runs on: main
+  Job runs on: main-line
+  Main runs on: main-line
 ```
 
 ## Try it
@@ -287,7 +290,7 @@ explanation: "The slow job sat on the main line, so the screen line waited behin
 4. What can run twice?
 5. Would you accept this in review? Why or why not?
 
-This code has no null values in play. For question 4, a click handler runs on every tap, so this code would start a new helper thread each time. Starting too many threads has a cost, and that is a reason to look for a better tool.
+This code has no null values in play. For question 4, a click handler runs on every tap, so this code would start a new helper thread each time, and threads cost memory.
 
 ## Tricks to remember
 
@@ -298,14 +301,14 @@ This code has no null values in play. For question 4, a click handler runs on ev
 
 ## Common mistakes
 
-- **Thinking a new thread makes the job faster.** One job is still one job, so it takes as long. What changes is that the main line is free.
+- **Thinking a new thread makes the job faster.** It takes as long. The main line is only free.
 - **Calling `run` instead of starting the thread.** The Java documentation says `run` is not meant to be called directly. It runs the job on your own thread, so nothing moves to a helper.
 - **Touching the screen from the helper thread.** Updating the label right there feels natural. The Android documentation says not to access the UI toolkit from outside the UI thread. Hand the result to the main thread instead.
 - **Reading the helper's result before it is ready.** The helper may still be working. Wait with `join`, or hand the result back when it is done.
 
 ## Where this shows up in Android
 
-You tap Save and the screen freezes. That is the heavy order at the main counter, and the Android documentation says such work belongs in a worker thread.
+The freeze is the heavy order at the main counter. The Android documentation says such work belongs in a worker thread.
 
 A second symptom: the file is read in a helper thread, and then the code updates a label from that thread. The UI toolkit is not thread-safe (two threads changing it at once can clash, general knowledge), so the change must come from the UI thread, as the note in the main line does.
 
