@@ -20,7 +20,7 @@ upnext: false
 <!-- ⚠️ VERIFY: the sim id mixed-tools-chute is new; its spec in docs/sims/needed-ids.md must be turned into a docs/sims file by physics-designer. -->
 ## The question
 
-A worker pulls tools out of a toolbox one at a time. The box holds hammers and saws. The worker can ask any tool for its name, and each one answers. But only a hammer can swing, and only a saw can cut. What should the worker do before swinging whatever is in hand? And what happens if the worker swings without looking?
+A worker pulls tools out of a mixed toolbox one at a time. Any tool can say its name, but only a hammer can swing and only a saw can cut. What should the worker do before swinging whatever is in hand? And what happens if the worker swings without looking?
 
 ## Mental model
 
@@ -216,7 +216,7 @@ code: |
       }
   }
 
-  fun use(t: Tool): String {
+  fun useTool(t: Tool): String {
       return when (t) {
           is Hammer -> "hit " + t.swing()
           is Saw -> "cut " + t.cut()
@@ -227,7 +227,7 @@ code: |
   fun main() {
       val box: List<Tool> = listOf(Saw(), Hammer())
       for (t in box) {
-          println(use(t))
+          println(useTool(t))
       }
   }
 options:
@@ -353,7 +353,7 @@ output: |
 
 - **Believing that if it compiles, the cast must be safe.** The compiler accepts the cast, so it feels checked. It only knows the label, not the tool inside. Use `is` or `as?` unless you can be sure of the kind.
 - **Using `as` to get a hammer skill and ignoring what happens when the tool is a saw.** It works in testing when the box has only hammers. The documentation says a failed `as` throws a `ClassCastException`. Use `as?` and handle the nothing.
-- **Checking the kind before every use, even for the promised name.** Looking first feels careful. The label already promises the name, so you can ask for it directly, and the checks are a sign the label needs another promise.
+- **Checking the kind before every use, even for the promised name.** Looking first feels careful. The label already promises the name, so you can ask for it directly. If you check the kind for every use, the label probably needs another promise.
 - **Using the checked tool after changing what holds it.** The check was on the page a moment ago, so it feels still valid. Kotlin trusts a check only when nothing can swap the value, as in the smart casts lesson. Use the tool right after the look.
 
 ## Where this shows up in Android
@@ -385,4 +385,4 @@ My own reasoning: a long `when` with `is` for each kind means the label does not
 - Predict the output of a `when` with `is` branches over a mixed list.
 - Predict what `as?` gives for an object of the wrong kind.
 - Predict when a program with `as` stops, and what it printed first.
-- Fix a risky `as` by choosing `is` or `as?`.
+- Explain why a cast that compiles can still stop the program.
