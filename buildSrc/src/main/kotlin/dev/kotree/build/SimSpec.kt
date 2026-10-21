@@ -188,9 +188,18 @@ private class SimChecker(val branch: String, val failFn: (String) -> Nothing) {
         }
     }
 
-    fun spawnPattern(id: String): Regex? =
-        if (!id.contains('{')) null
-        else Regex(Regex.escape(id).replace(Regex("\\\\E\\{[a-zA-Z][A-Za-z0-9_.]*}\\\\Q"), "\\\\E.+\\\\Q"))
+    fun spawnPattern(id: String): Regex? {
+        if (!id.contains('{')) return null
+        val hole = Regex("\\{[a-zA-Z][A-Za-z0-9_.]*}")
+        val sb = StringBuilder()
+        var last = 0
+        for (h in hole.findAll(id)) {
+            sb.append(Regex.escape(id.substring(last, h.range.first))).append("\\d+")
+            last = h.range.last + 1
+        }
+        sb.append(Regex.escape(id.substring(last)))
+        return Regex(sb.toString())
+    }
 
     // ---- main ----
     fun check(root: Any?): SimLessonBlock {
@@ -335,7 +344,11 @@ private class SimChecker(val branch: String, val failFn: (String) -> Nothing) {
                 m["curves"]?.let { for (r in labelled(it, "curves", 3, set = curves, extra = setOf("f"), extraRequired = setOf("f"))) curveFn(r["f"], "curves.f") }
                 val bands = HashSet<String>()
                 m["bands"]?.let {
-                    for (r in labelled(it, "bands", 2, set = bands, extra = setOf("f", "k"), extraRequired = setOf("f", "k"))) { curveFn(r["f"], "bands.f"); num(r["k"], "bands.k") }
+                    for (r in labelled(it, "bands", 2, set = bands, extra = setOf("kind", "f", "k"), extraRequired = setOf("f", "k"))) {
+                        val kind = r["kind"]
+                        if (kind != "floor" && kind != "ceiling") bad("SM11", "band `${r["id"]}` needs `kind: floor` or `kind: ceiling`")
+                        curveFn(r["f"], "bands.f"); num(r["k"], "bands.k")
+                    }
                 }
                 ids += curves; ids += bands; places += bars; places += curves
                 m["marks"]?.let { mk ->

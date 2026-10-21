@@ -33,7 +33,10 @@ sealed interface CurveFn {
 }
 
 class SimCurveSpec(val id: String, val label: String, val fn: CurveFn)
-class SimBandSpec(val id: String, val label: String, val fn: CurveFn, val k: Double)
+/** Which side of its band line the first curve must stay on (ADR 009 section 2). */
+enum class BandKind { Floor, Ceiling }
+
+class SimBandSpec(val id: String, val label: String, val kind: BandKind, val fn: CurveFn, val k: Double)
 
 /** A bar of a chart: a fixed [value], or the value of the variable [valueVar]. */
 class SimBarSpec(val id: String, val label: String, val value: Double?, val valueVar: String?)
@@ -181,7 +184,7 @@ fun readSimSpec(id: String, template: String, spec: dynamic, tryList: List<SimTr
         items = arr(spec.items).map { SimItemSpec(str(it.id), str(it.label), str(it.at)) },
         lanes = lanes,
         curves = arr(spec.curves).map { SimCurveSpec(str(it.id), str(it.label), curveFn(it.f)) },
-        bands = arr(spec.bands).map { SimBandSpec(str(it.id), str(it.label), curveFn(it.f), (it.k as Number).toDouble()) },
+        bands = arr(spec.bands).map { SimBandSpec(str(it.id), str(it.label), if (str(it.kind) == "floor") BandKind.Floor else BandKind.Ceiling, curveFn(it.f), (it.k as Number).toDouble()) },
         bars = arr(spec.bars).map {
             val v = it.value
             if (jsTypeOf(v) == "object") SimBarSpec(str(it.id), str(it.label), null, str(v.`var`))

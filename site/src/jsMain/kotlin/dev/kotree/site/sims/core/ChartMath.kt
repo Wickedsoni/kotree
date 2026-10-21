@@ -6,9 +6,8 @@ import kotlin.math.pow
 /**
  * Chart arithmetic of ADR 009 section 2: `poly`, `log2`, `nlog2`, `pow2` and the band exit. No expression evaluation.
  *
- * Band convention (the validated keys `{id, label, f, k}` carry no direction, so this is chosen here): a band is the line
- * `k * f(x)`; the curve it bounds is the first curve of the sim. A band whose id or label contains "floor" or "lower" is
- * a floor (the curve must stay at or above the line); every other band is a ceiling (at or below). `exit` is the first
+ * Band convention: a band is the line `k * f(x)`; the curve it bounds is the first curve of the sim. The band's `kind`
+ * (rule SM11) says which side is inside: `floor` = at or above the line, `ceiling` = at or below. `exit` is the first
  * integer `x >= n0` where the curve is outside, searched up to [SEARCH_LIMIT] values; no exit in that range gives null.
  */
 object ChartMath {
@@ -24,11 +23,6 @@ object ChartMath {
         CurveFn.Pow2 -> 2.0.pow(x)
     }
 
-    fun isFloor(band: SimBandSpec): Boolean {
-        val t = (band.id + " " + band.label).lowercase()
-        return "floor" in t || "lower" in t
-    }
-
     /** Value of the band line at [x]. */
     fun bandAt(band: SimBandSpec, x: Double): Double = band.k * eval(band.fn, x)
 
@@ -36,7 +30,7 @@ object ChartMath {
     fun inside(curve: SimCurveSpec, band: SimBandSpec, x: Double): Boolean {
         val c = eval(curve.fn, x)
         val b = bandAt(band, x)
-        return if (isFloor(band)) c >= b else c <= b
+        return if (band.kind == BandKind.Floor) c >= b else c <= b
     }
 
     /** First integer x >= [n0] where the first curve of [spec] leaves [band], or null when it never does in range. */

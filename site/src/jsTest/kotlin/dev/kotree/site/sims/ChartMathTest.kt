@@ -1,5 +1,6 @@
 package dev.kotree.site.sims
 
+import dev.kotree.site.sims.core.BandKind
 import dev.kotree.site.sims.core.ChartMath
 import dev.kotree.site.sims.core.SimCore
 import kotlin.test.Test
@@ -8,12 +9,12 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class ChartMathTest {
-    // The curve is 3n + 2; each band is k times n. "floor" in an id makes a floor, anything else a ceiling.
+    // The curve is 3n + 2; each band is k times n. The band `kind` decides floor or ceiling.
     private fun chart(floorK: Double, ceilingK: Double, n0: Int) = specOf(
         "chart",
         """{"title":"t","intro":"i","axes":{"x":"n","y":"minutes"},
           "curves":[{"id":"cost","label":"3n + 2","f":{"poly":[2,3,0]}}],
-          "bands":[{"id":"floor","label":"Floor","f":{"poly":[0,1,0]},"k":$floorK},{"id":"ceiling","label":"Ceiling","f":{"poly":[0,1,0]},"k":$ceilingK}],
+          "bands":[{"id":"floor","label":"Floor","kind":"floor","f":{"poly":[0,1,0]},"k":$floorK},{"id":"ceiling","label":"Ceiling","kind":"ceiling","f":{"poly":[0,1,0]},"k":$ceilingK}],
           "vars":{"x":10,"n0":$n0}}""",
     )
 
@@ -58,10 +59,10 @@ class ChartMathTest {
     }
 
     @Test
-    fun floorDirectionComesFromTheName() {
+    fun floorDirectionComesFromTheKind() {
         val s = chart(4.0, 4.0, 2)
-        assertTrue(ChartMath.isFloor(s.bands[0]))
-        assertTrue(!ChartMath.isFloor(s.bands[1]))
+        assertEquals(BandKind.Floor, s.bands[0].kind)
+        assertEquals(BandKind.Ceiling, s.bands[1].kind)
         // Floor 4: 3n + 2 >= 4n only up to n = 2, so the floor holds at n0 = 2 and breaks at 3.
         assertEquals(3, ChartMath.bandExit(s, s.bands[0], 2.0))
     }

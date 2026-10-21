@@ -83,4 +83,29 @@ class SimSpecTest {
         val rules = fx.violations().rules()
         assertTrue("SM9" in rules && "SM1" in rules, rules.toString())
     }
+
+    private val chart: String = """
+id: cost-band
+template: chart
+title: Cost against a floor
+intro: The cost curve sits above the floor.
+axes: { x: n, y: minutes }
+curves:
+  - { id: cost, label: "3n + 2", f: { poly: [2, 3, 0] } }
+bands:
+  - { id: floor, label: Floor, kind: floor, f: { poly: [0, 1, 0] }, k: 3 }
+vars: { x: 10, n0: 2 }
+sliders:
+  - { id: x, label: Size, var: x, min: 1, max: 50, step: 1 }
+try:
+  - { text: "Move the size slider.", done: [ "x=20" ] }
+""".trimStart()
+
+    @Test
+    fun chartBandNeedsAKind() {
+        val b = parse(chart)
+        assertTrue(simBlockJson(b).contains("\"bands\":[{\"id\":\"floor\",\"label\":\"Floor\",\"kind\":\"floor\",\"f\":"))
+        assertEquals("SM11", rule(chart.replace("kind: floor, ", "")))
+        assertEquals("SM11", rule(chart.replace("kind: floor", "kind: lower")))
+    }
 }
