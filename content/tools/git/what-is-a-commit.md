@@ -89,7 +89,7 @@ If you forget step 2 for a file, that file is not in the snapshot, and nothing s
 
 Two facts from the Git book matter here. First, Git stages a file exactly as it is when you run `git add`. If you change the file again afterwards, the new change is not in the frame until you add it again. Second, the commit records the snapshot you set up in the staging area, and anything you did not stage is still sitting there modified.
 
-To bring a file back from an old snapshot, you use `git restore` and name that snapshot with `--source`. Without `--source`, a search excerpt of the Git manual says the file comes back from the staging area, not from an old photo.
+To bring a file back from an old snapshot, you use `git restore` and name that snapshot with `--source`. Without `--source`, the file comes back from the staging area, not from an old photo.
 
 Git also reads a file called `.gitignore`. You list patterns in it for files that Git should leave out. Because the album keeps every old photo, never commit a password or a key. My own reasoning: a password that is in an old snapshot is still in the album after you delete it from the folder.
 
@@ -180,7 +180,7 @@ I run `git add` on the files I want, then `git commit -m` with a short message. 
 The Git book describes it as a snapshot of the project's files at that moment, not a list of changes. The trade-off is that you think in whole states you can return to. It also helps to remember that a commit only holds what was staged.
 
 **Why keep each commit small and about one thing?**
-This answer is my own reasoning and general knowledge. A commit about one thing is easy to read, review and go back to. If one commit mixes unrelated changes, undoing one of them also undoes the others, and the message cannot describe it well.
+This answer is my own reasoning and general knowledge. A commit about one thing is quick to read, review and go back to. If one commit mixes unrelated changes, undoing one of them also undoes the others, and the message cannot describe it well.
 
 ## Recap
 

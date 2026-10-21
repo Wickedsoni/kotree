@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/testing/fundamentals ("manual testing scales poorly, and it can be easy to overlook regressions in your app's behavior"; automated testing "is faster, more repeatable, and generally gives you more actionable feedback about your app earlier"; local tests "execute on your development machine or a server" and are "usually small and fast"). The page does not define regression, so the definition here is marked as general knowledge. The page does not say how local tests run, so nothing is claimed about the JVM. Interview data: docs/practice/interview-testing.md (test-driven development and living documentation are not on the page, so they are left out). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.0 only; none were run for this rewrite, so every challenge says not-run and a 2.4.21 run is still needed. Sim tests-lamps is new, see docs/sims/needed-ids.md. -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/testing/fundamentals ("manual testing scales poorly" and regressions in your app's behavior can be overlooked; automated testing "is faster, more repeatable, and generally gives you more actionable feedback about your app earlier"; local tests "execute on your development machine or a server" and are "usually small and fast"). The page does not define regression, so the definition here is marked as general knowledge. The page does not say how local tests run, so nothing is claimed about the JVM. Interview data: docs/practice/interview-testing.md (test-driven development and living documentation are not on the page, so they are left out). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.0 only; none were run for this rewrite, so every challenge says not-run and a 2.4.21 run is still needed. Sim tests-lamps is new, see docs/sims/needed-ids.md. -->
 
 ## The question
 
@@ -230,7 +230,7 @@ explanation: "Ten percent is ten out of a hundred, so the amount taken off is pr
 
 ## Common mistakes
 
-- **Thinking tests are extra work for big teams.** Tapping through the app feels quicker when the app is small. But the cost of tapping grows with every feature you add, and a test costs almost nothing to run again. Start with one check for the part you just changed.
+- **Thinking tests are extra work for big teams.** Tapping through the app feels quicker when the app is small. But the cost of tapping grows with every feature you add, and a test costs almost nothing to run again. Start with one check for the part you changed today.
 - **Thinking all checks passing means no bugs.** A full row of `true` feels like proof. In the second Predict item, two checks passed on broken code. Add a check for a case that would fail.
 - **Writing the expected answer by copying what the code gave.** It feels fast, and the check will pass. But then the check only repeats the bug. Work out the right answer by hand first, then write it down.
 
@@ -238,7 +238,7 @@ explanation: "Ten percent is ten out of a hundred, so the amount taken off is pr
 
 Picture a shopping app. A teammate changes the function that adds up the cart, and the order screen still works. A week later a user sees the wrong total on the invoice screen, which calls the same function. That symptom is a regression, and a short list of checks on the cart function would have shown it on the day of the change.
 
-The Android testing documentation says manual testing scales poorly and that it can be easy to overlook regressions. It says automated testing is faster, more repeatable and gives feedback earlier. It also says local tests run on your development machine or a server and are usually small and fast. That is the kind of check this lesson wrote by hand.
+The Android testing documentation says manual testing scales poorly and that regressions in your app's behavior can slip past you. It says automated testing is faster, more repeatable and gives feedback earlier. It also says local tests run on your development machine or a server and are usually small and fast. That is the kind of check this lesson wrote by hand.
 
 ## Say it in an interview
 
@@ -252,7 +252,7 @@ No. A test only checks the cases someone wrote down. In this lesson, two checks 
 My own reasoning: the tests are a checklist that still works after the change. If a check turns red, you know which behaviour broke, and you can fix it before a user finds it. Without them, you rely on remembering every place the code is used.
 
 **What goes wrong if a team relies only on manual testing?**
-The Android documentation says manual testing scales poorly and regressions are easy to overlook. A change in one place can break a screen nobody opens again before release. The trade-off is that writing tests costs time up front, but running them again costs almost nothing.
+The Android documentation says manual testing scales poorly and that regressions can slip past you. A change in one place can break a screen nobody opens again before release. The trade-off is that writing tests costs time up front, but running them again costs almost nothing.
 
 ## Recap
 

@@ -15,12 +15,11 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: shadow draft written 21 Oct 2026, author has not yet said he understood this topic. Android claims were checked on 21 Oct 2026 against https://developer.android.com/develop/ui/compose/mental-model (declarative API, "call the same composable function with different arguments", recomposition, "conceptually regenerating the entire screen from scratch, then applying only the necessary changes", only functions that might have changed are called). The sim id declarative-vs-steps has no spec in docs/05 yet (sim-engineer / physics-designer must create docs/sims/declarative-vs-steps.md; kind code-to-screen, so it needs the caption "A picture of what Android does. Not a real phone." and its sources). Code was compiled and run on Kotlin 2.4.20 only (not 2.4.21), so every challenge block says UNVERIFIED. Model code is plain Kotlin and labelled "not real Android". -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/develop/ui/compose/mental-model ("a declarative API that lets you render your app UI without imperatively mutating frontend views"; "You update the UI by calling the same composable function with different arguments"; the imperative way is to "walk the tree using functions like findViewById()" and call methods like button.setText(String); "Manipulating views manually increases the likelihood of errors"; "If a piece of data is rendered in multiple places, you might forget to update one of the views that shows it"; "conceptually regenerating the entire screen from scratch, then applying only the necessary changes"; recomposition "calls only the functions or lambdas that might have changed, and skips the rest"; composable functions should be "fast, idempotent, and free of side-effects"; "A side-effect is any change that is visible to the rest of your app"). Interview data: docs/practice/interview-ui.md (its senior question about lifting state and its claim that Compose eliminates inconsistent UI are not on the page, so they are not used). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.20 only; none were run for this rewrite, so every challenge says not-run and a 2.4.21 run is still needed. All code is a model in plain Kotlin, not real Android. Sim declarative-vs-steps is new and is a code-to-screen sim, see docs/sims/needed-ids.md. -->
+
 ## The question
 
-You build a screen with a number on it and a slider. Slide the slider and the number should change. That sounds fine so far. But the screen also has a title that says "Count is 5" and a badge that says "5 left".
-
-You move the slider five times quickly. One label still shows an old value. Why does that happen, and is there a way to build the screen so it cannot happen?
+You build a screen with a slider and a number. The same number shows in two places: a title that says "Count is 5" and a badge that says "5 left". You move the slider five times quickly, and one label still shows an old value. Why does that happen? And is there a way to build the screen so it cannot happen?
 
 ## Mental model
 
@@ -33,7 +32,7 @@ Think of redecorating a room.
 
 With brush strokes, the painter does only what the list says. If you forget one stroke, one wall stays old. With a photo, the painter makes the room match the photo, so nothing can be forgotten. When you want a new look, you hand over a new photo.
 
-**Where the analogy stops:** A real painter repaints the whole room for each new photo. Compose does not redo all the work each time. It starts from the full description, then changes only what is different. Also, a photo is frozen. Your description is a piece of code, so it can work out the picture from a number.
+**Where the analogy stops:** A real painter repaints the whole room for each new photo. Compose does not redo all the work each time. It starts from the full description, then changes only what is different. Also, a photo is frozen. Your description is code, so it can work out the picture from a number.
 
 ## See it move
 
@@ -52,17 +51,17 @@ With brush strokes, the painter does only what the list says. If you forget one 
 
 A screen shows a number in two places: a big title and a small badge. The number changes from 1 to 2 to 3.
 
-With a list of changes, each new number needs two instructions: "change the title" and "change the badge". After ten new numbers, you have written twenty instructions. If someone adds a third place that shows the number, all the lists need one more line.
+With a list of changes, each new number needs two instructions: "change the title" and "change the badge". After ten new numbers, you have written twenty instructions. If someone adds a third place that shows the number, every list needs one more line.
 
 ### Guess
 
 How could the screen always match the number?
 
-- A. Be careful and never forget an instruction.
-- B. Keep a note of which places show the number, and update them in a fixed order.
+- A. Keep a note of which places show the number, and update them in a fixed order.
+- B. Be careful and never forget an instruction.
 - C. Stop writing changes. Write one description of the whole screen that uses the number, and build the screen from it whenever the number changes.
 
-Idea A works until the screen gets bigger or someone else edits it. Idea B is the same list in a different shape. Idea C removes the problem, because the screen has no old parts left to forget.
+Idea B works until the screen gets bigger or someone else edits it. Idea A is the same list in a different shape. Idea C removes the problem, because the screen has no old parts left to forget.
 
 ### Build
 
@@ -76,9 +75,9 @@ Idea A works until the screen gets bigger or someone else edits it. Idea B is th
 
 The number is the **state**: the data the screen depends on. Describing the screen from that data is **declarative UI**. Telling the screen what to change, step by step, is the **imperative** way.
 
-The Android documentation says that with the older imperative approach you walk the tree of views, for example with `findViewById()`, and change them with calls such as `button.setText(String)`. It warns that manipulating views by hand increases the likelihood of errors, and that the work grows with the number of views that need updating.
+The Android documentation says the common imperative way is to walk the tree of views using functions like `findViewById()` and change them with calls like `button.setText(String)`. A **view** is one item on the screen, such as a button or a piece of text. The documentation adds that manipulating views manually increases the likelihood of errors, and that if a piece of data is shown in several places, you might forget to update one of them.
 
-In Compose, the documentation says you update the UI by calling the same composable function with different arguments. A **composable** is a Kotlin function that describes a piece of the screen. The next lesson shows how one is written.
+In Compose, the documentation says you update the UI by calling the same composable function with different arguments. A **composable** is a Kotlin function that describes a piece of the screen.
 
 Here is the idea as a model in plain Kotlin, not real Android. The function takes the state and returns the whole screen as text.
 
@@ -101,7 +100,7 @@ This prints `Title: Count is 1 | Badge: 1 left`, then `Title: Count is 2 | Badge
 ```challenge
 type: predict
 id: slides-with-a-list
-verified: "UNVERIFIED: ran on Kotlin 2.4.20, not 2.4.21"
+verified: not-run
 code: |
   // A model in plain Kotlin, not real Android.
   var label = "Count is 0"
@@ -115,12 +114,12 @@ code: |
   }
 options:
   - id: a
-    text: "Count is 8"
-    why: "You may have thought the label follows the number by itself. With a list of changes, nobody told the label about the 8, so it still shows the old picture."
-  - id: b
     text: "Count is 5"
     correct: true
     why: "The list of changes had one line for the 5 and none for the 8. The painter did only what the list said, so the label stayed old."
+  - id: b
+    text: "Count is 8"
+    why: "You may have thought the label follows the number by itself. With a list of changes, nobody told the label about the 8, so it still shows the old picture."
   - id: c
     text: "Count is 0"
     why: "You may have thought no update ran. One did run, for the 5. The missing one is the update for the 8."
@@ -131,7 +130,7 @@ output: |
 ```challenge
 type: predict
 id: slides-with-a-description
-verified: "UNVERIFIED: ran on Kotlin 2.4.20, not 2.4.21"
+verified: not-run
 code: |
   // A model in plain Kotlin, not real Android.
   fun describeScreen(count: Int): String {
@@ -147,12 +146,12 @@ options:
     text: "Count is 5, then Count is 5"
     why: "You may have expected the first picture to stay. Each call is a new photo, so the new number is used."
   - id: b
+    text: "Count is 8, then Count is 8"
+    why: "You may have thought only the last number matters. Each call builds its own picture, so the 5 is shown first."
+  - id: c
     text: "Count is 5, then Count is 8"
     correct: true
     why: "Each new number gets a fresh description of the whole screen. There is no old part left to forget."
-  - id: c
-    text: "Count is 8, then Count is 8"
-    why: "You may have thought only the last number matters. Each call builds its own picture, so the 5 is shown first."
 output: |
   Count is 5
   Count is 8
@@ -170,7 +169,7 @@ output: |
 ```challenge
 type: fix
 id: fix-badge-left-behind
-verified: "UNVERIFIED: ran on Kotlin 2.4.20, not 2.4.21"
+verified: not-run
 code: |
   // A model in plain Kotlin, not real Android.
   var title = "Cart: 0"
@@ -224,25 +223,39 @@ For this code, question 3 has a short answer: this code has no null values in pl
 
 ## Common mistakes
 
-- **Thinking Compose redraws the entire screen every time anything changes.** It feels right because you describe the whole screen each time. The Android documentation says Compose conceptually regenerates the entire screen from scratch, then applies only the necessary changes. It calls only the functions that might have changed and skips the rest.
-- **Writing "change this label" code inside a description.** Old habits make it feel natural to patch. A description says how the screen looks for the state. It should not hold a list of edits.
+- **Thinking Compose redraws the entire screen every time anything changes.** It feels right because you describe the whole screen each time. The Android documentation says Compose works by conceptually regenerating the entire screen from scratch, then applying only the necessary changes. It calls only the functions that might have changed and skips the rest.
+- **Writing "change this label" code inside a description.** Old habits make it feel natural to patch. A description says how the screen looks for the state. The documentation says composable functions should be free of side-effects, and a side-effect is any change visible to the rest of your app.
 - **Keeping the same number in two places.** A second copy feels like a handy shortcut. The copy can fall behind. Keep one state and let both places read it.
-- **Expecting to find and edit a piece of the screen later.** In the older approach you could look a view up and change it. In Compose you change the state, and the description does the rest.
+- **Expecting to find and edit a piece of the screen later.** In the older approach you looked a view up and changed it. The documentation says Compose widgets do not expose setter or getter functions, so you change the state and the description does the rest.
 
 ## Where this shows up in Android
 
-Think of a shopping app where the cart title says "2 items" but the small badge on the cart icon still says "1". That is the drifting left panel from this lesson. In the older view-based approach, each place had its own change call, and the Android documentation says that manual updating raises the chance of errors as the number of views grows.
+Think of a shopping app where the cart title says "2 items" but the small badge on the cart icon still says "1". That is the drifting left panel from this page. In the older view-based approach, each place had its own change call, and the Android documentation says that if a piece of data is shown in several places, you might forget to update one.
 
-With Compose, the title and the badge are both described from the same cart count, and a new count builds the description again. If you see two parts of a screen disagreeing, ask: do they read the same state, or does each get its own patch?
+With Compose, the title and the badge are both described from the same cart count, and a new count builds the description again. If you see two parts of a screen disagreeing, ask whether they read the same state, or whether each one got its own patch.
+
+## Say it in an interview
+
+**What is the difference between imperative and declarative UI?**
+In the imperative way, you find a view and change it step by step, for example with `findViewById()` and `setText`. In the declarative way, you describe how the screen looks for the current state, and you update it by calling the same composable function with different arguments. That is how the Android documentation puts it.
+
+**Why does Compose describe the screen as a function of state?**
+When every place on the screen is built from the same state, they cannot disagree. The documentation says manual updating increases the likelihood of errors, because you might forget to update one view that shows the data. The trade-off is that you must keep the state in one place.
+
+**Does Compose redraw the whole screen on every change?**
+No. The documentation says the technique works by conceptually regenerating the entire screen, then applying only the necessary changes. On recomposition it calls only the functions that might have changed and skips the rest. So describing everything does not mean redoing everything.
+
+**Why should a composable function be free of side-effects?**
+The documentation says a side-effect is any change visible to the rest of your app. It says you should never depend on side-effects from running a composable, because recomposition may be skipped. My own reasoning: a description that also edits other things can leave the screen out of step, which is the bug this page is about.
 
 ## Recap
 
 1. A declarative screen is described from the current state, not edited step by step.
 2. When the state changes, the description is used again with the new data.
-3. Compose only changes what differs, so describing everything does not mean redrawing everything.
+3. Compose changes only what differs, so describing everything does not mean redrawing everything.
 
 ## You can now
 
-- Explain the difference between describing a screen from state and changing it step by step, using the photo and the brush strokes.
-- Predict which label is out of date after a series of quick changes made with a list of instructions.
+- Predict which label is out of date after a series of changes made with a list of instructions.
 - Fix a screen where one label was left behind by building both labels from the same state.
+- Explain the difference between describing a screen from state and changing it step by step, using the photo and the brush strokes.

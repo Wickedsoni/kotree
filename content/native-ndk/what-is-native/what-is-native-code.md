@@ -33,7 +33,7 @@ Think of a kitchen that buys a ready-made sauce from a specialist factory.
 
 Your kitchen opens the bottle and pours it in. It does not cook the sauce again.
 
-**Where the analogy stops:** Your Kotlin code is not cooked from raw on the phone either. It is turned into a form that does not belong to one kind of CPU, and the phone finishes the job (general knowledge). The difference is that the bottle is finished for one stove before the app is even built. Also, a sauce is just food. A native library is code that your app calls and trusts, and a mistake inside it can crash your app. And a good sauce does not improve every dish: native code is not faster at everything.
+**Where the analogy stops:** Your Kotlin code is not cooked from raw on the phone either. It is turned into a form that does not belong to one kind of CPU, and the phone finishes the job (general knowledge). The difference is that the bottle is finished for one stove before the app is even built. Also, a sauce is only food. A native library is code that your app calls and trusts, and a mistake inside it can crash your app. And a good sauce does not improve every dish: native code is not faster at everything.
 
 ## Build the logic
 
