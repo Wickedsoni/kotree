@@ -267,14 +267,14 @@ output: |
 - Locked by default. `open` unlocks, `override` changes.
 - The object inside the jar decides which step runs, not the label on the jar.
 - A changed step replaces the parent's. Call `super` to keep the parent's first.
-- A step with no `open` note stays gran's, for ever.
+- A step with no `open` note stays gran's.
 
 ## Common mistakes
 
 - **Thinking every class can be built on by default.** In some other languages it works that way, so it feels normal. In Kotlin a class is final unless it carries `open`. Add `open` to the parent when building on it is the plan.
 - **Forgetting `override` on a child's function.** The names match, so it feels like enough. The documentation says the modifier is required, and the compiler complains without it.
 - **Overriding a step and leaving out `super`.** The child's step looks complete. It replaces the parent's work, and the parent's work is lost. Call `super` first when the parent's work still needs to happen.
-- **Opening everything just in case.** It feels flexible. Any open step can be changed by a child in a way the parent did not expect. Open only the steps that need to change.
+- **Opening every step in case one is needed later.** It feels flexible. Any open step can be changed by a child in a way the parent did not expect. Open only the steps that need to change.
 
 ## Where this shows up in Android
 

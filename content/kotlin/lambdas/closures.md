@@ -32,7 +32,7 @@ Think of a window onto a garden.
 - A photo of the garden shows the plant as it was at one moment. It never updates.
 - Two windows onto the same garden show the same plant.
 
-**Where the analogy stops:** A real window only lets you look. In Kotlin, the small piece of code is called a lambda, and it can also reach out and change the plant. Also, a real house stays on its plot. A lambda can leave the place where it was made, for example when a function hands it back, and it still reaches the garden it came from.
+**Where the analogy stops:** A real window only lets you look. In Kotlin, the small piece of code is called a **lambda**, and it can also reach out and change the plant. Also, a real house stays on its plot. A lambda can leave the place where it was made, for example when a function hands it back, and it still reaches the garden it came from.
 
 ## See it move
 
@@ -72,7 +72,7 @@ Idea C feels right if you think a window is a photo. But a photo and a window ar
 
 ### Name it
 
-A **closure** is what a lambda can reach in the code around it. The Kotlin documentation says a lambda expression can access its closure, which includes the variables declared in the outer scope, meaning the code around the lambda. It says the variables captured in the closure can be modified in the lambda. To **capture** a variable means that the lambda keeps a connection to it.
+A **closure** is what a lambda can reach in the code around it. The Kotlin documentation says a lambda expression can access its closure, which includes the variables declared in the outer **scope**, meaning the code around the lambda. It says the variables captured in the closure can be modified in the lambda. To **capture** a variable means that the lambda keeps a connection to it.
 
 My own reasoning: the lambda holds the variable itself and not a copy of its value. If it held a copy, a change made inside the lambda could not be seen outside it, and the documentation says such changes can be made.
 
@@ -127,7 +127,7 @@ It prints `1`, `2` and `1`. Each call of `makeCounter` builds a new garden with 
 type: predict
 run: false
 id: two-windows-one-plant
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var count = 0
@@ -156,7 +156,7 @@ output: |
 type: predict
 run: false
 id: made-early-looked-late
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var n = 1
@@ -187,7 +187,7 @@ output: |
 type: predict
 run: false
 id: photo-in-a-pot
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var n = 1

@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/collection-filtering.html ; https://kotlinlang.org/docs/collection-transformations.html ; https://kotlinlang.org/docs/collection-ordering.html ; https://kotlinlang.org/docs/collection-grouping.html ; https://kotlinlang.org/docs/collection-elements.html ; https://kotlinlang.org/docs/collection-aggregate.html ; https://developer.android.com/develop/ui/compose/lists -->
+<!-- SOURCES: https://kotlinlang.org/docs/collection-filtering.html ; https://kotlinlang.org/docs/collection-transformations.html ; https://kotlinlang.org/docs/collection-ordering.html ; https://kotlinlang.org/docs/collection-grouping.html ; https://kotlinlang.org/docs/collection-elements.html ; https://kotlinlang.org/docs/collection-aggregate.html ; https://kotlinlang.org/docs/sequences.html ; https://developer.android.com/develop/ui/compose/lists -->
 ## The question
 
 A shop app has a list of 200 product names. The screen must show only the names longer than three letters, written in capitals. You could write a loop, a second list and a counter. Is there a shorter way to say what you want, without spelling out how to get it?
@@ -32,7 +32,7 @@ Think of a factory line for apples.
 - A crate at the end of the belt collects what is left.
 - Each station follows a note that says what to test or what to change.
 
-**Where the analogy stops:** In a real factory the apples are changed and the basket empties. Here the basket stays exactly as it was, and the crate holds new things. Also, a real line moves all the apples through together. Kotlin finishes one whole station before the next one starts (general knowledge).
+**Where the analogy stops:** In a real factory the apples are changed and the basket empties. Here the basket stays exactly as it was, and the crate holds new things. Also, a real line moves all the apples through together. On a list, Kotlin finishes one whole station before the next one starts (general knowledge).
 
 ## See it move
 
@@ -83,7 +83,7 @@ You chain stations with dots. In `fruit.filter { ... }.map { ... }`, `map` works
 The friends are named here and used once in the program below.
 
 - **`sortedBy`** is the line-up station. The documentation says it sorts by the value your lambda picks and returns a new collection.
-- **`groupBy`** is the sort-into-trays station. The documentation says it returns a `Map`, a table that pairs each key with a value. Each key is the lambda's answer, and each value is the `List` of elements that gave that answer.
+- **`groupBy`** is the sort-into-trays station. The documentation says it returns a **`Map`**, a table that pairs each key with a value. Each key is the lambda's answer, and each value is the `List` of elements that gave that answer.
 - **`firstOrNull`** is the polite first-apple search. The documentation says it returns the first element that matches, or **`null`** if none does. The value `null` is the special value for "nothing here".
 - The plain `first` is the strict search. The documentation says it throws an **exception** if nothing matches. An exception is a stop of the program with an error.
 - **`sumOf`** is the totals station. The documentation says it adds up the numbers your lambda picks.
@@ -131,7 +131,7 @@ fun main() {
 type: predict
 run: false
 id: order-of-the-stations
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val names = listOf("Bo", "Eve", "Cleo")
@@ -160,7 +160,7 @@ output: |
 type: predict
 run: false
 id: basket-stays-full
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val prices = listOf(5, 20, 8, 30)
@@ -191,7 +191,7 @@ output: |
 type: predict
 run: false
 id: repaint-where-test-meant
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val scores = listOf(40, 75, 90, 55)
@@ -227,13 +227,14 @@ output: |
 - **Believing `filter` and `map` change the original list.** The words sound like something done to the list itself. They build a new list, and the original stays as it was. Keep the result in a `val`.
 - **Using `map` where `filter` was meant.** A test feels like it should remove things. `map` gives one answer per item, so a test gives a list of true and false. Use `filter` to keep or drop items.
 - **Calling `names.filter { ... }` and not keeping the result.** The line looks like it did the work. The crate is thrown away, and `names` is the same. Write `val kept = names.filter { ... }`.
+- **Believing `asSequence()` is always faster.** Skipping the in-between lists sounds like a free win. The documentation says the lazy way adds some overhead that may be significant for smaller collections or simpler computations. For a short list, plain `filter` and `map` are often the better choice.
 - **Using `first` when nothing may match.** It reads shorter. If no item passes, it stops the program with an error. Use `firstOrNull` and decide what to do with `null`.
 
 ## Where this shows up in Android
 
 **Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its lists page shows a contacts screen with a heading for each first letter. It builds the groups with `groupBy`, using the first letter of each contact's first name as the key. Each key is then paired with the list of contacts that start with that letter.
 
-A comment in the page says this would ideally be done in the `ViewModel`, which is a part of an app that holds a screen's data (general knowledge). The page then goes through the groups and shows a heading and the contacts under it. The same page shows `items(messages) { message -> MessageRow(message) }`, where the lambda draws one row for each message.
+A comment in the page says this would ideally be done in the **`ViewModel`**, which is a part of an app that holds a screen's data (general knowledge). The page then goes through the groups and shows a heading and the contacts under it. The same page shows `items(messages) { message -> MessageRow(message) }`, where the lambda draws one row for each message.
 
 This next part is my own reasoning: if the note for `groupBy` picked a letter from the last name, the headings on the screen would show the wrong letters, and the list would still look tidy.
 
@@ -248,8 +249,8 @@ No. The documentation says `filter` leaves the original collection unchanged, so
 **What is the difference between `first` and `firstOrNull`?**
 Both look for the first item that passes a test. The documentation says that if nothing matches, `first` throws an exception and `firstOrNull` returns `null`. Use `firstOrNull` when "no match" is a normal answer, and then handle the `null`.
 
-**Does the order of the steps in a chain matter?**
-Yes. Each step works on the list the step before gave. In the first Predict item, putting `map` before `filter` kept an item that `filter` first would have dropped. My own reasoning: putting `filter` first also means later steps handle fewer items.
+**What is the difference between eager and lazy processing, and when would you use a `Sequence`?**
+A list chain is eager. The Kotlin documentation says each step completes and returns its result, an intermediate collection, before the next step starts. A `Sequence`, made with `asSequence()`, is lazy. The documentation says it does all the steps one by one for every single element, and the computing happens only when the result is asked for, for example with `toList()`. So a `Sequence` avoids the in-between lists. The documentation also says the lazy way adds some overhead that may be significant for smaller collections or simpler computations, so weigh both for your case. In this lesson's factory, a sequence would send one apple through every station before the next apple starts. The order of the steps matters in both ways, as the first Predict item showed.
 
 ## Recap
 

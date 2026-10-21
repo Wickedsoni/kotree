@@ -129,7 +129,7 @@ fun main() {
 type: predict
 run: false
 id: three-cookies-one-change
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Cookie {
       var icing = "plain"
@@ -161,7 +161,7 @@ output: |
 type: predict
 run: false
 id: show-your-icing
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Cookie {
       var icing = "plain"
@@ -194,7 +194,7 @@ output: |
 type: predict
 run: false
 id: fixed-spot-and-open-spot
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Cookie {
       val shape = "star"

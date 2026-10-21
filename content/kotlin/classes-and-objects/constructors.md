@@ -56,7 +56,7 @@ The design also lists pre-printed lines and the clerk's checks. In what order do
 - B. From top to bottom, in the order they are written in the design.
 - C. All the checks first, then the pre-printed lines.
 
-Idea B is the answer.
+Idea A splits one list into two groups, but the design is one list read from top to bottom. Idea C does the same the other way round, and a check that reads a pre-printed line below it would find nothing there yet. Idea B is the answer.
 
 ### Build
 
@@ -150,7 +150,7 @@ fun main() {
 type: predict
 run: false
 id: checks-run-per-form
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Badge(val label: String) {
       init {
@@ -184,7 +184,7 @@ output: |
 type: predict
 run: false
 id: top-to-bottom-in-the-design
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Mix(val id: Int) {
       init { println("one: " + id) }
@@ -215,7 +215,7 @@ output: |
 type: predict
 run: false
 id: pre-filled-answers
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Plan(val name: String = "basic", val seats: Int = 1)
 
@@ -262,7 +262,7 @@ output: |
 
 A **ViewModel** is a class that holds the data for a screen (general knowledge). The Android ViewModel factory page says a `ViewModel` can take dependencies as parameters in its constructor. A dependency is something the class needs to do its job, such as a place to load data from (general knowledge). The page's example is a class called `MyViewModel` whose form has two boxes, `myRepository` and `savedStateHandle`. This lesson does not explain those two types.
 
-The page also says the framework provides the `ViewModel`, so a special helper called a factory is needed to create it when it has dependencies. If the `ViewModel` takes no dependencies, or only one of the type `SavedStateHandle`, no factory is needed. This next part is my own reasoning: the system is the clerk, and a new box on the form is a box the clerk does not know how to fill. The factory tells the clerk what to write in it.
+The page also says the **framework**, which is the ready-made Android code that runs your app (general knowledge), provides the `ViewModel`, so a special helper called a factory is needed to create it when it has dependencies. If the `ViewModel` takes no dependencies, or only one of the type `SavedStateHandle`, no factory is needed. This next part is my own reasoning: the system is the clerk, and a new box on the form is a box the clerk does not know how to fill. The factory tells the clerk what to write in it.
 
 ## Say it in an interview
 
