@@ -19,9 +19,6 @@ upnext: false
 SOURCES (read 21 Oct 2026):
 - https://developer.android.com/guide/components/activities/intro-activities (activity = window for the UI, entry point, callbacks instead of main, onCreate fires when the system creates the activity, next callback is onStart, setContent in Compose, one activity in modern Compose apps, main activity, MyActivity sample)
 - https://developer.android.com/guide/topics/resources/runtime-changes (the system destroys the activity and creates a new instance on a configuration change; state kept as fields is cleared)
-⚠️ VERIFY: compile not run for the plain-Kotlin model. The real MainActivity block is marked "does not compile" because it needs the Android libraries.
-⚠️ VERIFY: the roadmap asks whether the current Android Studio Empty Activity template uses ComponentActivity and enableEdgeToEdge. This leaf shows only the documentation sample (ComponentActivity, onCreate, setContent) and makes no claim about the template.
-⚠️ VERIFY: the sim line "the frame stays empty when setContent is left out" is my own reasoning, not a documentation sentence.
 -->
 
 ## The question
@@ -147,7 +144,7 @@ Idea A cannot work, because no line of yours runs first. Idea C would make every
 
 ### Name it
 
-An **Activity** is the class the system creates to give your app a window to draw in. The Android documentation says it is the entry point for the app's interaction with the user. It also says Android starts code in an Activity by calling callback methods, not by calling a `main` method. A **callback** is a method that the system calls for you at a set moment.
+An **Activity** is the class the system creates to give your app a window to draw in. The Android documentation says it is the **entry point** for the app's interaction with the user. An entry point is a door the system can use to come into your app. It also says Android starts code in an Activity by calling callback methods, not by calling a `main` method. A **callback** is a method that the system calls for you at a set moment.
 
 The callback in step 2 is **`onCreate`**. The documentation says it fires when the system creates your activity. The documentation's own sample extends a class named **`ComponentActivity`** and calls **`setContent`** inside `onCreate`. For a Compose app, it says to use this callback to set up your host composable with `setContent`. A **composable** is a function that describes a piece of the screen. The picture in the frame is made of composables.
 
@@ -267,10 +264,9 @@ output: |
 
 ## Tricks to remember
 
-- Frame first, picture second.
-- You never call `onCreate`. The system calls it for you.
-- No `setContent`, no picture.
-- One frame, many pictures: a modern app needs one activity.
+- Frame first, picture second. You never call `onCreate`: the system calls it for you.
+- No `setContent`, no picture. One frame, many pictures: a modern app needs one activity.
+- Task, in Android Studio: open the `MainActivity` of a new Compose project and find the `setContent` call inside `onCreate`.
 
 ## Common mistakes
 

@@ -21,13 +21,11 @@ SOURCES (read 21 Oct 2026):
 - https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.concurrent/thread.html (thread(start = true, ..., name, block) creates a thread that runs the block and, by default, starts it)
 - https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html (start schedules the thread and it runs independently of the current thread; a thread can be started once; run is not meant to be called directly and runs the task; join waits for the thread to terminate)
 ⚠️ VERIFY: compile and run not done for any kotlin block. Output order relies on join(), so it should be fixed, but a reviewer must run each block. The thread name "main" for the Playground's main thread is not documented here.
-⚠️ VERIFY: the roadmap says the Playground block shows the print order of a main program and a thread. docs/06 asks for deterministic output, so every block here uses join() to fix the order.
-⚠️ VERIFY: the roadmap Notes mention os/threads/what-is-a-thread as a helpful earlier leaf. This leaf recaps what a thread is in the Name it paragraph.
 -->
 
 ## The question
 
-You tap Save and the screen freezes while a big file is read. The read has to happen. How do you get it done without stopping the screen? And does the read finish sooner if you do it somewhere else?
+You tap Save and the screen freezes while a big file is read. How do you get it done without stopping the screen? Does it finish sooner somewhere else?
 
 ## Mental model
 
@@ -37,11 +35,10 @@ Think of the small shop from before, with one cashier.
 - A draw customer joins the line every 16 ticks and wants the display tidied. A tick is a tiny slice of shop time.
 - A heavy order is a job that takes 800 ticks, such as counting the whole stockroom.
 - A helper counter is a second counter with its own cashier.
-- The window display is the screen.
 
 If the heavy order goes to the main counter, the line stands still for 800 ticks. If it goes to the helper counter, the main counter keeps serving. The heavy order still takes 800 ticks. The helper never tidies the window display. It leaves a note in the main line, and the main cashier tidies it.
 
-**Where the analogy stops:** A second cashier costs wages, and a second thread costs memory (general knowledge). Real cashiers can talk to each other and agree, but two threads can both change the same data and clash. Also, in a shop you see who is serving whom. In code you have to ask which thread is running a line.
+**Where the analogy stops:** A second cashier costs wages, and a second thread costs memory (general knowledge). Two threads can both change the same data and clash, and in code you must ask which thread runs a line.
 
 ## See it move
 
@@ -123,28 +120,28 @@ What should the shop do? Here are three ideas.
 - B. Open a second counter and send the heavy order there. It still takes 800 ticks, but the main line keeps moving.
 - C. Tell the draw customers to wait until the heavy order is done.
 
-Idea A is believable, because more workers sounds like less time. But one order is still one job for one cashier, so it takes as long. Idea C is what happens when nothing is done. Idea B is the answer.
+Idea A sounds believable, but one order is still one job for one cashier. Idea C is what happens when nothing is done. Idea B is the answer.
 
 ### Build
 
 1. Open a second counter with its own cashier.
-2. Hand the heavy order to the second cashier. The main cashier carries on with the line.
+2. Hand the heavy order to the second cashier, and the main cashier carries on.
 3. The heavy order still takes 800 ticks. It is not faster. The main line is only free.
-4. When the helper finishes, it must not tidy the window display itself. Only the main cashier does that.
-5. So the helper leaves a note in the main line. The main cashier reads the note when its turn comes and tidies the display.
-6. If the main cashier waits at the helper counter for the order to finish, nothing is gained. The main line stands still again.
+4. The helper must not tidy the window display itself.
+5. So the helper leaves a note in the main line, and the main cashier tidies the display when it reads it.
+6. If the main cashier waits at the helper counter, nothing is gained.
 
 ### Name it
 
-A **thread** is one worker that runs one job at a time. Every app starts with the main thread. The Android documentation says that if you have operations that are not instantaneous, do them in separate background or worker threads. It gives two rules for the main thread, which it also calls the UI thread: do not block it, and do not access the Android UI toolkit from outside it. The UI toolkit is the part of Android that draws the screen.
+A **thread** is one worker that runs one job at a time. Every app starts with the main thread. The Android documentation says work that is not instantaneous belongs in background or worker threads. It gives two rules for the main thread, which it also calls the UI thread: do not block it, and do not access the Android UI toolkit from outside it. The UI toolkit is the part of Android that draws the screen.
 
-In Kotlin, the **`thread`** function from `kotlin.concurrent` creates a thread that runs the block you give it. The Kotlin documentation says that by default the thread is started at once. To **start** a thread means to ask the system to begin running it beside the current thread. The Java documentation says a started thread runs independently of the current thread. A thread can be started only once.
+In Kotlin, the **`thread`** function from `kotlin.concurrent` creates a thread that runs the block of code you give it, the lines between the curly braces. By default the Kotlin documentation says it starts at once. To **start** a thread means to ask the system to begin running it beside the current thread. The Java documentation says a started thread runs independently, and that it starts at most once.
 
-The method **`join`** waits for a thread to finish. The Java documentation says it waits for the thread to terminate. Without `join`, the main thread carries on and does not wait.
+The method **`join`** waits for a thread to terminate, as the Java documentation says. Without it, the main thread carries on.
 
-There is a trap in the name `run`. The Java documentation says `run` is not meant to be called directly, and that it runs the task. Calling `run` yourself runs the job on the thread that called it. Only starting a thread gives you a new one.
+There is a trap in the name `run`. The Java documentation says `run` is not meant to be called directly, and that it runs the task. Calling `run` yourself runs the job on the thread that called it. (My own reasoning from the Javadoc: an ordinary method call runs on the caller's thread.) Only starting a thread gives you a new one.
 
-To get a result back to the screen, the Android documentation lists `Activity.runOnUiThread`, `View.post` and `View.postDelayed`. These hand a piece of work to the UI thread, like the note in the main line.
+To get work back onto the UI thread, the Android documentation lists `Activity.runOnUiThread`, `View.post` and `View.postDelayed`, like the note in the main line.
 
 | Shop | Kotlin |
 |---|---|
@@ -167,14 +164,14 @@ fun main() {
 }
 ```
 
-This prints `Main: start`, then `Helper: counting the stockroom`, then `Main: done`. The last line waits for `join`, so the helper line always comes before it.
+This prints `Main: start`, then `Helper: counting the stockroom`, then `Main: done`. The last line waits for `join`, so the helper line always comes first.
 
 ## Predict the output
 
 ```challenge
 type: predict
 id: which-thread-prints
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   import kotlin.concurrent.thread
 
@@ -204,7 +201,7 @@ output: |
 ```challenge
 type: predict
 id: run-is-not-start
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val job = Thread { println("Job runs on: " + Thread.currentThread().name) }
@@ -239,7 +236,7 @@ output: |
 ```challenge
 type: fix
 id: fix-slow-job-on-main-line
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   // Not real Android. Thread.sleep stands for a slow job.
   fun loadReport(): String {
@@ -294,38 +291,37 @@ This code has no null values in play. For question 4, a click handler runs on ev
 
 ## Tricks to remember
 
-- A helper counter does not make the order faster. It frees the main line.
+- A helper counter does not make the order faster. It frees the main line, and only the main counter tidies the window display.
 - `start` opens a helper counter. `run` does the job where you stand.
 - `join` is waiting at the helper counter. Do it only when you need the result.
-- Only the main counter tidies the window display.
-- Task, in a plain Kotlin project: start ten threads that each print their number, and run it a few times. The order changes, and that shows why you cannot count on it.
+- Task, in a plain Kotlin project: start ten threads that each print their number, and run it a few times to see the order change.
 
 ## Common mistakes
 
-- **Thinking a new thread makes the job faster.** More workers sounds like less time. One job is still one job, so it takes as long. What changes is that the main line is free.
-- **Calling `run` instead of starting the thread.** The name sounds like "run it". The Java documentation says `run` is not meant to be called directly. It runs the job on your own thread, so nothing moves to a helper.
-- **Touching the screen from the helper thread.** The result is ready, so updating the label right there feels natural. The Android documentation says not to access the UI toolkit from outside the UI thread. Hand the result to the main thread instead.
-- **Reading the helper's result before it is ready.** The code is right below the line that starts the thread, so the result feels ready. The helper may still be working. Wait with `join`, or hand the result back when it is done.
+- **Thinking a new thread makes the job faster.** One job is still one job, so it takes as long. What changes is that the main line is free.
+- **Calling `run` instead of starting the thread.** The Java documentation says `run` is not meant to be called directly. It runs the job on your own thread, so nothing moves to a helper.
+- **Touching the screen from the helper thread.** Updating the label right there feels natural. The Android documentation says not to access the UI toolkit from outside the UI thread. Hand the result to the main thread instead.
+- **Reading the helper's result before it is ready.** The helper may still be working. Wait with `join`, or hand the result back when it is done.
 
 ## Where this shows up in Android
 
-You tap Save and the screen freezes while a file is read. That is the heavy order at the main counter. The Android documentation tells you to do work that is not instantaneous in a separate worker thread, and not to block the UI thread.
+You tap Save and the screen freezes. That is the heavy order at the main counter, and the Android documentation says such work belongs in a worker thread.
 
-A second symptom: the file is read in a helper thread, and then the code tries to update a label from that thread. The documentation says the Android UI toolkit is not thread-safe, so do all changes to the UI from the UI thread. The note in the main line is how the result gets there. The documentation lists `runOnUiThread` and `View.post` for this. Its own examples also show executors and Kotlin coroutines as ways to run the work.
+A second symptom: the file is read in a helper thread, and then the code updates a label from that thread. The UI toolkit is not thread-safe (two threads changing it at once can clash, general knowledge), so the change must come from the UI thread, as the note in the main line does.
 
 ## Say it in an interview
 
 **How do you run work on a background thread in Kotlin, and why can't that thread change the UI?**
-In Kotlin I can use the `thread` function from `kotlin.concurrent`, which starts a thread that runs my block. The Android documentation says non-instant work belongs in a worker thread. It also says the UI toolkit is not thread-safe, so all changes to the UI must come from the UI thread.
+In Kotlin I can use the `thread` function from `kotlin.concurrent`, which starts a thread that runs my block. The UI toolkit is not thread-safe, so all UI changes must come from the UI thread.
 
 **How do you get a result from a background thread back to the screen?**
-You hand a piece of work to the UI thread. The Android documentation lists `Activity.runOnUiThread`, `View.post` and `View.postDelayed` for this. The trade-off is that you must remember to do it every time. My own reasoning: forgetting is a common bug, and later tools such as coroutines make it harder to forget.
+You hand a piece of work to the UI thread, using `Activity.runOnUiThread`, `View.post` or `View.postDelayed` as the Android documentation lists. My own reasoning: forgetting to do it is a common bug.
 
 **What is the difference between `start` and `run` on a Thread?**
-`start` asks the system to run the thread beside the current one. The Java documentation says a thread can be started only once. `run` is not meant to be called directly, and calling it runs the task on the thread you are already on, so nothing runs in the background.
+`start` asks the system to run the thread beside the current one. `run` is not meant to be called directly, and calling it runs the task on the thread you are already on, so nothing runs in the background.
 
 **Why use a thread pool instead of a new thread for each task?**
-This answer is general knowledge and my own reasoning. Each thread costs memory, and starting one takes time. A pool reuses a fixed number of threads, so a burst of tasks queues up and does not create hundreds of threads. The trade-off is that tasks may wait in the queue.
+This answer is general knowledge and my own reasoning. Each thread costs memory and start-up time. A pool reuses a fixed number of threads, so a burst of tasks queues up instead of creating hundreds of threads.
 
 ## Recap
 

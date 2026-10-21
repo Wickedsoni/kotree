@@ -19,13 +19,9 @@ upnext: false
 SOURCES (read 21 Oct 2026):
 - https://developer.android.com/develop/connectivity/network-ops/connecting (Retrofit is a type-safe HTTP client built on OkHttp that creates a client interface declaratively; UserService sample with @GET and suspend fun; no network work on the main thread, NetworkOnMainThreadException)
 - https://lysine.dev/retrofit/ (Retrofit.Builder().baseUrl(...).build() and retrofit.create(...); @GET on an interface method)
-- https://raw.githubusercontent.com/square/retrofit/trunk/CHANGELOG.md (2.6.0, 2019-06-05: "Support suspend modifier on functions for Kotlin")
+- https://raw.githubusercontent.com/square/retrofit/trunk/CHANGELOG.md (2.6.0, 2019-06-05: "Support suspend modifier on functions for Kotlin"; the 2.6.0 entry also says suspend works like Call.enqueue)
 - https://kotlinlang.org/docs/coroutines-basics.html (a suspending function can pause and resume later; a suspended coroutine does not block its thread; a suspending function is called from another suspending function)
-- https://javadoc.io/static/com.squareup.okhttp3/okhttp/3.9.1/okhttp3/OkHttpClient.html (create one OkHttpClient and reuse it; each client has its own connection pool and thread pools)
-⚠️ VERIFY: the OkHttp sentence is read from the 3.9.1 Javadoc via a search result. Re-read the current OkHttp page before go-live.
-⚠️ VERIFY: "building the client sends nothing, only the call line does" and "treat the Retrofit object as the one shared waiter" are my own reasoning. Check both against the current Retrofit documentation before go-live.
-⚠️ VERIFY: the roadmap asks about the base-address trailing slash rule. The sources read here do not state it, so this leaf makes no claim about it.
-⚠️ VERIFY: compile not run for the plain-Kotlin model. The Retrofit blocks are marked "does not compile" because they need the library.
+- https://raw.githubusercontent.com/square/okhttp/master/okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt (current OkHttpClient KDoc, read 21 Oct 2026: create a single OkHttpClient and reuse it for all calls; each client holds its own connection pool and thread pools; reuse reduces latency and saves memory; a client for each request wastes resources on idle pools)
 -->
 
 ## The question
@@ -143,7 +139,7 @@ Idea A freezes your table for the whole wait. Idea C cannot work, because the fo
 
 ### Name it
 
-A **client** is the object that sends requests for you, like the waiter. **Retrofit** is a library for this. The Android documentation describes it as a type-safe HTTP client for the JVM, built on top of OkHttp, which lets you create a client interface declaratively. An **interface** is a list of functions that says what can be done and not how. Here it is the order card. **`@GET`** marks one entry as a request of the GET kind, which asks for data without changing anything. A **suspend function** is a function that can pause and resume later. The Kotlin documentation says a suspended coroutine does not block its thread, so the thread stays free to do other work. A **coroutine** is a piece of work that Kotlin runs and that is allowed to pause. You call a suspend function from another suspend function or from inside a coroutine, for example one started with `launch`.
+A **client** is the object that sends requests for you, like the waiter. **Retrofit** is a library for this. The Android documentation describes it as a type-safe HTTP client for the JVM, built on top of OkHttp, which lets you create a client interface declaratively. An **interface** is a list of functions that says what can be done and not how. Here it is the order card. **`@GET`** marks one entry as a request of the GET kind, which asks for data without changing anything (general knowledge). A **suspend function** is a function that can pause and resume later. The Kotlin documentation says a suspended coroutine does not block its thread, so the thread stays free to do other work. A **coroutine** is a piece of work that Kotlin runs and that is allowed to pause. You call a suspend function from another suspend function or from inside a coroutine, for example one started with `launch`.
 
 The three pieces are these.
 
@@ -268,7 +264,7 @@ output: |
 - Card, waiter, hand-over: interface, client, call.
 - Nothing is sent until you hand over the card.
 - Hire one waiter and reuse the same one.
-- The call can wait, so it is marked `suspend`.
+- Task, in an Android project with Retrofit: call one `@GET` function five times with one shared client, then five times with a new client for each call, and compare the times.
 
 ## Common mistakes
 
@@ -291,7 +287,7 @@ You write an interface with one function for each endpoint. You mark it with `@G
 The OkHttp documentation says to create one `OkHttpClient` and reuse it. Each client has its own connection pool and thread pools, so reuse saves connections and memory. The trade-off is that one shared client carries one set of settings. My own reasoning: if two parts of an app need different timeouts, you build a second client on purpose and still share each one.
 
 **How does a suspend call avoid freezing the thread that calls it?**
-The Kotlin documentation says a coroutine can suspend instead of blocking a thread, and the thread stays free for other work. The call pauses at that line and carries on when the answer arrives. I do not know how Retrofit does this inside, so I would say that if asked.
+The Kotlin documentation says a coroutine can suspend instead of blocking a thread, and the thread stays free for other work. The call pauses at that line and carries on when the answer arrives. The Retrofit changelog for 2.6.0 says a `suspend` function behaves like a function that returns a `Call` run with `enqueue`. My own reasoning: that is why the calling thread is not held while the request is in flight.
 
 **What goes wrong if you build a new client on every call?**
 The OkHttp documentation says that creating a client for each request wastes resources on idle pools. My own reasoning: you also lose the chance to reuse an open connection, so calls can be slower.

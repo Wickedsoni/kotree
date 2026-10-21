@@ -20,9 +20,6 @@ SOURCES (read 21 Oct 2026):
 - https://developer.android.com/topic/libraries/architecture/viewmodel (business logic or screen level state holder; caches state and persists it through configuration changes; remains in memory until its ViewModelStoreOwner disappears; should not hold Context or Resources; viewModel() from lifecycle-viewmodel-compose)
 - https://developer.android.com/guide/topics/resources/runtime-changes (on a configuration change the system destroys the activity instance and creates a new one; state kept as fields is cleared)
 - https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-savedstate (ViewModel handles configuration changes; SavedStateHandle is the backup for system-initiated process death)
-⚠️ VERIFY: compile and run not done for any kotlin block. The CounterViewModel block is marked "does not compile" because it needs the Android lifecycle library.
-⚠️ VERIFY: the roadmap says to re-check ViewModel behaviour before go-live (volatile). Checked on the three pages above on 21 Oct 2026.
-⚠️ VERIFY: the Android lifecycle and concurrency leaves named in the roadmap are not required here, so this leaf teaches rotation recreation in one paragraph from the runtime-changes page.
 -->
 
 ## The question
@@ -131,7 +128,7 @@ A **configuration change** is a change to the device while the app runs, such as
 
 The keeper is a **ViewModel**. The documentation calls it a business logic or screen level state holder, and says its principal advantage is that it caches state and persists it through configuration changes. A **state holder** is an object that keeps the data a screen shows. Business logic means the rules that decide what the data is, such as adding one to a counter. The documentation says a ViewModel stays in memory until its owner disappears. For an activity, that is when it finishes. In Compose you ask for one with the `viewModel()` function.
 
-It also says a ViewModel should not hold references to lifecycle-related things such as a `Context` or `Resources`, because it can live longer than the screen and a held reference would leak memory.
+It also says a ViewModel should not hold references to lifecycle-related things such as a `Context` (the Android class that gives access to information about the app's environment) or `Resources` (the class that gives access to the app's resources, such as strings and images), because it can live longer than the screen and a held reference would leak memory. A memory leak is memory that stays in use after nothing needs it (general knowledge).
 
 | Stage | Android |
 |---|---|
@@ -190,7 +187,7 @@ This prints `Screen's own count: 0`, then `Keeper's count: 2`. The new `Screen` 
 ```challenge
 type: predict
 id: screen-and-keeper-after-rebuild
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   object Keeper { var count = 0 }
   class Screen { var own = 0 }
@@ -222,7 +219,7 @@ output: |
 ```challenge
 type: predict
 id: keeper-made-once
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   class Keeper { init { println("keeper created") } }
   class Screen(val keeper: Keeper) { init { println("screen created") } }
@@ -260,7 +257,7 @@ output: |
 ```challenge
 type: fix
 id: fix-counter-kept-in-screen
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   class CounterKeeper {
@@ -333,7 +330,6 @@ This code has no null values in play. For question 4, the screen is built twice 
 ## Tricks to remember
 
 - Props on the stage walk off. Props backstage stay.
-- A ViewModel is a stage manager: the audience never sees it.
 - Turning the phone rebuilds the screen. It does not rebuild the keeper.
 - Ask: "If the screen is rebuilt, do I need this number again?" If yes, it belongs backstage.
 - Task, in an Android project with Compose: put a counter in a ViewModel, show it on the screen, rotate the emulator, and see whether it keeps its value.
@@ -362,7 +358,7 @@ The documentation says its key benefits are two: it lets you persist UI state an
 No. The documentation says ViewModels should not hold references to lifecycle-related APIs such as `Context` or `Resources`, to prevent memory leaks, because they can live longer than their owner. My own reasoning: pass the ViewModel plain data and let the screen look up things like strings.
 
 **Does a ViewModel survive the app being killed?**
-No. The documentation says ViewModel objects handle configuration changes, and that for system-initiated process death you may want `SavedStateHandle` as a backup. The trade-off is that saved state must be small and light, so large data belongs in local storage.
+No. The documentation says ViewModel objects handle configuration changes, and that for system-initiated process death you may want `SavedStateHandle` as a backup. The trade-off is that saved state must be simple and lightweight, so complex or large data belongs in local persistence, as the saved-state page says.
 
 ## Recap
 

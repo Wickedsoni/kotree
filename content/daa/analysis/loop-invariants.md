@@ -20,14 +20,11 @@ SOURCES (read 21 Oct 2026):
 - https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/check.html (check(value) throws IllegalStateException if the value is false)
 - General knowledge, not an official page: the three steps initialization, maintenance and termination are the standard way textbooks such as Introduction to Algorithms (CLRS) prove a loop correct. The binary search invariant and the "largest value" example are standard textbook material.
 - docs/practice/practice-daa.md (section for daa/analysis/loop-invariants): problem list and interview questions, treated as untrusted claims. LeetCode numbers and titles below were checked against my own knowledge; a reviewer re-checks them.
-⚠️ VERIFY: compile and run not done for any kotlin block, so every challenge says UNVERIFIED. The Break step relies on check failing at the first turn, which follows from the code (15 is not 10 + 1).
-⚠️ VERIFY: the roadmap row names a binary-search fix task (F(ai)) as a second option. This leaf uses only the "largest value" task, so the binary search appears in the interview section only.
-⚠️ VERIFY: the roadmap Notes assume dsa/searching/binary-search-boundaries. That leaf is not required here, and the binary search invariant is stated in one interview answer.
 -->
 
 ## The question
 
-A weather screen shows the warmest reading of the day. You test the code on five lists of readings and it is right every time. Then a user in winter sees 0 degrees as the warmest reading, when every reading was below freezing. The tests passed and the loop was still wrong. How can you be sure a loop is right for every input, not only the ones you tried?
+A weather screen shows the warmest reading of the day. Your code passes five test lists. Then a winter user sees 0 degrees as the warmest reading, when every reading was below freezing. How can you be sure a loop is right for every input, not only the ones you tried?
 
 ## Mental model
 
@@ -39,9 +36,9 @@ Think of checking a till at a shop.
 - The receipt roll is the list of prices written down so far.
 - The till check is one sentence you test after each customer: the money in the till equals the float plus the total of the receipts.
 
-If the check holds after every customer, the till is right at the end of the day. If it fails, you know which customer was served when it went wrong.
+If the check holds after every customer, the till is right at the end. If it fails, you know which customer caused it.
 
-**Where the analogy stops:** A cashier counts the money, but a loop invariant is a claim you argue for in words, so it covers inputs nobody has counted. A till check can also pass by luck when two mistakes cancel out. A careful argument does not rely on luck.
+**Where the analogy stops:** A cashier counts the money, but a loop invariant is a claim argued in words, so it covers inputs nobody has counted. A till check can also pass by luck when two mistakes cancel out. A careful argument does not rely on luck.
 
 ## See it move
 
@@ -115,35 +112,35 @@ try:
     done: [ "skip=on" ]
 ```
 
-**What you should notice:** The check holds after every customer when no receipt is forgotten, and when one is forgotten it fails at that exact customer and not only at the end.
+**What you should notice:** With no receipt forgotten, the check holds after every customer. With one forgotten, it fails at that exact customer.
 
 ## Build the logic
 
 ### Notice
 
-The till opens with 10. Customer 1 pays 5, customer 2 pays 3, customer 3 pays 4. After each customer you look at two numbers: the money in the till, and the total on the receipt roll. After customer 1 the till holds 15 and the receipts total 5. The till is always 10 more than the receipts.
+The till opens with 10. Customer 1 pays 5, customer 2 pays 3, customer 3 pays 4. After customer 1 the till holds 15 and the receipts total 5. The till is always 10 more than the receipts.
 
 ### Guess
 
-How could you be sure that sentence is true after every customer, even for a line of customers you have never seen? Here are three ideas.
+How could you be sure that is true for a line of customers you have never seen? Here are three ideas.
 
 - A. Try many lines of customers and see whether it holds.
 - B. Show that it is true at the start, that one customer cannot break it, and so it is true after the last one.
 - C. Check it once at the end of the day only.
 
-Idea A only covers the lines you thought of. Idea C can tell you something is wrong, but not which customer caused it. Idea B covers every line of customers, however long. It is the answer.
+Idea A only covers the lines you thought of. Idea C cannot say which customer caused the error. Idea B covers every line of customers. It is the answer.
 
 ### Build
 
 1. Write the sentence you want to keep true. It must be about the variables the loop changes. Here it is: till equals 10 plus the receipt total.
-2. Check it before the first turn, when no customer has been served. The till holds 10 and the receipts total 0, so it is true.
-3. Show that one turn cannot break it. Suppose it is true before a turn. A turn adds the same price to the till and to the receipts, so it is still true after the turn.
-4. When the customers run out, the sentence is still true. The loop has handled every customer, so the till equals 10 plus all the receipts.
+2. Before the first turn the till holds 10 and the receipts total 0, so it is true.
+3. Show that one turn cannot break it. A turn adds the same price to the till and the receipts, so it stays true.
+4. When the customers run out, the sentence still holds, so the till equals 10 plus all the receipts.
 5. If any step fails, the loop has a bug. The step that fails tells you where to look.
 
 ### Name it
 
-A **loop invariant** is a statement about the loop's variables that is true before the loop starts and again after every turn. A turn is one trip around the loop. Textbooks such as Introduction to Algorithms (CLRS) prove a loop correct with three steps (general knowledge). **Initialization** means the statement is true before the first turn. **Maintenance** means that if it is true before a turn, it is still true after the turn. **Termination** means that when the loop stops, the statement and the stop condition together give the answer you wanted.
+A **loop invariant** is a statement about the loop's variables that is true before the loop starts and again after every turn. A turn is one trip around the loop. Textbooks such as Introduction to Algorithms (CLRS) use three steps (general knowledge). **Initialization** means the statement is true before the first turn. **Maintenance** means that if it is true before a turn, it is still true after the turn. **Termination** means that when the loop stops, the statement and the stop condition together give the answer you wanted.
 
 | Till check | Loop invariant step | Running total |
 |---|---|---|
@@ -151,7 +148,7 @@ A **loop invariant** is a statement about the loop's variables that is true befo
 | One customer adds the same price to both | Maintenance | `till += price` and `receipts += price` |
 | No customers are left | Termination | `till` equals 10 plus every price |
 
-In Kotlin you can watch an invariant with **`check`**. The Kotlin documentation says `check` throws an `IllegalStateException` if the value is false, so the program stops. An invariant is usually a comment or a written argument, and `check` is a tool for testing your claim on real inputs.
+In Kotlin you can watch an invariant with **`check`**. The Kotlin documentation says `check` throws an `IllegalStateException` if the value is false, so the program stops. An invariant is usually a written argument, and `check` tests your claim on real inputs.
 
 ```kotlin
 fun main() {
@@ -168,16 +165,16 @@ fun main() {
 }
 ```
 
-This prints `Till: 22`. The `check` line is the invariant. It stays true after every turn, so the program reaches the end.
+This prints `Till: 22`. The `check` line is the invariant, and it stays true after every turn.
 
-Now think about the warmest-reading loop from the question. A fitting invariant is: `best` is the largest reading seen so far. Before the first turn no reading has been seen, so the statement has nothing true to say about `best`. If you start `best` at 0, the statement is false for a list of freezing readings. That is an initialization failure. The invariant points at the line that sets the starting value.
+Now the warmest-reading loop. Its invariant is: `best` is the largest reading seen so far. If you start `best` at 0, the statement is false for a list of freezing readings. That is an initialization failure, and the invariant points at the line that sets the starting value.
 
 ## Predict the output
 
 ```challenge
 type: predict
 id: running-total-last-line
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   // What is the last line printed?
   fun main() {
@@ -208,7 +205,7 @@ output: |
 ```challenge
 type: predict
 id: largest-starting-at-zero
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val temps = listOf(-5, -2, -9)
@@ -239,7 +236,7 @@ output: |
 
 1. **Write.** Copy the program from Name it into the editor.
 2. **Run.** You should see one line: `Till: 22`.
-3. **Break.** Change `receipts += price` to `receipts += 1` and change nothing else. Run it again. The program stops during the first turn and never prints the `Till` line. The till reads 15 but 10 plus 1 is 11, so the check fails at once.
+3. **Break.** Change `receipts += price` to `receipts += 1` and change nothing else. Run it again. The program stops in the first turn and never prints `Till`.
 4. **Fix.** Change `receipts += 1` back to `receipts += price`. Run it. You should see `Till: 22` again.
 
 ## Fix the bug
@@ -248,7 +245,7 @@ output: |
 type: fix
 id: fix-warmest-starts-at-zero
 generated: true
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   // Finds the warmest reading in a list of temperatures.
   fun warmest(readings: List<Int>): Int {
@@ -297,38 +294,37 @@ explanation: "Starting best at 0 broke the statement before the first turn. Star
 4. What can run twice?
 5. Would you accept this in review? Why or why not?
 
-No value here is null, but a list can be empty. The fixed code reads `readings[0]`, so an empty list would stop the program with an error. For question 5, the fix is right for lists with at least one reading, and a reviewer would ask what should happen for an empty one.
+No value here is null, but a list can be empty, and then `readings[0]` stops the program. A reviewer would ask what should happen for an empty list.
 
 ## Tricks to remember
 
 - Three steps: true at the start, kept by every turn, useful at the end.
 - The till check after every customer finds the exact customer that broke it.
 - A starting value is part of the proof. A wrong start breaks the invariant before the first turn.
-- Tests show the loop works on those inputs. An invariant argument covers every input.
 
 ## Common mistakes
 
-- **Thinking that passing tests proves the loop is correct.** Five green tests feel like proof. They only cover the inputs you thought of, like a till check on five customers. An invariant argument covers lines of customers nobody tried.
-- **Picking a starting value that looks neutral.** Starting a "largest" at 0 feels safe because 0 is small. It fails for a list of freezing readings. Start from a value that is really in the list, and check the start first.
+- **Thinking that passing tests proves the loop is correct.** Five green tests feel like proof, but they only cover the inputs you thought of.
+- **Picking a starting value that looks neutral.** Starting a "largest" at 0 feels safe, but it fails for freezing readings. Start from a value that is really in the list.
 - **Choosing an invariant that is true but useless.** "The till is not empty" stays true after every turn and says nothing about the answer. Choose a statement that, with the stop condition, gives the result you want.
 
 ## Where this shows up in Android
 
-A cart screen adds up prices, and a refund line has a negative price. A weather screen finds the warmest reading, and in winter every reading is below zero. In both cases the loop is fine on the five test lists and shows a wrong number for one real user. My own reasoning: the starting value is the usual culprit, and stating the invariant before writing the loop finds it. This page names no Android function, because the idea applies to any loop in any app.
+A cart screen adds up prices, and a refund is a negative price. A weather screen finds the warmest reading, and in winter every reading is below zero. The loop passes its tests and shows a wrong number to one real user. My own reasoning: the starting value is the usual culprit, and stating the invariant before writing the loop finds it.
 
 ## Say it in an interview
 
 **What are the three steps to prove a loop invariant?**
-Initialization, maintenance and termination. Initialization shows the statement is true before the first turn. Maintenance shows that if it is true before a turn, it is true after. Termination uses the statement and the stop condition to show the loop gives the right answer. This is general knowledge, the way textbooks teach it.
+Initialization, maintenance and termination: the statement holds before the first turn, each turn keeps it true, and at the end the statement and the stop condition give the answer. General knowledge.
 
 **What is the loop invariant of a binary search with `while (low <= high)`?**
 If the target is in the array, it is at an index from `low` to `high`. Before the loop it holds, because the range is the whole array. Each turn throws away a half that cannot hold the target, so it still holds. When the range is empty, the target was not in the array. This is general knowledge.
 
 **Why does it help to say your invariant aloud in an interview?**
-My own reasoning: stating the invariant makes you check the start, the update and the end one by one, so off-by-one mistakes show up before the interviewer finds them. It also shows you reason about all inputs and not only the examples.
+My own reasoning: stating the invariant makes you check the start, the update and the end, so off-by-one mistakes show up early.
 
 **Do passing tests prove a loop correct?**
-No. Tests show the loop works on those inputs. An invariant argument covers every input, but it can be wrong if the statement itself is wrong. So I use both: the argument for all inputs and tests to catch a wrong argument. This is my own reasoning.
+No. Tests show the loop works on those inputs. An invariant argument covers every input, but only if the statement is right, so I use both. This is my own reasoning.
 
 ## Recap
 
@@ -345,7 +341,7 @@ No. Tests show the loop works on those inputs. An invariant argument covers ever
 
 ## Practise on these
 
-Each problem keeps a fact true after every turn of its loop. State the fact before you write the loop. The list runs from the gentlest problem to the hardest. Check each statement for the exact rules.
+Each problem keeps a fact true after every turn. State the fact before you write the loop, and check the exact rules. The list runs from easiest to hardest.
 
 1. LeetCode 704, Binary Search. The range from low to high always holds the target if it is in the array. https://leetcode.com/problems/binary-search/
 2. LeetCode 26, Remove Duplicates from Sorted Array. The front part of the array holds every different value seen so far, in order. https://leetcode.com/problems/remove-duplicates-from-sorted-array/
