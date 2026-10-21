@@ -129,6 +129,7 @@ class VectorRenderer(
     private val hits = HitIndex(nodes, geometry)
     private val labels = LabelLayout(nodes, g)
     private val wood = WoodLayer(this)
+    private val backdrop = Backdrop(geometry)
 
     private val surfaceCss = cssColor(Tokens.Color.surface)
     private val stemCss = cssColor(Tokens.Status.treeStem)
@@ -321,10 +322,7 @@ class VectorRenderer(
         curSet = set
         updateHover(pointerX, pointerY)
 
-        g.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        g.fillStyle = surfaceCss
-        g.fillRect(0.0, 0.0, bw.toDouble(), bh.toDouble())
-        g.setTransform(dpr, 0.0, 0.0, dpr, 0.0, 0.0)
+        backdrop.draw(g, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
         val step = (splitProgress(cam.z) * Tokens.Zoom.splitSteps).roundToInt()
         wood.draw(g, cam, s, dpr, step, level, branchIdx, crisp)
         g.setTransform(dpr, 0.0, 0.0, dpr, 0.0, 0.0)

@@ -241,6 +241,20 @@ object Tokens {
         const val hillHeightWorld = 60
         const val grassWorld = 10
         const val hillSamples = 48
+        /** Cloud centre y and half-width as shares of the sky canvas; ry = rx * [cloudFlatten]. */
+        const val cloudCyMin = 0.06
+        const val cloudCyMax = 0.40
+        const val cloudRxMin = 0.08
+        const val cloudRxMax = 0.16
+        const val cloudFlatten = 0.35
+        /** Grain: dots per tile, and hill wavelengths (world px) of the two sine terms. */
+        const val grainDots = 600
+        const val hillWave1Min = 500.0
+        const val hillWave1Max = 900.0
+        const val hillWave2Min = 220.0
+        const val hillWave2Max = 420.0
+        const val hillBase = 0.6
+        const val hillMix = 0.4
     }
 
     /** Green canopy dots (ADR 008 §Canopy). Radii and sizes in world px unless noted. */
