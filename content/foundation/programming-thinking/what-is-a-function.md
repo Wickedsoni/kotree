@@ -136,7 +136,7 @@ script: [ step, step, step, step, step, step, step, again, step, step ]
 try:
   - text: "Press Step seven times. Watch the finger go into the card at each line that says greet(), and come back after."
     done: [ step, step, step, step, step, step, step ]
-  - text: "Press \"Say the name again\", then press Step twice. The card is followed one more time."
+  - text: "Press \"Say the name again\", then press \"Run the next line\" twice. The card is followed one more time."
     done: [ again, step, step ]
   - text: "Switch on \"Remove every name line\". The run replays, and the card is never followed."
     done: [ "gone=on" ]

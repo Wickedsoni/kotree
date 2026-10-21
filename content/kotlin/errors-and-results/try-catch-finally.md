@@ -103,7 +103,7 @@ actions:
     refuse: "Run the small show's tricks first."
 script: [ "fall=2", "net=1", trick, trick, after, after, after, after, after ]
 try:
-  - text: "Move the fall slider to 2 and the net slider to 1, a net under the small show. Press Step until the act ends (or use the two Run buttons). The net catches the fall, and the act carries on after the small show."
+  - text: "Press Step. The first two presses set the fall slider to 2 and the net slider to 1, a net under the small show. Keep pressing Step until the act ends. The net catches the fall, and the act carries on after the small show."
     done: [ "fall=2", "net=1", trick, trick, after, after, after, after, after ]
   - text: "Move the net slider to 0, which means no net, and press \"Run the next step after the tricks\" once more. The run replays: the fall leaves both shows, and the act stops after the sweeper."
     done: [ "net=0", after ]

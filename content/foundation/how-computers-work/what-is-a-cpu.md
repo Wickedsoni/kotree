@@ -104,11 +104,11 @@ script: [ ring, ring, ring, "jump=on", ring, ring, ring ]
 try:
   - text: "Press Step three times. Each press is one ring of the bell, and the finger does one line per ring."
     done: [ ring, ring, ring ]
-  - text: "Switch on \"Use line 4\", then press Step. Line 4 says go back to line 1, so the finger jumps up."
+  - text: "Switch on \"Use line 4\", then press \"Ring the bell\". Line 4 says go back to line 1, so the finger jumps up."
     done: [ "jump=on", ring ]
-  - text: "Move the bell slider to 0, then press Step. With no ring, nothing is done and the finger stays put."
+  - text: "Move the bell slider to 0, then press \"Ring the bell\". With no ring, nothing is done and the finger stays put."
     done: [ "bell=0", ring ]
-  - text: "(Optional) Move the bell slider to 3 and press Step. The same line is done, only more rings come each second."
+  - text: "(Optional) Move the bell slider to 3 and press \"Ring the bell\". The same line is done, only more rings come each second."
     done: [ "bell=3", ring ]
     optional: true
 ```

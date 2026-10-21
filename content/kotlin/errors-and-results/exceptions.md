@@ -136,11 +136,11 @@ actions:
     refuse: "The meeting is over. Move a setting or press Reset to run it again."
 script: [ "alarm=4", next, next, next, next ]
 try:
-  - text: "Move the alarm slider to 4, a line inside the desk. Press Step until the meeting stops. The log shows the desk, then the office, then the hall leaving."
+  - text: "Press Step. The first press moves the alarm slider to 4, a line inside the desk. Keep pressing Step until the meeting stops. The log shows the desk, then the office, then the hall leaving."
     done: [ "alarm=4", next, next, next, next ]
-  - text: "Move the alarm slider to 2, a line in the office, and press Step once more. The run replays: only the office and the hall leave, and the desk lines are never reached."
+  - text: "Move the alarm slider to 2, a line in the office, and press \"Run the next line\" once more. The run replays: only the office and the hall leave, and the desk lines are never reached."
     done: [ "alarm=2", next ]
-  - text: "Move the alarm slider to 0, which means never, and press Step once more. The alarm does not ring, and every line runs."
+  - text: "Move the alarm slider to 0, which means never, and press \"Run the next line\" once more. The alarm does not ring, and every line runs."
     done: [ "alarm=0", next ]
   - text: "(Optional) Move the alarm slider back to 4, then switch on \"Check the guest list at the door\". No line runs at all."
     done: [ "alarm=4", "door=on" ]

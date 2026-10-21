@@ -53,8 +53,8 @@ lines:
   - { id: l9, text: "9  }" }
 code: true
 log: { columns: [Step, Line, n, coins, Printed] }
-vars: { pc: 1, k: 0, coins: 1 }
-sliders: [ { id: coins, label: Coins in the first purse, var: coins, min: 0, max: 5, step: 1 } ]
+vars: { pc: 1, k: 0, start: 1, coins: 0 }
+sliders: [ { id: start, label: Coins in the first purse, var: start, min: 0, max: 5, step: 1 } ]
 actions:
   - id: step
     label: Walk one line
@@ -64,29 +64,64 @@ actions:
           - add: { k: 1 }
           - set: { pc: 2 }
           - light: [ l6 ]
-          - row: [ "{k}", "6", "-", "{coins}", "-" ]
-          - say: "The cross is on line 6. The purse coins holds {coins}."
+          - row: [ "{k}", "6", "-", "{start}", "-" ]
+          - say: "The cross is on line 6. The purse coins holds {start}."
       - when: { var: { pc: 2 } }
         do:
           - add: { k: 1 }
           - set: { pc: 3 }
           - light: [ l7 ]
-          - row: [ "{k}", "7, starts the call triple(2)", "-", "{coins}", "-" ]
-          - say: "Line 7 starts a detour to triple and carries the number 2. The purse coins still holds {coins}."
+          - row: [ "{k}", "7, starts the call triple(2)", "-", "{start}", "-" ]
+          - say: "Line 7 starts a detour to triple and carries the number 2. The purse coins still holds {start}."
       - when: { var: { pc: 3 } }
         do:
           - add: { k: 1 }
           - set: { pc: 4 }
           - light: [ l2 ]
-          - row: [ "{k}", "2, inside triple", "2", "{coins}", "-" ]
+          - row: [ "{k}", "2, inside triple", "2", "{start}", "-" ]
           - say: "Inside triple, the purse n holds 2. The line works out 2 times 3, which is 6, and hands it back."
-      - when: { var: { pc: 4 } }
+      - when: { var: { pc: 4, start: 0 } }
         do:
-          - add: { k: 1, coins: 6 }
-          - set: { pc: 5 }
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 6 }
           - light: [ l7 ]
           - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
-          - say: "Back on line 7, the 6 is added to coins. The purse coins now holds {coins}."
+          - say: "Back on line 7, the 6 is added to 0. The purse coins now holds {coins}."
+      - when: { var: { pc: 4, start: 1 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 7 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to 1. The purse coins now holds {coins}."
+      - when: { var: { pc: 4, start: 2 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 8 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to 2. The purse coins now holds {coins}."
+      - when: { var: { pc: 4, start: 3 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 9 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to 3. The purse coins now holds {coins}."
+      - when: { var: { pc: 4, start: 4 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 10 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to 4. The purse coins now holds {coins}."
+      - when: { var: { pc: 4, start: 5 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 5, coins: 11 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to 5. The purse coins now holds {coins}."
       - when: { var: { pc: 5 } }
         do:
           - add: { k: 1 }
@@ -104,7 +139,7 @@ try:
   - text: "Press Step twice more. The cross walks into triple, then returns to line 7 with the 6 that came back."
     done: [ step, step ]
   - text: "Move the slider to 3, then press Step once more. Every coins cell in the table changes, because the first purse started with a different number."
-    done: [ "coins=3", step ]
+    done: [ "start=3", step ]
 ```
 
 **What you should notice:** Most rows change one purse and copy the rest, and the last row holds what the program says aloud.

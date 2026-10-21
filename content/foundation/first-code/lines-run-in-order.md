@@ -99,9 +99,9 @@ script: [ run, run, run, swap, run, run, run ]
 try:
   - text: "Press Step three times. The bar visits one line each press, and the log fills in the same order."
     done: [ run, run, run ]
-  - text: "Press \"Swap line 1 and line 3\", then press Step three times. Compare the new rows with the first run."
+  - text: "Press \"Swap line 1 and line 3\", then press \"Serve the next line\" three times. Compare the new rows with the first run."
     done: [ swap, run, run, run ]
-  - text: "(Optional) Press \"Swap line 1 and line 3\" again and run all three lines. The first order comes back."
+  - text: "(Optional) Press \"Swap line 1 and line 3\" again and press \"Serve the next line\" three times. The first order comes back."
     done: [ swap, run, run, run ]
     optional: true
 ```

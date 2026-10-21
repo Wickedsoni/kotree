@@ -82,9 +82,9 @@ script: [ go, go, go, go, go, go, go ]
 try:
   - text: "Press Step twice. The spoon goes to the gate, then to stir. Before the stir the gate reads the thermometer, and the stove adds one mark."
     done: [ go, go ]
-  - text: "Move the boiling mark slider to 5, then press Step until the spoon is put down. It takes more laps."
+  - text: "Move the boiling mark slider to 5, then press \"Step the spoon\" until the spoon is put down. It takes more laps."
     done: [ "boil=5", go ]
-  - text: "Switch the stove off, then press Step. The thermometer never changes, so the spoon keeps circling."
+  - text: "Switch the stove off, then press \"Step the spoon\". The thermometer never changes, so the spoon keeps circling."
     done: [ "stove=off", go ]
 ```
 
