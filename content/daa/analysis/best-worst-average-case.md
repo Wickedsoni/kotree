@@ -36,12 +36,87 @@ How long the search takes depends on where the keys happen to be, not only on ho
 
 ## See it move
 
-<!-- SIM: linear-search-shelf -->
-
-**Try this:**
-1. Put the keys in the first place and press "Search". Read the check count.
-2. Put the keys in the middle place, then in the last place, and search each time.
-3. Take the keys out of every place and search again.
+```sim
+id: linear-search-shelf
+template: lanes
+title: "Looking for keys place by place"
+intro: "A shelf has five places in a row, checked from the left. Your keys are in your pocket, not on the shelf. The check count is 0."
+lanes:
+  - { id: "shelf", label: "Shelf of five places", kind: "row", slots: 5, index0: false }
+  - { id: "outside", label: "Not on the shelf (in your pocket)", kind: "row", slots: 1, index0: true }
+items:
+  - { id: "keys", label: "Keys", at: "outside.0" }
+vars: { checks: 0 }
+show:
+  - { var: "checks", label: "Checks" }
+actions:
+  - id: search
+    label: "Search"
+    cases:
+      - when: { at: { keys: "shelf.0" } }
+        do:
+          - set: { checks: 1 }
+          - say: "Search checks place 1 and finds the keys at once. That is 1 check."
+      - when: { at: { keys: "shelf.1" } }
+        do:
+          - set: { checks: 2 }
+          - say: "Search checks places 1 to 2 in order and finds the keys in place 2. That is 2 checks."
+      - when: { at: { keys: "shelf.2" } }
+        do:
+          - set: { checks: 3 }
+          - say: "Search checks places 1 to 3 in order and finds the keys in place 3. That is 3 checks."
+      - when: { at: { keys: "shelf.3" } }
+        do:
+          - set: { checks: 4 }
+          - say: "Search checks places 1 to 4 in order and finds the keys in place 4. That is 4 checks."
+      - when: { at: { keys: "shelf.4" } }
+        do:
+          - set: { checks: 5 }
+          - say: "Search checks places 1 to 5 in order and finds the keys in place 5. That is 5 checks."
+      - when: { at: { keys: "outside.0" } }
+        do:
+          - set: { checks: 5 }
+          - say: "Search checks all 5 places and finds no keys. Only then does it know they are missing. That is 5 checks."
+drops:
+  - item: keys
+    to: "shelf.0"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are now in place 1. The check count starts again at 0."
+  - item: keys
+    to: "shelf.1"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are now in place 2. The check count starts again at 0."
+  - item: keys
+    to: "shelf.2"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are now in place 3. The check count starts again at 0."
+  - item: keys
+    to: "shelf.3"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are now in place 4. The check count starts again at 0."
+  - item: keys
+    to: "shelf.4"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are now in place 5. The check count starts again at 0."
+  - item: keys
+    to: "outside.0"
+    do:
+      - set: { checks: 0 }
+      - say: "The keys are out of every place. The check count starts again at 0."
+script: ["keys>shelf.0", "search", "keys>shelf.2", "search", "keys>shelf.4", "search", "keys>outside.0", "search"]
+try:
+  - text: "Drag the keys to place 1 and press \"Search\". Read the check count."
+    done: ["keys>shelf.0", "search"]
+  - text: "Drag the keys to place 3, the middle, and search. Then drag them to place 5, the last, and search again."
+    done: ["keys>shelf.2", "search", "keys>shelf.4", "search"]
+  - text: "Drag the keys out of the shelf, back to your pocket, and search again."
+    done: ["keys>outside.0", "search"]
+```
 
 **What you should notice:** The row has the same number of places each time. The check count depends on where the keys sit, and missing keys cost the most.
 

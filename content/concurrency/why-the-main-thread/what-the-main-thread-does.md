@@ -34,11 +34,125 @@ The cashier serves the customer at the front. When that customer is done, the ne
 
 ## See it move
 
-<!-- SIM: main-thread-queue -->
-
-**Try this:**
-1. Press "Tap" three times in a row. Watch each tap's job wait in the line, and watch the counter serve the front of the line.
-2. Switch the tap job from short to long, then tap once. Watch where the next "Draw" job waits.
+```sim
+id: main-thread-queue
+template: lanes
+title: "One cashier, one line of jobs"
+intro: "One cashier serves one line of jobs. Three tap jobs and two draw jobs wait outside. The line is empty."
+lanes:
+  - { id: "outside", label: "Outside: jobs that have not joined the line yet", kind: "row", slots: 5, index0: false }
+  - { id: "line", label: "Line of jobs (the front job is at the counter)", kind: "queue", slots: 6, index0: false }
+items:
+  - { id: "t1", label: "Tap job 1", at: "outside.0" }
+  - { id: "t2", label: "Tap job 2", at: "outside.1" }
+  - { id: "t3", label: "Tap job 3", at: "outside.2" }
+  - { id: "d1", label: "Draw job 1", at: "outside.3" }
+  - { id: "d2", label: "Draw job 2", at: "outside.4" }
+vars: { clock: 0, long: "off" }
+show:
+  - { var: "clock", label: "Shop clock (ticks)" }
+toggles:
+  - { id: "long", label: "Tap job is long", var: "long" }
+actions:
+  - id: tap
+    label: "A tap job joins the line"
+    cases:
+      - when: { at: { t1: "outside.0" }, var: { long: "on" } }
+        do:
+          - push: { line: "t1" }
+          - label: { t1: "Tap job 1 (long, 5 ticks)" }
+          - say: "Tap job 1 joins the back of the line. It is long: the cashier will need 5 ticks for it."
+      - when: { at: { t1: "outside.0" } }
+        do:
+          - push: { line: "t1" }
+          - label: { t1: "Tap job 1 (short, 1 tick)" }
+          - say: "Tap job 1 joins the back of the line. It is short: 1 tick."
+      - when: { at: { t2: "outside.1" }, var: { long: "on" } }
+        do:
+          - push: { line: "t2" }
+          - label: { t2: "Tap job 2 (long, 5 ticks)" }
+          - say: "Tap job 2 joins the back of the line. It is long: the cashier will need 5 ticks for it."
+      - when: { at: { t2: "outside.1" } }
+        do:
+          - push: { line: "t2" }
+          - label: { t2: "Tap job 2 (short, 1 tick)" }
+          - say: "Tap job 2 joins the back of the line. It is short: 1 tick."
+      - when: { at: { t3: "outside.2" }, var: { long: "on" } }
+        do:
+          - push: { line: "t3" }
+          - label: { t3: "Tap job 3 (long, 5 ticks)" }
+          - say: "Tap job 3 joins the back of the line. It is long: the cashier will need 5 ticks for it."
+      - when: { at: { t3: "outside.2" } }
+        do:
+          - push: { line: "t3" }
+          - label: { t3: "Tap job 3 (short, 1 tick)" }
+          - say: "Tap job 3 joins the back of the line. It is short: 1 tick."
+    refuse: "All three tap jobs are already in the line. Press Reset to start again."
+  - id: draw
+    label: "A draw job joins the line"
+    cases:
+      - when: { at: { d1: "outside.3" } }
+        do:
+          - push: { line: "d1" }
+          - say: "Draw job 1 joins the back of the line. It asks the cashier to tidy the window display."
+      - when: { at: { d2: "outside.4" } }
+        do:
+          - push: { line: "d2" }
+          - say: "Draw job 2 joins the back of the line. It asks the cashier to tidy the window display."
+    refuse: "Both draw jobs are already in the line."
+  - id: serve
+    label: "The cashier serves the front job"
+    cases:
+      - when: { at: { t1: "line.0" }, var: { long: "on" } }
+        do:
+          - pop: "line"
+          - add: { clock: 5 }
+          - say: "The cashier serves the tap job and needs all 5 ticks for it. Everyone behind it waits. The shop clock reads {clock}."
+      - when: { at: { t1: "line.0" } }
+        do:
+          - pop: "line"
+          - add: { clock: 1 }
+          - say: "The cashier serves the tap job. It is short, so it takes 1 tick. The shop clock reads {clock}."
+      - when: { at: { t2: "line.0" }, var: { long: "on" } }
+        do:
+          - pop: "line"
+          - add: { clock: 5 }
+          - say: "The cashier serves the tap job and needs all 5 ticks for it. Everyone behind it waits. The shop clock reads {clock}."
+      - when: { at: { t2: "line.0" } }
+        do:
+          - pop: "line"
+          - add: { clock: 1 }
+          - say: "The cashier serves the tap job. It is short, so it takes 1 tick. The shop clock reads {clock}."
+      - when: { at: { t3: "line.0" }, var: { long: "on" } }
+        do:
+          - pop: "line"
+          - add: { clock: 5 }
+          - say: "The cashier serves the tap job and needs all 5 ticks for it. Everyone behind it waits. The shop clock reads {clock}."
+      - when: { at: { t3: "line.0" } }
+        do:
+          - pop: "line"
+          - add: { clock: 1 }
+          - say: "The cashier serves the tap job. It is short, so it takes 1 tick. The shop clock reads {clock}."
+      - when: { at: { d1: "line.0" } }
+        do:
+          - pop: "line"
+          - add: { clock: 1 }
+          - say: "The cashier serves the draw job and tidies the window display, after every job in front of it. The shop clock reads {clock}."
+      - when: { at: { d2: "line.0" } }
+        do:
+          - pop: "line"
+          - add: { clock: 1 }
+          - say: "The cashier serves the draw job and tidies the window display, after every job in front of it. The shop clock reads {clock}."
+    refuse: "The line is empty, so the cashier has no job to serve."
+script: ["tap", "tap", "tap", "draw", "serve", "serve", "serve", "serve", "long=on"]
+try:
+  - text: "Press \"A tap job joins the line\" three times. Each job waits behind the one before it."
+    done: ["tap", "tap", "tap"]
+  - text: "Press \"A draw job joins the line\". Then press \"The cashier serves the front job\" four times and watch the shop clock."
+    done: ["draw", "serve", "serve", "serve", "serve"]
+  - text: "Tick \"Tap job is long\". The sim replays your presses with long tap jobs, the clock jumps, and the draw job waits much longer."
+    done: ["long=on"]
+```
 
 **What you should notice:** One counter serves one job at a time, and a long job in front makes the draw job behind it wait.
 

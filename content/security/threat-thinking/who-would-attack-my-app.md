@@ -35,12 +35,146 @@ A burglar does not pick the strongest lock. A burglar walks around the house and
 
 ## See it move
 
-<!-- SIM: app-house-doors -->
-
-**Try this:**
-1. Look at the house. Each door is one way into the app: the screen, the files, the network, the logs and the installed app file.
-2. Press "Send the burglar". Watch which door is tried first.
-3. Place a lock on one door and send the burglar again. Then lock every door but one.
+```sim
+id: app-house-doors
+template: lanes
+title: "A house with five doors and a burglar"
+intro: "The app is a house with five doors. The lock box holds one lock for each door. No door has a lock yet."
+lanes:
+  - { id: "doors", label: "The app's five doors", kind: "row", slots: 5, index0: false }
+  - { id: "locks", label: "Locks in place (one under each door)", kind: "row", slots: 5, index0: false }
+  - { id: "box", label: "Lock box", kind: "row", slots: 5, index0: false }
+items:
+  - { id: "door0", label: "Screen door", at: "doors.0" }
+  - { id: "door1", label: "Files door", at: "doors.1" }
+  - { id: "door2", label: "Network door", at: "doors.2" }
+  - { id: "door3", label: "Logs door", at: "doors.3" }
+  - { id: "door4", label: "Installed app file door", at: "doors.4" }
+  - { id: "lock0", label: "Lock for the screen door", at: "box.0" }
+  - { id: "lock1", label: "Lock for the files door", at: "box.1" }
+  - { id: "lock2", label: "Lock for the network door", at: "box.2" }
+  - { id: "lock3", label: "Lock for the logs door", at: "box.3" }
+  - { id: "lock4", label: "Lock for the installed app file door", at: "box.4" }
+vars: { locked: 0 }
+show:
+  - { var: "locked", label: "Locks placed" }
+actions:
+  - id: send
+    label: "Send the burglar"
+    cases:
+      - unless: { at: { lock0: "locks.0" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - mark: { door0: "picked" }
+          - say: "The burglar tries the screen door first. It has no lock, so the burglar walks in."
+      - when: { at: { lock0: "locks.0" } }
+        unless: { at: { lock1: "locks.1" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - mark: { door1: "picked" }
+          - say: "The burglar tries the locked doors, finds them shut, and walks in through the files door, which has no lock."
+      - when: { at: { lock0: "locks.0", lock1: "locks.1" } }
+        unless: { at: { lock2: "locks.2" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - mark: { door2: "picked" }
+          - say: "The burglar tries the locked doors, finds them shut, and walks in through the network door, which has no lock."
+      - when: { at: { lock0: "locks.0", lock1: "locks.1", lock2: "locks.2" } }
+        unless: { at: { lock3: "locks.3" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - mark: { door3: "picked" }
+          - say: "The burglar tries the locked doors, finds them shut, and walks in through the logs door, which has no lock."
+      - when: { at: { lock0: "locks.0", lock1: "locks.1", lock2: "locks.2", lock3: "locks.3" } }
+        unless: { at: { lock4: "locks.4" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - mark: { door4: "picked" }
+          - say: "The burglar tries the locked doors, finds them shut, and walks in through the installed app file door, which has no lock."
+      - when: { at: { lock0: "locks.0", lock1: "locks.1", lock2: "locks.2", lock3: "locks.3", lock4: "locks.4" } }
+        do:
+          - mark: { door0: "plain", door1: "plain", door2: "plain", door3: "plain", door4: "plain" }
+          - say: "Every door has a lock, so the burglar finds no easy way in and gives up here."
+drops:
+  - item: lock0
+    to: "locks.0"
+    when: { at: { lock0: "box.0" } }
+    do:
+      - add: { locked: 1 }
+      - say: "A lock is fitted on the screen door."
+    refuse: "That lock is already on its door."
+  - item: lock0
+    to: "box.0"
+    when: { at: { lock0: "locks.0" } }
+    do:
+      - add: { locked: -1 }
+      - say: "The lock is taken off the screen door and goes back in the box."
+    refuse: "That lock is already in the box."
+  - item: lock1
+    to: "locks.1"
+    when: { at: { lock1: "box.1" } }
+    do:
+      - add: { locked: 1 }
+      - say: "A lock is fitted on the files door."
+    refuse: "That lock is already on its door."
+  - item: lock1
+    to: "box.1"
+    when: { at: { lock1: "locks.1" } }
+    do:
+      - add: { locked: -1 }
+      - say: "The lock is taken off the files door and goes back in the box."
+    refuse: "That lock is already in the box."
+  - item: lock2
+    to: "locks.2"
+    when: { at: { lock2: "box.2" } }
+    do:
+      - add: { locked: 1 }
+      - say: "A lock is fitted on the network door."
+    refuse: "That lock is already on its door."
+  - item: lock2
+    to: "box.2"
+    when: { at: { lock2: "locks.2" } }
+    do:
+      - add: { locked: -1 }
+      - say: "The lock is taken off the network door and goes back in the box."
+    refuse: "That lock is already in the box."
+  - item: lock3
+    to: "locks.3"
+    when: { at: { lock3: "box.3" } }
+    do:
+      - add: { locked: 1 }
+      - say: "A lock is fitted on the logs door."
+    refuse: "That lock is already on its door."
+  - item: lock3
+    to: "box.3"
+    when: { at: { lock3: "locks.3" } }
+    do:
+      - add: { locked: -1 }
+      - say: "The lock is taken off the logs door and goes back in the box."
+    refuse: "That lock is already in the box."
+  - item: lock4
+    to: "locks.4"
+    when: { at: { lock4: "box.4" } }
+    do:
+      - add: { locked: 1 }
+      - say: "A lock is fitted on the installed app file door."
+    refuse: "That lock is already on its door."
+  - item: lock4
+    to: "box.4"
+    when: { at: { lock4: "locks.4" } }
+    do:
+      - add: { locked: -1 }
+      - say: "The lock is taken off the installed app file door and goes back in the box."
+    refuse: "That lock is already in the box."
+script: ["send", "lock0>locks.0", "send", "lock1>locks.1", "lock2>locks.2", "lock3>locks.3", "send"]
+try:
+  - text: "Look at the five doors: the screen, the files, the network, the logs and the installed app file. Each is one way into the app. Press \"Send the burglar\" with no locks and see which door is tried first."
+    done: ["send"]
+  - text: "Drag the lock for the screen door onto its door. Then send the burglar again."
+    done: ["lock0>locks.0", "send"]
+  - text: "Lock the files, network and logs doors too, and leave the installed app file door open. Send the burglar once more."
+    done: ["lock1>locks.1", "lock2>locks.2", "lock3>locks.3", "send"]
+```
 
 **What you should notice:** The burglar always walks to the door with no lock, and a strong lock on one door does not stop the use of another.
 

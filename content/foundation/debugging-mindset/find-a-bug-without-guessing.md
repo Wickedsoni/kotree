@@ -36,12 +36,131 @@ You do not replace every lamp in the house. You switch everything off and switch
 
 ## See it move
 
-<!-- SIM: fuse-halving-search -->
-
-**Try this:**
-1. Switch on rooms 1 to 8 only. Does the fuse blow?
-2. Keep the half that holds the fault, and switch on half of that. Count how many tries it takes to find the lamp.
-3. Move the faulty lamp to another room and find it again in as few tries as you can.
+```sim
+id: fuse-halving-search
+template: lanes
+title: "Finding one faulty lamp among sixteen rooms"
+intro: "Sixteen rooms share one fuse and one lamp is faulty. The marker sits on room 1. Drag it to room N to switch on rooms 1 to N."
+lanes:
+  - { id: "rooms", label: "Rooms 1 to 16 on one fuse", kind: "row", slots: 16, index0: false }
+items:
+  - { id: "probe", label: "Rooms 1 to here on", at: "rooms.0" }
+vars: { lamp: 11, tries: 0, f1: "holds", f2: "holds", f3: "holds", f4: "holds", f5: "holds", f6: "holds", f7: "holds", f8: "holds", f9: "holds", f10: "holds", f11: "blows", f12: "blows", f13: "blows", f14: "blows", f15: "blows", f16: "blows" }
+show:
+  - { var: "tries", label: "Tries" }
+actions:
+  - id: move-lamp
+    label: "Move the faulty lamp"
+    cases:
+      - when: { var: { lamp: 11 } }
+        do:
+          - set: { lamp: 5, tries: 0, f1: "holds", f2: "holds", f3: "holds", f4: "holds", f5: "blows", f6: "blows", f7: "blows", f8: "blows", f9: "blows", f10: "blows", f11: "blows", f12: "blows", f13: "blows", f14: "blows", f15: "blows", f16: "blows" }
+          - move: { probe: "rooms.0" }
+          - say: "The faulty lamp moves to another room. The tries counter starts again at 0."
+      - when: { var: { lamp: 5 } }
+        do:
+          - set: { lamp: 11, tries: 0, f1: "holds", f2: "holds", f3: "holds", f4: "holds", f5: "holds", f6: "holds", f7: "holds", f8: "holds", f9: "holds", f10: "holds", f11: "blows", f12: "blows", f13: "blows", f14: "blows", f15: "blows", f16: "blows" }
+          - move: { probe: "rooms.0" }
+          - say: "The faulty lamp moves to another room. The tries counter starts again at 0."
+  - id: reveal
+    label: "Open the faulty room"
+    cases:
+      - when: { var: { lamp: 11 } }
+        do:
+          - say: "The faulty lamp is in room 11. You used {tries} tries to find it."
+      - when: { var: { lamp: 5 } }
+        do:
+          - say: "The faulty lamp is in room 5. You used {tries} tries to find it."
+drops:
+  - item: probe
+    to: "rooms.0"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 1 are switched on. The fuse {f1}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.1"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 2 are switched on. The fuse {f2}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.2"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 3 are switched on. The fuse {f3}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.3"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 4 are switched on. The fuse {f4}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.4"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 5 are switched on. The fuse {f5}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.5"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 6 are switched on. The fuse {f6}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.6"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 7 are switched on. The fuse {f7}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.7"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 8 are switched on. The fuse {f8}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.8"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 9 are switched on. The fuse {f9}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.9"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 10 are switched on. The fuse {f10}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.10"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 11 are switched on. The fuse {f11}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.11"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 12 are switched on. The fuse {f12}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.12"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 13 are switched on. The fuse {f13}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.13"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 14 are switched on. The fuse {f14}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.14"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 15 are switched on. The fuse {f15}. Tries so far: {tries}."
+  - item: probe
+    to: "rooms.15"
+    do:
+      - add: { tries: 1 }
+      - say: "Rooms 1 to 16 are switched on. The fuse {f16}. Tries so far: {tries}."
+script: ["probe>rooms.7", "probe>rooms.11", "probe>rooms.9", "probe>rooms.10", "reveal", "move-lamp", "probe>rooms.7", "probe>rooms.3", "probe>rooms.5", "probe>rooms.4", "reveal"]
+try:
+  - text: "Drag the marker to room 8. That switches on rooms 1 to 8. Does the fuse blow?"
+    done: ["probe>rooms.7"]
+  - text: "Keep halving what is left: drag the marker to a new room each time. When you know the room, press \"Open the faulty room\" and read the tries."
+    done: ["reveal"]
+  - text: "Press \"Move the faulty lamp\", then find it again in as few tries as you can and open the room."
+    done: ["move-lamp", "reveal"]
+```
 
 **What you should notice:** Each try cuts the rooms left in half, so 16 rooms take 4 tries, while testing one room at a time can take up to 15.
 

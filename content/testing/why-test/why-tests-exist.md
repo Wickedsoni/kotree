@@ -34,12 +34,95 @@ A pilot does not trust memory and does not think "it flew fine yesterday". The l
 
 ## See it move
 
-<!-- SIM: tests-lamps -->
-
-**Try this:**
-1. Look at the twenty lamps. Each lamp is one feature of an app. Change one line of the app's code.
-2. Start the "tap by hand" clock and count how long it takes to find the lamp that turned red.
-3. Reset, change the same line, and press "Run the checklist".
+```sim
+id: tests-lamps
+template: lanes
+title: "Twenty feature lamps, tapped by hand or checked by a list"
+intro: "Twenty lamps stand for twenty features of an app. All of them are green and no line of code has changed yet."
+lanes:
+  - { id: "row1", label: "Features 1 to 10", kind: "row", slots: 10, index0: false }
+  - { id: "row2", label: "Features 11 to 20", kind: "row", slots: 10, index0: false }
+items:
+  - { id: "l1", label: "Lamp 1", at: "row1.0" }
+  - { id: "l2", label: "Lamp 2", at: "row1.1" }
+  - { id: "l3", label: "Lamp 3", at: "row1.2" }
+  - { id: "l4", label: "Lamp 4", at: "row1.3" }
+  - { id: "l5", label: "Lamp 5", at: "row1.4" }
+  - { id: "l6", label: "Lamp 6", at: "row1.5" }
+  - { id: "l7", label: "Lamp 7", at: "row1.6" }
+  - { id: "l8", label: "Lamp 8", at: "row1.7" }
+  - { id: "l9", label: "Lamp 9", at: "row1.8" }
+  - { id: "l10", label: "Lamp 10", at: "row1.9" }
+  - { id: "l11", label: "Lamp 11", at: "row2.0" }
+  - { id: "l12", label: "Lamp 12", at: "row2.1" }
+  - { id: "l13", label: "Lamp 13", at: "row2.2" }
+  - { id: "l14", label: "Lamp 14", at: "row2.3" }
+  - { id: "l15", label: "Lamp 15", at: "row2.4" }
+  - { id: "l16", label: "Lamp 16", at: "row2.5" }
+  - { id: "l17", label: "Lamp 17", at: "row2.6" }
+  - { id: "l18", label: "Lamp 18", at: "row2.7" }
+  - { id: "l19", label: "Lamp 19", at: "row2.8" }
+  - { id: "l20", label: "Lamp 20", at: "row2.9" }
+vars: { changed: 0, tapped: 0, minutes: 0, seconds: 0 }
+show:
+  - { var: "minutes", label: "Minutes tapping by hand" }
+  - { var: "seconds", label: "Seconds with the checklist" }
+actions:
+  - id: change
+    label: "Change one line of the code"
+    cases:
+      - when: { var: { changed: 0 } }
+        do:
+          - set: { changed: 1 }
+          - say: "You change one line of the code. A hidden break now sits behind one lamp, but no lamp shows it yet."
+    refuse: "You already changed a line. Press Reset to start again."
+  - id: tap
+    label: "Tap through five lamps by hand"
+    cases:
+      - when: { var: { changed: 1, tapped: 0 } }
+        do:
+          - mark: { l1: "picked", l2: "picked", l3: "picked", l4: "picked", l5: "picked" }
+          - set: { tapped: 5 }
+          - add: { minutes: 5 }
+          - say: "You tap features 1 to 5 by hand. That is {minutes} minutes and every lamp you tried looks fine."
+      - when: { var: { changed: 1, tapped: 5 } }
+        do:
+          - mark: { l6: "picked", l7: "picked", l8: "picked", l9: "picked", l10: "picked" }
+          - set: { tapped: 10 }
+          - add: { minutes: 5 }
+          - say: "You tap features 6 to 10 by hand. {minutes} minutes so far and all fine."
+      - when: { var: { changed: 1, tapped: 10 } }
+        do:
+          - mark: { l11: "picked", l12: "picked", l13: "picked", l14: "picked", l15: "picked" }
+          - mark: { l13: "bad" }
+          - set: { tapped: 15 }
+          - add: { minutes: 5 }
+          - say: "You tap features 11 to 15 and lamp 13 is red. Finding it took {minutes} minutes by hand."
+      - when: { var: { changed: 1, tapped: 15 } }
+        do:
+          - say: "You already found the red lamp by hand."
+    refuse: "Change a line of the code first, so there is something to find."
+  - id: checklist
+    label: "Run the checklist"
+    cases:
+      - when: { var: { changed: 1 } }
+        do:
+          - mark: { l1: "good", l2: "good", l3: "good", l4: "good", l5: "good", l6: "good", l7: "good", l8: "good", l9: "good", l10: "good", l11: "good", l12: "good", l13: "good", l14: "good", l15: "good", l16: "good", l17: "good", l18: "good", l19: "good", l20: "good" }
+          - mark: { l13: "bad" }
+          - set: { seconds: 1 }
+          - say: "The checklist runs all twenty checks in about a second. Lamp 13 is red."
+      - do:
+          - mark: { l1: "good", l2: "good", l3: "good", l4: "good", l5: "good", l6: "good", l7: "good", l8: "good", l9: "good", l10: "good", l11: "good", l12: "good", l13: "good", l14: "good", l15: "good", l16: "good", l17: "good", l18: "good", l19: "good", l20: "good" }
+          - say: "The checklist runs all twenty checks. Every lamp is green, because nothing has changed."
+script: ["change", "tap", "tap", "tap", "checklist"]
+try:
+  - text: "Look at the twenty lamps. Each lamp is one feature of the app. Press \"Change one line of the code\"."
+    done: ["change"]
+  - text: "Press \"Tap through five lamps by hand\" until you find the lamp that turned red. Count the minutes."
+    done: ["tap", "tap", "tap"]
+  - text: "Now press \"Run the checklist\". Compare the seconds with the minutes."
+    done: ["checklist"]
+```
 
 **What you should notice:** One lamp turns red after the change, and the checklist finds it within a second, while tapping by hand takes minutes.
 

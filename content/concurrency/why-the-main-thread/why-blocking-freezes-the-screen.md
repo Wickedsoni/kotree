@@ -36,12 +36,86 @@ A tick is a tiny slice of time on the shop clock. Every 16 ticks, a new draw cus
 
 ## See it move
 
-<!-- SIM: blocked-main-thread-timeline -->
-
-**Try this:**
-1. Press "Tap" with the click job set short. Watch a draw job reach the counter each time the bell rings.
-2. Drag the click job to long and tap again. Watch the draw jobs pile up behind it, and watch the drawn screen stop changing.
-3. Make the job longer still, until the timeline bar passes the five-second mark and turns red.
+```sim
+id: blocked-main-thread-timeline
+template: lanes
+title: "A click job that holds the counter"
+intro: "One counter serves every job. A draw job joins the line every 16 ticks. The picture shows picture 0 and the timeline bar is empty."
+lanes:
+  - { id: "line", label: "Line of draw jobs (the front job is at the counter)", kind: "queue", slots: 6, index0: false }
+  - { id: "view", label: "Window display and timeline bar", kind: "row", slots: 2, index0: false }
+items:
+  - { id: "picture", label: "Screen: picture 0", at: "view.0" }
+  - { id: "bar", label: "Timeline: nothing yet", at: "view.1" }
+vars: { drawn: 0, waiting: 0, busy: 0 }
+show:
+  - { var: "drawn", label: "Pictures drawn" }
+  - { var: "waiting", label: "Draw jobs waiting" }
+  - { var: "busy", label: "Counter busy (ticks)" }
+actions:
+  - id: tap-short
+    label: "Tap with a short click job (10 ticks)"
+    cases:
+      - unless: { at: { d1: "line.0" } }
+        do:
+          - add: { drawn: 1 }
+          - set: { busy: 10, waiting: 0 }
+          - label: { picture: "Screen: picture {drawn}", bar: "Timeline: 10 ticks (smooth)" }
+          - mark: { picture: "plain", bar: "good" }
+          - say: "The click job takes 10 ticks, less than the 16 ticks between draw jobs. A draw job is served on time and the picture changes to picture {drawn}."
+    refuse: "Draw jobs are still stuck in the line. Press \"Let the long job end\" first."
+  - id: tap-long
+    label: "Tap with a long click job (800 ticks)"
+    cases:
+      - unless: { at: { d1: "line.0" } }
+        do:
+          - spawn: { id: "d1", label: "Draw job", at: "line.0" }
+          - spawn: { id: "d2", label: "Draw job", at: "line.1" }
+          - spawn: { id: "d3", label: "Draw job", at: "line.2" }
+          - spawn: { id: "d4", label: "Draw job", at: "line.3" }
+          - set: { busy: 800, waiting: 50 }
+          - label: { picture: "Screen: picture {drawn} (frozen)", bar: "Timeline: 800 ticks (frozen frames)" }
+          - mark: { picture: "changed", bar: "picked" }
+          - say: "The click job holds the counter for 800 ticks. In that time 50 draw jobs join the line and none is served, so the picture stays at picture {drawn}."
+    refuse: "Draw jobs are still stuck in the line. Press \"Let the long job end\" first."
+  - id: tap-huge
+    label: "Tap with a huge click job (6000 ticks)"
+    cases:
+      - unless: { at: { d1: "line.0" } }
+        do:
+          - spawn: { id: "d1", label: "Draw job", at: "line.0" }
+          - spawn: { id: "d2", label: "Draw job", at: "line.1" }
+          - spawn: { id: "d3", label: "Draw job", at: "line.2" }
+          - spawn: { id: "d4", label: "Draw job", at: "line.3" }
+          - set: { busy: 6000, waiting: 375 }
+          - label: { picture: "Screen: picture {drawn} (frozen)", bar: "Timeline: 6000 ticks, past the 5000 mark" }
+          - mark: { picture: "changed", bar: "bad" }
+          - say: "The click job holds the counter for 6000 ticks, past the five-second mark of 5000 ticks. 375 draw jobs wait and the timeline bar turns red. Android may now offer to close the app."
+    refuse: "Draw jobs are still stuck in the line. Press \"Let the long job end\" first."
+  - id: finish
+    label: "Let the long job end"
+    cases:
+      - when: { at: { d1: "line.0" } }
+        do:
+          - remove: "d1"
+          - remove: "d2"
+          - remove: "d3"
+          - remove: "d4"
+          - set: { waiting: 0 }
+          - add: { drawn: 1 }
+          - label: { picture: "Screen: picture {drawn}" }
+          - mark: { picture: "plain", bar: "plain" }
+          - say: "The long job ends and the cashier goes on with the line. The picture only changes once, to picture {drawn}, because the chances to redraw have already passed."
+    refuse: "No draw jobs are waiting, so there is nothing to finish."
+script: ["tap-short", "tap-long", "finish", "tap-huge"]
+try:
+  - text: "Press \"Tap with a short click job\". A draw job is served on time and the picture changes."
+    done: ["tap-short"]
+  - text: "Press \"Tap with a long click job (800 ticks)\". Watch the draw jobs pile up and the picture stop changing."
+    done: ["tap-long"]
+  - text: "Press \"Let the long job end\". Then press \"Tap with a huge click job (6000 ticks)\" and watch the timeline bar pass the five-second mark and turn red."
+    done: ["finish", "tap-huge"]
+```
 
 **What you should notice:** While the long job holds the counter, no draw job is served and the picture stays the same, and past five seconds the bar turns red.
 

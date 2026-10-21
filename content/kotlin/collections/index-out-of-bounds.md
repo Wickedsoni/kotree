@@ -34,12 +34,87 @@ Think of an inn with five rooms.
 
 ## See it move
 
-<!-- SIM: inn-room-clerk -->
-
-**Try this:**
-1. Type door number 2 and press "Walk to the door". Then type 5 and press it again.
-2. Type 5 again and press "Ask the clerk".
-3. Remove all the rooms and ask for door 0, both ways.
+```sim
+id: inn-room-clerk
+template: lanes
+title: "An inn with five rooms and a front-desk clerk"
+intro: "An inn has five rooms behind doors 0 to 4. A guest can walk straight to a door or ask the clerk. Nothing has happened yet."
+lanes:
+  - { id: "inn", label: "Inn rooms (doors 0 to 4)", kind: "row", slots: 5, index0: true }
+  - { id: "result", label: "What the guest gets", kind: "row", slots: 1, index0: true }
+items:
+  - { id: "r0", label: "Sky", at: "inn.0" }
+  - { id: "r1", label: "Sea", at: "inn.1" }
+  - { id: "r2", label: "Sun", at: "inn.2" }
+  - { id: "r3", label: "Star", at: "inn.3" }
+  - { id: "r4", label: "Moon", at: "inn.4" }
+actions:
+  - id: walk-2
+    label: "Walk to door 2"
+    cases:
+      - when: { at: { r2: "inn.2" } }
+        do:
+          - spawn: { id: "outcome", label: "Room 2: Sun", at: "result.0" }
+          - mark: { outcome: "good" }
+          - say: "The guest walks to door 2 and finds Sun."
+      - do:
+          - spawn: { id: "outcome", label: "The wall: the visit stops", at: "result.0" }
+          - mark: { outcome: "bad" }
+          - say: "There is no door 2 now. The guest walks into the wall and the visit stops."
+  - id: walk-5
+    label: "Walk to door 5"
+    do:
+      - spawn: { id: "outcome", label: "The wall: the visit stops", at: "result.0" }
+      - mark: { outcome: "bad" }
+      - say: "The guest walks straight to door 5. The last door is 4, so the guest walks into the wall and the visit stops."
+  - id: ask-5
+    label: "Ask the clerk for door 5"
+    do:
+      - spawn: { id: "outcome", label: "Slip: no such room", at: "result.0" }
+      - say: "The clerk checks the inn, finds no room 5 and hands over a slip that reads \"no such room\". The guest carries on."
+  - id: remove-rooms
+    label: "Remove all the rooms"
+    cases:
+      - do:
+          - remove: "r0"
+          - remove: "r1"
+          - remove: "r2"
+          - remove: "r3"
+          - remove: "r4"
+          - say: "All five rooms are gone. The inn has no doors, not even door 0."
+    refuse: "The inn is already empty."
+  - id: walk-0
+    label: "Walk to door 0"
+    cases:
+      - when: { at: { r0: "inn.0" } }
+        do:
+          - spawn: { id: "outcome", label: "Room 0: Sky", at: "result.0" }
+          - mark: { outcome: "good" }
+          - say: "The guest walks to door 0 and finds Sky."
+      - do:
+          - spawn: { id: "outcome", label: "The wall: the visit stops", at: "result.0" }
+          - mark: { outcome: "bad" }
+          - say: "There is no door 0, because the inn is empty. The guest walks into the wall and the visit stops."
+  - id: ask-0
+    label: "Ask the clerk for door 0"
+    cases:
+      - when: { at: { r0: "inn.0" } }
+        do:
+          - spawn: { id: "outcome", label: "Room 0: Sky", at: "result.0" }
+          - mark: { outcome: "good" }
+          - say: "The clerk finds room 0 and the guest gets Sky."
+      - do:
+          - spawn: { id: "outcome", label: "Slip: no such room", at: "result.0" }
+          - say: "The inn is empty, so the clerk hands over a slip that reads \"no such room\". The guest carries on."
+script: ["walk-2", "walk-5", "ask-5", "remove-rooms", "walk-0", "ask-0"]
+try:
+  - text: "Press \"Walk to door 2\". Then press \"Walk to door 5\"."
+    done: ["walk-2", "walk-5"]
+  - text: "Press \"Ask the clerk for door 5\"."
+    done: ["ask-5"]
+  - text: "Press \"Remove all the rooms\". Then ask for door 0 both ways: \"Walk to door 0\" and \"Ask the clerk for door 0\"."
+    done: ["remove-rooms", "walk-0", "ask-0"]
+```
 
 **What you should notice:** Walking to a door that does not exist stops the guest at the wall, while the clerk answers the same request with a "no such room" slip.
 

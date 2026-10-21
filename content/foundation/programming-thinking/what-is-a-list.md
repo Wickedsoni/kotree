@@ -36,12 +36,62 @@ Think of a wall of post-office boxes, built in one row.
 
 ## See it move
 
-<!-- SIM: post-office-boxes -->
-
-**Try this:**
-1. Click each number on the doors and watch which box lights up.
-2. Type 3 into "Ask for number" on the wall of three boxes.
-3. Press "Add a box" and ask for 3 again.
+```sim
+id: post-office-boxes
+template: lanes
+title: "A wall of numbered post-office boxes"
+intro: "Three boxes sit in one row under the sign \"names\". The doors are numbered from 0. The spot at door 3 has no box yet."
+lanes:
+  - { id: "wall", label: "Wall of boxes under the sign \"names\"", kind: "row", slots: 4, index0: true }
+items:
+  - { id: "ada", label: "Ada", at: "wall.0" }
+  - { id: "ben", label: "Ben", at: "wall.1" }
+  - { id: "cy", label: "Cy", at: "wall.2" }
+vars: { boxes: 3 }
+show:
+  - { var: "boxes", label: "Boxes on the wall" }
+actions:
+  - id: ask-0
+    label: "Ask for door 0"
+    do:
+      - mark: { ada: "picked", ben: "plain", cy: "plain", dan: "plain" }
+      - say: "Door 0 opens. Box 0 lights up and holds Ada."
+  - id: ask-1
+    label: "Ask for door 1"
+    do:
+      - mark: { ada: "plain", ben: "picked", cy: "plain", dan: "plain" }
+      - say: "Door 1 opens. Box 1 lights up and holds Ben."
+  - id: ask-2
+    label: "Ask for door 2"
+    do:
+      - mark: { ada: "plain", ben: "plain", cy: "picked", dan: "plain" }
+      - say: "Door 2 opens. Box 2 lights up and holds Cy."
+  - id: ask-3
+    label: "Ask for door 3"
+    cases:
+      - when: { at: { dan: "wall.3" } }
+        do:
+          - mark: { ada: "plain", ben: "plain", cy: "plain", dan: "picked" }
+          - say: "Door 3 opens. Box 3 lights up and holds Dee."
+    refuse: "Door 3 has no box behind it. The wall shakes. In a program this stops with an error."
+  - id: add-box
+    label: "Add a box"
+    cases:
+      - when: { var: { boxes: 3 } }
+        do:
+          - spawn: { id: "dan", label: "Dee", at: "wall.3" }
+          - set: { boxes: 4 }
+          - say: "A fourth box is built at door 3. It holds Dee."
+    refuse: "The wall already has its fourth box."
+script: ["ask-0", "ask-1", "ask-2", "ask-3", "add-box", "ask-3"]
+try:
+  - text: "Press \"Ask for door 0\", then \"Ask for door 1\", then \"Ask for door 2\". Watch which box lights up each time."
+    done: ["ask-0", "ask-1", "ask-2"]
+  - text: "Press \"Ask for door 3\" on the wall of three boxes."
+    done: ["ask-3"]
+  - text: "Press \"Add a box\". Then ask for door 3 again."
+    done: ["add-box", "ask-3"]
+```
 
 **What you should notice:** The door numbers start at 0, so the last of three boxes is door 2, and a number with no box shakes the wall.
 

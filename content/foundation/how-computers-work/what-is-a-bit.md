@@ -36,12 +36,173 @@ One switch can only say "yes" or "no". A row of them says much more, because the
 
 ## See it move
 
-<!-- SIM: binary-switches -->
-
-**Try this:**
-1. Flip switches until the counter shows 5. Then flip them until it shows 200.
-2. Look at the sign above each switch. Flip only the switch that is worth 8 and watch the counter change by 8.
-3. Press "Add a ninth switch". Turn every switch on and read the counter.
+```sim
+id: binary-switches
+template: lanes
+title: "A row of switches and a counter"
+intro: "Eight switches sit in the dark row. Each chip shows what that switch is worth when it is lit. The counter shows 0."
+lanes:
+  - { id: "dark", label: "Dark row: switches that are off", kind: "row", slots: 9, index0: false }
+  - { id: "lit", label: "Lit row: switches that are on", kind: "row", slots: 9, index0: false }
+items:
+  - { id: "sw1", label: "Worth 1", at: "dark.0" }
+  - { id: "sw2", label: "Worth 2", at: "dark.1" }
+  - { id: "sw3", label: "Worth 4", at: "dark.2" }
+  - { id: "sw4", label: "Worth 8", at: "dark.3" }
+  - { id: "sw5", label: "Worth 16", at: "dark.4" }
+  - { id: "sw6", label: "Worth 32", at: "dark.5" }
+  - { id: "sw7", label: "Worth 64", at: "dark.6" }
+  - { id: "sw8", label: "Worth 128", at: "dark.7" }
+vars: { total: 0, patterns: 256, nine: 0 }
+show:
+  - { var: "total", label: "Counter" }
+  - { var: "patterns", label: "Different patterns" }
+actions:
+  - id: add-switch
+    label: "Add a ninth switch"
+    cases:
+      - when: { var: { nine: 0 } }
+        do:
+          - spawn: { id: "sw9", label: "Worth 256", at: "dark.8" }
+          - set: { nine: 1, patterns: 512 }
+          - say: "A ninth switch joins the dark row. It is worth 256, and the row now has 512 patterns, double the 256 before."
+    refuse: "The ninth switch is already on the wall."
+drops:
+  - item: sw1
+    to: "lit.0"
+    when: { at: { sw1: "dark.0" } }
+    do:
+      - add: { total: 1 }
+      - say: "The switch worth 1 is lit. The counter goes up by 1 and shows {total}."
+    refuse: "The switch worth 1 is already lit."
+  - item: sw1
+    to: "dark.0"
+    when: { at: { sw1: "lit.0" } }
+    do:
+      - add: { total: -1 }
+      - say: "The switch worth 1 goes dark. The counter goes down by 1 and shows {total}."
+    refuse: "The switch worth 1 is already dark."
+  - item: sw2
+    to: "lit.1"
+    when: { at: { sw2: "dark.1" } }
+    do:
+      - add: { total: 2 }
+      - say: "The switch worth 2 is lit. The counter goes up by 2 and shows {total}."
+    refuse: "The switch worth 2 is already lit."
+  - item: sw2
+    to: "dark.1"
+    when: { at: { sw2: "lit.1" } }
+    do:
+      - add: { total: -2 }
+      - say: "The switch worth 2 goes dark. The counter goes down by 2 and shows {total}."
+    refuse: "The switch worth 2 is already dark."
+  - item: sw3
+    to: "lit.2"
+    when: { at: { sw3: "dark.2" } }
+    do:
+      - add: { total: 4 }
+      - say: "The switch worth 4 is lit. The counter goes up by 4 and shows {total}."
+    refuse: "The switch worth 4 is already lit."
+  - item: sw3
+    to: "dark.2"
+    when: { at: { sw3: "lit.2" } }
+    do:
+      - add: { total: -4 }
+      - say: "The switch worth 4 goes dark. The counter goes down by 4 and shows {total}."
+    refuse: "The switch worth 4 is already dark."
+  - item: sw4
+    to: "lit.3"
+    when: { at: { sw4: "dark.3" } }
+    do:
+      - add: { total: 8 }
+      - say: "The switch worth 8 is lit. The counter goes up by 8 and shows {total}."
+    refuse: "The switch worth 8 is already lit."
+  - item: sw4
+    to: "dark.3"
+    when: { at: { sw4: "lit.3" } }
+    do:
+      - add: { total: -8 }
+      - say: "The switch worth 8 goes dark. The counter goes down by 8 and shows {total}."
+    refuse: "The switch worth 8 is already dark."
+  - item: sw5
+    to: "lit.4"
+    when: { at: { sw5: "dark.4" } }
+    do:
+      - add: { total: 16 }
+      - say: "The switch worth 16 is lit. The counter goes up by 16 and shows {total}."
+    refuse: "The switch worth 16 is already lit."
+  - item: sw5
+    to: "dark.4"
+    when: { at: { sw5: "lit.4" } }
+    do:
+      - add: { total: -16 }
+      - say: "The switch worth 16 goes dark. The counter goes down by 16 and shows {total}."
+    refuse: "The switch worth 16 is already dark."
+  - item: sw6
+    to: "lit.5"
+    when: { at: { sw6: "dark.5" } }
+    do:
+      - add: { total: 32 }
+      - say: "The switch worth 32 is lit. The counter goes up by 32 and shows {total}."
+    refuse: "The switch worth 32 is already lit."
+  - item: sw6
+    to: "dark.5"
+    when: { at: { sw6: "lit.5" } }
+    do:
+      - add: { total: -32 }
+      - say: "The switch worth 32 goes dark. The counter goes down by 32 and shows {total}."
+    refuse: "The switch worth 32 is already dark."
+  - item: sw7
+    to: "lit.6"
+    when: { at: { sw7: "dark.6" } }
+    do:
+      - add: { total: 64 }
+      - say: "The switch worth 64 is lit. The counter goes up by 64 and shows {total}."
+    refuse: "The switch worth 64 is already lit."
+  - item: sw7
+    to: "dark.6"
+    when: { at: { sw7: "lit.6" } }
+    do:
+      - add: { total: -64 }
+      - say: "The switch worth 64 goes dark. The counter goes down by 64 and shows {total}."
+    refuse: "The switch worth 64 is already dark."
+  - item: sw8
+    to: "lit.7"
+    when: { at: { sw8: "dark.7" } }
+    do:
+      - add: { total: 128 }
+      - say: "The switch worth 128 is lit. The counter goes up by 128 and shows {total}."
+    refuse: "The switch worth 128 is already lit."
+  - item: sw8
+    to: "dark.7"
+    when: { at: { sw8: "lit.7" } }
+    do:
+      - add: { total: -128 }
+      - say: "The switch worth 128 goes dark. The counter goes down by 128 and shows {total}."
+    refuse: "The switch worth 128 is already dark."
+  - item: sw9
+    to: "lit.8"
+    when: { at: { sw9: "dark.8" } }
+    do:
+      - add: { total: 256 }
+      - say: "The switch worth 256 is lit. The counter goes up by 256 and shows {total}."
+    refuse: "The switch worth 256 is already lit."
+  - item: sw9
+    to: "dark.8"
+    when: { at: { sw9: "lit.8" } }
+    do:
+      - add: { total: -256 }
+      - say: "The switch worth 256 goes dark. The counter goes down by 256 and shows {total}."
+    refuse: "The switch worth 256 is already dark."
+script: ["sw1>lit.0", "sw3>lit.2", "sw4>lit.3", "add-switch", "sw9>lit.8"]
+try:
+  - text: "Drag the switch worth 1 and then the switch worth 4 from the dark row to the lit row. The counter shows 5."
+    done: ["sw1>lit.0", "sw3>lit.2"]
+  - text: "Drag the switch worth 8 to the lit row. The counter goes up by exactly 8."
+    done: ["sw4>lit.3"]
+  - text: "Press \"Add a ninth switch\" and drag it to the lit row. Then drag the other switches over too and read the counter. The patterns number doubled."
+    done: ["add-switch", "sw9>lit.8"]
+```
 
 **What you should notice:** A lit switch adds its worth to the counter, and each extra switch doubles the patterns.
 

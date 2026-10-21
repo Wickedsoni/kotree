@@ -34,12 +34,87 @@ Think of reading a stack of letters at a desk.
 
 ## See it move
 
-<!-- SIM: letter-stack-gates -->
-
-**Try this:**
-1. Run the stack of six letters with no rule cards and count the letters in the done tray.
-2. Add the "junk mail" rule for letter 3 and run again.
-3. Add the "STOP letter" rule for letter 5 as well and run again.
+```sim
+id: letter-stack-gates
+template: lanes
+title: "Reading a stack of letters with two rule cards"
+intro: "Six letters sit in a stack, letter 1 on top. The done tray and the unread pile are empty and no rule card is in play."
+lanes:
+  - { id: "stack", label: "Stack of letters (top letter is read first)", kind: "stack", slots: 6, index0: false }
+  - { id: "tray", label: "Done tray", kind: "row", slots: 6, index0: false }
+  - { id: "unread", label: "Unread pile (set aside or thrown away)", kind: "row", slots: 6, index0: false }
+items:
+  - { id: "l1", label: "Letter 1", at: "stack.5" }
+  - { id: "l2", label: "Letter 2", at: "stack.4" }
+  - { id: "l3", label: "Letter 3", at: "stack.3" }
+  - { id: "l4", label: "Letter 4", at: "stack.2" }
+  - { id: "l5", label: "Letter 5", at: "stack.1" }
+  - { id: "l6", label: "Letter 6", at: "stack.0" }
+vars: { next: 0, read: 0, skipped: 0, junk: "off", stop: "off" }
+show:
+  - { var: "read", label: "Letters in the done tray" }
+  - { var: "skipped", label: "Letters left unread" }
+toggles:
+  - { id: "junk", label: "Junk mail rule for letter 3", var: "junk" }
+  - { id: "stop", label: "STOP letter rule for letter 5", var: "stop" }
+actions:
+  - id: take
+    label: "Take the next letter"
+    cases:
+      - when: { var: { next: 0 } }
+        do:
+          - push: { tray: "l1" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 1 is read and goes into the done tray."
+      - when: { var: { next: 1 } }
+        do:
+          - push: { tray: "l2" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 2 is read and goes into the done tray."
+      - when: { var: { next: 2, junk: "on" } }
+        do:
+          - push: { unread: "l3" }
+          - add: { skipped: 1, next: 1 }
+          - say: "Letter 3 is junk mail. You put it aside unread and take the next letter."
+      - when: { var: { next: 2 } }
+        do:
+          - push: { tray: "l3" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 3 is read and goes into the done tray."
+      - when: { var: { next: 3 } }
+        do:
+          - push: { tray: "l4" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 4 is read and goes into the done tray."
+      - when: { var: { next: 4, stop: "on" } }
+        do:
+          - push: { unread: "l5" }
+          - push: { unread: "l6" }
+          - add: { skipped: 2 }
+          - set: { next: 6 }
+          - say: "Letter 5 is a STOP letter. You throw it away with the rest of the stack and leave the stack. Then you make tea."
+      - when: { var: { next: 4 } }
+        do:
+          - push: { tray: "l5" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 5 is read and goes into the done tray."
+      - when: { var: { next: 5 } }
+        do:
+          - push: { tray: "l6" }
+          - add: { read: 1, next: 1 }
+          - say: "Letter 6 is read and goes into the done tray. The stack is empty."
+      - when: { var: { next: 6 } }
+        do:
+          - say: "The stack is finished. Now you make tea."
+script: ["take", "take", "take", "take", "take", "take", "junk=on", "stop=on"]
+try:
+  - text: "Press \"Take the next letter\" six times with no rule cards. Count the letters in the done tray."
+    done: ["take", "take", "take", "take", "take", "take"]
+  - text: "Tick the junk mail rule card for letter 3. The sim replays your six turns with the rule."
+    done: ["junk=on"]
+  - text: "Tick the STOP letter rule card for letter 5 as well. Count the letters in the done tray and in the unread pile."
+    done: ["stop=on"]
+```
 
 **What you should notice:** The junk rule leaves one letter unread and carries on, while the STOP rule leaves all the remaining letters unread.
 

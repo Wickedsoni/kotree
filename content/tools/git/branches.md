@@ -35,12 +35,118 @@ A second note does not make a second album. It is only another label on a photo.
 **Where the analogy stops:** A sticky note is moved by hand. A branch label moves itself when you take a snapshot while your thumb is on it. Also, when you move your thumb to another note, the room changes to match that photo, and an album page does not do that.
 ## See it move
 
-<!-- SIM: branch-labels -->
-
-**Try this:**
-1. Tie a new label, `try-layout`, on the latest bead. Switch to it and take two snapshots. Watch which label moves.
-2. Switch back to `main`. Look at the working folder and at where each label sits.
-3. (Optional reveal) Hold `main` by mistake and take a snapshot. See which label moves.
+```sim
+id: branch-labels
+template: lanes
+title: "Snapshots on a string and labels you can move"
+intro: "Three snapshots hang on a string. The label main sits under snapshot 3 and your thumb is on main. The working folder matches snapshot 3."
+lanes:
+  - { id: "beads", label: "Snapshots (beads on a string)", kind: "row", slots: 6, index0: false }
+  - { id: "mainl", label: "Label main (sits under one snapshot)", kind: "row", slots: 6, index0: false }
+  - { id: "tryl", label: "Label try-layout (sits under one snapshot)", kind: "row", slots: 6, index0: false }
+items:
+  - { id: "b1", label: "Snapshot 1", at: "beads.0" }
+  - { id: "b2", label: "Snapshot 2", at: "beads.1" }
+  - { id: "b3", label: "Snapshot 3", at: "beads.2" }
+  - { id: "main", label: "main (thumb)", at: "mainl.2" }
+vars: { held: "main", beads: 3, made: 0, folder: "the snapshot under main" }
+show:
+  - { var: "folder", label: "Working folder shows" }
+actions:
+  - id: new-label
+    label: "Tie a new label try-layout on this snapshot"
+    cases:
+      - when: { var: { made: 0, beads: 3 } }
+        do:
+          - spawn: { id: "try", label: "try-layout", at: "tryl.2" }
+          - set: { made: 1 }
+          - say: "A new label, try-layout, is tied on the same snapshot as main. Nothing else changes and your thumb is still on main."
+      - when: { var: { made: 0, beads: 4 } }
+        do:
+          - spawn: { id: "try", label: "try-layout", at: "tryl.3" }
+          - set: { made: 1 }
+          - say: "A new label, try-layout, is tied on the same snapshot as main. Nothing else changes and your thumb is still on main."
+      - when: { var: { made: 0, beads: 5 } }
+        do:
+          - spawn: { id: "try", label: "try-layout", at: "tryl.4" }
+          - set: { made: 1 }
+          - say: "A new label, try-layout, is tied on the same snapshot as main. Nothing else changes and your thumb is still on main."
+      - when: { var: { made: 0, beads: 6 } }
+        do:
+          - spawn: { id: "try", label: "try-layout", at: "tryl.5" }
+          - set: { made: 1 }
+          - say: "A new label, try-layout, is tied on the same snapshot as main. Nothing else changes and your thumb is still on main."
+    refuse: "The label try-layout is already tied."
+  - id: switch-try
+    label: "Switch to try-layout"
+    cases:
+      - when: { var: { made: 1, held: "main" } }
+        do:
+          - set: { held: "try", folder: "the snapshot under try-layout" }
+          - label: { main: "main", try: "try-layout (thumb)" }
+          - mark: { main: "plain", try: "picked" }
+          - say: "Your thumb moves to try-layout. The working folder changes to match the snapshot under that label."
+    refuse: "Either try-layout is not tied yet, or your thumb is already on it."
+  - id: switch-main
+    label: "Switch to main"
+    cases:
+      - when: { var: { held: "try" } }
+        do:
+          - set: { held: "main", folder: "the snapshot under main" }
+          - label: { main: "main (thumb)", try: "try-layout" }
+          - mark: { main: "picked", try: "plain" }
+          - say: "Your thumb moves back to main. The working folder changes back to the snapshot under main."
+    refuse: "Your thumb is already on main."
+  - id: snapshot
+    label: "Take a snapshot"
+    cases:
+      - when: { var: { held: "main", beads: 3 } }
+        do:
+          - spawn: { id: "b4", label: "Snapshot 4", at: "beads.3" }
+          - move: { main: "mainl.3" }
+          - add: { beads: 1 }
+          - say: "Snapshot 4 is taken after the snapshot under main. Only main slides forward to it. The other label stays where it was."
+      - when: { var: { held: "main", beads: 4 } }
+        do:
+          - spawn: { id: "b5", label: "Snapshot 5", at: "beads.4" }
+          - move: { main: "mainl.4" }
+          - add: { beads: 1 }
+          - say: "Snapshot 5 is taken after the snapshot under main. Only main slides forward to it. The other label stays where it was."
+      - when: { var: { held: "main", beads: 5 } }
+        do:
+          - spawn: { id: "b6", label: "Snapshot 6", at: "beads.5" }
+          - move: { main: "mainl.5" }
+          - add: { beads: 1 }
+          - say: "Snapshot 6 is taken after the snapshot under main. Only main slides forward to it. The other label stays where it was."
+      - when: { var: { held: "try", beads: 3 } }
+        do:
+          - spawn: { id: "b4", label: "Snapshot 4", at: "beads.3" }
+          - move: { try: "tryl.3" }
+          - add: { beads: 1 }
+          - say: "Snapshot 4 is taken after the snapshot under try-layout. Only try-layout slides forward to it. The other label stays where it was."
+      - when: { var: { held: "try", beads: 4 } }
+        do:
+          - spawn: { id: "b5", label: "Snapshot 5", at: "beads.4" }
+          - move: { try: "tryl.4" }
+          - add: { beads: 1 }
+          - say: "Snapshot 5 is taken after the snapshot under try-layout. Only try-layout slides forward to it. The other label stays where it was."
+      - when: { var: { held: "try", beads: 5 } }
+        do:
+          - spawn: { id: "b6", label: "Snapshot 6", at: "beads.5" }
+          - move: { try: "tryl.5" }
+          - add: { beads: 1 }
+          - say: "Snapshot 6 is taken after the snapshot under try-layout. Only try-layout slides forward to it. The other label stays where it was."
+    refuse: "The string is full in this picture. Press Reset to start again."
+script: ["new-label", "switch-try", "snapshot", "snapshot", "switch-main", "snapshot"]
+try:
+  - text: "Press \"Tie a new label try-layout on this snapshot\" and then \"Switch to try-layout\". Take two snapshots and watch which label moves."
+    done: ["new-label", "switch-try", "snapshot", "snapshot"]
+  - text: "Press \"Switch to main\". Look at the working folder and at where each label sits."
+    done: ["switch-main"]
+  - text: "(Optional reveal) With your thumb on main by mistake, take a snapshot. See which label moves."
+    done: ["snapshot"]
+    optional: true
+```
 
 **What you should notice:** Only the label you hold moves forward when you take a snapshot, and the other label stays where it was.
 

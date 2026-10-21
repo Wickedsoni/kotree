@@ -39,12 +39,87 @@ Think of a cashier at a till with a basket of shopping.
 
 ## See it move
 
-<!-- SIM: basket-checkout-loop -->
-
-**Try this:**
-1. Press "Step" and watch the cashier scan one item and the display change.
-2. Press "Reset", set the display's starting number to 10, and press "Step" until the basket is empty.
-3. Tick "Wipe the display before each scan" and step through the basket again.
+```sim
+id: basket-checkout-loop
+template: lanes
+title: "A cashier scans a basket one item at a time"
+intro: "A basket holds four items priced 3, 5, 2 and 4, in places 0 to 3. The display shows 0."
+lanes:
+  - { id: "basket", label: "Basket (places 0 to 3)", kind: "row", slots: 4, index0: true }
+items:
+  - { id: "i0", label: "Item priced 3", at: "basket.0" }
+  - { id: "i1", label: "Item priced 5", at: "basket.1" }
+  - { id: "i2", label: "Item priced 2", at: "basket.2" }
+  - { id: "i3", label: "Item priced 4", at: "basket.3" }
+vars: { total: 0, scanned: 0, wipe: "off" }
+show:
+  - { var: "total", label: "Display" }
+  - { var: "scanned", label: "Items scanned" }
+toggles:
+  - { id: "wipe", label: "Wipe the display before each scan", var: "wipe" }
+sliders:
+  - { id: "start", label: "Display starts at", var: "total", min: 0, max: 20, step: 5 }
+actions:
+  - id: scan
+    label: "Scan the next item"
+    cases:
+      - when: { var: { scanned: 0, wipe: "on" } }
+        do:
+          - set: { total: 0 }
+          - add: { total: 3, scanned: 1 }
+          - mark: { i0: "picked" }
+          - say: "The display is wiped to 0 first. Then the scanner reads place 0, price 3, so the display shows {total}. Everything before it is lost."
+      - when: { var: { scanned: 0 } }
+        do:
+          - add: { total: 3, scanned: 1 }
+          - mark: { i0: "picked" }
+          - say: "The scanner beeps at place 0 and reads price 3. The display adds 3 to what it showed and now reads {total}."
+      - when: { var: { scanned: 1, wipe: "on" } }
+        do:
+          - set: { total: 0 }
+          - add: { total: 5, scanned: 1 }
+          - mark: { i0: "good", i1: "picked" }
+          - say: "The display is wiped to 0 first. Then the scanner reads place 1, price 5, so the display shows {total}. Everything before it is lost."
+      - when: { var: { scanned: 1 } }
+        do:
+          - add: { total: 5, scanned: 1 }
+          - mark: { i0: "good", i1: "picked" }
+          - say: "The scanner beeps at place 1 and reads price 5. The display adds 5 to what it showed and now reads {total}."
+      - when: { var: { scanned: 2, wipe: "on" } }
+        do:
+          - set: { total: 0 }
+          - add: { total: 2, scanned: 1 }
+          - mark: { i1: "good", i2: "picked" }
+          - say: "The display is wiped to 0 first. Then the scanner reads place 2, price 2, so the display shows {total}. Everything before it is lost."
+      - when: { var: { scanned: 2 } }
+        do:
+          - add: { total: 2, scanned: 1 }
+          - mark: { i1: "good", i2: "picked" }
+          - say: "The scanner beeps at place 2 and reads price 2. The display adds 2 to what it showed and now reads {total}."
+      - when: { var: { scanned: 3, wipe: "on" } }
+        do:
+          - set: { total: 0 }
+          - add: { total: 4, scanned: 1 }
+          - mark: { i2: "good", i3: "picked" }
+          - say: "The display is wiped to 0 first. Then the scanner reads place 3, price 4, so the display shows {total}. Everything before it is lost."
+      - when: { var: { scanned: 3 } }
+        do:
+          - add: { total: 4, scanned: 1 }
+          - mark: { i2: "good", i3: "picked" }
+          - say: "The scanner beeps at place 3 and reads price 4. The display adds 4 to what it showed and now reads {total}."
+      - when: { var: { scanned: 4 } }
+        do:
+          - mark: { i3: "good" }
+          - say: "No unscanned item is left, so the loop stops. The display reads {total}."
+script: ["scan", "scan", "scan", "scan", "start=10", "wipe=on"]
+try:
+  - text: "Press \"Scan the next item\" once. The scanner reads place 0 and the display changes from 0 to 3."
+    done: ["scan"]
+  - text: "Move the \"Display starts at\" slider to 10. The sim replays your scan, so the display starts from 10. Then press \"Scan the next item\" until the basket is empty."
+    done: ["start=10", "scan", "scan", "scan"]
+  - text: "Tick \"Wipe the display before each scan\". The sim replays all your scans, and the display ends on the last price only."
+    done: ["wipe=on"]
+```
 
 **What you should notice:** Each beep adds one price to what the display already shows, and wiping before each scan leaves only the last price.
 
