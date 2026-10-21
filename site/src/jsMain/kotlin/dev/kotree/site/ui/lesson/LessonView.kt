@@ -22,6 +22,11 @@ import dev.kotree.site.lessons.LessonState
 import dev.kotree.site.lessons.findLeaf
 import dev.kotree.site.lessons.isExporting
 import dev.kotree.site.lessons.rememberLesson
+import dev.kotree.site.sims.ReadOnlyTry
+import dev.kotree.site.sims.TemplateSimHost
+import dev.kotree.site.sims.core.SimTryStep
+import dev.kotree.site.sims.core.readSimSpec
+import dev.kotree.site.sims.templateLayouts
 import dev.kotree.site.space12Var
 import dev.kotree.site.space2Var
 import dev.kotree.site.space3Var
@@ -193,7 +198,7 @@ private fun LessonBody(data: LessonData, info: LeafInfo, preview: Boolean) {
 private fun Block(block: BlockData, data: LessonData, branch: String, preview: Boolean) {
     when (block.t) {
         "html" -> Prose(block.html.orEmpty())
-        "sim" -> SimHost(block.id.orEmpty(), branch, preview)
+        "sim" -> SimHost(block, branch, preview)
         "code" -> {
             val code = block.code.orEmpty()
             if (block.runnable == true && data.playground) {
@@ -227,16 +232,33 @@ private fun Block(block: BlockData, data: LessonData, branch: String, preview: B
 }
 
 /**
- * Sims that exist, by id. Empty until Phase 5 (docs/05). A sim that is not registered draws nothing on a live page, so
- * the "Try this" text beside it still teaches (docs/04 section 4.3), and a labelled frame in a preview.
+ * Bespoke sims by id (later physics sims, ADR 009 section 1, docs/05). Empty today. A registered id wins over a template.
  */
 private val simRegistry: Map<String, @Composable () -> Unit> = emptyMap()
 
+/**
+ * Resolution order of ADR 009 section 1: (1) a bespoke sim registered for the id; (2) the template layout of `tpl`;
+ * (3) a template whose layout is not built yet: the Try this steps read-only on a live page, a labelled working frame in
+ * a preview; a legacy bare marker (no `tpl`) draws nothing on a live page and a labelled frame in a preview.
+ */
 @Composable
-private fun SimHost(id: String, branch: String, preview: Boolean) {
-    val sim = simRegistry[id]
+private fun SimHost(block: BlockData, branch: String, preview: Boolean) {
+    val id = block.id.orEmpty()
+    val bespoke = simRegistry[id]
+    if (bespoke != null) {
+        SimFrame(title = "Simulation: $id", branch = branch) { bespoke() }
+        return
+    }
+    val spec = remember(block) {
+        val tpl = block.tpl
+        if (tpl == null) null
+        else readSimSpec(id, tpl, block.spec, block.`try`.orEmpty().map { SimTryStep(it.html, it.done.toList(), it.optional) })
+    }
+    val layout = spec?.let { templateLayouts[it.template] }
     when {
-        sim != null -> SimFrame(title = "Simulation: $id", branch = branch) { sim() }
+        spec != null && layout != null -> TemplateSimHost(spec, branch, layout)
+        spec != null && preview -> TemplateSimHost(spec, branch, null)
+        spec != null -> ReadOnlyTry(spec, branch)
         preview -> SimFrame(title = "Simulation: $id", branch = branch) { Text("Simulation \"$id\" is not built yet. Preview only.") }
     }
 }

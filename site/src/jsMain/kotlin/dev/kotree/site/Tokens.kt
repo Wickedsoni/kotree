@@ -208,6 +208,14 @@ object Tokens {
         const val tooltipDelayMs = 500
         /** motion.autumn: ease of a leaf turning to autumn colour when marked done (ADR 008). */
         const val autumnMs = 900
+        /** Play interval of a template sim (ADR 009 section 4); Slow doubles it. */
+        const val simStepMs = 1200
+        /** Opacity fade of a new sim state under reduced motion (ADR 009 section 4). */
+        const val simFadeMs = 150
+        /** A playing sim pauses when less than this share of its frame is visible (ADR 009 section 4). */
+        const val simVisibleShare = 0.1
+        /** Width of the bar that marks the current Try this step (ADR 009 section 3). */
+        const val simStepBarPx = 4
     }
 
     // ---- Tree v3 additions (ADR 008 WP1). Constants only; additions only. ----

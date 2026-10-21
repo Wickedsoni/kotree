@@ -35,12 +35,85 @@ The recipes do not change from city to city. The oven knobs do, so each kitchen 
 
 ## See it move
 
-<!-- SIM: shared-or-platform-bins -->
-
-**Try this:**
-1. Let the six features roll down the belt. Drop each one into the shared bin or the per-phone bin, and read the reason the bin shows.
-2. Drop "camera" into the shared bin and read why it bounces back.
-3. Drop "screen layout" into each bin in turn and read both reasons.
+```sim
+id: shared-or-platform-bins
+template: zones
+title: Shared bin and per-phone bin
+intro: Six features of a shop app wait on the belt. The shared bin and the per-phone bin are empty.
+zones:
+  - { id: belt, label: Belt }
+  - { id: shared, label: Shared bin (written once) }
+  - { id: platform, label: Per-phone bin (written for each phone) }
+items:
+  - { id: price, label: Price rules, at: belt }
+  - { id: login, label: Login rules, at: belt }
+  - { id: data, label: Saved data, at: belt }
+  - { id: layout, label: Screen layout, at: belt }
+  - { id: camera, label: Camera, at: belt }
+  - { id: notify, label: Notifications, at: belt }
+vars: { cameraShareable: 0, notifyShareable: 0 }
+drops:
+  - item: price
+    to: shared
+    do:
+      - say: "Price rules use only numbers and rules, so they do not depend on the phone. They can live in the shared bin."
+  - item: price
+    to: platform
+    do:
+      - say: "Price rules could be written for each phone, but they only use numbers and rules. The shared bin is the better home."
+  - item: login
+    to: shared
+    do:
+      - say: "Login rules use only text and rules, so they do not depend on the phone. They can live in the shared bin."
+  - item: login
+    to: platform
+    do:
+      - say: "Login rules could be written for each phone, but they only use text and rules. The shared bin is the better home."
+  - item: data
+    to: shared
+    do:
+      - say: "Saved data can be shared. The Kotlin documentation names storage as a module you can share."
+  - item: data
+    to: platform
+    do:
+      - say: "Saved data could be written for each phone, but storage is a module the documentation says you can share."
+  - item: layout
+    to: shared
+    do:
+      - say: "Screen layout can be shared with Compose Multiplatform. Sharing the screen is a choice, not a requirement."
+  - item: layout
+    to: platform
+    do:
+      - say: "Screen layout can also stay native, so each phone builds its own screen. Both choices are allowed."
+  - item: camera
+    to: shared
+    when: { var: { cameraShareable: 1 } }
+    do:
+      - say: "The camera can be shared."
+    refuse: "The camera is the phone's own feature, so the shared bin cannot do the real work. Shared code can only say that it needs a photo, and each phone supplies the camera."
+  - item: camera
+    to: platform
+    do:
+      - say: "The camera is the phone's own feature, so each phone supplies the real work. The shared code can still say that it needs a photo."
+  - item: notify
+    to: shared
+    when: { var: { notifyShareable: 1 } }
+    do:
+      - say: "Notifications can be shared."
+    refuse: "Each phone has its own notification system, so the shared bin cannot do the real work. Shared code can only say that it needs one, and each phone supplies it."
+  - item: notify
+    to: platform
+    do:
+      - say: "Each phone has its own notification system, so each phone supplies the real work. The shared code can still say that it needs one."
+script: ["price>shared", "notify>platform", "camera>shared", "layout>shared", "layout>platform"]
+try:
+  - text: "Look at the six features waiting on the belt. Drop Price rules into the shared bin and Notifications into the per-phone bin, and read the reason each bin shows."
+    done: ["price>shared", "notify>platform"]
+  - text: "Drop \"Camera\" into the shared bin and read why it bounces back."
+    done: ["camera>shared"]
+  - text: "Drop \"Screen layout\" into each bin in turn and read both reasons."
+    done: ["layout>shared", "layout>platform"]
+```
 
 **What you should notice:** Rules and data code can sit in the shared bin, camera and notifications must go to the per-phone bin, and screen layout can go to either.
 

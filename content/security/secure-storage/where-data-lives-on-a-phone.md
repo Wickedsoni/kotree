@@ -35,12 +35,71 @@ A guest does not leave a password note in the hall. But a guest also should not 
 
 ## See it move
 
-<!-- SIM: hotel-corridor-files -->
-
-**Try this:**
-1. Pick a way to save a file: in the private room, or in the shared hall. Watch where the file lands.
-2. Send the snooper ball along the hall and then to your room's door. See which files it can pick up.
-3. (Optional reveal) Turn on "front desk photo" and see which files are in the photo.
+```sim
+id: hotel-corridor-files
+template: zones
+title: Private room, shared hall and front desk
+intro: Three files wait to be saved. The private room, the shared hall and the front desk photo are empty.
+zones:
+  - { id: pile, label: Files to save }
+  - { id: room, label: Private room (internal storage) }
+  - { id: hall, label: Shared hall (shared storage) }
+  - { id: desk, label: Front desk photo (Auto Backup) }
+items:
+  - { id: notes, label: Notes list, at: pile }
+  - { id: photo, label: Photo to share, at: pile }
+  - { id: token, label: Login token, at: pile }
+actions:
+  - id: snoop
+    label: Send the snooper ball
+    do:
+      - say: "The snooper ball rolls down the hall and picks up every file marked with a cross. At the private room's door it stops, because files marked with a check are closed to other apps."
+  - id: backup
+    label: Front desk takes its photo
+    do:
+      - spawn: { id: desk-copy, label: "Copy of the checked files from your private room", at: desk }
+      - say: "By default Auto Backup copies the files in your private room, the ones marked with a check. A file in the room can leave the phone this way, which is why a token needs care even there."
+drops:
+  - item: notes
+    to: room
+    do:
+      - mark: { notes: good }
+      - say: "The notes list is in your private room. By default only your app can open it."
+  - item: notes
+    to: hall
+    do:
+      - mark: { notes: bad }
+      - say: "The notes list is in the shared hall. Any app with the right permission can read it."
+  - item: photo
+    to: room
+    do:
+      - mark: { photo: good }
+      - say: "The photo is in the private room, so other apps cannot reach it. If the user wants to share it, put it in a shared place on purpose."
+  - item: photo
+    to: hall
+    do:
+      - mark: { photo: bad }
+      - say: "The photo is in the shared hall. That fits here, because the user wants to share it."
+  - item: token
+    to: room
+    do:
+      - mark: { token: good }
+      - say: "The login token is in the private room, closed to other apps. Keep it short-lived, and ask whether it needs to be saved at all."
+  - item: token
+    to: hall
+    do:
+      - mark: { token: bad }
+      - say: "The login token is in the shared hall, where other apps can read it. Move it to the private room."
+script: ["token>hall", "notes>room", snoop, backup]
+try:
+  - text: "Pick a way to save a file. Drag the login token into the shared hall and the notes list into the private room, and watch where each file lands."
+    done: ["token>hall", "notes>room"]
+  - text: "Send the snooper ball along the hall and then to your room's door. See which files it can pick up."
+    done: [snoop]
+  - text: "(Optional reveal) Let the front desk take its photo and see which files are in it."
+    done: [backup]
+    optional: true
+```
 
 **What you should notice:** The snooper picks up files in the hall, and it cannot open the private room.
 

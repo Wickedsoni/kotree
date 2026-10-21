@@ -37,12 +37,69 @@ If the label card is missing, a pile of parts is all you have. Nobody can tell w
 
 ## See it move
 
-<!-- SIM: flat-pack-app-box -->
-
-**Try this:**
-1. Press "Unpack" and watch the box open into four piles: code, pictures, words and the label card.
-2. Click the label card to see what it lists.
-3. Press "Remove the label card", then press "Unpack onto the phone".
+```sim
+id: flat-pack-app-box
+template: zones
+title: A flat-pack box, its four piles and the phone
+intro: A sealed box stands for the app file. Nothing is unpacked and the phone is empty.
+zones:
+  - { id: box, label: App file (the sealed box) }
+  - { id: piles, label: Four piles }
+  - { id: phone, label: Phone }
+items:
+  - { id: sealed, label: Sealed app file, at: box }
+actions:
+  - id: unpack
+    label: Unpack
+    cases:
+      - when: { at: { sealed: box } }
+        do:
+          - remove: sealed
+          - spawn: { id: parts, label: "Parts bag (translated code)", at: piles }
+          - spawn: { id: pictures, label: "Picture sheets (images)", at: piles }
+          - spawn: { id: words, label: "Printed words (text)", at: piles }
+          - spawn: { id: card, label: "Label card (the manifest)", at: piles }
+          - say: "The box opens into four piles: code, pictures, words and the label card."
+    refuse: "The box is already open. Press Reset to pack it again."
+  - id: read-card
+    label: Read the label card
+    cases:
+      - when: { at: { card: piles } }
+        do:
+          - mark: { card: picked }
+          - say: "The label card lists the parts of the app, such as its screens, and what the app asks to use."
+    refuse: "There is no label card to read."
+  - id: remove-card
+    label: Remove the label card
+    cases:
+      - when: { at: { card: piles } }
+        do:
+          - remove: card
+          - say: "The label card is gone. The parts bag is still full, but nothing lists the parts."
+    refuse: "There is no label card to remove. Unpack the box first."
+  - id: to-phone
+    label: Unpack onto the phone
+    cases:
+      - when: { at: { card: piles } }
+        do:
+          - move: { parts: phone, pictures: phone, words: phone, card: phone }
+          - mark: { parts: good }
+          - say: "The phone reads the label card, sets the app up and can start each part the card lists."
+      - when: { at: { parts: piles } }
+        do:
+          - move: { parts: phone, pictures: phone, words: phone }
+          - mark: { parts: bad }
+          - say: "With the label card removed, the phone has no list of the parts, so it cannot start any of them."
+    refuse: "Nothing is waiting in the piles. Press Unpack first, or press Reset to start again."
+script: [unpack, read-card, remove-card, to-phone]
+try:
+  - text: "Press \"Unpack\" and watch the box open into four piles: code, pictures, words and the label card."
+    done: [unpack]
+  - text: "Read the label card to see what it lists."
+    done: [read-card]
+  - text: "Press \"Remove the label card\", then press \"Unpack onto the phone\"."
+    done: [remove-card, to-phone]
+```
 
 **What you should notice:** With the label card removed, the phone has no list of the parts, so it cannot start any of them.
 

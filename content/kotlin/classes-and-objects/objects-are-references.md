@@ -36,13 +36,87 @@ Think of flats and keys.
 
 ## See it move
 
-<!-- SIM: two-keys-one-flat -->
-
-**Try this:**
-1. Press "Cut a spare key" so Ben gets a copy of Ana's key. Then press "Ben repaints the sofa".
-2. Press "Build a second flat" and give Ben a key to it. Repaint again from Ben's side.
-3. Press "Ana repaints the sofa" and watch which flats change.
-4. (Optional reveal) Tick "Show the door number on each key". Compare the numbers before and after step 2.
+```sim
+id: two-keys-one-flat
+template: zones
+title: Keys, flats and a sofa
+intro: Ana holds a key to flat 1, which has a red sofa. A second flat has not been built yet.
+zones:
+  - { id: flat-1, label: Flat 1 }
+  - { id: flat-2, label: Flat 2 }
+items:
+  - { id: key-ana, label: "Ana's key", at: flat-1 }
+vars: { sofa1: red, sofa2: "no flat yet", built: 0 }
+show:
+  - { var: sofa1, label: Sofa in flat 1 }
+  - { var: sofa2, label: Sofa in flat 2 }
+actions:
+  - id: cut
+    label: Cut a spare key
+    do:
+      - spawn: { id: key-ben, label: "Ben's key", at: flat-1 }
+      - say: "A spare key was cut. Ben's key opens the same flat 1 as Ana's key. The flat was not copied."
+  - id: ben-paints
+    label: Ben repaints the sofa
+    cases:
+      - when: { at: { key-ben: flat-1 } }
+        do:
+          - set: { sofa1: blue }
+          - say: "Ben used his key to flat 1 and painted the sofa blue. Ana's key leads to the same flat, so her sofa is blue too."
+      - when: { at: { key-ben: flat-2 } }
+        do:
+          - set: { sofa2: blue }
+          - say: "Ben used his key to flat 2 and painted that sofa blue. Flat 1 is not touched."
+    refuse: "Ben has no key yet. Press Cut a spare key first."
+  - id: ana-paints
+    label: Ana repaints the sofa
+    do:
+      - set: { sofa1: green }
+      - say: "Ana used her key to flat 1 and painted the sofa green. Every key to flat 1 shows green. Flat 2 is not touched."
+  - id: build
+    label: Build a second flat
+    cases:
+      - when: { var: { built: 0 } }
+        do:
+          - set: { built: 1, sofa2: grey }
+          - label: { flat-2: "Flat 2 (new)" }
+          - say: "A new flat was built with a grey sofa. It is a second object, and no key leads to it yet."
+    refuse: "The second flat is already built."
+  - id: numbers
+    label: Show the door numbers
+    cases:
+      - when: { at: { key-ben: flat-2 } }
+        do:
+          - label: { key-ana: "Ana's key: door 1", key-ben: "Ben's key: door 2" }
+          - say: "Ana's key opens door 1 and Ben's key opens door 2. Two different flats."
+      - when: { at: { key-ben: flat-1 } }
+        do:
+          - label: { key-ana: "Ana's key: door 1", key-ben: "Ben's key: door 1" }
+          - say: "Both keys show door 1. One flat, two keys."
+    refuse: "Only Ana's key exists so far. It opens door 1."
+drops:
+  - item: key-ben
+    to: flat-2
+    when: { var: { built: 1 } }
+    do:
+      - say: "Ben gave back his spare key and got a key to flat 2. It leads to a different flat."
+    refuse: "There is no second flat yet. Press Build a second flat first."
+  - item: key-ben
+    to: flat-1
+    do:
+      - say: "Ben's key leads to flat 1 again."
+script: [cut, ben-paints, build, "key-ben>flat-2", ben-paints, ana-paints, numbers]
+try:
+  - text: "Press \"Cut a spare key\" so Ben gets a copy of Ana's key. Then press \"Ben repaints the sofa\"."
+    done: [cut, ben-paints]
+  - text: "Press \"Build a second flat\" and give Ben a key to it. Repaint again from Ben's side."
+    done: [build, "key-ben>flat-2", ben-paints]
+  - text: "Press \"Ana repaints the sofa\" and watch which flats change."
+    done: [ana-paints]
+  - text: "(Optional reveal) Press \"Show the door numbers\" and compare the numbers on the two keys with their places before and after step 2."
+    done: [numbers]
+    optional: true
+```
 
 **What you should notice:** A repaint through any key shows through every key to that flat, and a key to a second flat leaves the first flat alone.
 

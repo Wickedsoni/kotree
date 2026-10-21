@@ -35,12 +35,73 @@ At home, calling "Sam" gets the Sam who lives in the house. On the street, calli
 
 ## See it move
 
-<!-- SIM: house-and-street-names -->
-
-**Try this:**
-1. Stand Lee in the house and press "Call Sam".
-2. Move Lee out to the street. Press "Call Sam", then "Call Mia".
-3. Drag the house's Sam out of the house, move Lee back in, and press "Call Sam" again.
+```sim
+id: house-and-street-names
+template: zones
+title: A street, a house and the names people answer to
+intro: Sam the baker and Joe the postman live on the street. Sam the cousin and Mia live in the house. Lee stands on the street.
+zones:
+  - { id: street, label: Street (the outer area) }
+  - { id: house, label: House (a pair of braces) }
+items:
+  - { id: baker, label: "Sam (baker)", at: street }
+  - { id: postman, label: "Joe (postman)", at: street }
+  - { id: cousin, label: "Sam (cousin)", at: house }
+  - { id: mia, label: "Mia", at: house }
+  - { id: lee, label: "Lee, who calls", at: street }
+actions:
+  - id: call-sam
+    label: Call Sam
+    cases:
+      - when: { at: { lee: house, cousin: house } }
+        do:
+          - say: "Lee is in the house, so the call looks in the house first. Sam the cousin answers."
+      - when: { at: { lee: house } }
+        do:
+          - say: "Lee is in the house, but nobody called Sam lives there. The call goes out to the street and Sam the baker answers."
+      - do:
+          - say: "Lee is on the street, so the call looks on the street. Sam the baker answers."
+  - id: call-joe
+    label: Call Joe
+    cases:
+      - when: { at: { lee: house } }
+        do:
+          - say: "Nobody called Joe lives in the house, so the call goes out to the street. Joe the postman answers."
+      - do:
+          - say: "Lee is on the street, and Joe the postman answers."
+  - id: call-mia
+    label: Call Mia
+    cases:
+      - when: { at: { lee: house } }
+        do:
+          - say: "Mia lives in the house, so Lee finds her."
+      - do:
+          - say: "Nobody on the street is called Mia. She lives inside the house, and a call from the street cannot reach her."
+drops:
+  - item: lee
+    to: house
+    do:
+      - say: "Lee is in the house."
+  - item: lee
+    to: street
+    do:
+      - say: "Lee is on the street."
+  - item: cousin
+    to: street
+    when: { at: { cousin: house } }
+    do:
+      - remove: cousin
+      - say: "Sam the cousin has been removed from the house. No Sam lives there now."
+    refuse: "Sam the cousin is already gone."
+script: ["lee>house", call-sam, "lee>street", call-sam, call-mia, "cousin>street", "lee>house", call-sam]
+try:
+  - text: "Stand Lee in the house and press \"Call Sam\"."
+    done: ["lee>house", call-sam]
+  - text: "Move Lee out to the street. Press \"Call Sam\", then \"Call Mia\"."
+    done: ["lee>street", call-sam, call-mia]
+  - text: "Drag the house's Sam out of the house, move Lee back in, and press \"Call Sam\" again."
+    done: ["cousin>street", "lee>house", call-sam]
+```
 
 **What you should notice:** A call looks in the house first and then outwards, a person who lives in the house cannot be reached from the street, and removing the house's Sam lets the street's Sam answer.
 

@@ -36,12 +36,61 @@ Your recipes are not thrown away. They are packed so they fit a small bag. The r
 
 ## See it move
 
-<!-- SIM: dex-packer -->
-
-**Try this:**
-1. Press "Pack" and watch the loose class pages slide into the packer and come out as one dex box inside the package.
-2. Click the package. Find the dex box and the separate bag for the ready-made tins.
-3. (Optional reveal) Remove the dex box and look at what is left of the Kotlin code.
+```sim
+id: dex-packer
+template: zones
+title: Loose class pages, packer and app package
+intro: Four loose class pages and one ready-made tin sit in your project. The app package is empty.
+zones:
+  - { id: project, label: Your project }
+  - { id: package, label: App package }
+items:
+  - { id: main, label: MainActivity class page, at: project }
+  - { id: cart, label: Cart class page, at: project }
+  - { id: price, label: Price class page, at: project }
+  - { id: libs, label: Library class pages, at: project }
+  - { id: tin, label: audio.cpp ready-made tin (libaudio.so), at: project }
+actions:
+  - id: pack
+    label: Pack
+    cases:
+      - when: { at: { main: project } }
+        do:
+          - remove: main
+          - remove: cart
+          - remove: price
+          - remove: libs
+          - spawn: { id: dex, label: "classes.dex (all the classes, packed small)", at: package }
+          - move: { tin: package }
+          - label: { tin: "lib/arm64-v8a/libaudio.so (own bag)" }
+          - say: "The packer reads every class page, yours and your libraries', and prints them into one classes.dex. The ready-made tin is not a class page, so it travels in its own bag."
+    refuse: "The class pages are already packed. Press Reset to pack again."
+  - id: look
+    label: Look inside the package
+    cases:
+      - when: { at: { dex: package } }
+        do:
+          - mark: { dex: picked }
+          - say: "Inside the package are classes.dex and, in a separate bag, the libaudio.so tin. There is no .kt file."
+    refuse: "The package is empty. Press Pack first."
+  - id: remove-dex
+    label: Remove the dex box
+    cases:
+      - when: { at: { dex: package } }
+        do:
+          - remove: dex
+          - say: "Without classes.dex, none of your compiled Kotlin is left in the package. Only the tin in its own bag remains."
+    refuse: "There is no dex box in the package. Press Pack first."
+script: [pack, look, remove-dex]
+try:
+  - text: "Press \"Pack\" and watch the loose class pages come out of the packer as one dex box inside the package."
+    done: [pack]
+  - text: "Look inside the package. Find the dex box and the separate bag for the ready-made tin."
+    done: [look]
+  - text: "(Optional reveal) Remove the dex box and look at what is left of the Kotlin code."
+    done: [remove-dex]
+    optional: true
+```
 
 **What you should notice:** The compiled Kotlin code lives in the dex box, and the C++ tins sit in a different bag.
 

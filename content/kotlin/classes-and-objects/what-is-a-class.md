@@ -35,13 +35,96 @@ Think of a cookie cutter and the cookies it makes.
 
 ## See it move
 
-<!-- SIM: cookie-cutter-stamp -->
-
-**Try this:**
-1. Press "Stamp" three times and look at the tray.
-2. Click one cookie and change its icing. Look at the other two.
-3. Add a "sprinkles" spot to the cutter. The tray clears, as when a program runs again. Stamp two cookies.
-4. (Optional reveal) Press "Eat the cutter".
+```sim
+id: cookie-cutter-stamp
+template: zones
+title: A cookie cutter and the cookies it stamps
+intro: The cutter has one spot for icing. The tray is empty.
+zones:
+  - { id: shelf, label: Shelf (the class) }
+  - { id: tray, label: Tray (the objects) }
+items:
+  - { id: cutter, label: "Cutter: a spot for icing", at: shelf }
+vars: { n: 0, spots: "icing plain", edible: 0 }
+show:
+  - { var: n, label: Cookies on the tray }
+actions:
+  - id: stamp
+    label: Stamp
+    cases:
+      - when: { var: { n: 0 } }
+        do:
+          - add: { n: 1 }
+          - spawn: { id: c1, label: "Cookie 1: {spots}", at: tray }
+          - say: "Stamped cookie 1. It has its own icing, plain at first."
+      - when: { var: { n: 1 } }
+        do:
+          - add: { n: 1 }
+          - spawn: { id: c2, label: "Cookie 2: {spots}", at: tray }
+          - say: "Stamped cookie 2. It has its own icing, plain at first."
+      - when: { var: { n: 2 } }
+        do:
+          - add: { n: 1 }
+          - spawn: { id: c3, label: "Cookie 3: {spots}", at: tray }
+          - say: "Stamped cookie 3. It has its own icing, plain at first."
+    refuse: "The tray holds three cookies and is full. Change a cookie or add a spot to the cutter."
+  - id: ice-2
+    label: Make cookie 2 pink
+    cases:
+      - when: { at: { c2: tray } }
+        do:
+          - label: { c2: "Cookie 2: pink icing" }
+          - say: "Cookie 2 now has pink icing. Cookies 1 and 3 keep their plain icing, because each cookie holds its own icing."
+    refuse: "There is no cookie 2 yet. Press Stamp until the tray holds two cookies."
+  - id: add-spot
+    label: Add a sprinkles spot to the cutter
+    cases:
+      - when: { var: { n: 3 } }
+        do:
+          - remove: c1
+          - remove: c2
+          - remove: c3
+          - set: { n: 0, spots: "icing plain, sprinkles none" }
+          - label: { c2: "Cookie 2: icing plain, sprinkles none" }
+          - label: { cutter: "Cutter: spots for icing and sprinkles" }
+          - say: "The cutter has a new spot. The tray was cleared, as when a program runs again. New cookies get both spots."
+      - when: { var: { n: 2 } }
+        do:
+          - remove: c1
+          - remove: c2
+          - set: { n: 0, spots: "icing plain, sprinkles none" }
+          - label: { c2: "Cookie 2: icing plain, sprinkles none" }
+          - label: { cutter: "Cutter: spots for icing and sprinkles" }
+          - say: "The cutter has a new spot. The tray was cleared, as when a program runs again. New cookies get both spots."
+      - when: { var: { n: 1 } }
+        do:
+          - remove: c1
+          - set: { n: 0, spots: "icing plain, sprinkles none" }
+          - label: { cutter: "Cutter: spots for icing and sprinkles" }
+          - say: "The cutter has a new spot. The tray was cleared, as when a program runs again. New cookies get both spots."
+      - do:
+          - set: { spots: "icing plain, sprinkles none" }
+          - label: { cutter: "Cutter: spots for icing and sprinkles" }
+          - say: "The cutter has a new spot. New cookies get both spots."
+  - id: eat-cutter
+    label: Eat the cutter
+    cases:
+      - when: { var: { edible: 1 } }
+        do:
+          - say: "The cutter was eaten."
+    refuse: "A cutter is only a description. It does nothing until the program presses it, and you cannot eat it."
+script: [stamp, stamp, stamp, ice-2, add-spot, stamp, stamp, eat-cutter]
+try:
+  - text: "Press \"Stamp\" three times and look at the tray."
+    done: [stamp, stamp, stamp]
+  - text: "Press \"Make cookie 2 pink\" and look at the other two cookies."
+    done: [ice-2]
+  - text: "Add a \"sprinkles\" spot to the cutter. The tray clears, as when a program runs again. Stamp two cookies."
+    done: [add-spot, stamp, stamp]
+  - text: "(Optional reveal) Press \"Eat the cutter\"."
+    done: [eat-cutter]
+    optional: true
+```
 
 **What you should notice:** Each press of Stamp makes a new cookie, changing one cookie leaves the others alone, and the cutter cannot be eaten.
 

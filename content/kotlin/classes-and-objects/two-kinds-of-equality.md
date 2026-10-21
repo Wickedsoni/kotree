@@ -34,13 +34,75 @@ Think of identical twins in a crowd, with name tags pinned on them.
 
 ## See it move
 
-<!-- SIM: twins-or-one-person -->
-
-**Try this:**
-1. Pin tag y onto the same person as tag x. Watch the two lights, "Same person?" and "Alike?".
-2. Pin tag y onto the twin instead. Watch the lights again.
-3. Change the twin's hair colour and look at the "Alike?" light.
-4. (Optional reveal) Tick "Give this kind of person its own rule" and repeat steps 2 and 3.
+```sim
+id: twins-or-one-person
+template: zones
+title: Name tags, a person and a twin
+intro: Ana and her twin both have black hair and the same height. Tag x is pinned on Ana. Tag y is pinned on the twin. The clerk has no rule of its own for this kind of person.
+zones:
+  - { id: ana, label: Ana }
+  - { id: twin, label: "Ana's twin" }
+items:
+  - { id: tag-x, label: Tag x, at: ana }
+  - { id: tag-y, label: Tag y, at: twin }
+vars: { rule: "off", hair: black, samePerson: "not asked yet", alike: "not asked yet" }
+show:
+  - { var: samePerson, label: "Same person?" }
+  - { var: alike, label: "Alike?" }
+  - { var: hair, label: "Twin's hair colour" }
+toggles:
+  - { id: rule, label: Give this kind of person its own rule, var: rule }
+actions:
+  - id: ask
+    label: Ask the clerk
+    cases:
+      - when: { at: { tag-y: ana } }
+        do:
+          - set: { samePerson: "yes", alike: "yes" }
+          - say: "Tags x and y lead to one person, Ana. Same person: yes. Alike: yes, because a person is always alike to themselves."
+      - when: { at: { tag-y: twin }, var: { rule: "on", hair: black } }
+        do:
+          - set: { samePerson: "no", alike: "yes" }
+          - say: "Two people, so not the same person. The rule compares height and hair, and they match, so they are alike."
+      - when: { at: { tag-y: twin }, var: { rule: "on" } }
+        do:
+          - set: { samePerson: "no", alike: "no" }
+          - say: "Two people, so not the same person. The rule compares hair, and it differs, so they are not alike."
+      - when: { at: { tag-y: twin } }
+        do:
+          - set: { samePerson: "no", alike: "no" }
+          - say: "Two people, so not the same person. This kind of person has no rule of its own, so the clerk uses the plain one: alike means the same person. Not alike, even though they look the same."
+  - id: change-hair
+    label: Change the twin's hair colour
+    cases:
+      - when: { var: { hair: black } }
+        do:
+          - set: { hair: red }
+          - say: "The twin's hair is now red. Ana's hair is still black."
+      - do:
+          - set: { hair: black }
+          - say: "The twin's hair is black again, like Ana's."
+drops:
+  - item: tag-y
+    to: ana
+    do:
+      - say: "Tag y is now pinned on Ana. Press Ask the clerk."
+  - item: tag-y
+    to: twin
+    do:
+      - say: "Tag y is now pinned on the twin. Press Ask the clerk."
+script: ["tag-y>ana", ask, "tag-y>twin", ask, change-hair, ask]
+try:
+  - text: "Pin tag y onto the same person as tag x. Press \"Ask the clerk\" and watch the two answers, \"Same person?\" and \"Alike?\"."
+    done: ["tag-y>ana", ask]
+  - text: "Pin tag y onto the twin instead. Ask the clerk again."
+    done: ["tag-y>twin", ask]
+  - text: "Change the twin's hair colour and ask again. Look at the \"Alike?\" answer."
+    done: [change-hair, ask]
+  - text: "(Optional reveal) Tick \"Give this kind of person its own rule\" and ask again."
+    done: ["rule=on", ask]
+    optional: true
+```
 
 **What you should notice:** With the plain rule the two lights always agree, and only after the kind of person gets its own rule can "Alike?" be on while "Same person?" is off.
 

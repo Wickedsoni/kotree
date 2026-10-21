@@ -38,13 +38,67 @@ If the label says "always has a sandwich", you can ask about the slices straight
 
 ## See it move
 
-<!-- SIM: null-lunch-box -->
-
-**Try this:**
-1. Drag a sandwich into the box labelled "might be empty". Drag it out again.
-2. Press "Count the slices" while that box is empty.
-3. Try to leave the box labelled "always has a sandwich" empty.
-4. (Optional reveal) Press Reset. Tick "Look inside first", then press "Count the slices" on the empty "might be empty" box.
+```sim
+id: null-lunch-box
+template: zones
+title: Two lunch boxes with different labels
+intro: One box is labelled "might be empty" and holds nothing. The other is labelled "always has a sandwich" and holds one. A spare sandwich is on the table.
+zones:
+  - { id: maybe, label: "Box labelled \"might be empty\"" }
+  - { id: always, label: "Box labelled \"always has a sandwich\"" }
+  - { id: table, label: Table }
+items:
+  - { id: spare, label: Spare sandwich, at: table }
+  - { id: fixed, label: "Sandwich in the \"always\" box", at: always }
+vars: { look: "off", locked: 0 }
+toggles:
+  - { id: look, label: Look inside first, var: look }
+actions:
+  - id: count
+    label: Count the slices
+    cases:
+      - when: { at: { spare: maybe } }
+        do:
+          - say: "The box holds a sandwich, so counting works. It has four slices."
+      - when: { var: { look: "on" } }
+        do:
+          - say: "You looked first and saw the box is empty, so you skipped the counting. Nothing crashed."
+      - do:
+          - mark: { maybe: bad }
+          - say: "You counted the slices of nothing and the sim stops, like the crash in the opening question. Press Reset to start again."
+drops:
+  - item: spare
+    to: maybe
+    do:
+      - say: "The spare sandwich is in the box labelled might be empty."
+  - item: spare
+    to: table
+    do:
+      - say: "The sandwich is back on the table. The box labelled might be empty is empty again, and that label allows it."
+  - item: fixed
+    to: table
+    when: { var: { locked: 1 } }
+    do:
+      - say: "The sandwich left the box."
+    refuse: "This box is labelled always has a sandwich. Kotlin does not let it hold nothing, so the sandwich is pulled back before the program runs."
+  - item: fixed
+    to: maybe
+    when: { var: { locked: 1 } }
+    do:
+      - say: "The sandwich left the box."
+    refuse: "This box is labelled always has a sandwich. Kotlin does not let it hold nothing, so the sandwich is pulled back before the program runs."
+script: ["spare>maybe", "spare>table", count, "fixed>table"]
+try:
+  - text: "Drag a sandwich into the box labelled \"might be empty\". Drag it out again."
+    done: ["spare>maybe", "spare>table"]
+  - text: "Press \"Count the slices\" while that box is empty."
+    done: [count]
+  - text: "Try to leave the box labelled \"always has a sandwich\" empty."
+    done: ["fixed>table"]
+  - text: "(Optional reveal) Tick \"Look inside first\", then press \"Count the slices\" on the empty \"might be empty\" box."
+    done: ["look=on", count]
+    optional: true
+```
 
 **What you should notice:** The "might be empty" box lets you leave without a sandwich, the "always has a sandwich" box refuses to stay empty, and counting slices in an empty box stops the sim unless you looked first.
 

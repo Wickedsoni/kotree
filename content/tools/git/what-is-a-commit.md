@@ -35,12 +35,79 @@ You tidy the desk, you move the things you want to keep into the frame, and you 
 
 ## See it move
 
-<!-- SIM: snapshot-tray -->
-
-**Try this:**
-1. Edit file A. It moves to the "changed" area of the working folder.
-2. Drag file A into the tray, which stands for the frame. Then press "Take snapshot".
-3. Edit file B and leave it out of the tray. Take another snapshot and open it.
+```sim
+id: snapshot-tray
+template: zones
+title: Working folder, tray and snapshot shelf
+intro: Files A and B sit in the working folder. The tray and the shelf are empty.
+zones:
+  - { id: folder, label: Working folder }
+  - { id: tray, label: "Tray (the frame)" }
+  - { id: shelf, label: Snapshot shelf }
+items:
+  - { id: a, label: File A, at: folder }
+  - { id: b, label: File B, at: folder }
+vars: { snaps: 0 }
+show:
+  - { var: snaps, label: Snapshots }
+actions:
+  - id: edit-a
+    label: Edit file A
+    do:
+      - mark: { a: changed }
+      - say: "File A is changed. It is still in the working folder."
+  - id: edit-b
+    label: Edit file B
+    do:
+      - mark: { b: changed }
+      - say: "File B is changed. It is still in the working folder."
+  - id: snap
+    label: Take snapshot
+    cases:
+      - when: { at: { a: tray, b: tray } }
+        do:
+          - add: { snaps: 1 }
+          - spawn: { id: "s{snaps}", label: "Snapshot {snaps}: new A and new B", at: shelf }
+          - move: { a: folder, b: folder }
+          - mark: { a: plain, b: plain }
+          - say: "Snapshot {snaps} holds the new A and the new B."
+      - when: { at: { a: tray } }
+        do:
+          - add: { snaps: 1 }
+          - spawn: { id: "s{snaps}", label: "Snapshot {snaps}: new A, B carried over", at: shelf }
+          - move: { a: folder }
+          - mark: { a: plain }
+          - say: "Snapshot {snaps} holds the new A. B is carried over unchanged."
+      - when: { at: { b: tray } }
+        do:
+          - add: { snaps: 1 }
+          - spawn: { id: "s{snaps}", label: "Snapshot {snaps}: new B, A carried over", at: shelf }
+          - move: { b: folder }
+          - mark: { b: plain }
+          - say: "Snapshot {snaps} holds the new B. A is carried over unchanged."
+    refuse: "Nothing is in the tray, so no snapshot is taken. Git does not record a commit that is the same as the one before it, and the changed files stay in the folder."
+drops:
+  - item: a
+    to: tray
+    when: { mark: { a: changed } }
+    do:
+      - say: "File A is in the tray."
+    refuse: "File A has no change to stage."
+  - item: b
+    to: tray
+    when: { mark: { b: changed } }
+    do:
+      - say: "File B is in the tray."
+    refuse: "File B has no change to stage."
+script: [edit-a, "a>tray", snap, edit-b, snap]
+try:
+  - text: "Edit file A. It is marked \"changed\" in the working folder."
+    done: [edit-a]
+  - text: "Drag file A into the tray, which stands for the frame. Then press \"Take snapshot\"."
+    done: ["a>tray", snap]
+  - text: "Edit file B and leave it out of the tray. Press \"Take snapshot\" again. Nothing is staged, so no snapshot is taken and file B stays waiting in the folder."
+    done: [edit-b, snap]
+```
 
 **What you should notice:** Only the staged edits are new in the snapshot, and the edit you left out is still waiting in your folder.
 

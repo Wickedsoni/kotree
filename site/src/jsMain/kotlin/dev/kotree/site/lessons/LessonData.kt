@@ -39,6 +39,18 @@ external interface BlockData {
     val expected: String?
     val fix: String?
     val explanation: String?
+    /** Sim blocks only (ADR 009 section 1). Absent on a legacy bare marker. */
+    val tpl: String?
+    /** The validated sim YAML as JSON; read by `sims.core.readSimSpec`. */
+    val spec: dynamic
+    val `try`: Array<TryStepData>?
+}
+
+/** One Try this step of a sim block: [html] is trusted build output (escaped Markdown), set with innerHTML like Prose. */
+external interface TryStepData {
+    val html: String
+    val done: Array<String>
+    val optional: Boolean
 }
 
 external interface OptionData {

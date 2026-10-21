@@ -34,12 +34,55 @@ Think of a recipe card.
 
 ## See it move
 
-<!-- SIM: recipe-card-handoff -->
-
-**Try this:**
-1. Drag the card from Mia's pocket into Sam's pocket. Look at the dish counter.
-2. Press "Cook with Ana", then "Cook with Bo". Look at the counter again.
-3. (Optional reveal) Tick "Cook while handing over" and drag the card back to Mia.
+```sim
+id: recipe-card-handoff
+template: zones
+title: A recipe card handed from Mia to Sam
+intro: Mia holds a recipe card that needs a name and makes a greeting. Nothing has been cooked, so the dish counter is empty.
+zones:
+  - { id: mia, label: Mia's pocket }
+  - { id: sam, label: Sam's pocket }
+  - { id: counter, label: Dish counter }
+items:
+  - { id: card, label: "Recipe card: needs a name, makes a greeting", at: mia }
+vars: { dishes: 0 }
+show:
+  - { var: dishes, label: Dishes made }
+actions:
+  - id: cook-ana
+    label: Cook with Ana
+    cases:
+      - when: { at: { card: sam } }
+        do:
+          - add: { dishes: 1 }
+          - spawn: { id: "dish{dishes}", label: "Hello, Ana", at: counter }
+          - say: "Sam followed the card with the name Ana and made \"Hello, Ana\". The card is still in Sam's pocket."
+    refuse: "Only the cook holding the card can cook it. Drag the card into Sam's pocket first."
+  - id: cook-bo
+    label: Cook with Bo
+    cases:
+      - when: { at: { card: sam } }
+        do:
+          - add: { dishes: 1 }
+          - spawn: { id: "dish{dishes}", label: "Hello, Bo", at: counter }
+          - say: "Sam followed the same card with the name Bo and made \"Hello, Bo\". The card is still in Sam's pocket."
+    refuse: "Only the cook holding the card can cook it. Drag the card into Sam's pocket first."
+drops:
+  - item: card
+    to: sam
+    do:
+      - say: "The card moved to Sam's pocket. Nothing was cooked on the way, so the dish counter did not change."
+  - item: card
+    to: mia
+    do:
+      - say: "The card moved back to Mia's pocket. Nothing was cooked on the way."
+script: ["card>sam", cook-ana, cook-bo]
+try:
+  - text: "Drag the card from Mia's pocket into Sam's pocket. Look at the dish counter."
+    done: ["card>sam"]
+  - text: "Press \"Cook with Ana\", then \"Cook with Bo\". Look at the counter again."
+    done: [cook-ana, cook-bo]
+```
 
 **What you should notice:** Moving the card cooks nothing, each press of "Cook" makes one dish, and the card stays in the pocket afterwards.
 

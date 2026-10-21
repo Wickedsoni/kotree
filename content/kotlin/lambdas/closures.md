@@ -35,12 +35,59 @@ Think of a window onto a garden.
 
 ## See it move
 
-<!-- SIM: garden-window-view -->
-
-**Try this:**
-1. Press "Look through window A" and read what the window shows.
-2. Press "Gardener swaps the plant". Look through window A and then through window B.
-3. (Optional reveal) Tick "Take a photo first", swap the plant again, and compare the photo with the windows.
+```sim
+id: garden-window-view
+template: zones
+title: A garden, two windows and a photo
+intro: A tulip grows in the garden. Window A and window B both look onto it.
+zones:
+  - { id: garden, label: Garden (the code around) }
+  - { id: house-a, label: House A (window A) }
+  - { id: house-b, label: House B (window B) }
+  - { id: album, label: Photos }
+items:
+  - { id: plant, label: Tulip, at: garden }
+vars: { plant: tulip }
+show:
+  - { var: plant, label: Plant in the garden now }
+actions:
+  - id: look-a
+    label: Look through window A
+    do:
+      - light: [house-a, plant]
+      - say: "Window A shows the {plant}, the plant that grows there right now."
+  - id: look-b
+    label: Look through window B
+    do:
+      - light: [house-b, plant]
+      - say: "Window B shows the {plant}, the same plant that window A looks onto."
+  - id: swap
+    label: Gardener swaps the plant
+    cases:
+      - when: { var: { plant: tulip } }
+        do:
+          - set: { plant: rose }
+          - label: { plant: Rose }
+          - say: "The gardener replaced the tulip with a rose. Nothing changed in the houses."
+      - do:
+          - set: { plant: tulip }
+          - label: { plant: Tulip }
+          - say: "The gardener replaced the rose with a tulip. Nothing changed in the houses."
+  - id: photo
+    label: Take a photo of the garden
+    do:
+      - spawn: { id: shot, label: "Photo: {plant}", at: album }
+      - say: "The photo shows the {plant} as it is now. It will not change when the garden does."
+script: [look-a, swap, look-a, look-b, photo, swap]
+try:
+  - text: "Press \"Look through window A\" and read what the window shows."
+    done: [look-a]
+  - text: "Press \"Gardener swaps the plant\". Look through window A and then through window B."
+    done: [swap, look-a, look-b]
+  - text: "(Optional reveal) Press \"Take a photo of the garden\", swap the plant again, and compare the photo with the windows."
+    done: [photo, swap]
+    optional: true
+```
 
 **What you should notice:** Both windows show the plant as it is now, and only the photo keeps the old plant.
 

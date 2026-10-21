@@ -35,12 +35,62 @@ You pick the kind of tag when you first put it on the shelf.
 
 ## See it move
 
-<!-- SIM: mug-and-whiteboard-tag -->
-
-**Try this:**
-1. Drag the printed tag "price" onto another mug.
-2. Drag the whiteboard tag "lives" onto another mug.
-3. (Optional reveal) Press "Pour tea" on the mug that has the printed tag.
+```sim
+id: mug-and-whiteboard-tag
+template: zones
+title: Mugs with a printed tag and a whiteboard tag
+intro: Three mugs stand on a shelf. The printed tag "price" is on the mug holding 10. The whiteboard tag "lives" is on the mug holding 3.
+zones:
+  - { id: mug-10, label: Mug holding 10 }
+  - { id: mug-3, label: Mug holding 3 }
+  - { id: mug-7, label: Mug holding 7 }
+items:
+  - { id: price, label: "price (printed tag, val)", at: mug-10 }
+  - { id: lives, label: "lives (whiteboard tag, var)", at: mug-3 }
+vars: { locked: 0, tea: 0 }
+show:
+  - { var: tea, label: Tea poured into the price mug }
+actions:
+  - id: pour
+    label: Pour tea
+    do:
+      - add: { tea: 1 }
+      - say: "The mug with the printed tag now holds more tea. The tag did not move. Whether a value can change inside depends on its kind: a list you can add to can, a number cannot."
+drops:
+  - item: price
+    to: mug-3
+    when: { var: { locked: 1 } }
+    do:
+      - say: "The price tag moved."
+    refuse: "A printed tag cannot be pointed at another mug. Kotlin refuses a val being given a new value before the program runs, so the tag snaps back."
+  - item: price
+    to: mug-7
+    when: { var: { locked: 1 } }
+    do:
+      - say: "The price tag moved."
+    refuse: "A printed tag cannot be pointed at another mug. Kotlin refuses a val being given a new value before the program runs, so the tag snaps back."
+  - item: lives
+    to: mug-10
+    do:
+      - say: "The whiteboard tag was wiped and written again. The name lives now means the mug holding 10."
+  - item: lives
+    to: mug-3
+    do:
+      - say: "The whiteboard tag now means the mug holding 3 again."
+  - item: lives
+    to: mug-7
+    do:
+      - say: "The whiteboard tag was wiped and written again. The name lives now means the mug holding 7."
+script: ["price>mug-3", "lives>mug-7", pour]
+try:
+  - text: "Drag the printed tag \"price\" onto another mug."
+    done: ["price>mug-3"]
+  - text: "Drag the whiteboard tag \"lives\" onto another mug."
+    done: ["lives>mug-7"]
+  - text: "(Optional reveal) Press \"Pour tea\" on the mug that has the printed tag."
+    done: [pour]
+    optional: true
+```
 
 **What you should notice:** The printed tag snaps back to its own mug, the whiteboard tag moves, and tea can still be poured into the mug with the printed tag.
 

@@ -34,12 +34,118 @@ Think of a desk and a filing cabinet in a small office.
 
 ## See it move
 
-<!-- SIM: desk-and-cabinet -->
-
-**Try this:**
-1. Drag a paper from the cabinet onto the desk. Drag it back.
-2. Pull the power plug. Look at the desk and the cabinet.
-3. Put more papers on the desk than fit, and watch what happens at the edge.
+```sim
+id: desk-and-cabinet
+template: zones
+title: Desk, filing cabinet and the power plug
+intro: A typed message that is not saved lies on the desk. The cabinet holds three saved papers. The desk has room for two papers.
+zones:
+  - { id: desk, label: Desk (memory) }
+  - { id: cabinet, label: Filing cabinet (storage) }
+items:
+  - { id: draft, label: Typed message (not saved), at: desk }
+  - { id: photo, label: Photo, at: cabinet }
+  - { id: song, label: Song, at: cabinet }
+  - { id: notes, label: Notes, at: cabinet }
+vars: { onDesk: 1 }
+show:
+  - { var: onDesk, label: "Papers on the desk (room for 2)" }
+actions:
+  - id: unplug
+    label: Pull the power plug
+    cases:
+      - when: { at: { photo-open: desk } }
+        do:
+          - remove: draft
+          - remove: photo-open
+          - set: { onDesk: 0 }
+          - say: "The desk is empty and the cabinet is unchanged. The typed message was only on the desk, so it is gone unless a saved copy is in the cabinet."
+      - when: { at: { song-open: desk } }
+        do:
+          - remove: draft
+          - remove: song-open
+          - set: { onDesk: 0 }
+          - say: "The desk is empty and the cabinet is unchanged. The typed message was only on the desk, so it is gone unless a saved copy is in the cabinet."
+      - when: { at: { notes-open: desk } }
+        do:
+          - remove: draft
+          - remove: notes-open
+          - set: { onDesk: 0 }
+          - say: "The desk is empty and the cabinet is unchanged. The typed message was only on the desk, so it is gone unless a saved copy is in the cabinet."
+      - do:
+          - remove: draft
+          - set: { onDesk: 0 }
+          - say: "The desk is empty and the cabinet is unchanged. The typed message was only on the desk, so it is gone unless a saved copy is in the cabinet."
+    refuse: "The plug was already pulled in this run and the desk was cleared. Press Reset to start again."
+drops:
+  - item: draft
+    to: cabinet
+    when: { at: { draft: desk } }
+    do:
+      - spawn: { id: draft-saved, label: "Typed message (saved copy)", at: cabinet }
+      - move: { draft: desk }
+      - say: "Saving makes a copy. The message stays on the desk and a saved copy is now in the cabinet."
+    refuse: "The typed message is no longer on the desk."
+  - item: photo
+    to: desk
+    when: { at: { photo: cabinet } }
+    unless: { var: { onDesk: 2 } }
+    do:
+      - spawn: { id: photo-open, label: "Photo (open copy)", at: desk }
+      - move: { photo: cabinet }
+      - add: { onDesk: 1 }
+      - say: "The phone loads a copy of the photo onto the desk to work on. The photo is still in the cabinet."
+    refuse: "The desk is full, so nothing more fits. Put an open paper back in the cabinet first."
+  - item: song
+    to: desk
+    when: { at: { song: cabinet } }
+    unless: { var: { onDesk: 2 } }
+    do:
+      - spawn: { id: song-open, label: "Song (open copy)", at: desk }
+      - move: { song: cabinet }
+      - add: { onDesk: 1 }
+      - say: "The phone loads a copy of the song onto the desk to work on. The song is still in the cabinet."
+    refuse: "The desk is full, so nothing more fits. Put an open paper back in the cabinet first."
+  - item: notes
+    to: desk
+    when: { at: { notes: cabinet } }
+    unless: { var: { onDesk: 2 } }
+    do:
+      - spawn: { id: notes-open, label: "Notes (open copy)", at: desk }
+      - move: { notes: cabinet }
+      - add: { onDesk: 1 }
+      - say: "The phone loads a copy of the notes onto the desk to work on. The notes are still in the cabinet."
+    refuse: "The desk is full, so nothing more fits. Put an open paper back in the cabinet first."
+  - item: photo-open
+    to: cabinet
+    when: { at: { photo-open: desk } }
+    do:
+      - remove: photo-open
+      - add: { onDesk: -1 }
+      - say: "The open copy of the photo goes back. The desk has more room."
+  - item: song-open
+    to: cabinet
+    when: { at: { song-open: desk } }
+    do:
+      - remove: song-open
+      - add: { onDesk: -1 }
+      - say: "The open copy of the song goes back. The desk has more room."
+  - item: notes-open
+    to: cabinet
+    when: { at: { notes-open: desk } }
+    do:
+      - remove: notes-open
+      - add: { onDesk: -1 }
+      - say: "The open copy of the notes goes back. The desk has more room."
+script: ["photo>desk", "photo-open>cabinet", unplug, "photo>desk", "song>desk", "notes>desk"]
+try:
+  - text: "Drag a paper from the cabinet onto the desk. Drag it back."
+    done: ["photo>desk", "photo-open>cabinet"]
+  - text: "Pull the power plug. Look at the desk and the cabinet."
+    done: [unplug]
+  - text: "Put more papers on the desk than fit, and watch what happens at the edge."
+    done: ["photo>desk", "song>desk", "notes>desk"]
+```
 
 **What you should notice:** After the plug is pulled the desk is empty and the cabinet is unchanged, so a paper that was never copied into the cabinet is gone.
 
