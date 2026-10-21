@@ -33,12 +33,72 @@ Think of a book in a language you cannot read, and two ways to hear it in your o
 
 ## See it move
 
-<!-- SIM: translation-lanes -->
-
-**Try this:**
-1. Send the book with the typo down the print-shop lane. Count how many sentences are said aloud.
-2. Send the same book down the live-speaker lane. Count how many sentences are said aloud before it stops.
-3. Send the clean book down both lanes, and ask to hear it three times. Count how many translations each lane does.
+```sim
+id: translation-lanes
+template: compare
+title: A print-shop lane and a live-speaker lane
+intro: A book has a typo on sentence 3. One lane prints a full copy first and the other says each sentence as it is read. Nothing is heard yet.
+sides:
+  - id: print-shop
+    label: Print-shop lane
+    boxes:
+      - { id: book, label: The book to translate }
+      - { id: check, label: Check the whole book first }
+      - { id: heard, label: "Sentences heard: 0" }
+      - { id: count, label: "Translations done: 0" }
+  - id: live-speaker
+    label: Live-speaker lane
+    boxes:
+      - { id: book, label: The book to translate }
+      - { id: speak, label: Say each sentence as it is read }
+      - { id: heard, label: "Sentences heard: 0" }
+      - { id: count, label: "Translations done: 0" }
+actions:
+  - id: send-typo
+    label: Send the book with the typo
+    do:
+      - light: [ print-shop.check, live-speaker.speak ]
+      - label:
+          print-shop.check: "Check: typo found on sentence 3, so no copy is printed"
+          print-shop.heard: "Sentences heard: 0"
+          print-shop.count: "Translations done: 0"
+          live-speaker.speak: "Said sentences 1 and 2, then stopped at the typo"
+          live-speaker.heard: "Sentences heard: 2"
+          live-speaker.count: "Translations done: 2 (one per sentence)"
+      - say: In the print-shop lane the typo is found first, so nothing is heard. In the live-speaker lane sentences 1 and 2 are heard before it stops at sentence 3.
+  - id: send-clean
+    label: Send the clean book
+    do:
+      - light: [ print-shop.check, live-speaker.speak ]
+      - label:
+          print-shop.check: "Check: no typo, so a full copy is printed"
+          print-shop.heard: "Sentences heard: 3"
+          print-shop.count: "Translations done: 1 (the whole book, once)"
+          live-speaker.speak: "Said sentences 1, 2 and 3 as they were read"
+          live-speaker.heard: "Sentences heard: 3"
+          live-speaker.count: "Translations done: 3 (one per sentence)"
+      - say: With no typo, both lanes get all 3 sentences across. The print shop translated once, and the live speaker translated each sentence as it came.
+  - id: hear-three
+    label: Hear the clean book three times
+    do:
+      - light: [ print-shop.heard, live-speaker.heard ]
+      - label:
+          print-shop.check: "The printed copy is read again, with no new translation"
+          print-shop.heard: "Sentences heard: 9 (3 sentences, 3 times)"
+          print-shop.count: "Translations done: 1 (the copy is reused)"
+          live-speaker.speak: "The speaker must say every sentence again"
+          live-speaker.heard: "Sentences heard: 9 (3 sentences, 3 times)"
+          live-speaker.count: "Translations done: 9 (3 sentences, 3 times)"
+      - say: Hearing the book three times, the print shop still translated once, and the live speaker translated every sentence again each time.
+script: [ send-typo, send-clean, hear-three ]
+try:
+  - text: Press "Send the book with the typo". Compare how many sentences are heard in each lane.
+    done: [ send-typo ]
+  - text: Press "Send the clean book". Compare the translation counters of the two lanes.
+    done: [ send-clean ]
+  - text: Press "Hear the clean book three times". Compare the counters again.
+    done: [ hear-three ]
+```
 
 **What you should notice:** In the print-shop lane the typo stops everything before any sentence is heard, but in the live-speaker lane the sentences before the typo are heard first.
 

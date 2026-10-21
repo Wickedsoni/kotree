@@ -35,11 +35,45 @@ For a 1,000 km trip the fare is 2,005. The 5 is not even a quarter of one percen
 
 ## See it move
 
-<!-- SIM: drop-the-small-parts -->
-
-**Try this:**
-1. Slide n to 3, then to 10, then to 1000. Watch which of the two curves is lower each time.
-2. Switch on "Drop the small parts" and watch the formula 3n + 7 turn into n.
+```sim
+id: drop-the-small-parts
+template: chart
+title: Code A, code B and what is left after dropping
+intro: Code A takes 3n + 7 steps and code B takes n times n steps. The plot shows n from 0 to 12, and the key below it also gives the steps at larger n.
+axes: { x: n (the size of the input), y: Steps }
+curves:
+  - { id: a, label: Code A (3n + 7 steps), f: { poly: [7, 3, 0] } }
+  - { id: b, label: Code B (n times n steps), f: { poly: [0, 0, 1] } }
+  - { id: kept, label: A after dropping the small parts (n), f: { poly: [0, 1, 0] } }
+scale: { x: [0, 12] }
+vars: { x: 1 }
+actions:
+  - id: n3
+    label: Set n to 3
+    do:
+      - set: { x: 3 }
+      - say: "At n = {x}, code A takes {a.at} steps and code B takes {b.at}, so B is lower."
+  - id: n10
+    label: Set n to 10
+    do:
+      - set: { x: 10 }
+      - say: "At n = {x}, code A takes {a.at} steps and code B takes {b.at}, so A is lower."
+  - id: n1000
+    label: Set n to 1000
+    do:
+      - set: { x: 1000 }
+      - say: "At n = {x}, code A takes {a.at} steps and code B takes {b.at}, so B is far above A."
+  - id: drop
+    label: Drop the small parts
+    do:
+      - say: Dropping the small parts turns 3n + 7 into n. The 3 and the 7 go, and the line stays straight while code B keeps curving.
+script: [ n3, n10, n1000, drop ]
+try:
+  - text: Press "Set n to 3", "Set n to 10" and "Set n to 1000". Each time, read which code takes fewer steps.
+    done: [ n3, n10, n1000 ]
+  - text: Press "Drop the small parts". Compare the line n with the line for 3n + 7. Both are straight.
+    done: [ drop ]
+```
 
 **What you should notice:** The lower curve changes as n grows, and dropping the small parts keeps the shape of each curve.
 

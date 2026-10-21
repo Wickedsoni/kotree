@@ -34,12 +34,57 @@ With brush strokes, the painter does only what the list says. If you forget one 
 
 ## See it move
 
-<!-- SIM: declarative-vs-steps -->
-
-**Try this:**
-1. Slide the number on the left panel from 0 to 8, one slide at a time. Then do it again on the right panel.
-2. Slide five times quickly on both panels. Look at both labels on each panel.
-3. (Optional reveal) Press "Skip one instruction" on the left panel and slide again.
+```sim
+id: declarative-vs-steps
+template: compare
+title: A list of brush strokes and a photo of the finished room
+intro: The number is 0, and both panels show Count is 0 with 0 left. The left panel follows a list of changes. The right panel is described again from the number each time.
+sides:
+  - id: steps
+    label: Brush strokes (a list of changes)
+    boxes:
+      - { id: list, label: "Instructions: set the title, set the badge" }
+      - { id: title, label: "Title: Count is 0" }
+      - { id: badge, label: "Badge: 0 left" }
+  - id: photo
+    label: Photo (described from the number)
+    boxes:
+      - { id: rule, label: "Rule: describe the whole screen from the number" }
+      - { id: title, label: "Title: Count is 0" }
+      - { id: badge, label: "Badge: 0 left" }
+vars: { n: 0, skip: "off" }
+toggles:
+  - { id: skip, label: Skip one instruction on the left, var: skip }
+actions:
+  - id: up1
+    label: Add 1 to the number
+    cases:
+      - when: { var: { skip: "off" } }
+        do:
+          - add: { n: 1 }
+          - label:
+              steps.title: "Title: Count is {n}"
+              steps.badge: "Badge: {n} left"
+              photo.title: "Title: Count is {n}"
+              photo.badge: "Badge: {n} left"
+          - light: [ steps.list, photo.rule ]
+          - say: The number is {n}. The left list ran both of its instructions, and the right panel was described again, so both match.
+      - when: { var: { skip: "on" } }
+        do:
+          - add: { n: 1 }
+          - label:
+              steps.title: "Title: Count is {n}"
+              photo.title: "Title: Count is {n}"
+              photo.badge: "Badge: {n} left"
+          - light: [ steps.list, photo.rule ]
+          - say: The number is {n}. The left list skipped one instruction, so its badge is still old. The right panel was described again from {n} and matches.
+script: [ up1, up1, up1 ]
+try:
+  - text: Press "Add 1 to the number" three times. Look at both labels on each panel.
+    done: [ up1, up1, up1 ]
+  - text: Switch "Skip one instruction on the left" on and press "Add 1 to the number" again. Compare the two badges.
+    done: [ skip=on, up1 ]
+```
 
 **What you should notice:** The left panel follows a list of changes and drifts out of step when one change is missing. The right panel is described again from the number and always matches.
 

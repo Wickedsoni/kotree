@@ -34,12 +34,76 @@ Think of a shop with a front window and a stock room.
 
 ## See it move
 
-<!-- SIM: shop-window-restock -->
-
-**Try this:**
-1. Press "Customer tries to open the window". Then press "Staff restock from behind" and read the count in the window.
-2. Press "Take a photo of the window", then let staff restock again. Compare the photo with the window.
-3. (Optional reveal) Tick "Hand over the photo, not the window". Let staff restock again and watch the customer's view.
+```sim
+id: shop-window-restock
+template: compare
+title: A shop window for the customer and a back door for staff
+intro: The stock room holds 2 items. The customer sees them through the front window, and staff can reach the stock room through the back door. No photo has been taken.
+sides:
+  - id: customer
+    label: Customer side (the window)
+    boxes:
+      - { id: view, label: "Customer's view: window shows 2 items" }
+      - { id: photo, label: "Photo: none taken" }
+  - id: staff
+    label: Staff side (the back door)
+    boxes:
+      - { id: stock, label: "Stock room: 2 items" }
+vars: { items: 2, viewing: window }
+actions:
+  - id: try-open
+    label: Customer tries to open the window
+    do:
+      - light: [ customer.view ]
+      - mark: { customer.view: bad }
+      - say: Refused. The window is only a read-only name for the stock room, so the customer cannot open it to add or remove items.
+  - id: restock
+    label: Staff restock from behind
+    cases:
+      - when: { var: { viewing: window } }
+        do:
+          - add: { items: 1 }
+          - label:
+              staff.stock: "Stock room: {items} items"
+              customer.view: "Customer's view: window shows {items} items"
+          - light: [ staff.stock, customer.view ]
+          - say: Staff restock from behind. The stock room and the window both show {items} items.
+      - when: { var: { viewing: photo } }
+        do:
+          - add: { items: 1 }
+          - label:
+              staff.stock: "Stock room: {items} items"
+          - light: [ staff.stock ]
+          - say: Staff restock. The stock room has {items} items, but the customer is looking at the photo, so their view does not change.
+  - id: photo
+    label: Take a photo of the window
+    do:
+      - label:
+          customer.photo: "Photo: {items} items (frozen)"
+      - mark: { customer.photo: good }
+      - light: [ customer.photo ]
+      - say: A photo of the window is taken. It shows {items} items and does not change when the stock room does.
+  - id: hand-photo
+    label: Hand over the photo, not the window
+    cases:
+      - when: { mark: { customer.photo: good } }
+        do:
+          - set: { viewing: photo }
+          - label:
+              customer.view: "Customer's view: the photo, {items} items (frozen)"
+          - light: [ customer.view ]
+          - say: The customer is handed the photo, not the window, so later restocking cannot reach what they see.
+    refuse: Take a photo of the window first, then hand it over.
+script: [ try-open, restock, photo, restock, hand-photo, restock ]
+try:
+  - text: Press "Customer tries to open the window". Then press "Staff restock from behind" and read the count in the window.
+    done: [ try-open, restock ]
+  - text: Press "Take a photo of the window", then let staff restock again. Compare the photo with the window.
+    done: [ photo, restock ]
+  - text: (Optional reveal) Press "Hand over the photo, not the window". Let staff restock again and watch the customer's view.
+    done: [ hand-photo, restock ]
+    optional: true
+```
 
 **What you should notice:** The glass blocks the customer from changing the display. Staff behind it still can, and the customer sees every change. A photo stays as it was.
 

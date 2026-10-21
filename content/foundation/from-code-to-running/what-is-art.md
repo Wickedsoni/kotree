@@ -38,11 +38,56 @@ Think of one recipe cooked in two kinds of kitchen.
 
 ## See it move
 
-<!-- SIM: phone-kitchen-two-ways -->
-
-**Try this:**
-1. Press "Cook" and watch which cooks carry out the compact cards on the phone.
-2. Flip the toggle to "prepare ahead" and press "Cook" again. Then flip it to "prepare while cooking". Watch when the quick-prep sheets get made.
+```sim
+id: phone-kitchen-two-ways
+template: compare
+title: Two ways a phone kitchen prepares its quick-prep sheets
+intro: The compact cards have reached the phone kitchen. Its cooks can jot quick-prep sheets while they cook, or prepare them ahead in the quiet hour. Nothing is cooked yet.
+sides:
+  - id: while-cooking
+    label: Prepare while cooking
+    boxes:
+      - { id: cards, label: Compact cards on the phone }
+      - { id: cooks, label: The phone's cooks }
+      - { id: sheets, label: Quick-prep sheets (none yet) }
+  - id: ahead
+    label: Prepare ahead
+    boxes:
+      - { id: cards, label: Compact cards on the phone }
+      - { id: cooks, label: The phone's cooks }
+      - { id: sheets, label: Quick-prep sheets (none yet) }
+actions:
+  - id: cook-while
+    label: Cook, preparing while cooking
+    do:
+      - light: [ while-cooking.cards, while-cooking.cooks, while-cooking.sheets ]
+      - spawn: { id: wread, label: Cards carried out line by line, at: while-cooking.cooks }
+      - spawn: { id: wsheet, label: Sheet jotted during the order, at: while-cooking.sheets }
+      - label: { while-cooking.sheets: Quick-prep sheets (made during the order) }
+      - say: The phone's own cooks carry out the compact cards, and a step that keeps coming back gets a quick-prep sheet jotted while the order is cooking.
+  - id: quiet-hour
+    label: Wait for the quiet hour
+    do:
+      - light: [ ahead.sheets ]
+      - spawn: { id: asheet, label: Sheet made in the quiet hour, at: ahead.sheets }
+      - label: { ahead.sheets: Quick-prep sheets (made before the order) }
+      - say: In the quiet hour nobody is ordering, so the kitchen prepares a sheet ahead, before any order needs it.
+  - id: cook-ahead
+    label: Cook, preparing ahead
+    cases:
+      - when: { at: { asheet: ahead.sheets } }
+        do:
+          - light: [ ahead.cards, ahead.cooks, ahead.sheets ]
+          - spawn: { id: aread, label: Cards carried out using the sheet, at: ahead.cooks }
+          - say: The phone's own cooks carry out the compact cards and use the sheet that was prepared ahead.
+    refuse: No sheet is ready yet. Wait for the quiet hour first.
+script: [ cook-while, quiet-hour, cook-ahead ]
+try:
+  - text: Press "Cook, preparing while cooking". Read which cooks carry out the compact cards, and when the sheet gets made.
+    done: [ cook-while ]
+  - text: Press "Wait for the quiet hour", then "Cook, preparing ahead". Compare when the sheet got made this time.
+    done: [ quiet-hour, cook-ahead ]
+```
 
 **What you should notice:** The phone's own cooks carry out the compact cards, and the toggle only changes when the quick-prep sheets are made.
 

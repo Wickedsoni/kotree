@@ -35,12 +35,72 @@ The staff will not move a drink from the small cup into the jug on their own, ev
 
 ## See it move
 
-<!-- SIM: overflow-cups -->
-
-**Try this:**
-1. Pour the small cup into the jug without an order slip, then pour again with one.
-2. Fill the small cup to its mark, then add one more drop.
-3. Put the same amount in the jug, add one more drop, and see how much room is left.
+```sim
+id: overflow-cups
+template: chart
+title: A small cup, a mark and a big jug
+intro: The small cup (Int) holds 2000000000 and the big jug (Long) is empty. A third bar marks the top of the small cup, 2147483647.
+axes: { x: Container, y: Amount of drink }
+bars:
+  - { id: small, label: Small cup (Int), value: { var: small } }
+  - { id: mark, label: Small cup top mark, value: 2147483647 }
+  - { id: jug, label: Big jug (Long), value: { var: jug } }
+vars: { small: 2000000000, jug: 0, compiler: strict }
+actions:
+  - id: pour-plain
+    label: Pour small cup into jug, no order slip
+    cases:
+      # The compiler never pours without a slip, so this case can never hold.
+      - when: { var: { compiler: lenient } }
+        do:
+          - set: { jug: 0 }
+          - say: This never runs.
+    refuse: Refused. The staff will not pour an Int into a Long without an order slip, so Kotlin does not compile it.
+  - id: pour-slip
+    label: Pour small cup into jug, with an order slip (toLong)
+    cases:
+      - when: { var: { small: 2000000000 } }
+        do:
+          - set: { jug: 2000000000 }
+          - say: With the order slip, a copy of 2000000000 goes into the jug.
+      - when: { var: { small: 2147483647 } }
+        do:
+          - set: { jug: 2147483647 }
+          - say: With the order slip, a copy of the full cup, 2147483647, goes into the jug.
+      - when: { var: { small: -2147483648 } }
+        do:
+          - set: { jug: -2147483648 }
+          - say: The slip copies the wrapped number too, because the wrap already happened in the small cup.
+  - id: fill
+    label: Fill small cup to its mark
+    do:
+      - set: { small: 2147483647 }
+      - say: The small cup is full to its top mark, 2147483647.
+  - id: drop-small
+    label: Add one drop to the small cup
+    cases:
+      - when: { var: { small: 2147483647 } }
+        do:
+          - set: { small: -2147483648 }
+          - say: One drop past the top mark wraps the small cup to -2147483648, and nothing warns you.
+    refuse: This drop does not wrap, because the small cup is not at its top mark. Fill it first.
+  - id: drop-jug
+    label: Add one drop to the big jug
+    cases:
+      - when: { var: { jug: 2147483647 } }
+        do:
+          - set: { jug: 2147483648 }
+          - say: The jug now holds 2147483648 and does not wrap, because its top mark is 9223372036854775807.
+    refuse: The jug is not holding a full small cup yet. Fill the small cup, then pour it in with an order slip.
+script: [ pour-plain, pour-slip, fill, drop-small, fill, pour-slip, drop-jug ]
+try:
+  - text: Press "Pour small cup into jug, no order slip", then the same pour with an order slip.
+    done: [ pour-plain, pour-slip ]
+  - text: Press "Fill small cup to its mark", then "Add one drop to the small cup".
+    done: [ fill, drop-small ]
+  - text: Fill the small cup again and pour it into the jug with an order slip. Then add one drop to the jug and read how much room is left.
+    done: [ fill, pour-slip, drop-jug ]
+```
 
 **What you should notice:** The jug accepts the small cup's drink only with an order slip, and a small cup that gets one drop past its mark wraps around to the bottom.
 

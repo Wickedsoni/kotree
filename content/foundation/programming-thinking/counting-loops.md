@@ -36,12 +36,52 @@ You know the first step and the last step before you take a single step. So you 
 
 ## See it move
 
-<!-- SIM: numbered-stairs-loop -->
-
-**Try this:**
-1. Set the first step to 1 and the last step to 10, then press Run. Watch the number shown on each step.
-2. Switch from "include the last step" to "stop below the last step" and run again.
-3. Switch to climbing down and run again.
+```sim
+id: numbered-stairs-loop
+template: chart
+title: A staircase with a number on every step
+intro: A staircase of five steps stands ready, with a number painted on each step. Nobody has climbed yet, so every bar is empty. A bar of height 0 means no number is said on that step.
+axes: { x: Step, y: Number said }
+bars:
+  - { id: s1, label: Step 1, value: { var: b1 } }
+  - { id: s2, label: Step 2, value: { var: b2 } }
+  - { id: s3, label: Step 3, value: { var: b3 } }
+  - { id: s4, label: Step 4, value: { var: b4 } }
+  - { id: s5, label: Step 5, value: { var: b5 } }
+vars: { b1: 0, b2: 0, b3: 0, b4: 0, b5: 0, include: "on", down: "off", said: nothing yet }
+show: [ { var: said, label: Numbers said } ]
+toggles:
+  - { id: include, label: Include the last step, var: include }
+  - { id: down, label: Climb down, var: down }
+actions:
+  - id: climb
+    label: Climb
+    cases:
+      - when: { var: { include: "on", down: "off" } }
+        do:
+          - set: { b1: 1, b2: 2, b3: 3, b4: 4, b5: 5, said: 1 2 3 4 5 }
+          - say: Climbing up from step 1 to step 5 says 1 2 3 4 5, and the last step counts.
+      - when: { var: { include: "off", down: "off" } }
+        do:
+          - set: { b1: 1, b2: 2, b3: 3, b4: 4, b5: 0, said: 1 2 3 4 }
+          - say: Stopping below the last step says 1 2 3 4, and step 5 is left out.
+      - when: { var: { include: "on", down: "on" } }
+        do:
+          - set: { b1: 1, b2: 2, b3: 3, b4: 4, b5: 5, said: 5 4 3 2 1 }
+          - say: Climbing down from step 5 to step 1 says 5 4 3 2 1, and the last step counts.
+      - when: { var: { include: "off", down: "on" } }
+        do:
+          - set: { b1: 0, b2: 2, b3: 3, b4: 4, b5: 5, said: 5 4 3 2 }
+          - say: Climbing down and stopping before the last step says 5 4 3 2, and step 1 is left out.
+script: [ climb ]
+try:
+  - text: Press "Climb". Read the numbers said, one for each step.
+    done: [ climb ]
+  - text: Switch "Include the last step" off and press "Climb" again. Step 5 is left out.
+    done: [ include=off, climb ]
+  - text: Switch "Climb down" on and press "Climb" again. The numbers come in the other order.
+    done: [ down=on, climb ]
+```
 
 **What you should notice:** Each number is handed out once, and stopping below the last step leaves the top number out.
 

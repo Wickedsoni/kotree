@@ -34,12 +34,33 @@ On a street with 10 houses, the postman takes about 10 footsteps. With 100 house
 
 ## See it move
 
-<!-- SIM: step-counter-bars -->
-
-**Try this:**
-1. Set the slider to 10, then 100, then 1000 houses. Read the bar and the footstep counter for the single walk.
-2. Watch the second bar, for a walk inside a walk, at the same three sizes.
-3. Double the number of houses and watch how each bar changes.
+```sim
+id: step-counter-bars
+template: chart
+title: Footsteps for one walk and for a walk inside a walk
+intro: A postman walks a street of houses. The two lines show his footsteps against the number of houses, and the slider starts at 10 houses.
+axes: { x: Houses, y: Footsteps }
+curves:
+  - { id: one, label: One walk down the street (n footsteps), f: { poly: [0, 1, 0] } }
+  - { id: inner, label: A walk inside a walk (n times n footsteps), f: { poly: [0, 0, 1] } }
+scale: { x: [0, 1000] }
+vars: { x: 10 }
+sliders:
+  - { id: houses, label: Houses, var: x, min: 10, max: 1000, step: 10 }
+actions:
+  - id: count
+    label: Count the footsteps
+    do:
+      - say: "With {x} houses, one walk takes {one.at} footsteps and a walk inside a walk takes {inner.at}."
+script: [ houses=100, count ]
+try:
+  - text: Slide the houses to 100 and press "Count the footsteps". Read the counter for each walk in the key below the chart.
+    done: [ houses=100, count ]
+  - text: Slide the houses to 1000 and count again. Watch how far apart the two lines are now.
+    done: [ houses=1000, count ]
+  - text: Slide the houses to 500 and count. Then double them to 1000 and count again. Compare how each count changed.
+    done: [ houses=500, count, houses=1000, count ]
+```
 
 **What you should notice:** The bar for a single walk grows in step with the houses, and the bar for a walk inside a walk grows much faster.
 

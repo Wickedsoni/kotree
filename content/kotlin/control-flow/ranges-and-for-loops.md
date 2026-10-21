@@ -35,12 +35,77 @@ You say where to start, where to stop, and how big each step is. Then you walk a
 
 ## See it move
 
-<!-- SIM: tape-measure-range -->
-
-**Try this:**
-1. Set the start to 1 and the stop to 5, press "Place stickers", then switch to "stop before the stop mark" and place them again.
-2. Switch to "count down", set the start to 10 and the stop to 0, and set the step size to 3.
-3. Compare the two choices that both stop before the stop mark. They have different names but the same stickers.
+```sim
+id: tape-measure-range
+template: chart
+title: A tape measure with stickers on the visited marks
+intro: A tape measure shows marks 1 to 6, with stop mark 6. Nothing is stuck on it yet, so every bar is empty. A bar of height 0 means that mark gets no sticker.
+axes: { x: Mark, y: Mark with a sticker }
+bars:
+  - { id: k1, label: Mark 1, value: { var: m1 } }
+  - { id: k2, label: Mark 2, value: { var: m2 } }
+  - { id: k3, label: Mark 3, value: { var: m3 } }
+  - { id: k4, label: Mark 4, value: { var: m4 } }
+  - { id: k5, label: Mark 5, value: { var: m5 } }
+  - { id: k6, label: Mark 6, value: { var: m6 } }
+marks: { start: 1, stop: 6, step: 1, inclusive: true }
+vars: { m1: 0, m2: 0, m3: 0, m4: 0, m5: 0, m6: 0, step2: "off" }
+toggles:
+  - { id: step2, label: Step by 2, var: step2 }
+actions:
+  - id: incl
+    label: Place stickers with 1..6
+    cases:
+      - when: { var: { step2: "off" } }
+        do:
+          - set: { m1: 1, m2: 2, m3: 3, m4: 4, m5: 5, m6: 6 }
+          - say: The loop 1..6 puts stickers on 1, 2, 3, 4, 5 and 6, so the stop mark gets one.
+      - when: { var: { step2: "on" } }
+        do:
+          - set: { m1: 1, m2: 0, m3: 3, m4: 0, m5: 5, m6: 0 }
+          - say: The loop 1..6 step 2 puts stickers on 1, 3 and 5, and the next mark, 7, is past the stop, so mark 6 is missed.
+  - id: excl
+    label: Place stickers with 1..<6
+    cases:
+      - when: { var: { step2: "off" } }
+        do:
+          - set: { m1: 1, m2: 2, m3: 3, m4: 4, m5: 5, m6: 0 }
+          - say: The loop 1..<6 puts stickers on 1, 2, 3, 4 and 5, and the stop mark gets none.
+      - when: { var: { step2: "on" } }
+        do:
+          - set: { m1: 1, m2: 0, m3: 3, m4: 0, m5: 5, m6: 0 }
+          - say: The loop 1..<6 step 2 puts stickers on 1, 3 and 5.
+  - id: until
+    label: Place stickers with 1 until 6
+    cases:
+      - when: { var: { step2: "off" } }
+        do:
+          - set: { m1: 1, m2: 2, m3: 3, m4: 4, m5: 5, m6: 0 }
+          - say: The loop 1 until 6 puts stickers on 1, 2, 3, 4 and 5, the same marks as 1..<6.
+      - when: { var: { step2: "on" } }
+        do:
+          - set: { m1: 1, m2: 0, m3: 3, m4: 0, m5: 5, m6: 0 }
+          - say: The loop 1 until 6 step 2 puts stickers on 1, 3 and 5, the same marks as 1..<6 step 2.
+  - id: down
+    label: Place stickers with 6 downTo 1
+    cases:
+      - when: { var: { step2: "off" } }
+        do:
+          - set: { m1: 1, m2: 2, m3: 3, m4: 4, m5: 5, m6: 6 }
+          - say: The loop 6 downTo 1 puts stickers on 6, 5, 4, 3, 2 and 1, in that order.
+      - when: { var: { step2: "on" } }
+        do:
+          - set: { m1: 0, m2: 2, m3: 0, m4: 4, m5: 0, m6: 6 }
+          - say: The loop 6 downTo 1 step 2 puts stickers on 6, 4 and 2, and the next mark, 0, is past the stop, so mark 1 is missed.
+script: [ incl, excl, until, down ]
+try:
+  - text: Press "Place stickers with 1..6", then "Place stickers with 1..<6". Compare mark 6.
+    done: [ incl, excl ]
+  - text: Press "Place stickers with 1 until 6". It is a different spelling, but are the stickers the same as for 1..<6?
+    done: [ until ]
+  - text: Press "Place stickers with 6 downTo 1". Then switch "Step by 2" on and see which mark is missed.
+    done: [ down, step2=on ]
+```
 
 **What you should notice:** Whether the stop mark gets a sticker depends on the choice, and the step size can make you miss the stop mark.
 

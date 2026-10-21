@@ -35,12 +35,92 @@ A good doctor does not look at the patient and prescribe the strongest medicine.
 
 ## See it move
 
-<!-- SIM: measure-bars -->
-
-**Try this:**
-1. Look at the five suspect functions. Pick the one you think is the slowest.
-2. Press "Measure". Watch the bars grow to their real size.
-3. Fix the function you picked, then press "Measure again" and compare the stopwatch before and after.
+```sim
+id: measure-bars
+template: chart
+title: Five suspect functions, measured
+intro: Five functions are suspects for a slow screen. The bars are empty until you measure, and your guess starts at function 1. The numbers are invented for teaching.
+axes: { x: Suspect function, y: Milliseconds }
+bars:
+  - { id: f1, label: 1 parseJson, value: { var: b1 } }
+  - { id: f2, label: 2 layoutList, value: { var: b2 } }
+  - { id: f3, label: 3 decodeImage, value: { var: b3 } }
+  - { id: f4, label: 4 drawRows, value: { var: b4 } }
+  - { id: f5, label: 5 saveCache, value: { var: b5 } }
+vars: { b1: 0, b2: 0, b3: 0, b4: 0, b5: 0, guess: 1, stage: start, before: not measured yet, after: not measured yet }
+show:
+  - { var: before, label: Stopwatch before the fix (ms) }
+  - { var: after, label: Stopwatch after the fix (ms) }
+sliders:
+  - { id: guess, label: Your guess (function number), var: guess, min: 1, max: 5, step: 1 }
+actions:
+  - id: measure
+    label: Measure
+    cases:
+      - when: { var: { guess: 3 } }
+        do:
+          - set: { b1: 30, b2: 60, b3: 190, b4: 40, b5: 20, stage: measured, before: 340 }
+          - say: The stopwatch reads 340 ms, and the longest bar is function 3, decodeImage, at 190 ms. Your guess was right this time.
+      - do:
+          - set: { b1: 30, b2: 60, b3: 190, b4: 40, b5: 20, stage: measured, before: 340 }
+          - say: The stopwatch reads 340 ms, and the longest bar is function 3, decodeImage, at 190 ms. It is not function {guess}.
+  - id: fix
+    label: Fix my guess (twice as fast)
+    cases:
+      - when: { var: { stage: measured, guess: 1 } }
+        do:
+          - set: { b1: 15, stage: fixed }
+          - say: Function 1 now takes 15 ms instead of 30 ms. Measure again to see the stopwatch.
+      - when: { var: { stage: measured, guess: 2 } }
+        do:
+          - set: { b2: 30, stage: fixed }
+          - say: Function 2 now takes 30 ms instead of 60 ms. Measure again to see the stopwatch.
+      - when: { var: { stage: measured, guess: 3 } }
+        do:
+          - set: { b3: 95, stage: fixed }
+          - say: Function 3 now takes 95 ms instead of 190 ms. Measure again to see the stopwatch.
+      - when: { var: { stage: measured, guess: 4 } }
+        do:
+          - set: { b4: 20, stage: fixed }
+          - say: Function 4 now takes 20 ms instead of 40 ms. Measure again to see the stopwatch.
+      - when: { var: { stage: measured, guess: 5 } }
+        do:
+          - set: { b5: 10, stage: fixed }
+          - say: Function 5 now takes 10 ms instead of 20 ms. Measure again to see the stopwatch.
+    refuse: Nothing to fix yet. Press Measure first, so you fix a measured function and not a guess.
+  - id: measure-again
+    label: Measure again
+    cases:
+      - when: { var: { stage: fixed, guess: 1 } }
+        do:
+          - set: { after: 325 }
+          - say: The stopwatch reads 325 ms, down from 340 ms, so the fix barely helped.
+      - when: { var: { stage: fixed, guess: 2 } }
+        do:
+          - set: { after: 310 }
+          - say: The stopwatch reads 310 ms, down from 340 ms, so the fix barely helped.
+      - when: { var: { stage: fixed, guess: 3 } }
+        do:
+          - set: { after: 245 }
+          - say: The stopwatch reads 245 ms, down from 340 ms. Fixing the longest bar gave the big win.
+      - when: { var: { stage: fixed, guess: 4 } }
+        do:
+          - set: { after: 320 }
+          - say: The stopwatch reads 320 ms, down from 340 ms, so the fix barely helped.
+      - when: { var: { stage: fixed, guess: 5 } }
+        do:
+          - set: { after: 330 }
+          - say: The stopwatch reads 330 ms, down from 340 ms, so the fix barely helped.
+    refuse: Fix a function first, then measure again to compare with the first stopwatch.
+script: [ guess=2, measure, fix, measure-again ]
+try:
+  - text: Slide your guess to 2, the function that looks the busiest.
+    done: [ guess=2 ]
+  - text: Press "Measure" and watch the bars grow to their real size.
+    done: [ measure ]
+  - text: Press "Fix my guess", then "Measure again", and compare the stopwatch before and after.
+    done: [ fix, measure-again ]
+```
 
 **What you should notice:** The slowest bar is often not the one you guessed, and a fix on the wrong function leaves the stopwatch where it was.
 

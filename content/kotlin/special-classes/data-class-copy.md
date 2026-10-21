@@ -34,13 +34,85 @@ Think of a paper form and a photocopier.
 
 ## See it move
 
-<!-- SIM: form-photocopier -->
-
-**Try this:**
-1. Press "Photocopy the form" and write 31 in the age box of the copy. Read both forms.
-2. Press "Add a note through the copy". Read the folder number on both forms and the notes in the folder.
-3. Press "Give the copy a folder of its own". Add a note through the copy again.
-4. (Optional reveal) Tick "Show folder numbers" and compare the number on each form before and after step 3.
+```sim
+id: form-photocopier
+template: compare
+title: A paper form, its photocopy and the filing cabinet
+intro: One form sits on the desk, with the name Ada, the age 30 and the folder number 7. Folder 7 in the filing cabinet holds one note. The photocopy has not been made yet.
+sides:
+  - id: desk
+    label: Forms on the desk
+    boxes:
+      - { id: original, label: "Original form: Ada, age 30, folder 7" }
+      - { id: copy, label: "Copy: not made yet" }
+  - id: cabinet
+    label: Filing cabinet
+    boxes:
+      - { id: f7, label: "Folder 7: notes in it: 1" }
+      - { id: f8, label: "Folder 8: not made yet" }
+vars: { stage: blank, copyAge: 30, folder: 7, n7: 1, n8: 0 }
+actions:
+  - id: copy
+    label: Photocopy the form
+    do:
+      - set: { stage: copied, copyAge: 30, folder: 7 }
+      - label:
+          desk.copy: "Copy: Ada, age {copyAge}, folder {folder}"
+      - light: [ desk.copy ]
+      - say: The photocopier makes a second form with the same answers, including folder number 7.
+  - id: age31
+    label: Write 31 in the copy's age box
+    cases:
+      - when: { var: { stage: copied } }
+        do:
+          - set: { copyAge: 31 }
+          - label:
+              desk.copy: "Copy: Ada, age {copyAge}, folder {folder}"
+          - light: [ desk.copy ]
+          - say: The copy's age box now says 31, and the original still says 30.
+    refuse: Make the photocopy first.
+  - id: note
+    label: Add a note through the copy
+    cases:
+      - when: { var: { stage: copied, folder: 7 } }
+        do:
+          - add: { n7: 1 }
+          - label:
+              cabinet.f7: "Folder 7: notes in it: {n7}"
+              desk.original: "Original form: Ada, age 30, folder 7 (notes in folder: {n7})"
+              desk.copy: "Copy: Ada, age {copyAge}, folder 7 (notes in folder: {n7})"
+          - light: [ cabinet.f7 ]
+          - say: A note added through the copy goes into folder 7, so both forms point at a folder with {n7} notes.
+      - when: { var: { stage: copied, folder: 8 } }
+        do:
+          - add: { n8: 1 }
+          - label:
+              cabinet.f8: "Folder 8: notes in it: {n8}"
+              desk.copy: "Copy: Ada, age {copyAge}, folder 8 (notes in folder: {n8})"
+          - light: [ cabinet.f8 ]
+          - say: The note goes into folder 8. Only the copy points there, so the original's folder 7 is unchanged.
+    refuse: Make the photocopy first.
+  - id: own-folder
+    label: Give the copy a folder of its own
+    cases:
+      - when: { var: { stage: copied } }
+        do:
+          - set: { folder: 8 }
+          - label:
+              desk.copy: "Copy: Ada, age {copyAge}, folder 8 (notes in folder: {n8})"
+              cabinet.f8: "Folder 8: notes in it: {n8}"
+          - light: [ desk.copy, cabinet.f8 ]
+          - say: The copy now carries a new folder number, 8. The original still points at folder 7.
+    refuse: Make the photocopy first.
+script: [ copy, age31, note, own-folder, note ]
+try:
+  - text: Press "Photocopy the form" and then "Write 31 in the copy's age box". Read both forms.
+    done: [ copy, age31 ]
+  - text: Press "Add a note through the copy". Read the folder number on both forms and the notes in the folder.
+    done: [ note ]
+  - text: Press "Give the copy a folder of its own". Then add a note through the copy again.
+    done: [ own-folder, note ]
+```
 
 **What you should notice:** Writing a plain fact on the copy leaves the original alone, but a note added to a shared folder shows through both forms.
 

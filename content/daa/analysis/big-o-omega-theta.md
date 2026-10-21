@@ -32,12 +32,37 @@ Think of promises about a car trip. A trip of d km takes 3 minutes per km, plus 
 
 ## See it move
 
-<!-- SIM: ceiling-and-floor-band -->
-
-**Try this:**
-1. Pick the shape n. Drag the floor and the ceiling constants until the curve 3n + 2 stays between the two lines from n = 2 onwards.
-2. Pick the shape n². Try to place a floor line under the curve for every large n.
-3. Drag the ceiling constant low, for example to 2, and watch the curve sit above the line at every n.
+```sim
+id: ceiling-and-floor-band
+template: chart
+title: A ceiling line and a floor line around 3n + 2
+intro: The code takes 3n + 2 steps. A ceiling line 4n and a floor line 3n of the same shape n are drawn, and so are a ceiling band and a floor band you can test from a starting point n0.
+axes: { x: n (the size of the input), y: Steps }
+curves:
+  - { id: code, label: The code (3n + 2 steps), f: { poly: [2, 3, 0] } }
+  - { id: floorn, label: Floor line 3n, f: { poly: [0, 3, 0] } }
+bands:
+  - { id: ceil, label: Ceiling line 4n, kind: ceiling, f: { poly: [0, 1, 0] }, k: 4 }
+  - { id: sqfloor, label: Floor line 0.1 times n squared, kind: floor, f: { poly: [0, 0, 1] }, k: 0.1 }
+scale: { x: [0, 40] }
+vars: { x: 10, n0: 1 }
+sliders:
+  - { id: n, label: n, var: x, min: 1, max: 40, step: 1 }
+  - { id: n0, label: Starting point n0, var: n0, min: 1, max: 40, step: 1 }
+actions:
+  - id: check
+    label: Check the promise
+    do:
+      - say: "From n0 = {n0}, the ceiling 4n first fails at {ceil.exit}, and the floor 0.1 times n squared first fails at {sqfloor.exit}. The word none means the promise holds."
+script: [ n0=2, check ]
+try:
+  - text: Slide n0 to 2 and press "Check the promise". The ceiling 4n has no failure from n = 2 on, so it says none.
+    done: [ n0=2, check ]
+  - text: Slide n0 to 1 and press the button again. At n = 1 the code takes 5 steps and the ceiling line is at 4, so it fails at 1.
+    done: [ n0=1, check ]
+  - text: Slide n to 40. The code stays above the floor 3n, but the floor 0.1 times n squared climbs above it, after n = 30.
+    done: [ n=40 ]
+```
 
 **What you should notice:** With the shape n, a floor and a ceiling can both hold. With the shape n², the ceiling holds and the floor fails, and a ceiling below the curve fails once n is large.
 

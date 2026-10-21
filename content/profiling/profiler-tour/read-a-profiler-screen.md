@@ -36,12 +36,55 @@ A nurse does not read one line alone. The nurse looks at the same moment on ever
 
 ## See it move
 
-<!-- SIM: hospital-monitor -->
-
-**Try this:**
-1. Look at the rows on one clock. Drag a time window over a busy moment and watch the call chart, flame chart and table change.
-2. Move the window to a quiet moment and read the same charts again.
-3. Answer the quiz that asks which row or chart answers which question.
+```sim
+id: hospital-monitor
+template: chart
+title: Reading one time window of a profiler recording
+intro: A recording is open and no time window is selected yet, so the bars are empty. The numbers are invented for teaching, not measured from a real app.
+axes: { x: Call in the selected window, y: Milliseconds }
+bars:
+  - { id: load, label: loadList, value: { var: c1 } }
+  - { id: decode, label: decodeImage, value: { var: c2 } }
+  - { id: draw, label: drawRow, value: { var: c3 } }
+  - { id: idle, label: Idle or other, value: { var: c4 } }
+vars: { c1: 0, c2: 0, c3: 0, c4: 0, window: nothing selected }
+show:
+  - { var: window, label: Window }
+actions:
+  - id: busy
+    label: Select the busy window
+    do:
+      - set: { c1: 50, c2: 240, c3: 90, c4: 20, window: 1.8 s to 2.2 s }
+      - say: The window 1.8 s to 2.2 s is selected, where the CPU usage row spikes. The table shows decodeImage using 240 of the 400 ms.
+  - id: quiet
+    label: Select the quiet window
+    do:
+      - set: { c1: 30, c2: 10, c3: 20, c4: 340, window: 4.0 s to 4.4 s }
+      - say: The window 4.0 s to 4.4 s is quiet. Of its 400 ms, 340 ms is idle or other time, so no call stands out.
+  - id: ask-when
+    label: Ask which row says when
+    do:
+      - say: The rows answer when something happened and how big it was, for example the CPU usage row spiking at the 2 s mark.
+  - id: ask-which
+    label: Ask which chart says what
+    do:
+      - say: The Call Chart and the Top Down table answer which calls ran and how long each one took.
+  - id: ask-flame
+    label: Ask about the flame chart
+    do:
+      - say: The Flame Chart merges identical call stacks, and its width shows each call's share of the time, not a clock.
+script: [ busy, quiet, ask-when, ask-which, ask-flame ]
+try:
+  - text: Press "Select the busy window". Read which call has the tallest bar.
+    done: [ busy ]
+  - text: Press "Select the quiet window" and read the same bars again.
+    done: [ quiet ]
+  - text: Press "Ask which row says when" and "Ask which chart says what". Each one says which part of the screen answers that question.
+    done: [ ask-when, ask-which ]
+  - text: Press "Ask about the flame chart" and read what its width means.
+    done: [ ask-flame ]
+    optional: true
+```
 
 **What you should notice:** Every row lines up on one clock, and each row or chart answers a different question.
 

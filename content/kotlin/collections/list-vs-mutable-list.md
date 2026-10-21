@@ -35,12 +35,73 @@ The cover takes the marker out of the guest's hand. It does not freeze the board
 
 ## See it move
 
-<!-- SIM: menu-board-cover -->
-
-**Try this:**
-1. Press "Add a dish" on the board that has only a cover. Then press it on the board that has a marker.
-2. Hang the cover over the marker board. Press "Owner adds a dish" and watch the guest's view.
-3. Press "Take a photo" and let the owner add another dish. Compare the photo with the board.
+```sim
+id: menu-board-cover
+template: compare
+title: A menu board behind a cover and a board with a marker
+intro: Two boards each list soup, salad and tea. The first is seen only through a clear cover. The second has the owner's marker. A photo has not been taken.
+sides:
+  - id: cover-only
+    label: Cover only (a List)
+    boxes:
+      - { id: board, label: "Board: soup, salad, tea (3 dishes)" }
+  - id: with-marker
+    label: Owner's marker (a MutableList)
+    boxes:
+      - { id: board, label: "Board: soup, salad, tea (3 dishes)" }
+      - { id: guest, label: "Guest's view: no cover hung yet" }
+      - { id: photo, label: "Photo: none taken" }
+vars: { dishes: 3, hung: bare }
+actions:
+  - id: add-cover
+    label: Add a dish through the cover
+    do:
+      - light: [ cover-only.board ]
+      - mark: { cover-only.board: bad }
+      - say: Refused. Through a cover you can only read, so a List has no add and Kotlin does not compile it.
+  - id: add-owner
+    label: Owner adds a dish
+    cases:
+      - when: { var: { hung: covered } }
+        do:
+          - add: { dishes: 1 }
+          - label:
+              with-marker.board: "Board: {dishes} dishes"
+              with-marker.guest: "Guest's view: {dishes} dishes, through the cover"
+          - light: [ with-marker.board, with-marker.guest ]
+          - say: The owner adds a dish with the marker. The board has {dishes} dishes, and the guest sees the change through the cover.
+      - when: { var: { hung: bare } }
+        do:
+          - add: { dishes: 1 }
+          - label:
+              with-marker.board: "Board: {dishes} dishes"
+          - light: [ with-marker.board ]
+          - say: The owner adds a dish with the marker. The board has {dishes} dishes.
+  - id: hang-cover
+    label: Hang the cover over the owner's board
+    do:
+      - set: { hung: covered }
+      - label:
+          with-marker.guest: "Guest's view: {dishes} dishes, through the cover"
+      - light: [ with-marker.guest ]
+      - say: The cover now hangs over the owner's board, so the guest can read the board but cannot write on it.
+  - id: photo
+    label: Take a photo
+    do:
+      - label:
+          with-marker.photo: "Photo: {dishes} dishes (frozen)"
+      - mark: { with-marker.photo: good }
+      - light: [ with-marker.photo ]
+      - say: A photo is taken. It shows {dishes} dishes and does not change when the board does.
+script: [ add-cover, add-owner, hang-cover, add-owner, photo, add-owner ]
+try:
+  - text: Press "Add a dish through the cover". Then press "Owner adds a dish" on the board with the marker.
+    done: [ add-cover, add-owner ]
+  - text: Press "Hang the cover over the owner's board". Then press "Owner adds a dish" and read the guest's view.
+    done: [ hang-cover, add-owner ]
+  - text: Press "Take a photo", then press "Owner adds a dish" again. Compare the photo with the board.
+    done: [ photo, add-owner ]
+```
 
 **What you should notice:** The cover blocks writing but the board behind it still changes and the guest sees the change, while a photo stays as it was when it was taken.
 
