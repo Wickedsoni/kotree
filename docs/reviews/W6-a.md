@@ -235,3 +235,6 @@ New items (mechanical, `fixer`):
 Owner items 1 to 5: none blocks the content fixes. Item 1 (roadmap Sim cells for `safe-call-and-elvis`, `scope-and-shadowing`) remains the only go-live precondition for those two leaves; the curriculum-designer is on it. Items 2 and 3 are decisions, item 4 an upstream docs quirk, item 5 an optional IDE check.
 
 Re-check VERDICT: FIX for 2 leaves (N1, N2 are one-line edits), PASS for 6. After N1 to N3 no further review is needed beyond `validateContent`.
+
+## Final (orchestrator, 21 Oct 2026)
+N1 and N2 applied as specified; validateContent passes. All 8 leaves in this report: PASS.
