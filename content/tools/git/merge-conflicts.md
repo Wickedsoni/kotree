@@ -1,27 +1,19 @@
 ---
 id: tools/git/merge-conflicts
 title: "What do I do when git says two changes collide?"
-status: shadow
+status: live
 difficulty: hard
 order: 3
 requires: [tools/git/branches]
 summary: A merge conflict means two copies changed the same part of a file differently, so Git stops and asks you to choose what stays.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [shared-page-corrections]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging (section "Basic Merge Conflicts", read 21 Oct 2026): a conflict happens when you changed the same part of the same file differently in the two branches; Git pauses and does not create a merge commit; git status lists "Unmerged paths"; Git adds conflict markers; the version in HEAD is the top part above =======, the other branch is the bottom part; you choose one side or merge the contents yourself; remove the marker lines; run git add on each file to mark it as resolved ("Staging the file marks it as resolved in Git"); git mergetool starts a visual merge tool.
-- https://www.jetbrains.com/help/idea/resolve-conflicts.html (read 21 Oct 2026): the Conflicts dialog opens when a conflict is detected; Accept Yours keeps the changes from the currently checked-out branch; Accept Theirs accepts the changes from the branch you are merging; resolving manually opens the merge tool with a left pane, a right pane and an editable central pane.
-- General knowledge: Android Studio is built on IntelliJ IDEA; Git does not read the file for marker lines when you stage it; Git joins by lines and not by meaning.
-- The sim shows an invented page. No Kotlin program runs on this page.
--->
 
 ## The question
 

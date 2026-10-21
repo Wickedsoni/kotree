@@ -1,26 +1,20 @@
 ---
 id: os/processes/what-is-a-process
 title: Why does one crashing app leave all the other apps running?
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [os/what-an-os-does/kernel-and-system-calls]
 summary: Each running app lives in its own process, with its own walls. A crash stops that process and leaves the others running.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [sealed-flats]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-Android Open Source Project, Application Sandbox (Android assigns a unique user ID to each app and runs it in its own process; the UID sets up a kernel-level Application Sandbox; the kernel enforces security between apps at the process level; by default apps can't interact with each other): https://source.android.com/docs/security/app-sandbox
-Android Developers, Processes and threads overview (the system starts a new Linux process for the application; by default all components of an app run in the same process; the android:process attribute can put components in their own process; components of different apps can share a process only with the same Linux user ID and the same signing certificate; the system may shut down a process when resources are needed elsewhere): https://developer.android.com/guide/components/processes-and-threads
-Android Developers, Crashes (a crash is an unexpected exit from an unhandled exception or signal; Android terminates the app's process and shows a dialog that the app has stopped): https://developer.android.com/topic/performance/vitals/crash
-Interview seed: docs/practice/practice-os.md section for this leaf (problems: none, so no Practise on these section). Its claims about the process control block and task_struct are general knowledge, not quoted.
--->
 ## The question
 
 You have a map app, a music player and a notes app open. The music player stops working, and a message tells you it has stopped. The map and the notes carry on as if nothing happened. Why does one broken app not take the whole phone down with it?

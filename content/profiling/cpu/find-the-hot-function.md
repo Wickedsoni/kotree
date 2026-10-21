@@ -1,29 +1,19 @@
 ---
 id: profiling/cpu/find-the-hot-function
 title: "How do I find the function that uses the most CPU time?"
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [profiling/profiler-tour/read-a-profiler-screen]
 summary: The hot function spends the most time in its own code, and a profiler sorts a recording so it comes first.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [shop-bill-sorted]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://developer.android.com/studio/profile/record-java-kotlin-methods (read 21 Oct 2026): runtime instrumentation injects timestamps at entry and exit of each method call; recordings of five seconds or less recommended; timings might deviate from production because of the overhead; flame chart or Top Down chart to find the methods that take the most time.
-- https://developer.android.com/studio/profile/sample-callstack (read 21 Oct 2026): task "Find CPU Hotspots (Callstack Sample)"; needs a device on Android 8.0 (API level 26) or higher.
-- https://developer.android.com/studio/profile/chart-glossary/flame-chart (read 21 Oct 2026): flame chart aggregates identical call stacks; horizontal axis is not a timeline, it shows relative time; the callees that use the most CPU time appear first.
-- https://developer.android.com/studio/profile/chart-glossary/top-bottom-charts (read 21 Oct 2026): Top Down and Bottom Up; Self, Children, Total; Bottom Up is useful for sorting by CPU time.
-- Kotlin code: compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh, reviewer, 21 Oct 2026); outputs match.
-- Task names in the profiler change between Android Studio versions. The method-recording task name was not stated on the page, so the lesson does not give it.
--->
 
 ## The question
 

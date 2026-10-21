@@ -1,27 +1,19 @@
 ---
 id: testing/unit-tests/arrange-act-assert
 title: "What are the three parts of a test that anyone can read?"
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [testing/unit-tests/run-your-first-unit-test]
 summary: A readable test sets things up, does one thing, then checks the result, in that order.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [experiment-write-up]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://developer.android.com/training/testing/local-tests (read 21 Oct 2026): local test sources go in module-name/src/test/; a test method begins with the @Test annotation and contains the code to exercise and verify a single aspect of the component; local tests run on your own workstation's JVM; the page's own example has three comments, "Given", "when" and "then", which is the same three-part shape.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/check.html (read 21 Oct 2026): check(value) and check(value, lazyMessage) throw IllegalStateException when the value is false; the second form uses the result of lazyMessage as the message.
-- The names "Arrange, Act, Assert" and the habit of one act per test are general knowledge, not an Android or Kotlin rule. The page does not use those words.
-- Kotlin code: compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh, reviewer, 21 Oct 2026); outputs match. Result.exceptionOrNull() and runCatching are Kotlin standard library functions (used the same way in the live leaf run-your-first-unit-test).
--->
 
 ## The question
 

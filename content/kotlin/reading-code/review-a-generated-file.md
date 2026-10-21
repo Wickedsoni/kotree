@@ -1,31 +1,20 @@
 ---
 id: kotlin/reading-code/review-a-generated-file
 title: Would I accept this generated file in review?
-status: shadow
+status: live
 difficulty: hard
 order: 65
 requires: [kotlin/reading-code/spotting-risky-patterns]
 summary: Walk a generated file four times with one question each, write down the worst risks with line numbers, fix one and decide.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [review-walk-through]
 playground: true
 fruit: true
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-Kotlin null safety (the not-null assertion !! results in an NPE when the value is null; causes of an NPE): https://kotlinlang.org/docs/null-safety.html
-Kotlin numbers, Integer division (integer division always returns an integer, the fractional part is discarded; a Double operand gives 2.5): https://kotlinlang.org/docs/numbers.html
-Kotlin String.toInt (NumberFormatException on an invalid string): https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int.html
-Android activity lifecycle (onCreate receives savedInstanceState, null if the activity has never existed before): https://developer.android.com/guide/components/activities/activity-lifecycle
-Android crashes (a crash is an unhandled exception or signal; Android terminates the app's process and shows a dialog): https://developer.android.com/topic/performance/vitals/crash
-Android reference, java.lang.ArithmeticException (an integer "divide by zero" throws an instance of this class): https://developer.android.com/reference/java/lang/ArithmeticException
-Android reference, java.lang.NullPointerException (thrown when an application attempts to use null in a case where an object is required): https://developer.android.com/reference/java/lang/NullPointerException
-Android reference, java.lang.NumberFormatException (string not in the right format for a numeric type): https://developer.android.com/reference/java/lang/NumberFormatException
-Interview seed: docs/practice/interview-kotlin.md section for this leaf. Its claims about reflection, allocations and boxing in generated code were NOT used; they were not checked. Its listed reference (Kotlin Symbol Processing overview) was not used either.
--->
 ## The question
 
 A tool writes 150 lines of Kotlin for you in ten seconds. It compiles, the names are clear and the one test you tried passes. Would you put your name on it? And if you only have ten minutes, what would you check before you sign?

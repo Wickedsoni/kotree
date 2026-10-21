@@ -1,28 +1,19 @@
 ---
 id: ui/first-composable/text-and-images
 title: "How do I put words and pictures on the screen?"
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [ui/first-composable/what-is-a-composable]
 summary: Text puts words on the screen and Image puts a picture there, with a description for people who cannot see it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [postcard-words-and-photo]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://developer.android.com/develop/ui/compose/text/display-text (read 21 Oct 2026): the most basic way to display text is the Text composable with a String, Text("Hello World"); "We recommend you use string resources instead of hardcoding Text values, as you can share the same strings with your Android Views as well as preparing your app for internationalization"; Text(stringResource(R.string.hello_world)).
-- https://developer.android.com/develop/ui/compose/graphics/images/loading (read 21 Oct 2026): Image displays a graphic; painterResource loads an image (PNG, JPEG, WEBP) or vector resource from the disk; Image(painter = painterResource(id = R.drawable.dog), contentDescription = stringResource(id = R.string.dog_content_description)); supply a contentDescription for visual elements, TalkBack reads it out, the text must be meaningful if read out loud and translated; for a purely decorative element set contentDescription to null so the screen reader ignores it; to load from the internet use a third-party library such as Coil, whose AsyncImage(model = url, contentDescription = ...) handles caching and networking.
-- Not checked on an official page, labelled "general knowledge" in the lesson: that a resource lives in the res folder and that R is a class made by the build; that an Image shows without a size.
-- The exact signature of Image (which parameters have defaults) was not read in this run, so the lesson does not claim anything about it.
-- Compose code needs an Android project, so every code block is read-only or paper (docs/06 section 1).
--->
 
 ## The question
 

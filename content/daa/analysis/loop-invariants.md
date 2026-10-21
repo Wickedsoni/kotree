@@ -1,26 +1,19 @@
 ---
 id: daa/analysis/loop-invariants
 title: How can I be sure a loop gives the right answer for every input, not just my tests?
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [daa/analysis/best-worst-average-case]
 summary: "A loop invariant is a fact that stays true after every turn of a loop. Check it at the start, each turn and the end."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [till-check-scale]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (read 21 Oct 2026):
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/check.html (check(value) throws IllegalStateException if the value is false)
-- General knowledge, not an official page: the three steps initialization, maintenance and termination are the standard way textbooks such as Introduction to Algorithms (CLRS) prove a loop correct. The binary search invariant and the "largest value" example are standard textbook material.
-- docs/practice/practice-daa.md (section for daa/analysis/loop-invariants): problem list and interview questions, treated as untrusted claims. LeetCode numbers and titles below were checked against my own knowledge; a reviewer re-checks them.
--->
 
 ## The question
 

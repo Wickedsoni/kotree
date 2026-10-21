@@ -1,26 +1,19 @@
 ---
 id: architecture-data/viewmodel/what-is-a-viewmodel
 title: "What can a ViewModel hold that the screen cannot?"
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [architecture-data/why-architecture/three-jobs-in-an-app]
 summary: "A ViewModel is a keeper of screen state. It is not thrown away when the screen is rebuilt, for example on rotation."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [stage-and-backstage]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (read 21 Oct 2026):
-- https://developer.android.com/topic/libraries/architecture/viewmodel (business logic or screen level state holder; caches state and persists it through configuration changes; remains in memory until its ViewModelStoreOwner disappears; should not hold Context or Resources; viewModel() from lifecycle-viewmodel-compose)
-- https://developer.android.com/guide/topics/resources/runtime-changes (on a configuration change the system destroys the activity instance and creates a new one; state kept as fields is cleared)
-- https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-savedstate (ViewModel handles configuration changes; SavedStateHandle is the backup for system-initiated process death)
--->
 
 ## The question
 

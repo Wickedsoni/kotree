@@ -1,26 +1,20 @@
 ---
 id: native-ndk/art-and-dex/how-art-runs-code
 title: "How does ART turn my app's code into fast machine code over time?"
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [native-ndk/art-and-dex/what-is-dex]
 summary: ART reads your code slowly at first, learns which parts run most, and turns those into fast machine code.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [waiter-learns-the-card]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-Android Open Source Project, Configure ART (since Android 7 a hybrid of AOT compilation, JIT compilation and interpretation; AOT can be profile-guided; the first few runs interpret methods that are not AOT-compiled; frequently executed methods are JIT-compiled; a compilation daemon re-compiles when the device is idle and charging; compiler filters verify, speed, speed-profile): https://source.android.com/docs/core/runtime/configure
-Android Developers, Baseline Profiles overview (without a profile, code is JIT-compiled in memory after being interpreted, or written to an odex file in the background when the device is idle; users have a suboptimal experience from the first run until new code paths are optimized; during installation ART AOT-compiles the methods in the profile; about 30% faster from the first launch): https://developer.android.com/topic/performance/baselineprofiles/overview
-Android NDK guides (the NDK compiles C and C++ into a native library packaged into the APK; Java calls it through JNI): https://developer.android.com/ndk/guides
-No practice or interview seed exists for the native-ndk branch; the interview answers below are written from these pages.
--->
 ## The question
 
 You install an app and open it. The first start feels slow. A few days later the same app starts faster, and you changed nothing. Did the phone do something while you were not looking? What did it do to the app's code, and why not do it all before you first opened the app?

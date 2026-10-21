@@ -1,27 +1,20 @@
 ---
 id: dsa/complexity/reading-complexity-in-code
 title: Which of these loops hides an O(n²) cost?
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [dsa/complexity/big-o-notation]
 summary: One loop can hide a second loop inside a single call. See how to spot it, count it and remove it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [hidden-second-loop]
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-Java SE 17 ArrayList class description (size, isEmpty, get, set constant time; add amortized constant; all other operations linear, roughly speaking): https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html
-Java SE 17 HashSet class description (constant time add, remove, contains, size, assuming the hash function disperses the elements): https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashSet.html
-Kotlin MutableSet.add (true if the element has been added, false if already contained): https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-mutable-set/add.html
-Android slow rendering (16 ms per frame, dropped frame, jank): https://developer.android.com/topic/performance/vitals/render
-Practice data: docs/practice/practice-dsa.md, section for this leaf ([both] problems only, plus [A] 14 whose number and title are well known).
--->
 ## The question
 
 Your app merges 2,000 items from the server into the saved list. With 20 test items it ran at once. On a real phone the screen freezes for a moment. The code has one loop, and one loop looks cheap. So where is the extra cost hiding, and how can you find it by reading the code?

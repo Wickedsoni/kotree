@@ -1,26 +1,19 @@
 ---
 id: concurrency/threads/running-work-on-another-thread
 title: "How do I run a slow job beside the main thread?"
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [concurrency/why-the-main-thread/why-blocking-freezes-the-screen]
 summary: "Start a helper thread for the slow job so the main thread keeps drawing. The job itself does not get faster."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [second-cashier]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (read 21 Oct 2026):
-- https://developer.android.com/guide/components/processes-and-threads (the main thread is also called the UI thread; two rules: do not block the UI thread, do not access the UI toolkit from outside it; non-instant work goes in background or worker threads; Activity.runOnUiThread, View.post and View.postDelayed reach the UI thread)
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.concurrent/thread.html (thread(start = true, ..., name, block) creates a thread that runs the block and, by default, starts it)
-- https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html (start schedules the thread and it runs independently of the current thread; a thread can be started once; run is not meant to be called directly and runs the task; join waits for the thread to terminate)
--->
 
 ## The question
 

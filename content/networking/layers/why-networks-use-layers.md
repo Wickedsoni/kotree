@@ -1,31 +1,20 @@
 ---
 id: networking/layers/why-networks-use-layers
 title: Why does a message pass through several layers before it leaves my phone?
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [networking/how-the-internet-works/how-data-travels-in-packets]
 summary: Each layer wraps the message with its own label on the way out. Each layer reads only its own label on the way in.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [envelope-layers]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-RFC 1122, section 1.1.3 Internet Protocol Suite (the layers: application, transport, internet, link; the transport layer provides end-to-end communication services for applications; all Internet transport protocols use IP to carry data from source host to destination host; a host must implement the communication protocol of its network): https://www.rfc-editor.org/rfc/rfc1122.html
-MDN, An overview of HTTP (HTTP is an application layer protocol sent over TCP, or over a TLS-encrypted TCP connection; the layered design hides the network and transport layers; proxies work at the application layer): https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
-Java SE 17, java.net.UnknownHostException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/UnknownHostException.html
-Java SE 17, java.net.ConnectException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/ConnectException.html
-Java SE 17, javax.net.ssl.SSLHandshakeException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/javax/net/ssl/SSLHandshakeException.html
-Android reference, java.net.UnknownHostException: https://developer.android.com/reference/java/net/UnknownHostException
-Android reference, java.net.ConnectException: https://developer.android.com/reference/java/net/ConnectException
-Android reference, javax.net.ssl.SSLHandshakeException: https://developer.android.com/reference/javax/net/ssl/SSLHandshakeException
-Interview seed: docs/practice/interview-networking.md section for this leaf (question list used; its HTTP -> TLS -> TCP -> IP -> Ethernet chain is treated as general knowledge, not quoted).
--->
 ## The question
 
 Your app asks a server for a picture. Between your code and the Wi-Fi radio there are several steps, and each one does a different job. Why not send the request straight out? And when a request fails, why does the error name usually point at only one of those steps?

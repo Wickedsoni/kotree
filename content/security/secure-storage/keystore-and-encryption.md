@@ -1,27 +1,19 @@
 ---
 id: security/secure-storage/keystore-and-encryption
 title: "How can an app lock data with a key that the app itself cannot copy?"
-status: shadow
+status: live
 difficulty: hard
 order: 3
 requires: [security/secure-storage/where-data-lives-on-a-phone]
 summary: The Android Keystore does the locking for your app, so a key can be used but never copied out.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [safe-deposit-vault]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://developer.android.com/privacy-and-security/keystore (read 21 Oct 2026): the Keystore lets you store cryptographic keys in a container to make them more difficult to extract; key material never enters the application process; if the app process is compromised the attacker might be able to use the app's keys but cannot extract the key material; key material can be bound to secure hardware (TEE or Secure Element); StrongBox gives stronger isolation than the TEE; a key that supports only biometric credentials is invalidated by default when new biometric enrollments are added; KeyStore.getInstance("AndroidKeyStore") with load(null).
-- https://developer.android.com/privacy-and-security/cryptography (read 21 Oct 2026): AES in CBC or GCM mode with 256-bit keys, such as AES/GCM/NoPadding; with the Android Keystore you must specify a provider; all APIs in the security-crypto Jetpack library were deprecated in version 1.1.0 stable and there will be no more releases.
-- https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec.Builder, .../KeyProperties, .../javax/crypto/Cipher (read 21 Oct 2026): constructor (alias, purposes), setBlockModes, setEncryptionPaddings, build, the constants KEY_ALGORITHM_AES, PURPOSE_ENCRYPT, PURPOSE_DECRYPT, BLOCK_MODE_GCM, ENCRYPTION_PADDING_NONE, getIV(); the class intro of KeyGenParameterSpec has the same AES/GCM example.
-- Re-checked 21 Oct 2026 by search of the official reference pages: EncryptedSharedPreferences deprecated since 1.1.0; MasterKey deprecation points to javax.crypto.KeyGenerator with the AndroidKeyStore instance.
--->
 
 ## The question
 

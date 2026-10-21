@@ -1,28 +1,19 @@
 ---
 id: app-networking/http-client/first-get-call
 title: "How do I fetch data from an address with a few lines of Kotlin?"
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [app-networking/requests-from-an-app/why-my-first-call-fails]
 summary: "Fetching data takes three pieces: an interface that lists the calls, a client that sends them, and the call itself."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [waiter-and-kitchen]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (read 21 Oct 2026):
-- https://developer.android.com/develop/connectivity/network-ops/connecting (Retrofit is a type-safe HTTP client built on OkHttp that creates a client interface declaratively; UserService sample with @GET and suspend fun; no network work on the main thread, NetworkOnMainThreadException)
-- https://lysine.dev/retrofit/ (Retrofit.Builder().baseUrl(...).build() and retrofit.create(...); @GET on an interface method)
-- https://raw.githubusercontent.com/square/retrofit/trunk/CHANGELOG.md (2.6.0, 2019-06-05: "Support suspend modifier on functions for Kotlin"; the 2.6.0 entry also says suspend works like Call.enqueue)
-- https://kotlinlang.org/docs/coroutines-basics.html (a suspending function can pause and resume later; a suspended coroutine does not block its thread; a suspending function is called from another suspending function)
-- https://raw.githubusercontent.com/square/okhttp/master/okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt (current OkHttpClient KDoc, read 21 Oct 2026: create a single OkHttpClient and reuse it for all calls; each client holds its own connection pool and thread pools; reuse reduces latency and saves memory; a client for each request wastes resources on idle pools)
--->
 
 ## The question
 

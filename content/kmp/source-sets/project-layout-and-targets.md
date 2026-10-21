@@ -1,27 +1,20 @@
 ---
 id: kmp/source-sets/project-layout-and-targets
 title: "Which folder holds code for which platform, and what does the build file declare?"
-status: shadow
+status: live
 difficulty: medium
 order: 3
 requires: [kmp/what-is-kmp/how-kotlin-reaches-an-iphone]
 summary: Each folder under src is a source set for some targets. The build file declares the targets, and that decides which folders get compiled.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [floor-plan-targets]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips this comment at go-live):
-Kotlin, Discover your project (commonMain compiles to all declared targets; each target has a platform source set that compiles for only that target; iosMain shares code among the iOS targets; targets are declared with DSL calls in the kotlin block; src directories): https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html
-Kotlin, Hierarchical project structure (default hierarchy template creates the shared source sets from the declared targets; sharing code among some but not all targets): https://kotlinlang.org/docs/multiplatform/multiplatform-hierarchy.html
-Kotlin, Add dependencies (common code needs to compile for every declared target; a library can be added to chosen source sets only): https://kotlinlang.org/docs/multiplatform/multiplatform-add-dependencies.html
-Android, KMP library plugin (com.android.kotlin.multiplatform.library, the android block, androidMain): https://developer.android.com/kotlin/multiplatform/plugin
-Interview seed: docs/practice/interview-kmp.md section for this leaf. Its androidTarget() and iosX64() wording was not used as fact (androidTarget() appears only in the Android page's migration example, iosX64 was on no page read).
--->
 ## The question
 
 A teammate shows you a shared project. One folder is named for the iPhone, one for Android and one for code that every phone uses. They point at a file in the iPhone folder and ask: which builds read it? You cannot answer by looking at the folder alone. What decides which folder is read for which phone, and where does that decision live?

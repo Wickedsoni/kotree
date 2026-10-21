@@ -1,25 +1,19 @@
 ---
 id: android-core/activities/what-is-an-activity
 title: "What is the Activity that opens when my app starts?"
-status: shadow
+status: live
 difficulty: easy
 order: 3
 requires: [android-core/what-is-an-app/who-starts-your-app]
 summary: "An Activity is the window the system gives your app. One line inside it, setContent, chooses what the user sees."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [picture-frame-hook]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (read 21 Oct 2026):
-- https://developer.android.com/guide/components/activities/intro-activities (activity = window for the UI, entry point, callbacks instead of main, onCreate fires when the system creates the activity, next callback is onStart, setContent in Compose, one activity in modern Compose apps, main activity, MyActivity sample)
-- https://developer.android.com/guide/topics/resources/runtime-changes (the system destroys the activity and creates a new instance on a configuration change; state kept as fields is cleared)
--->
 
 ## The question
 

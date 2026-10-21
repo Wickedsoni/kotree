@@ -92,7 +92,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] How do I write a function in Kotlin? (easy)
 - [x] How can a function have optional inputs? (easy)
 - [x] Why do some Kotlin functions use = instead of braces? (easy)
-- >> What does a function return when it has nothing to give back? (easy)
+- [x] What does a function return when it has nothing to give back? (easy)
 - [x] Why can't I use a variable outside the braces where I made it? (medium)
 
 **Null Safety** (5)
@@ -175,7 +175,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] In what order should I read an unfamiliar Kotlin file? (medium)
 - [x] Which lines in tidy-looking Kotlin deserve a second look? (hard)
-- - Would I accept this generated file in review? (hard)
+- [x] Would I accept this generated file in review? (hard)
 
 ### Android core and lifecycles (37 leaves, 12 stems)
 
@@ -187,7 +187,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Activities** (3)
 
-- - What is the Activity that opens when my app starts? (easy)
+- [x] What is the Activity that opens when my app starts? (easy)
 - - What is a Context, the key card that Android functions ask for? (medium)
 - - What happens to the old screen when I open a new one? (medium)
 
@@ -260,7 +260,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] Why does Compose describe the screen instead of changing it step by step? (medium)
 - [x] What makes a Kotlin function a composable? (easy)
-- - How do I put words and pictures on the screen? (easy)
+- [x] How do I put words and pictures on the screen? (easy)
 - - How can I see my screen without running the app? (easy)
 
 **Modifiers** (3)
@@ -357,7 +357,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Threads** (2)
 
-- - How do I run a slow job beside the main thread? (easy)
+- [x] How do I run a slow job beside the main thread? (easy)
 - - What goes wrong when I use plain threads for everything? (medium)
 
 **Coroutine Basics** (3)
@@ -434,7 +434,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **ViewModel** (4)
 
-- - What can a ViewModel hold that the screen cannot? (medium)
+- [x] What can a ViewModel hold that the screen cannot? (medium)
 - - When is a ViewModel created and when does it die? (hard)
 - - Why must a ViewModel never hold a screen or a Context? (medium)
 - - How do I keep a small value when Android kills my app? (hard)
@@ -506,7 +506,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **The HTTP Client** (3)
 
-- - How do I fetch data from an address with a few lines of Kotlin? (medium)
+- [x] How do I fetch data from an address with a few lines of Kotlin? (medium)
 - - How do I send a search word, an id in the address, or a form to the server? (easy)
 - - How can I add a header or a log line to every call? (easy)
 
@@ -553,7 +553,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Source Sets** (2)
 
-- - Which folder holds code for which platform, and what does the build file declare? (medium)
+- [x] Which folder holds code for which platform, and what does the build file declare? (medium)
 - - Why can the shared folder not call Android or iPhone code directly? (medium)
 
 **Expect and Actual** (2)
@@ -608,7 +608,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] How many steps does this code take for 10 items, 100 items and 1000 items? (easy)
 - [x] What does O(n) say about my code, and what does it ignore? (medium)
-- - Which of these loops hides an O(n²) cost? (medium)
+- [x] Which of these loops hides an O(n²) cost? (medium)
 - - When is it right to spend more memory to save time? (easy)
 
 **Arrays** (3)
@@ -705,7 +705,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] Why can the same code be fast on one input and slow on another? (easy)
 - [x] What do O, Omega and Theta each promise? (medium)
-- - How can I be sure a loop gives the right answer for every input, not just my tests? (medium)
+- [x] How can I be sure a loop gives the right answer for every input, not just my tests? (medium)
 
 **Recurrences** (2)
 
@@ -760,7 +760,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Processes** (3)
 
-- - Why does one crashing app leave all the other apps running? (easy)
+- [x] Why does one crashing app leave all the other apps running? (easy)
 - - What is a process doing while it waits for its turn? (medium)
 - - How can two apps share data if neither can see the other's memory? (medium)
 
@@ -816,7 +816,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Layers** (1)
 
-- - Why does a message pass through several layers before it leaves my phone? (medium)
+- [x] Why does a message pass through several layers before it leaves my phone? (medium)
 
 **Addresses and Names** (3)
 
@@ -873,7 +873,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Unit Tests** (2)
 
 - [x] How do I write and run one test on my own computer? (easy)
-- - What are the three parts of a test that anyone can read? (easy)
+- [x] What are the three parts of a test that anyone can read? (easy)
 
 **Assertions** (2)
 
@@ -934,7 +934,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **CPU** (2)
 
-- - How do I find the function that uses the most CPU time? (medium)
+- [x] How do I find the function that uses the most CPU time? (medium)
 - - How do I find work that runs on the main thread and should not? (medium)
 
 **Memory and Leaks** (2)
@@ -980,7 +980,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **ART and Dex** (2)
 
 - [x] What is inside classes.dex? (easy)
-- - How does ART turn my app's code into fast machine code over time? (medium)
+- [x] How does ART turn my app's code into fast machine code over time? (medium)
 
 **JNI Basics** (3)
 
@@ -1012,7 +1012,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Secure Storage** (2)
 
 - [x] Which of my app's saved data can another app or person read? (easy)
-- - How can an app lock data with a key that the app itself cannot copy? (hard)
+- [x] How can an app lock data with a key that the app itself cannot copy? (hard)
 
 **Network Security** (2)
 
@@ -1057,7 +1057,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] How do I save a snapshot of my project that I can return to later? (medium)
 - [x] How can I try an idea without breaking my working code? (medium)
-- - What do I do when git says two changes collide? (hard)
+- [x] What do I do when git says two changes collide? (hard)
 - - How does my code get to GitHub and into a teammate's project? (hard)
 
 **Android Studio and IntelliJ** (3)
