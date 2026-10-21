@@ -121,7 +121,7 @@ It prints `asking` and then stops with an exception. The word `done` never appea
 type: predict
 run: false
 id: clerk-with-stand-in
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val names = listOf("Ana", "Ben", "Cy")
@@ -148,7 +148,7 @@ output: |
 type: predict
 run: false
 id: door-number-equals-count
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val names = listOf("Ana", "Ben", "Cy")
@@ -175,7 +175,7 @@ output: |
 type: predict
 run: false
 id: three-from-the-end
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val items = listOf("a", "b")
@@ -229,7 +229,7 @@ Use `getOrNull(index)`. The documentation says it returns the element at the ind
 My own reasoning: it depends on who is wrong. If the index must be valid, a wrong one means a bug, and a loud crash shows it early. If a missing item is normal, such as an empty list on the first screen, `null` lets the code handle it. The risk of a stand-in is that it can hide a real bug.
 
 **How do you safely read the last item of a list that may be empty?**
-Use `list.getOrNull(list.lastIndex)`. The documentation says `lastIndex` is -1 for an empty list, and -1 is out of bounds, so `getOrNull` returns `null` instead of crashing.
+Use `list.lastOrNull()`. The documentation says it returns the last element, or `null` if the list is empty. The longer form `list.getOrNull(list.lastIndex)` also works. For an empty list, `lastIndex` is -1, which is out of bounds, so you get `null`.
 
 ## Recap
 

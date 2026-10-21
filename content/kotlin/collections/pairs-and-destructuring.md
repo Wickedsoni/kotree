@@ -117,7 +117,7 @@ fun main() {
 type: predict
 run: false
 id: walk-the-shelf
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val ages = mapOf("Ana" to 31, "Ben" to 28)
@@ -145,7 +145,7 @@ output: |
 type: predict
 run: false
 id: swapped-plate-labels
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val item = Pair("tea", 3)
@@ -171,7 +171,7 @@ output: |
 type: predict
 run: false
 id: bin-in-the-middle
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val (a, _, c) = Triple("x", "y", "z")
@@ -218,7 +218,7 @@ This next part is our own reasoning: if those two names were swapped, the name `
 The documentation says it is compiled into `val a = pair.component1()` and `val b = pair.component2()`. The `componentN()` functions must be marked with the word `operator`, which lets Kotlin call them for this syntax. A `Pair` and any data class provide them, so unpacking works for both.
 
 **Does destructuring match by name or by position?**
-By position. The documentation says the variables correspond to the order of the `componentN()` functions, and shows `val (email, username) = user` giving `email` the first property, which is the username. So the order of your names must match the order of the properties.
+By position. The documentation says the variables correspond to the order of the `componentN()` functions, and shows `val (email, username) = user` giving `email` the first property, which is the username. So the order of your names must match the order of the properties. A name-based form exists, but the documentation marks it Experimental and it needs a compiler option.
 
 **Should a function return a `Pair` or a data class for two values?**
 The documentation says a data class is a compact way to return several values, and that a `Pair` is possible but it is often better to have your data named properly. My own reasoning: a `Pair` is quick for a local helper, while a named class makes call sites easier to read months later.

@@ -115,7 +115,7 @@ It prints `asking` and then stops with an exception. The word `done` never appea
 type: predict
 run: false
 id: missing-ticket-stand-in
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val prices = mapOf("coffee" to 4, "juice" to 6)
@@ -142,7 +142,7 @@ output: |
 type: predict
 run: false
 id: add-to-the-count
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val counts = mutableMapOf<String, Int>()
@@ -174,7 +174,7 @@ output: |
 type: predict
 run: false
 id: same-ticket-twice
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val tickets = mapOf(7 to "red", 12 to "blue", 7 to "green")
@@ -226,7 +226,7 @@ This next part is our own reasoning: a menu screen with no soft-baked cookies sh
 The documentation says `mapOf` entries are iterated in the order they were specified. It says a `HashMap` gives no order guarantee and that you should not rely on one, and it points to `LinkedHashMap` when you need insertion order. My own reasoning: write code that does not depend on order unless the type promises it.
 
 **What is the `equals` and `hashCode` contract, and why does it matter for map keys?**
-The documentation for `hashCode` says that if two objects are equal according to `equals`, they must give the same hash code, which is a number computed from the object. The `HashMap` page says it relies on both functions to organize and locate entries, and that violating the contract can lead to incorrect behavior. My own reasoning in coat-check words: the clerk picks a section by the number, so two equal tickets that give different numbers would be looked for in different sections, and the coat is missed. It also says a key should not change in a way that alters its hash code after use, or the entry may become unreachable. My own reasoning: this is why text and numbers, which never change, make good keys.
+Two keys equal by `equals` must give the same hash code, a number computed from the key. The `HashMap` page says it relies on both to find entries, and that breaking this can lead to incorrect behavior. My own reasoning in coat-check words: equal tickets must lead to the same section, and a ticket must never change after filing. The page warns that a key changed after use may become unreachable.
 
 **Why use a `Map` instead of a list of pairs?**
 The `HashMap` page says it provides fast lookups based on keys, and the map guarantees one value per key. A list of pairs would be searched one by one, and could hold the same key twice. The trade-off, my own reasoning: a map uses more memory to give those quick lookups and has no numbered places.

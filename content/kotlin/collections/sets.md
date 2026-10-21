@@ -62,9 +62,9 @@ Idea A is how a plain row of names behaves, and it counts Ana twice. Idea C does
 
 The Kotlin documentation describes a **`Set`** as a generic unordered collection of unique elements. An element is one value in the collection. You make a read-only one with `setOf(...)` and a changeable one with `mutableSetOf(...)`. A `MutableSet` has `add`. Adding a value that is already there leaves the set as it was. The word `in` asks "is it here?", as in `"Ben" in guests`, and `size` counts the elements.
 
-The documentation says implementations usually decide uniqueness with `equals`, the function that says whether two values are equal. For text, equal means the same letters in the same case.
+The documentation says kinds of set usually decide uniqueness with `equals`, the function that says whether two values are equal. For text, equal means the same letters in the same case.
 
-Order needs care. The `Set` page says a set does not guarantee any particular order for iteration, although particular implementations may have a fixed order. The pages for `setOf` and `mutableSetOf` say the elements are iterated in the order you gave them. The page for **`HashSet`**, one kind of set, says it does not guarantee any order and that you should not rely on one. The page for **`LinkedHashSet`** says it iterates in the order elements were inserted, and that adding an element that is already there does not change that order.
+Order needs care. The `Set` page says a set does not guarantee any particular order for **iteration**, which means going through the items one by one, although particular kinds of set may have a fixed order. The pages for `setOf` and `mutableSetOf` say the elements are iterated in the order you gave them. The page for **`HashSet`**, one kind of set, says it does not guarantee any order and that you should not rely on one. The page for **`LinkedHashSet`** says it iterates in the order elements were inserted, and that adding an element that is already there does not change that order.
 
 Two sets are equal when they hold the same elements, whatever the order. The documentation's `setOf` page shows `setOf(1, 2, 3) == setOf(3, 2, 1)` giving `true`. Two lists are equal only if each place holds an equal element, so order matters for lists.
 
@@ -100,7 +100,7 @@ fun main() {
 type: predict
 run: false
 id: size-of-repeated-values
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val numbers = setOf(1, 2, 2, 3)
@@ -127,7 +127,7 @@ output: |
 type: predict
 run: false
 id: red-is-not-red
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val seen = mutableSetOf("red")
@@ -155,7 +155,7 @@ output: |
 type: predict
 run: false
 id: order-for-sets-and-lists
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val a = setOf("x", "y")
@@ -204,13 +204,13 @@ This next part is our own reasoning: with a set, selecting the same row twice ne
 ## Say it in an interview
 
 **When do you use a `Set` instead of a `List`?**
-Use a `Set` when you need unique values and quick answers to "is it here?". Use a `List` when order, numbered places or repeats matter. The documentation says a `Set` holds unique elements, while a `List` gives indexed access in a specified order.
+Use a `Set` when you need unique values and often ask "is it here?". Use a `List` when order, numbered places or repeats matter. The documentation says a `Set` holds unique elements, while a `List` gives indexed access in a specified order. The `HashSet` page says it gives fast lookups, while a list has to check items one by one (general knowledge).
 
 **Is a `Set` ordered?**
-The `Set` interface does not guarantee any order. The documentation says `setOf` and `mutableSetOf` iterate in the order you gave. It says `HashSet` guarantees no order and you should not rely on one, and `LinkedHashSet` keeps insertion order. My own reasoning: if your code depends on order, name a type that promises it, or keep a list.
+The `Set` type does not guarantee any order. The documentation says `setOf` and `mutableSetOf` iterate in the order you gave. It says `HashSet` guarantees no order and you should not rely on one, and `LinkedHashSet` keeps insertion order. My own reasoning: if your code depends on order, name a type that promises it, or keep a list.
 
 **How does a set decide that two values are the same?**
-The documentation says implementations usually use `equals`. For text that means the same letters in the same case. The documentation's contract for `hashCode` says that two objects equal by `equals` must give the same hash code, which is a number computed from the value. My own reasoning: if your own type breaks that contract, a hash-based set may hold two values that you think are equal.
+The documentation says kinds of set usually use `equals`. For text that means the same letters in the same case. The documentation's contract for `hashCode` says that two objects equal by `equals` must give the same hash code, which is a number computed from the value. My own reasoning: if your own type breaks that contract, a `HashSet` may hold two values that you think are equal.
 
 **How do you remove duplicates from a list?**
 `toSet()` gives a set and keeps the order of the list. `distinct()` gives a list and keeps the first of equal elements. The trade-off is the result type: a set has no numbered places, and a list still has them.

@@ -72,7 +72,7 @@ Idea A feels right because "covered" sounds like "locked". Idea C feels right be
 
 ### Name it
 
-The Kotlin documentation says each collection type comes as a pair of interfaces: a read-only one for accessing the elements, and a mutable one that extends it with write operations such as adding, removing and updating.
+The Kotlin documentation says each collection type comes as a pair of types, called **interfaces**. One is read-only, for accessing the elements. The other adds write operations such as adding, removing and updating.
 
 **`List`** is the read-only one. The documentation says it stores elements in a specified order and provides indexed access to them. **`MutableList`** is a `List` with write operations, so it has `add`. The function `listOf(...)` creates a new read-only list. The function `mutableListOf(...)` creates one you can change. The mark `List<String>` means a list of text values.
 
@@ -123,7 +123,7 @@ fun main() {
 type: predict
 run: false
 id: val-hook-still-writes
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val tea = mutableListOf("green")
@@ -151,7 +151,7 @@ output: |
 type: predict
 run: false
 id: cover-sees-the-change
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val board = mutableListOf("soup")
@@ -178,7 +178,7 @@ output: |
 type: predict
 run: false
 id: photo-stays-old
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val board = mutableListOf("a", "b")

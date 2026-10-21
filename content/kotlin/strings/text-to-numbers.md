@@ -111,7 +111,7 @@ It prints `before` and then stops with a `NumberFormatException`. The word `afte
 type: predict
 run: false
 id: slip-then-stand-in
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val a = "12a".toIntOrNull() ?: -1
@@ -139,7 +139,7 @@ output: |
 type: predict
 run: false
 id: spaces-on-the-note
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val raw = " 42 "
@@ -166,7 +166,7 @@ output: |
 type: predict
 run: false
 id: empty-note-alarm
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       println("start")
@@ -204,7 +204,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android tip calculator lesson reads a number from a text box. Its step reads: define a `val` named `tipPercent` that converts the `tipInput` variable to a `Double`, use an Elvis operator and return `0` if the value is `null`. The page adds that this value could be `null` if the text field is empty. The line is `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. A `Double` is a number with a decimal part, and `toDoubleOrNull()` is the same polite cashier for that kind of number.
+The Android tip calculator lesson reads a number from a text box. Its step reads: define a `val` named `tipPercent` that converts the `tipInput` variable to a `Double`, use an Elvis operator and return `0` if the value is `null`. The page adds that this value could be `null` if the text field is empty. The line is `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. A **`Double`** is a number with a decimal part, and `toDoubleOrNull()` is the same polite cashier for that kind of number.
 
 This next part is our own reasoning: the box is empty when the screen first opens. The strict version would press the alarm before the person typed anything, and the app would close. The polite version lets the screen show a result for an empty box.
 

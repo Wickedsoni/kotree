@@ -99,7 +99,7 @@ fun main() {
 type: predict
 run: false
 id: length-and-last-bead
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val word = "hello"
@@ -126,7 +126,7 @@ output: |
 type: predict
 run: false
 id: last-bead-by-length
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val city = "Paris"
@@ -153,7 +153,7 @@ output: |
 type: predict
 run: false
 id: tag-equal-to-length
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val code = "ab"
@@ -204,7 +204,7 @@ It gives `'K'`, a `Char`. The Kotlin documentation says a string index starts at
 The documentation says that after you create a `String`, its contents stay the same, and any operation that looks like a change creates a new string. General knowledge: because it never changes, many parts of a program can share one `String` safely. The trade-off is that every change makes a new string.
 
 **Is the `length` of a string always the number of symbols a person sees?**
-No. The Kotlin characters page says a `Char` is one UTF-16 code unit, which is one 16-bit piece of how text is stored as numbers. A symbol outside the basic range, such as an emoji, is stored as two `Char` values called a surrogate pair. The page shows an emoji with a length of 2. My own reasoning: an app that cuts a name at 10 characters could cut an emoji in half. The page says to use Unicode code points, stored as `Int`, to handle such symbols one by one.
+No, because a `Char` is one UTF-16 code unit, a 16-bit piece of how text is stored, and an emoji takes two of them, called a surrogate pair. The Kotlin characters page shows an emoji with a length of 2, and says to handle such symbols with Unicode code points stored as `Int`. General knowledge: a code point is the one number Unicode gives to a symbol. My own reasoning: an app that cuts a name at 10 characters could cut an emoji in half.
 
 **How do you read a character that may not exist?**
 Square brackets throw an exception when the index is out of range. The standard library has `getOrNull`, which returns the character at the index or `null` if the index is out of bounds. `null` is the mark for no value, and the result type is `Char?`. The trade-off: a crash shows a bug loudly, while `null` makes you decide what to do.

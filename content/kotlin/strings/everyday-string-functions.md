@@ -98,7 +98,7 @@ It prints `[  Sam  ]`, `[Sam]`, `SAM`, `Som` and `true`. The variable `name` kee
 type: predict
 run: false
 id: copy-not-filed
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val s = "hello"
@@ -124,7 +124,7 @@ output: |
 type: predict
 run: false
 id: trim-then-split
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val line = " red,green ,blue "
@@ -152,7 +152,7 @@ output: |
 type: predict
 run: false
 id: replace-every-copy
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val road = "a-b-c"
@@ -201,7 +201,7 @@ This next part is our own reasoning: if a sign-in screen saved the email as type
 The documentation says that after you create a `String`, its contents stay the same, and any operation that appears to modify it creates a new string. General knowledge: that makes a `String` safe to share between parts of a program. The cost is that every change makes a new string. The documentation says `+` creates a new `String` for each operation, which may not be beneficial in loops or when you assemble many pieces.
 
 **How do you build a long string from many pieces?**
-Use `StringBuilder` or `buildString()`. The documentation describes `StringBuilder` as a mutable sequence of characters for efficient string operations, and says `buildString()` creates a `StringBuilder` internally and returns the resulting string. The trade-off: for a few pieces, string templates are usually easier to read and more idiomatic, so use the builder when you assemble many pieces.
+Use `StringBuilder` or `buildString()`. The documentation describes `StringBuilder` as a mutable sequence of characters, which means text you can change in place. It says `buildString()` creates a `StringBuilder` internally and returns the resulting string. The trade-off: for a few pieces, string templates are usually easier to read and more idiomatic, so use the builder when you assemble many pieces.
 
 **Does `trim()` change the string it is called on? What does it remove?**
 No. It returns a new string with leading and trailing whitespace removed, and the original stays as it was. It does not touch whitespace inside the text.
