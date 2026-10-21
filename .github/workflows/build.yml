@@ -81,3 +81,10 @@ jobs:
           git add -A
           git commit -q -m "site: export of ${GITHUB_SHA::7}"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" site-dist
+      - name: Trigger Vercel production deploy
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          # Vercel's Git integration does not deploy site-dist pushes; the hook does.
+          test -n "$VERCEL_DEPLOY_HOOK" || { echo "VERCEL_DEPLOY_HOOK secret is not set"; exit 1; }
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK"
