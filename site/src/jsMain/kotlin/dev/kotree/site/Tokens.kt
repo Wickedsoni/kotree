@@ -145,7 +145,7 @@ object Tokens {
         const val STEM_T_MIN = 0.200
         const val STEM_T_MAX = 0.95
         /** Twig length in world px, plus per-stem jitter (Rng "stem:<id>"). */
-        const val STEM_LEN = 92.000
+        const val STEM_LEN = 104.000
         const val STEM_LEN_JITTER = 6.0
         /** Extra twig length for every second same-side stem, so neighbouring labels stack. */
         const val STEM_LEN_STAGGER = 40.000
