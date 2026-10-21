@@ -56,7 +56,7 @@ The design also lists pre-printed lines and the clerk's checks. In what order do
 - B. From top to bottom, in the order they are written in the design.
 - C. All the checks first, then the pre-printed lines.
 
-Idea A splits one list into two groups, but the design is one list read from top to bottom. Idea C does the same the other way round, and a check that reads a pre-printed line below it would find nothing there yet. Idea B is the answer.
+Idea A feels tidy, but the design is one list read from top to bottom, not two groups. Idea C has the same fault, and it is worse because a check would run before the pre-printed lines it may need. Idea B is the answer.
 
 ### Build
 
