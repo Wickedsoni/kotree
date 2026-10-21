@@ -66,3 +66,5 @@ Recap is one sentence per line, Question blocks are 5 sentences or fewer, correc
 
 ## Final (orchestrator, 21 Oct 2026)
 PASS. Fixes applied; validateContent ok.
+
+VERDICT (re-check, final): PASS for all 4 leaves (map-filter-and-friends, closures, what-is-a-class, constructors). validateContent ok.

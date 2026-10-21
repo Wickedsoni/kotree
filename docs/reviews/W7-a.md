@@ -80,3 +80,5 @@ Optional: `lambda-syntax.md` line 234 and `higher-order-functions.md` line 236 u
 
 ## Final (orchestrator, 21 Oct 2026)
 PASS. Re-check items 1 and 3 applied (prose only); validateContent ok.
+
+VERDICT (re-check, final): PASS for all 4 leaves (arrays-vs-lists, functions-as-values, lambda-syntax, higher-order-functions). Fixes verified by grep and validateContent ok.
