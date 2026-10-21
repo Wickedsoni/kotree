@@ -40,7 +40,7 @@ A burglar does not pick the strongest lock. A burglar walks around the house and
 <!-- SIM: app-house-doors -->
 
 **Try this:**
-1. Look at the house. Each door is one way into the app: the screen, the files, the network, the logs and the installed package.
+1. Look at the house. Each door is one way into the app: the screen, the files, the network, the logs and the installed app file.
 2. Press "Send the burglar". Watch which door is tried first.
 3. Place a lock on one door and send the burglar again. Then lock every door but one.
 
@@ -81,6 +81,13 @@ You are not trying to build a wall. You are trying to leave no open door.
 - The **attack surface** is the full list of doors an attacker could try (general knowledge).
 - **Threat thinking**, also called threat modelling, is the habit of listing the attackers and the doors before you build the locks (general knowledge).
 
+Four more words appear in the Predict section below.
+
+- **HTTP** is the plain way an app talks to a server. Anyone on the same network can read it.
+- **HTTPS** is the same talk with a lock on it, so a snoop on the network cannot read it (general knowledge).
+- **Internal storage** is the private area where an app saves its files. By default only that app can open them.
+- **External storage** is a shared area, such as an SD card. Other apps can read and write files there.
+
 Here are four attackers to picture for a phone app. The doors are my own reasoning, based on the Android pages in the sources.
 
 | Attacker | The door they use |
@@ -88,7 +95,7 @@ Here are four attackers to picture for a phone app. The doors are my own reasoni
 | A snoop on the same network | The network |
 | Another app on the same phone | Files saved where any app can read them |
 | A person holding the phone | The screen |
-| A person with a copy of the app file | The installed package |
+| A person with a copy of the app file | The installed app file |
 
 There is no code to run on this page. It is a way of looking at an app.
 
