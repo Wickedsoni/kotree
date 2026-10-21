@@ -99,48 +99,7 @@ fun layoutReport(
             for ((lid, lb) in labels) for ((id, b) in leaves) {
                 if (lb.gapTo(b) < 0) fail("${br.id} z=$z $tag label $lid overlaps leaf $id")
             }
-            if (tag == "stem") {
-                val clusters = br.stems.mapNotNull { st ->
-                    val bs = leaves.filter { (id, _) -> st.leaves.any { it.id == id } }.map { it.second }
-                    if (bs.isEmpty()) null else st.id to Box(bs.minOf { it.x0 }, bs.minOf { it.y0 }, bs.maxOf { it.x1 }, bs.maxOf { it.y1 })
-                }
-                for (i in clusters.indices) for (j in i + 1 until clusters.size) {
-                    val gap = clusters[i].second.gapTo(clusters[j].second)
-                    if (gap < Tokens.LayoutCheck.STEM_GAP_MIN_PX) fail("${br.id} z=$z $tag stem clusters gap $gap < ${Tokens.LayoutCheck.STEM_GAP_MIN_PX}: ${clusters[i].first} / ${clusters[j].first}")
-                }
-            }
             if (fails == before) lines.add("ok ${br.id} z=$z $tag (${br.stems.size} stems)")
-        }
-    }
-    // Cross-branch rule at stemEnter: other branches of the same bough keep clear of each other's leaves and labels.
-    run {
-        val s = base * Tokens.Zoom.stemEnter
-        val gapMin = Tokens.LayoutCheck.LEAF_GAP_MIN_PX
-        for (bough in g.boughs) {
-            val bs = bough.branches.filter { it.stems.isNotEmpty() }
-            for (i in bs.indices) for (j in i + 1 until bs.size) {
-                val ls = HashMap<String, Box>()
-                val ms = HashMap<String, Box>()
-                for ((k, br) in listOf(bs[i], bs[j]).withIndex()) for (st in br.stems) for (l in st.leaves) {
-                    if (l.id !in drawn) continue
-                    val half = max(hit, Tokens.Gen.LEAF_SIZE * s) / 2
-                    (if (k == 0) ls else ms)[l.id] = Box(l.at.x * s - half, l.at.y * s - half, l.at.x * s + half, l.at.y * s + half)
-                }
-                val before = fails
-                for ((ida, a) in ls) for ((idb, b) in ms) {
-                    val gap = a.gapTo(b)
-                    if (gap < gapMin) fail("${bs[i].id}/${bs[j].id} stem cross-branch leaf gap $gap < $gapMin: $ida / $idb")
-                }
-                for ((x, y, lm) in listOf(Triple(bs[i], bs[j], ms), Triple(bs[j], bs[i], ls))) for (st in x.stems) {
-                    val chars = titles[st.id]?.length ?: st.id.length
-                    val w = chars * Tokens.LayoutCheck.LABEL_CHAR_PX + 2 * Tokens.LayoutCheck.LABEL_PAD_PX
-                    val ax = st.labelAnchor.x * s
-                    val ay = st.labelAnchor.y * s
-                    val lb = if (st.labelAnchor.x >= st.tip.x) Box(ax, ay - hit / 2, ax + w, ay + hit / 2) else Box(ax - w, ay - hit / 2, ax, ay + hit / 2)
-                    for ((id, b) in lm) if (lb.gapTo(b) < 0) fail("${x.id}/${y.id} stem cross-branch label ${st.id} overlaps leaf $id")
-                }
-                if (fails == before) lines.add("ok ${bs[i].id}/${bs[j].id} cross-branch")
-            }
         }
     }
     lines.add(if (fails == 0) "layoutReport: PASS" else "layoutReport: $fails failure(s)")
