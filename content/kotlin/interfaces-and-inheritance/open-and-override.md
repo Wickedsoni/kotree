@@ -71,7 +71,7 @@ Idea B is the answer.
 
 ### Name it
 
-In Kotlin, classes are **final** by default. The documentation says they cannot be inherited. A class is opened for building on by marking it with **open**. The class that is built on is the parent class, and the new one is a child class that **inherits** from it. A child names its parent after a colon, with brackets: `class PepperSoup : Soup()`. The documentation's example writes `class Circle : Shape()`.
+In Kotlin, classes are **final** by default. The documentation says they cannot be inherited. A class is opened for building on by marking it with **open**. The class that is built on is the parent class, called the **superclass**. The new one is a child class, called a **subclass**, and it **inherits** from the superclass. A subclass names its superclass after a colon, with brackets: `class PepperSoup : Soup()`. The documentation's example writes `class Circle : Shape()`.
 
 The documentation says that if a function has no `open` modifier, a function with the same signature in a child is not allowed, either with `override` or without it. A function that may be changed is marked `open`. The child changes it with **override**, and the documentation says the `override` modifier is required. To run the parent's version of a step, the child calls **super**, as in `super.steps()`.
 
@@ -286,13 +286,13 @@ The Android activity lifecycle page shows `class ExampleActivity : ComponentActi
 The Kotlin documentation says classes are final by default, so they cannot be inherited. You choose to open one. My own reasoning: this stops other code building on a class that its author never meant to be changed.
 
 **What do `override` and `super` do?**
-`override` marks a function that replaces a function from the parent. The documentation says it is required. `super` lets the child's code call the parent's version, as in `super.draw()`. Leave it out and the parent's work does not run.
+`override` marks a function in a subclass that replaces a function from the superclass. The documentation says it is required. `super` lets the subclass call the superclass's version, as in `super.draw()`. Leave it out and the parent's work does not run.
 
 **Does an overriding function stay open for grandchildren?**
 Yes. The documentation says a member marked `override` is itself open. To stop that, write `final override`.
 
 **What is the trade-off of building on a class?**
-My own reasoning: you get the parent's work for free, but the child depends on how the parent behaves. If the parent changes, the child can break. Kotlin's locked-by-default design makes the author choose to take that risk.
+My own reasoning: you get the superclass's work for free, but the subclass depends on how the superclass behaves. If the superclass changes, the subclass can break. Kotlin's locked-by-default design makes the author choose to take that risk.
 
 ## Recap
 

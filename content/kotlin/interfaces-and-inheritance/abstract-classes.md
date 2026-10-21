@@ -290,7 +290,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android page on producing UI state shows `class DiceRollViewModel : ViewModel()`. The API reference describes `ViewModel` as an abstract class. You never build a plain `ViewModel`. You build your own class on top of it and add your data. The brackets after `ViewModel` are the call to the parent, as with `Pet(name)` above. If you ever see "cannot create an instance of an abstract class", you tried to make the kit instead of a house.
+The Android page on producing UI state shows `class DiceRollViewModel : ViewModel()`. The API reference describes `ViewModel` as an abstract class. My own reasoning: that is why the example builds its own class on top of it and adds its data, instead of making a plain `ViewModel`. The brackets after `ViewModel` are the call to the parent, as with `Pet(name)` above. If the compiler refuses to make an object of an abstract class, you tried to make the kit instead of a house.
 
 ## Say it in an interview
 

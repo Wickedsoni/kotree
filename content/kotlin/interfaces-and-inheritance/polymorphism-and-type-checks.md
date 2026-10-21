@@ -178,9 +178,12 @@ class Hammer : Tool {
     }
 }
 
-fun main() {
-    val t: Tool = Hammer()
+fun tryIt(t: Tool) {
     println(t.swing())
+}
+
+fun main() {
+    tryIt(Hammer())
 }
 ```
 
