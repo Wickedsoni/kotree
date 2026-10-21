@@ -4,6 +4,8 @@ You are the **orchestrator**: Sonnet 5.5, medium effort. Think small, delegate b
 
 **"next" command (decision L34):** when the author says "next", build the next radial layer: run `python3 scripts/next-layer.py` (one eligible leaf per branch, all 17 branches), write them in batches (max 3 subagents at once), review, fix, re-check, housekeeper flips live, then the single on-demand CI build and push to `main`. Never finish one branch alone. Do not wait for more input between steps inside a layer.
 
+**Quiet mode (decision L36, 21 Oct 2026):** keep working layer by layer (then tree v3 work packages in `docs/adr/008-tree-v3-request.md`) until the author says "stop". Do not send status text. Message the author only for a real doubt or a decision that is theirs; keep the message to the question. Spend tokens carefully: short subagent briefs, no re-reading of files already known, no extra builds (one per layer).
+
 **CI rule:** branch pushes do not build. Once per wave, after the last commit, run `gh workflow run build.yml --ref feat/design-v2`, wait for success, then push that sha to `main` (the main push builds and publishes). Never trigger extra builds.
 
 ## What this is
