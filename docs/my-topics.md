@@ -132,11 +132,11 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] How does a new object get its starting values? (easy)
 - [x] How does an object do things with its own data? (easy)
 - [x] Why hide some parts of a class with private? (easy)
-- - How can a property run code when it is read or written? (medium)
+- [x] How can a property run code when it is read or written? (medium)
 - [x] Why does changing one variable change another? (hard)
 - [x] When are two objects equal in Kotlin? (medium)
-- - Can a read-only list still change under me? (medium)
-- - How do I turn a real-world problem into classes and functions? (medium)
+- [x] Can a read-only list still change under me? (medium)
+- [x] How do I turn a real-world problem into classes and functions? (medium)
 
 **Interfaces and Inheritance** (4)
 
@@ -148,28 +148,28 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Special Classes** (5)
 
 - [x] Why does Kotlin write equals and toString for some classes? (medium)
-- - How do I change one field without changing the original object? (medium)
-- - How do I list every allowed choice, like the days of the week? (easy)
-- - How do I model loading, success or error so I never forget a case? (hard)
-- - How do I make exactly one of something in the whole program? (medium)
+- [x] How do I change one field without changing the original object? (medium)
+- [x] How do I list every allowed choice, like the days of the week? (easy)
+- [x] How do I model loading, success or error so I never forget a case? (hard)
+- [x] How do I make exactly one of something in the whole program? (medium)
 
 **Generics** (2)
 
-- - How can one List type hold Strings in one place and Ints in another? (medium)
-- - How do I write a function that works for any type? (medium)
+- [x] How can one List type hold Strings in one place and Ints in another? (medium)
+- [x] How do I write a function that works for any type? (medium)
 
 **Extensions, Scope Functions and Delegates** (4)
 
-- - How can I add a function to a class I did not write? (medium)
-- - What do let, apply, also, run and with actually do? (hard)
-- - How can a property be filled in after the object is made? (medium)
-- - What does by mean in val x by lazy? (medium)
+- [x] How can I add a function to a class I did not write? (medium)
+- [x] What do let, apply, also, run and with actually do? (hard)
+- [x] How can a property be filled in after the object is made? (medium)
+- [x] What does by mean in val x by lazy? (medium)
 
 **Errors and Results** (3)
 
-- - What happens to my program when code throws an exception? (medium)
-- - How do I catch a failure and keep going? (medium)
-- - How can a function hand back either a value or a failure without throwing? (hard)
+- [x] What happens to my program when code throws an exception? (medium)
+- [x] How do I catch a failure and keep going? (medium)
+- [x] How can a function hand back either a value or a failure without throwing? (hard)
 
 **Reading Code** (3)
 

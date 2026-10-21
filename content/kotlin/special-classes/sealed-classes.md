@@ -1,30 +1,19 @@
 ---
 id: kotlin/special-classes/sealed-classes
 title: How do I model loading, success or error so I never forget a case?
-status: shadow
+status: live
 difficulty: hard
 order: 52
 requires: [kotlin/special-classes/enum-classes, kotlin/interfaces-and-inheritance/polymorphism-and-type-checks]
 summary: A sealed type lists every kind a value can be. See why Kotlin stops the build when a when forgets one.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [three-lamp-signal]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/sealed-classes.html (definition, same package rule, exhaustive when with no else, sealed interface)
-- https://kotlinlang.org/docs/control-flow.html (when as an expression must cover all cases)
-- https://developer.android.com/topic/architecture/recommendations (UI state can be a sealed class if the states are exclusive)
-- https://developer.android.com/kotlin/flow/stateflow-and-sharedflow (LatestNewsUiState sealed class with Success and Error, and the when over it)
-Roadmap note about when statements versus expressions: the body claims exhaustiveness for expressions only, as the pages state.
-The roadmap row's F(ai) and B tasks are not built: playground is false. The type is named LoadState, not Result.
-Sim id three-lamp-signal appended to docs/sims/needed-ids.md. Roadmap row says balls and trays; the leaf uses lamps and a plan card to keep one analogy.
--->
 
 ## The question
 

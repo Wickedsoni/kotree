@@ -1,27 +1,19 @@
 ---
 id: kotlin/special-classes/object-declarations
 title: How do I make exactly one of something in the whole program?
-status: shadow
+status: live
 difficulty: medium
 order: 53
 requires: [kotlin/classes-and-objects/constructors]
 summary: An object exists exactly once. See how the whole program shares it, and what a companion object is.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/object-declarations.html (object declaration, lazy thread-safe initialisation, companion object, data object toString)
-- https://developer.android.com/training/data-storage/room (singleton note for the database object)
-Roadmap note about data object stability: not claimed. The page shows data object and its toString; it states no version or status.
-The roadmap row's F(ai) task is not built: playground is false.
--->
 
 ## The question
 

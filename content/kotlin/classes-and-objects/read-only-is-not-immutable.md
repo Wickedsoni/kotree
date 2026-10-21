@@ -1,29 +1,19 @@
 ---
 id: kotlin/classes-and-objects/read-only-is-not-immutable
 title: Can a read-only list still change under me?
-status: shadow
+status: live
 difficulty: medium
 order: 43
 requires: [kotlin/classes-and-objects/objects-are-references, kotlin/collections/list-vs-mutable-list]
 summary: A read-only list stops you from changing it, not everyone else. See how it can change under you and how a copy stops that.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [shop-window-restock]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/collections-overview.html (read-only and mutable interfaces; mutable collection in a val can still be written)
-- https://kotlinlang.org/docs/constructing-collections.html (copy functions make a snapshot; new references see changes; copies share elements)
-- https://developer.android.com/develop/ui/compose/state (caution on mutable objects as state; calls listOf() "immutable")
-- https://developer.android.com/topic/architecture/recommendations (MutableStateFlow exposed as an immutable StateFlow)
-- https://github.com/Kotlin/kotlinx.collections.immutable (README read 21 Oct 2026: persistentListOf, toPersistentList, "experimental and the API is subject to change")
-Sim id shop-window-restock appended to docs/sims/needed-ids.md. Roadmap row says to reuse objects-are-references; the leaf uses a shop window to keep one analogy.
--->
 
 ## The question
 

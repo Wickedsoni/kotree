@@ -1,27 +1,19 @@
 ---
 id: kotlin/generics/writing-generic-code
 title: How do I write a function that works for any type?
-status: shadow
+status: live
 difficulty: medium
 order: 55
 requires: [kotlin/generics/what-are-generics]
 summary: One function can work for numbers, words or anything else. See how its blank for the kind is filled at each call.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/generics.html : type parameters go before the function name; type arguments can be left out when inferred; default upper bound is Any?; out and in; erasure and the ban on is-checks such as ints is List<Int>.
-- https://developer.android.com/topic/libraries/architecture/livedata : MutableLiveData<String> snippet; "LiveData is a wrapper that can be used with any data".
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/generics/writing-generic-code.
-- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
--->
 
 ## The question
 

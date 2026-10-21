@@ -1,26 +1,19 @@
 ---
 id: kotlin/special-classes/enum-classes
 title: How do I list every allowed choice, like the days of the week?
-status: shadow
+status: live
 difficulty: easy
 order: 51
 requires: [kotlin/control-flow/when-expression]
 summary: An enum class is a fixed list of allowed choices. See how to loop over them and why a when can check every one.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/enum-classes.html (declaration, name, ordinal, entries, valueOf, when without else)
-- https://kotlinlang.org/docs/control-flow.html (when as an expression must cover all cases)
-- https://developer.android.com/topic/libraries/architecture/lifecycle (Lifecycle.State.RESUMED and STARTED used as values)
--->
 
 ## The question
 

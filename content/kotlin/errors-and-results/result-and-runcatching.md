@@ -1,32 +1,19 @@
 ---
 id: kotlin/errors-and-results/result-and-runcatching
 title: How can a function hand back either a value or a failure without throwing?
-status: shadow
+status: live
 difficulty: hard
 order: 62
 requires: [kotlin/errors-and-results/try-catch-finally, kotlin/special-classes/sealed-classes]
 summary: A function can return a value or a failure in one package. See how the caller opens it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-result/ : Result<out T> is "a discriminated union that encapsulates a successful outcome with a value of type T or a failure with an arbitrary Throwable exception"; isSuccess, isFailure, getOrNull, exceptionOrNull, fold, getOrElse, getOrDefault, getOrThrow, map, mapCatching, onSuccess, onFailure, recover.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html : runCatching calls the block, catches any Throwable thrown from it and encapsulates it as a failure.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/map.html (Result.map) : map rethrows any Throwable thrown by transform; mapCatching encapsulates exceptions.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/get-or-else.html : getOrElse signature; shorthand for fold(onSuccess = { it }, onFailure = onFailure).
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int.html : String.toInt() throws NumberFormatException for an invalid string.
-- https://developer.android.com/kotlin/coroutines : Android's own sealed class Result<out R> with Success and Error ("we have our own Result class"); caller checks with when.
-- https://developer.android.com/kotlin/coroutines/coroutines-best-practices : do not consume CancellationException; prefer catching specific exception types.
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/result-and-runcatching.
-- The roadmap's wording note on Result was checked against the Result API page above; no marker remains.
--->
 
 ## The question
 

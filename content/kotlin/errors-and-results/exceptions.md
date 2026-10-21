@@ -1,26 +1,19 @@
 ---
 id: kotlin/errors-and-results/exceptions
 title: What happens to my program when code throws an exception?
-status: shadow
+status: live
 difficulty: medium
 order: 60
 requires: [kotlin/functions/declaring-functions, kotlin/classes-and-objects/what-is-a-class]
 summary: Some lines stop the whole program when something goes wrong. See which lines get skipped, and how to refuse bad input early.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [fire-alarm-rooms]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/exceptions.html : exceptions are subclasses of Exception, which is a subclass of Throwable; Throwable has two direct subclasses, Error and Exception; the throw keyword; Kotlin treats all exceptions as unchecked, so you do not need to declare or handle them; require() throws IllegalArgumentException for input checks, check() throws IllegalStateException for state checks, error() throws IllegalStateException.
-- https://developer.android.com/topic/performance/issues/crash : "An app that is written using Java or Kotlin crashes if it throws an unhandled exception, represented by the Throwable class"; Android ends the app's process and shows a dialog that the app has stopped.
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/exceptions.
--->
 
 ## The question
 

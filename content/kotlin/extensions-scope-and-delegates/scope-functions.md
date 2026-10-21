@@ -1,28 +1,19 @@
 ---
 id: kotlin/extensions-scope-and-delegates/scope-functions
 title: What do let, apply, also, run and with actually do?
-status: shadow
+status: live
 difficulty: hard
 order: 57
 requires: [kotlin/extensions-scope-and-delegates/extension-functions, kotlin/lambdas/closures, kotlin/null-safety/safe-call-and-elvis]
 summary: Five helpers run a block of code on one object. See the two choices that tell them apart.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/scope-functions.html : the table of let, run, with, apply, also (object reference, return value, whether it is an extension); the function selection list; the apply Person example; the let example with ?.let; the advice to avoid nesting scope functions and to be careful when chaining.
-- https://developer.android.com/guide/components/intents-filters : Kotlin example "val sendIntent = Intent().apply { action = ...; putExtra(...); type = ... }".
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/scope-functions.
-- Non-local break and continue in these lambdas: not covered here; the Kotlin scope-functions page had no text on it when read.
-- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
--->
 
 ## The question
 

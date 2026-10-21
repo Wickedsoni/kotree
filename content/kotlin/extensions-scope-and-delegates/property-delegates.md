@@ -1,28 +1,19 @@
 ---
 id: kotlin/extensions-scope-and-delegates/property-delegates
 title: What does by mean in val x by lazy?
-status: shadow
+status: live
 difficulty: medium
 order: 59
 requires: [kotlin/extensions-scope-and-delegates/lateinit, kotlin/lambdas/lambda-syntax]
 summary: The word by hands a property to a helper. See why some work runs once, on the first read, or never.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [lazy-coffee-machine]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/delegated-properties.html : syntax "val/var <property name>: <Type> by <expression>"; getValue is called when you read a delegated property; lazy() takes a lambda and returns a Lazy<T>; the first get executes the lambda and remembers the result; default is synchronized; LazyThreadSafetyMode.PUBLICATION and NONE; Delegates.observable handler runs after the assignment; vetoable runs before.
-- https://developer.android.com/topic/libraries/architecture/livedata : val currentName: MutableLiveData<String> by lazy { MutableLiveData<String>() }.
-- https://developer.android.com/develop/ui/compose/state : "var value by remember { mutableStateOf(default) }" and "The by delegate syntax requires the following imports" (getValue, setValue).
-- https://developer.android.com/topic/libraries/architecture/views/viewmodel/viewmodel-apis-views : "val viewModel: MyViewModel by viewModels()".
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/property-delegates.
--->
 
 ## The question
 

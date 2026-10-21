@@ -1,28 +1,19 @@
 ---
 id: kotlin/extensions-scope-and-delegates/lateinit
 title: How can a property be filled in after the object is made?
-status: shadow
+status: live
 difficulty: medium
 order: 58
 requires: [kotlin/classes-and-objects/constructors, kotlin/null-safety/nullable-types]
 summary: A property can be promised now and filled in later. See what happens when something reads it too early.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [reserved-seat-timeline]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/properties.html#late-initialized-properties-and-variables : lateinit on var only; allowed on top-level properties, local variables and class-body properties; not in the primary constructor; no custom getter or setter; non-nullable; not a primitive type; reading too early throws kotlin.UninitializedPropertyAccessException; isInitialized on a property reference, usable only where the property is accessible.
-- https://developer.android.com/kotlin/common-patterns : lateinit lets you defer initialization; reading before initialization throws UninitializedPropertyAccessException; LoginFragment example assigns in onViewCreated.
-- https://developer.android.com/topic/libraries/view-binding : Activity uses "private lateinit var binding"; Fragment uses a nullable _binding cleared in onDestroyView because "Fragments outlive their views".
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/lateinit.
-- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
--->
 
 ## The question
 

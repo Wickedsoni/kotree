@@ -1,27 +1,19 @@
 ---
 id: kotlin/extensions-scope-and-delegates/extension-functions
 title: How can I add a function to a class I did not write?
-status: shadow
+status: live
 difficulty: medium
 order: 56
 requires: [kotlin/classes-and-objects/member-functions]
 summary: Add a function to a class you cannot edit. See what it can reach, and when the class's own function wins.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/extensions.html : extensions do not modify the class; the truncate example; member wins over extension with the same receiver type, name and compatible arguments; extensions are dispatched statically; an extension outside the class cannot reach private or protected members (User example); Shape/Rectangle getName example.
-- https://developer.android.com/kotlin/ktx : Android KTX is a set of Kotlin extensions; SharedPreferences.edit extension function signature and the edit { } call.
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/extension-functions.
-- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
--->
 
 ## The question
 

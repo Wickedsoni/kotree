@@ -1,27 +1,19 @@
 ---
 id: kotlin/special-classes/data-class-copy
 title: How do I change one field without changing the original object?
-status: shadow
+status: live
 difficulty: medium
 order: 50
 requires: [kotlin/special-classes/data-classes, kotlin/collections/pairs-and-destructuring]
 summary: The copy function makes a new data object with one value changed. See what it copies and what it still shares.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [form-photocopier]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/data-classes.html (copy(), shallow copy, shared references, properties declared in the class body)
-- https://developer.android.com/topic/architecture/ui-layer/state-production (copy( inside update on a UI state data class)
-Sim id form-photocopier appended to docs/sims/needed-ids.md. Roadmap row says to reuse objects-are-references; the leaf uses a form and a photocopier to keep one analogy.
-The roadmap's F(ai) task is not built: playground is false, as in data-classes.
--->
 
 ## The question
 

@@ -1,28 +1,19 @@
 ---
 id: kotlin/errors-and-results/try-catch-finally
 title: How do I catch a failure and keep going?
-status: shadow
+status: live
 difficulty: medium
 order: 61
 requires: [kotlin/errors-and-results/exceptions]
 summary: Catch a failure, clean up and carry on. See which blocks run, and why an empty catch hides trouble.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [net-and-sweeper]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- https://kotlinlang.org/docs/exceptions.html : a try block must be followed by at least one catch block or a finally block; try can be used as an expression and its value is the last expression of the try or catch block that ran; finally always executes whether or not the try block throws, and it does not change the result of the try-catch; the count() / ArithmeticException example.
-- https://developer.android.com/guide/components/intents-filters : Kotlin sample "try { startActivity(sendIntent) } catch (e: ActivityNotFoundException) { ... }" with the comment about no activity being able to handle the intent.
-- https://developer.android.com/kotlin/coroutines/coroutines-best-practices : "don't consume exceptions of type CancellationException (don't catch them, or always rethrow them if caught)"; "Prefer catching specific exception types like IOException over generic types like Exception or Throwable".
-- https://developer.android.com/topic/performance/issues/crash : an unhandled exception crashes the app and shows a dialog.
-- Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/try-catch-finally.
--->
 
 ## The question
 

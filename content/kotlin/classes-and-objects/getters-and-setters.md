@@ -1,26 +1,19 @@
 ---
 id: kotlin/classes-and-objects/getters-and-setters
 title: How can a property run code when it is read or written?
-status: shadow
+status: live
 difficulty: medium
 order: 40
 requires: [kotlin/classes-and-objects/private-and-public]
 summary: A property can run your code each time it is read or written. See how that checks values and builds answers on demand.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/properties.html (custom getters and setters, backing fields, field, no backing field for a computed property)
-- https://developer.android.com/kotlin/flow/stateflow-and-sharedflow (backing property comment)
-- docs/practice/interview-kotlin.md seed for this leaf. The recursion claim is NOT on the properties page; the body labels it general knowledge.
--->
 
 ## The question
 

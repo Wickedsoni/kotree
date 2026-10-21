@@ -1,29 +1,19 @@
 ---
 id: kotlin/generics/what-are-generics
 title: How can one List type hold Strings in one place and Ints in another?
-status: shadow
+status: live
 difficulty: medium
 order: 54
 requires: [kotlin/collections/list-vs-mutable-list, kotlin/interfaces-and-inheritance/what-is-an-interface]
 summary: The part in angle brackets tells the compiler what a list holds. See why that saves you checks, and what List of Any costs.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://kotlinlang.org/docs/generics.html (type parameters, inference of type arguments, type erasure, is-checks on generic types)
-- https://developer.android.com/kotlin/flow/stateflow-and-sharedflow (StateFlow<LatestNewsUiState>, List<ArticleHeadline>)
-- https://developer.android.com/develop/ui/compose/state (State<List<T>>)
-The roadmap row's P about the inferred type of listOf(1, "a") is not used: the type is not asserted. The code declares its types.
-The row's F task (a List<Any> that forces casts everywhere) appears as a Predict item, because playground is false.
-The roadmap says no sim, because the demo is compiler errors on the wrong item type. This leaf follows that.
--->
 
 ## The question
 

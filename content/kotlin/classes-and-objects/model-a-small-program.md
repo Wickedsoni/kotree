@@ -1,26 +1,19 @@
 ---
 id: kotlin/classes-and-objects/model-a-small-program
 title: How do I turn a real-world problem into classes and functions?
-status: shadow
+status: live
 difficulty: medium
 order: 44
 requires: [kotlin/classes-and-objects/private-and-public, kotlin/lambdas/map-filter-and-friends]
 summary: Plan a small program from a story. See how to pick classes and give each action to the class that holds its data.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: true
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
-- https://developer.android.com/topic/architecture (separation of concerns; UI layer and data layer roles)
-- docs/practice/interview-kotlin.md seed for this leaf. Composition and inheritance points are labelled general knowledge or my own reasoning.
-The roadmap says no sim: a design skill. The roadmap's F and B tasks are not built: playground is false. fruit: true is from the roadmap, and the page has no capstone link.
--->
 
 ## The question
 
