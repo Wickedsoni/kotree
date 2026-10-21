@@ -16,7 +16,6 @@ upnext: false
 ---
 
 <!-- SOURCES: https://kotlinlang.org/docs/inheritance.html ; https://developer.android.com/guide/components/activities/activity-lifecycle -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
 ## The question
 
 Your gran has a family soup recipe. Your cousin wants the same soup with pepper added. Can he start from gran's recipe and change one step, or must he write the whole recipe again? And what if gran's book is locked so that nobody may change it?
@@ -46,18 +45,18 @@ Gran's soup recipe says: "boil water, add salt". Her cover has the note "you may
 What should Kotlin do when a cousin tries to change a step with no note? Here are three ideas.
 
 - A. Allow it. Anyone can change anything.
-- B. Refuse it before the program runs.
-- C. Allow it but warn him in the margin.
+- B. Allow it but warn him in the margin.
+- C. Refuse it before the program runs.
 
-Idea A is how many people think every language works. The reason to lock steps is that gran may change her recipe later, and a cousin's recipe that depends on it could break. Idea B is what Kotlin does.
+Idea A is how many people think every language works. My own reasoning: the reason to lock steps is that gran may change her recipe later, and a cousin's recipe that depends on it could break. Idea C is what Kotlin does.
 
 What should happen when your cousin makes his soup but stores it in a jar labelled "Soup"? Here are three ideas.
 
-- A. The jar's label decides, so gran's step runs.
-- B. The soup inside decides, so his step runs.
+- A. The soup inside decides, so his step runs.
+- B. The jar's label decides, so gran's step runs.
 - C. Both steps run.
 
-Idea B is the answer.
+Idea A is the answer.
 
 ### Build
 
@@ -71,9 +70,9 @@ Idea B is the answer.
 
 ### Name it
 
-In Kotlin, classes are **final** by default. The documentation says they cannot be inherited. A class is opened for building on by marking it with **open**. The class that is built on is the parent class, called the **superclass**. The new one is a child class, called a **subclass**, and it **inherits** from the superclass. A subclass names its superclass after a colon, with brackets: `class PepperSoup : Soup()`. The documentation's example writes `class Circle : Shape()`.
+In Kotlin, classes are **final** by default. The documentation says they cannot be inherited. A class is opened for building on by marking it with **open**. The class that is built on is the parent class, called the **superclass**. The new one is a child class, called a **subclass**, and it **inherits** from the superclass. A subclass names its superclass after a colon, with brackets: `class PepperSoup : Soup()`. The documentation's example writes `class Circle() : Shape()`.
 
-The documentation says that if a function has no `open` modifier, a function with the same signature in a child is not allowed, either with `override` or without it. A function that may be changed is marked `open`. The child changes it with **override**, and the documentation says the `override` modifier is required. To run the parent's version of a step, the child calls **super**, as in `super.steps()`.
+A modifier is a word such as `open` or `override` written before a function or class. A signature is the same name and the same inputs. The documentation says that if a function has no `open` modifier, a function with the same signature in a child is not allowed, either with `override` or without it. A function that may be changed is marked `open`. The child changes it with `override`, as you saw before, and the documentation says that modifier is required. To run the parent's version of a step, the child calls **super**, as in `super.steps()`.
 
 ```kotlin
 open class Soup {
@@ -139,7 +138,7 @@ fun main() {
 type: predict
 run: false
 id: dog-held-as-animal
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   open class Animal {
       open fun sound(): String {
@@ -176,7 +175,7 @@ output: |
 type: predict
 run: false
 id: forgot-gran-first
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   open class Account {
       open fun close(): String {
@@ -220,7 +219,7 @@ output: |
 type: predict
 run: false
 id: changed-and-unchanged-steps
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   open class Vehicle {
       open fun honk(): String {

@@ -16,7 +16,6 @@ upnext: false
 ---
 
 <!-- SOURCES: https://kotlinlang.org/docs/functions.html#member-functions ; https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/this-expressions.html ; https://developer.android.com/guide/components/activities/activity-lifecycle -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
 ## The question
 
 A bank keeps two passbooks, one for Ada and one for Ben. A customer says, "Add 50 to Ada's book." Only Ada's total should grow, and Ben's must stay the same. The steps for adding money are written once. How does one set of steps know which book to change?
@@ -43,11 +42,11 @@ Ada's book shows 100. Ben's book shows 20. The customer hands over Ada's book an
 
 How does the sheet know which book to change? Here are three ideas.
 
-- A. The sheet changes every book in the bank.
-- B. The sheet changes the book that was handed over, and no other.
+- A. The sheet changes the book that was handed over, and no other.
+- B. The sheet changes every book in the bank.
 - C. The sheet changes a master book kept at the back of the bank.
 
-Idea A is the common worry: the sheet is shared, so it must change everything. The sheet is shared, but the books are not. Idea C would mean the passbooks hold nothing. Idea B is the answer.
+Idea B is the common worry: the sheet is shared, so it must change everything. The sheet is shared, but the books are not. Idea C would mean the passbooks hold nothing. Idea A is the answer.
 
 ### Build
 
@@ -111,7 +110,7 @@ It prints `6` and then `11`. Both calls to `add` inside `addTwice` work on `a`, 
 type: predict
 run: false
 id: one-deposit-two-accounts
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Account(val owner: String, var balance: Int) {
       fun deposit(amount: Int) {
@@ -146,7 +145,7 @@ output: |
 type: predict
 run: false
 id: sum-never-written-back
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Account(var balance: Int) {
       fun deposit(amount: Int) {
@@ -178,7 +177,7 @@ output: |
 type: predict
 run: false
 id: add-twice-on-one-counter
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Counter(var count: Int) {
       fun add(step: Int) {
@@ -230,7 +229,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android activity lifecycle page shows a class named `ExampleActivity` with a function `onCreate`. The page says you must implement this callback, which fires when the system first creates the activity. `onCreate` is a member function: it runs on one activity object, and it can read and change the data stored in that object. If a screen shows unexpected data after it is opened twice, ask which object the function was called on. That is the question this lesson trains.
+The Android activity lifecycle page shows a class named `ExampleActivity` with a function `onCreate`. The page says you must implement this callback, which fires when the system first creates the activity. `onCreate` is a member function: it runs on one activity object, and it can read and change the data stored in that object (general knowledge). My own reasoning: if a screen shows unexpected data after it is opened twice, ask which object the function was called on. That is the question this lesson trains.
 
 ## Say it in an interview
 

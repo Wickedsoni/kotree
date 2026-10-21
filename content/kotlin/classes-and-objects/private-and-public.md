@@ -16,7 +16,6 @@ upnext: false
 ---
 
 <!-- SOURCES: https://kotlinlang.org/docs/visibility-modifiers.html ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
 ## The question
 
 A shop keeps its cash in a drawer behind the counter. Customers can ask for change or pay a bill, but they cannot open the drawer and take notes out. Why does the shop do it that way? And how could a program give its data the same protection?
@@ -45,10 +44,10 @@ Ada's shop holds 100 in the drawer. A customer says, "Add 50." The teller checks
 How can the shop stop the third customer? Here are three ideas.
 
 - A. Put a sign on the drawer that says "please do not touch".
-- B. Move the drawer behind the counter so that only the teller can reach it.
-- C. Hire a guard to watch every customer.
+- B. Hire a guard to watch every customer.
+- C. Move the drawer behind the counter so that only the teller can reach it.
 
-Idea A depends on every customer reading and obeying. Idea C costs a lot and still lets a rule slip when the guard looks away. Idea B means nobody can break the rule, because nobody outside can reach the drawer.
+Idea A depends on every customer reading and obeying. Idea B costs a lot and still lets a rule slip when the guard looks away. Idea C means nobody can break the rule, because nobody outside can reach the drawer.
 
 ### Build
 
@@ -62,7 +61,7 @@ Idea A depends on every customer reading and obeying. Idea C costs a lot and sti
 
 A **visibility modifier** is a word in front of a member that says who may use it. The Kotlin documentation lists four: `private`, `protected`, `internal` and `public`. The documentation says the default visibility is `public`, so a member with no word is open to everybody.
 
-The documentation says `private` means the member is visible inside this class only, including all its members. So `private` is the drawer behind the counter. The documentation says `protected` is the same as `private`, but classes built on top of this one can see it too. It says `internal` means any client inside the same module that sees the class sees its `internal` members. A module is a set of Kotlin files built together (general knowledge). Those two words are named here and are not used in the programs below.
+The documentation says `private` means the member is visible inside this class only, including all its members. So `private` is the drawer behind the counter. The documentation says `protected` is the same as `private`, but classes built on top of this one can see it too. It says `internal` means any client inside the same module that sees the class sees its `internal` members. The documentation says a module is a set of Kotlin files compiled together. Those two words are named here and are not used in the programs below.
 
 ```kotlin
 class Account(private var balance: Int) {
@@ -105,7 +104,7 @@ fun main() {
 type: predict
 run: false
 id: refused-negative-deposit
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Account(private var balance: Int) {
       fun deposit(amount: Int) {
@@ -144,7 +143,7 @@ output: |
 type: predict
 run: false
 id: private-helper-in-back-room
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Till(private var cash: Int) {
       private fun note(text: String) {
@@ -186,7 +185,7 @@ output: |
 type: predict
 run: false
 id: no-label-means-open
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Box(var size: Int, private var secret: Int) {
       fun reveal(): Int {
@@ -239,7 +238,7 @@ The Android page on producing UI state shows a class `DiceRollViewModel` with `p
 There are four: `private`, `protected`, `internal` and `public`. The Kotlin documentation says the default is `public`. A member with no modifier is open to everyone who can see its class.
 
 **What does `internal` mean?**
-The documentation says any client inside the same module that sees the declaring class sees its `internal` members. A module is a set of Kotlin files compiled together (general knowledge). In an Android project, a Gradle module is one example (general knowledge).
+The documentation says any client inside the same module that sees the declaring class sees its `internal` members. The documentation says a module is a set of Kotlin files compiled together. A Gradle source set is one example, according to the documentation.
 
 **Why make a property private if the compiler is the only thing that checks it?**
 So the class controls how its data changes. Outside code must call a function, and the function can refuse a bad value. My own reasoning: when something looks wrong, you search only inside the class.

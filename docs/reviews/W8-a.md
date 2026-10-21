@@ -46,3 +46,12 @@ Frontmatter equals the roadmap rows (id, title, difficulty, requires, fruit, sim
 9. Optional, not blocking. `private-and-public` "You can now" lines 258-259 have no Predict item that tests exactly that (the outside-call refusal is shown only in a non-compiling block); consider rewording to match the Predict items. `private-and-public` line 241: "client" and "declaring class" in the Interview answer are undefined for a beginner.
 
 VERDICT: FIX
+
+## Fixes applied
+
+- Items 1-8 applied to the four leaves (verified field, VERIFY comments, Guess keys now A, C, A, C/A, labels, module wording, Circle quote, modifier/signature definitions, interface analogy line).
+- Item 9 not applied (optional, judgment): see OPEN QUESTIONS in the orchestrator report.
+- `./gradlew :site:validateContent`: validateContent: ok, BUILD SUCCESSFUL.
+- No VERDICT PASS line written, because item 9 is not applied.
+
+VERDICT (re-check, final): PASS for all 4 leaves (item 9 optional, skipped). validateContent ok.

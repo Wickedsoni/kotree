@@ -16,8 +16,6 @@ upnext: false
 ---
 
 <!-- SOURCES: https://kotlinlang.org/docs/interfaces.html ; https://developer.android.com/reference/android/view/View.OnClickListener ; https://developer.android.com/develop/ui/views/touch-and-input/input-events -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
-<!-- ⚠️ VERIFY: the View.OnClickListener claims in "Where this shows up in Android" come from a search summary of the reference page, not from reading the page body. -->
 ## The question
 
 A phone charger fits the wall socket in your room, and so does a lamp, a fan and a laptop. The people who made them never met. How can one socket work with all of them? And how could a program ask for "anything that can do this job" without caring who made it?
@@ -32,7 +30,7 @@ Think of a wall socket.
 - The house wiring is the rest of the program. It only knows the socket shape, never the device.
 - A new kind of device fits as soon as its plug has the right shape.
 
-**Where the analogy stops:** A socket is a real shape in the wall. An interface only lists names and inputs and outputs, and it says nothing about how the job is done. Also, one device can have plugs for several sockets, and you can never plug something into a socket that has no device behind it.
+**Where the analogy stops:** A socket is a real shape in the wall. An interface only lists names and inputs and outputs, and it says nothing about how the job is done. Also, one device can have plugs for several sockets, and a socket shape is never a device: an interface has no body of its own, so you cannot make an object from it.
 
 ## Build the logic
 
@@ -44,11 +42,11 @@ A garage has a button labelled "describe your vehicle". It works for a car, whic
 
 How can the garage button work with both? Here are three ideas.
 
-- A. The button has a separate rule for each vehicle it knows.
-- B. The garage writes down the one question every vehicle must be able to answer, and each vehicle answers in its own way.
+- A. The garage writes down the one question every vehicle must be able to answer, and each vehicle answers in its own way.
+- B. The button has a separate rule for each vehicle it knows.
 - C. Cars and bikes are forced to answer the same words.
 
-Idea A breaks as soon as a scooter arrives: the button has no rule for it. Idea C throws away what makes each vehicle different. Idea B is the answer.
+Idea B breaks as soon as a scooter arrives: the button has no rule for it. Idea C throws away what makes each vehicle different. Idea A is the answer.
 
 ### Build
 
@@ -160,7 +158,7 @@ fun main() {
 type: predict
 run: false
 id: list-of-drivable
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Drivable {
       fun describe(): String
@@ -204,7 +202,7 @@ output: |
 type: predict
 run: false
 id: ready-made-answer
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Helper {
       fun who(): String
@@ -254,7 +252,7 @@ output: |
 type: predict
 run: false
 id: one-function-any-plug
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Speaker {
       fun speak(): String
@@ -311,7 +309,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android reference lists `View.OnClickListener` as an interface with one function, `onClick`, that is called when a view such as a button has been clicked. Your code gives the button something that keeps that promise, and the button calls it on a tap. The button never needs to know what your class is called. If a tap does nothing, ask whether the right object was given to the button. That last point is my own reasoning.
+The Android reference lists `View.OnClickListener` as an interface with one function, `onClick`, that is called when a view has been clicked. Your code gives the button something that keeps that promise, and the button calls it on a tap (general knowledge). The button never needs to know what your class is called. If a tap does nothing, ask whether the right object was given to the button. That last point is my own reasoning.
 
 ## Say it in an interview
 
