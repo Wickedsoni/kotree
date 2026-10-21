@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 63
 requires: [kotlin/null-safety/when-to-use-double-bang, kotlin/extensions-scope-and-delegates/scope-functions]
-summary: Read an unfamiliar file with four questions in a fixed order: types, what runs when, what can be null, and what can run twice.
+summary: "Read an unfamiliar file with four questions in a fixed order: types, what runs when, what can be null, and what can run twice."
 video: ""
 publishedOn:
 updatedOn:
