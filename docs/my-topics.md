@@ -91,31 +91,31 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] How do I write a function in Kotlin? (easy)
 - [x] How can a function have optional inputs? (easy)
-- >> Why do some Kotlin functions use = instead of braces? (easy)
-- - What does a function return when it has nothing to give back? (easy)
-- - Why can't I use a variable outside the braces where I made it? (medium)
+- [x] Why do some Kotlin functions use = instead of braces? (easy)
+- >> What does a function return when it has nothing to give back? (easy)
+- [x] Why can't I use a variable outside the braces where I made it? (medium)
 
 **Null Safety** (5)
 
-- - What is null and why does it crash apps? (easy)
-- - How does Kotlin mark a value that might be missing? (easy)
-- - How do I use a maybe-missing value without crashing? (medium)
+- [x] What is null and why does it crash apps? (easy)
+- [x] How does Kotlin mark a value that might be missing? (easy)
+- [x] How do I use a maybe-missing value without crashing? (medium)
 - - How does Kotlin know a value is not null after I check it? (medium)
-- - When is !! ever the right choice? (medium)
+- [x] When is !! ever the right choice? (medium)
 
 **Strings** (3)
 
 - [x] How do I get one character out of a String? (easy)
 - [x] Which String functions do I need every day? (easy)
-- - How do I turn the text "42" into a number without crashing? (medium)
+- [x] How do I turn the text "42" into a number without crashing? (medium)
 
 **Collections** (6)
 
 - [x] Why can't I add an item to a List? (easy)
-- - Why does asking for item 5 crash a list of five items? (easy)
+- [x] Why does asking for item 5 crash a list of five items? (easy)
 - [x] How do I keep only unique values? (easy)
-- - How do I look up a value by its key? (easy)
-- - How do I unpack two values at once? (easy)
+- [x] How do I look up a value by its key? (easy)
+- [x] How do I unpack two values at once? (easy)
 - - When does Kotlin code use an Array instead of a List? (easy)
 
 **Lambdas** (5)
@@ -1058,7 +1058,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - >> How do I save a snapshot of my project that I can return to later? (medium)
 - - How can I try an idea without breaking my working code? (medium)
 - - What do I do when git says two changes collide? (hard)
-- [x] How does my code get to GitHub and into a teammate's project? (hard)
+- - How does my code get to GitHub and into a teammate's project? (hard)
 
 **Android Studio and IntelliJ** (3)
 

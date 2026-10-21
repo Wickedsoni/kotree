@@ -61,7 +61,7 @@ Idea A defeats the point of one routine. Idea C is how mistakes happen. Idea B i
 
 ### Name it
 
-A **higher-order function** is a function that takes another function as a parameter, or gives one back. The Kotlin documentation describes it as a function that receives other functions as parameters. In the function's first line, the slot is a parameter with a function type, for example `visit: (Int) -> Unit`. That reads: the parameter `visit` is a function that takes one whole number and gives back nothing useful. Inside the body, you call it the way you call any function stored in a variable, with `visit(1)`. When you call the higher-order function, you hand it a lambda, often as a trailing lambda.
+A **higher-order function** is a function that takes another function as an input, which is called a parameter, or gives one back. The Kotlin documentation describes it as a function that receives other functions as parameters. In the function's first line, the slot is a parameter with a function type, for example `visit: (Int) -> Unit`. That reads: the parameter `visit` is a function that takes one whole number and gives back nothing useful. Inside the function's steps, you call it the way you call any function stored in a variable, with `visit(1)`. When you call the higher-order function, you hand it a lambda, often as a trailing lambda.
 
 | Tour company | In Kotlin |
 |---|---|
@@ -233,7 +233,7 @@ It is a function that takes another function as a parameter, or gives one back. 
 You write the shared routine once, and each caller supplies the part that changes. In the spinner example, the show and hide steps stay in one place. My own reasoning: the trade-off is that a reader must follow where the lambda is called, because the call is no longer on the line that wrote it.
 
 **What does `inline` do, and why would you use it?**
-The documentation says each function value is an object, and that memory use and extra calls add run-time cost. Marking a function `inline` makes the compiler copy the function's body, and the lambdas passed to it, into the place where it is called. The documentation warns that this can make the generated code grow, so you avoid inlining large functions. The documentation shows `repeat` as an `inline` function.
+The documentation says that using functions as values adds run-time cost, because of extra memory use and extra calls. Marking a function `inline` makes the compiler copy the function's body, and the lambdas passed to it, into the place where it is called. The documentation warns that this can make the generated code grow, so you avoid inlining large functions. The documentation shows `repeat` as an `inline` function.
 
 **Who decides when the lambda runs, and how often?**
 The function that holds it. It may call it once, many times or never, as `times(0)` shows. My own reasoning: when you hand a lambda to a function you did not write, read what the function does with it.

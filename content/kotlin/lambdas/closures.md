@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 35
 requires: [kotlin/lambdas/lambda-syntax, kotlin/functions/scope-and-shadowing]
-summary: A lambda can read and change variables from the code around it. Learn what it holds on to, and why it sees the latest value.
+summary: A lambda can read and change variables from the code around it. See why it always uses the latest value.
 video: ""
 publishedOn:
 updatedOn:
@@ -68,7 +68,7 @@ Idea C feels right if you think a window is a photo. But a photo and a window ar
 3. A house can also reach through the window and change the plant. Everyone else then sees the change.
 4. Two windows onto the same plant share it.
 5. To freeze the plant, take a photo: copy the plant into a separate pot and look at that pot.
-6. A function that builds a house and hands it back builds a new garden each time it runs. Its houses see only that garden, and the garden lasts as long as a house that uses it.
+6. A function that builds a house and hands it back builds a new garden each time it runs. Its houses see only that garden, and the garden lasts as long as a house that uses it (general knowledge).
 
 ### Name it
 
@@ -226,7 +226,7 @@ output: |
 
 ## Where this shows up in Android
 
-**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its state page shows a text box whose lambda is `onValueChange = { name = it }`, where `name` was declared with `var name by remember { mutableStateOf("") }` just above it. The lambda reaches `name`, which was made outside it. Each time a person types, Compose calls the lambda with the new text as `it`, and the lambda writes that text into `name`. The page does not use the word closure. Calling this a closure is my own naming.
+**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its state page shows a text box with the lambda `onValueChange = { name = it }`. The variable `name` is declared just above it, in a line that starts `var name by remember`. This lesson does not explain the rest of that line. The lambda reaches `name`, which was made outside it. Each time a person types, Compose calls the lambda with the new text as `it`, and the lambda writes that text into `name`. The page does not use the word closure. Calling this a closure is my own naming.
 
 This next part is my own reasoning. If the lambda held only a copy of the first value, `name` outside it would never change, and the box would show the same text however much a person typed.
 

@@ -273,7 +273,7 @@ The primary constructor is declared in the class header. A secondary constructor
 Only with `val` or `var` in front of it. The documentation says a parameter without them is not stored and is available only inside the class body. The tour recommends `val` unless the value must change after the object is made.
 
 **In what order do `init` blocks and property initializers run?**
-In the order they appear in the class body. The documentation says you can write several `init` blocks and they run together with the property initializers. Constructor parameters can be used in them. The documentation's example uses an `init` block to check an age with `require`.
+In the order they appear in the class body. The documentation says you can write several `init` blocks and they run together with the property initializers. Constructor parameters can be used in them. The documentation's example uses an `init` block to check that an age is positive.
 
 **When would you use default values and when a secondary constructor?**
 Default values fit when an input may be left out, like the age 18. A secondary constructor fits when the input is a different shape, such as text that has to be turned into a number first. The documentation's example does that. My own reasoning: defaults mean fewer constructors to read, so try them first.

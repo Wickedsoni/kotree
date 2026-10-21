@@ -71,9 +71,9 @@ Idea A feels right because handing something over sounds like an action. But the
 
 ### Name it
 
-A **function type** is the header of a card, written as a type. The Kotlin documentation says `(A, B) -> C` is the type of functions that take two arguments of types `A` and `B` and give back a value of type `C`. So `(String) -> String` is a card that needs one piece of text and makes one piece of text. The documentation says the `Unit` return type cannot be left out in a function type. `Unit` is the type for "nothing useful", so a card that makes nothing useful has the header `() -> Unit`.
+A **function type** is the header of a card, written as a type. The Kotlin documentation says `(A, B) -> C` is the type of functions that take two arguments of types `A` and `B` and give back a value of type `C`. So `(String) -> String` is a card that needs one piece of text and makes one piece of text. The documentation says the `Unit` return type cannot be left out in a function type. **`Unit`** is the type for "nothing useful", so a card that makes nothing useful has the header `() -> Unit`.
 
-A **function reference** points at a function that already exists, without cooking it. The documentation says to write `::functionName` to pass or store a top-level or local named function as a value. To cook a stored card, write the pocket's name and the ingredients in brackets. The documentation says `f(x)` and `f.invoke(x)` both work.
+A **function reference** points at a function that already exists, without cooking it. The documentation says to write `::functionName` to pass or store a named function as a value. It names two places where such a function can be written: straight in the file, or inside another function. To cook a stored card, write the pocket's name and the ingredients in brackets. The documentation says `f(x)` and `f.invoke(x)` both work.
 
 Kotlin treats a function as a value that you can store, hand to other code and give back. People call these first-class functions (general knowledge).
 
@@ -242,7 +242,7 @@ That is the card in the pocket: the button holds the card and cooks it on a tap.
 It is the type of a function that takes one `Int` and gives back a `String`. The Kotlin documentation writes it as the parameter types in brackets, then an arrow, then the return type. A function that gives back nothing useful uses `Unit`, and the documentation says `Unit` cannot be left out in a function type.
 
 **How do you pass an existing function as a value?**
-You write `::name`, which the documentation calls a function reference. It works for a top-level or local named function. The function is not run when you write it. It runs only when someone calls it with `f(x)` or `f.invoke(x)`.
+You write `::name`, which the documentation calls a function reference. It works for a named function written in the file or inside another function. The function is not run when you write it. It runs only when someone calls it with `f(x)` or `f.invoke(x)`.
 
 **What is the difference between `val f = ::greet` and `val f = greet("Ana")`?**
 The first stores the function and runs nothing. The second runs `greet` at once and stores the result. People mix them up because both read like "f is greet".

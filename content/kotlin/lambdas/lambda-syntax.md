@@ -69,9 +69,9 @@ Idea C comes from writing functions, where a line says it. A note works differen
 
 ### Name it
 
-A **lambda expression** is a small function written on the spot. The Kotlin documentation says it is always surrounded by curly brackets, the parameters come before an arrow `->`, and the body goes after the arrow. If the lambda does not give back `Unit`, which means nothing useful, the documentation says the last expression in the body is treated as the value it gives back.
+A **lambda expression** is a small function written on the spot. The Kotlin documentation says it is always surrounded by curly brackets. The inputs, which are called parameters, come before an arrow `->`. The steps go after the arrow. If the lambda does not give back **`Unit`**, which means nothing useful, the documentation says its last expression is treated as the value it gives back. Here the last expression means the last line.
 
-The default label is **`it`**. The documentation says that when a lambda has a single parameter, the parameter does not need to be declared and the arrow can be left out. The parameter is then named `it`.
+The default label is **`it`**. The documentation says that when a lambda has a single input, you do not need to name it, and the arrow can be left out. The input is then named `it`.
 
 A **trailing lambda** is a lambda written outside the round brackets. The documentation says that if the last parameter of a function is a function, the lambda can be placed outside the round brackets. If the lambda is the only argument, the round brackets can be left out entirely.
 
@@ -230,20 +230,20 @@ This is a common first puzzle in a Compose file. The braces after `Column` look 
 ## Say it in an interview
 
 **What is `it` in a Kotlin lambda?**
-It is the default name of a lambda's only parameter. The documentation says you can leave the parameter and the arrow out, and the compiler names the parameter `it`. My own reasoning: it keeps short lambdas short, but when one lambda sits inside another, a written name such as `name` is clearer.
+It is the default name of a lambda's only input. The documentation says you can leave the input's name and the arrow out, and the compiler names the input `it`. My own reasoning: it keeps short lambdas short, but when one lambda sits inside another, a written name such as `name` is clearer.
 
 **What is a trailing lambda, and why does Kotlin allow it?**
 It is a lambda written outside the round brackets. The documentation says this is allowed when the lambda is the last parameter, and the round brackets can go if it is the only argument. My own reasoning: the call then reads like a built-in block, which is why Compose code looks the way it does.
 
 **What does a lambda give back, and how do you return from the middle?**
-It gives back the value of its last expression, unless it gives back `Unit`. To leave early you use a label, such as `return@forEach`. The documentation says a bare `return` returns from the nearest enclosing function, so inside a lambda it would leave the function around it. The label leaves only the lambda.
+It gives back the value of its last expression, unless it gives back `Unit`. To leave early you use a label, such as `return@forEach`. The documentation says a bare `return`, with no label, returns from the nearest function around it, so inside a lambda it would leave the function that holds the lambda. The label leaves only the lambda.
 
 **What is the difference between a lambda and a function reference?**
 Both are function values. A lambda is written on the spot and can hold its own small steps. The documentation says a function reference, written `::name`, points at a function that already exists. My own reasoning: use a reference when a function with the right header already exists, and a lambda when the work is small and only needed here.
 
 ## Recap
 
-1. A lambda is a function in curly brackets, with parameters before the arrow and the body after it.
+1. A lambda is a function in curly brackets, with its inputs before the arrow and its steps after it.
 2. The last line is the answer, and a lone parameter can be called `it`.
 3. A lambda in the last slot can sit outside the round brackets, and `return@name` leaves only the lambda.
 

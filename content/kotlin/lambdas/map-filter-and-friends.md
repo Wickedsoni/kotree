@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 34
 requires: [kotlin/lambdas/lambda-syntax, kotlin/collections/list-vs-mutable-list]
-summary: The functions filter and map build a new list from an old one with a short instruction. See how they chain and what stays untouched.
+summary: Filter and map build a new list from an old one. See how they chain and what stays untouched.
 video: ""
 publishedOn:
 updatedOn:
@@ -74,13 +74,19 @@ Idea A and idea C feel right if you picture the stations working on the basket i
 
 ### Name it
 
-A **predicate** is a lambda that answers true or false. The Kotlin documentation says `filter` called with a predicate returns the elements that match it. The result of `filter` on a list is a new list, and the documentation says the original collection stays unchanged.
+A **predicate** is a lambda that answers true or false. The function **`filter`** is the throw-out station. The Kotlin documentation says `filter` called with a predicate returns the elements that match it. The result of `filter` on a list is a new list, and the documentation says the original collection stays unchanged.
 
-The function `map` is the repaint station. The documentation says it applies the lambda to each element and returns the list of the lambda's results, in the same order.
+The function **`map`** is the repaint station. The documentation says it applies the lambda to each element and returns the list of the lambda's results, in the same order.
 
 You chain stations with dots. In `fruit.filter { ... }.map { ... }`, `map` works on the list that `filter` gave back. The documentation says these functions build new collections from existing ones.
 
-The friends are named here and used once in the program below. The documentation says `sortedBy` sorts by the value your lambda picks and returns a new collection. It says `groupBy` returns a `Map`, a table that pairs each key with a value. Each key is the lambda's answer, and each value is the `List` of elements that gave that answer. It says `firstOrNull` returns the first element that matches, or `null` if none does. `null` is the special value for "nothing here". The plain `first` throws an exception instead, which means it stops the program with an error. It says `sumOf` adds up the numbers your lambda picks.
+The friends are named here and used once in the program below.
+
+- **`sortedBy`** is the line-up station. The documentation says it sorts by the value your lambda picks and returns a new collection.
+- **`groupBy`** is the sort-into-trays station. The documentation says it returns a `Map`, a table that pairs each key with a value. Each key is the lambda's answer, and each value is the `List` of elements that gave that answer.
+- **`firstOrNull`** is the polite first-apple search. The documentation says it returns the first element that matches, or **`null`** if none does. The value `null` is the special value for "nothing here".
+- The plain `first` is the strict search. The documentation says it throws an **exception** if nothing matches. An exception is a stop of the program with an error.
+- **`sumOf`** is the totals station. The documentation says it adds up the numbers your lambda picks.
 
 | Factory line | In Kotlin |
 |---|---|
@@ -225,7 +231,9 @@ output: |
 
 ## Where this shows up in Android
 
-**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its lists page shows a contacts screen with a heading for each first letter. It builds the groups with `val grouped = contacts.groupBy { it.firstName[0] }`, which pairs each first letter with the list of contacts that start with it. A comment in the page says this would ideally be done in the `ViewModel`, the class that holds a screen's data. The page then goes through the groups and shows a heading and the contacts under it. The same page shows `items(messages) { message -> MessageRow(message) }`, where the lambda draws one row for each message.
+**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its lists page shows a contacts screen with a heading for each first letter. It builds the groups with `groupBy`, using the first letter of each contact's first name as the key. Each key is then paired with the list of contacts that start with that letter.
+
+A comment in the page says this would ideally be done in the `ViewModel`, which is a part of an app that holds a screen's data (general knowledge). The page then goes through the groups and shows a heading and the contacts under it. The same page shows `items(messages) { message -> MessageRow(message) }`, where the lambda draws one row for each message.
 
 This next part is my own reasoning: if the note for `groupBy` picked a letter from the last name, the headings on the screen would show the wrong letters, and the list would still look tidy.
 
