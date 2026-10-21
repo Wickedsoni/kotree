@@ -193,7 +193,7 @@ output: |
 - **Thinking the `lazy` block runs when the object is created.** The line sits inside the class, so it feels like it runs with the other setup lines. It runs on the first read. Add a print inside the block to see when.
 - **Expecting the block to run again on every read.** A block with curly brackets looks like a function call. The first result is kept, so later reads return the same value. If you need a fresh value each time, use a function.
 - **Putting cheap work in `lazy`.** It sounds like a free speed-up. Each lazy property has a helper object and some bookkeeping (general knowledge). Use it when the work is heavy or may never be needed.
-- **Using `NONE` mode in code that many threads share.** It feels faster. The documentation says `LazyThreadSafetyMode.NONE` has no thread-safety guarantees, so use it only when the first read always happens on one thread.
+- **Thinking `lazy` is unsafe when many threads share it.** A value computed on demand sounds like trouble when two threads ask at once. The documentation says the default is synchronized, so one thread computes the value and every thread sees the same one. Switch to `LazyThreadSafetyMode.NONE` only when the first read always happens on one thread.
 
 ## Where this shows up in Android
 
