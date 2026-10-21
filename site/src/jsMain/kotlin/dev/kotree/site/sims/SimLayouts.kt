@@ -35,4 +35,6 @@ val templateLayouts: Map<String, SimLayout> = mapOf(
     "lanes" to { s -> dev.kotree.site.sims.layouts.LanesLayout(s) },
     "flow" to { s -> dev.kotree.site.sims.layouts.FlowLayout(s) },
     "states" to { s -> dev.kotree.site.sims.layouts.StatesLayout(s) },
+    "chart" to { s -> dev.kotree.site.sims.layouts.ChartLayout(s) },
+    "compare" to { s -> dev.kotree.site.sims.layouts.CompareLayout(s) },
 )
