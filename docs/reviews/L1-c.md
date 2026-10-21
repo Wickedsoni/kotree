@@ -54,3 +54,19 @@ Not fully verified (page body unreachable; the proxy returned 403 and DNS failed
 Not run: the full `wave-check.sh` export and the browser view of sims (the three sims are not built; SIM markers are allowed). No images exist in these leaves, so there is no alt-text or contrast issue.
 
 VERDICT: FIX
+
+## Fixes applied
+
+Applied 21 Oct 2026 by the writer. Items 1 to 8 and 10 were requested; item 9 is deferred.
+
+- FIX 1 done: concurrency interview Q4 now quotes "the Android UI toolkit is not thread-safe. So, don't manipulate your UI from a worker thread.", glosses "thread-safe" and "worker thread", and keeps the conflicting-changes idea as "my own reasoning (general knowledge)".
+- FIX 2 done: concurrency Name it glosses components, events, widgets; interview Q2 glosses process; Where this shows up glosses UI toolkit.
+- FIX 3 done: architecture Mental model maps cook = getting prices, cashier = total and discount, waiter = showing. Build step 3, Tricks and You can now use the order cook, cashier, waiter.
+- FIX 4 done: native-ndk Name it, Build step 2, interview Q1, Recap and Common mistakes now say "compiled on the developer's computer, before the app is installed"; the definition is labelled (general knowledge).
+- FIX 5 done: native-ndk option a, its why, output, Tricks, Where this shows up and interview Q4 use "crashes at runtime"; the "when the feature runs" idea is labelled "my own reasoning".
+- FIX 6 partly done: `verified: kotlin-2.4.21` set on the nine named blocks (networking 3, architecture 3, concurrency 3). The `run: false` blocks keep `not-run`. No Kotlin code was changed, so the reviewer's 2.4.21 compile and output check stands. I had no shell in this session, so I did not re-run `scripts/kt-run.sh`.
+- FIX 7 done: labels added in networking (Q2, Q3, four-question advice), android-core (service or receiver advice; the "(my own example)" label was replaced by the documentation's own low-battery mention) and architecture (last paragraph).
+- FIX 8 done: kmp Name it glosses UI, API, interface and Compose Multiplatform.
+- FIX 10 partly done: the SOURCES comments are stripped from all six leaves. The three roadmap markers (networking, kmp, native-ndk rows) are NOT cleared, because this task forbids roadmap edits; they stay for `housekeeper` or `curriculum-designer` at go-live.
+- FIX 9 deferred by instruction.
+- `./gradlew :site:validateContent` was NOT run (no shell available in this session), so the final verdict line is withheld. Re-run the validator, then add the re-check verdict.

@@ -54,7 +54,7 @@ Idea A sounds sensible because the folders look like screen sizes, but they are 
 ### Build
 
 1. A developer writes a part of the app in a language like C or C++.
-2. A compiler, the factory, turns that code into instructions for one kind of CPU. It does this before the app is built.
+2. A compiler, the factory, turns that code into instructions for one kind of CPU. It does this on the developer's computer, before the app is installed.
 3. The result is one file per kind of CPU, because a bottle cooked for one stove does not fit another.
 4. The app package carries these files in its `lib` folder.
 5. When the app is installed, the phone unpacks only the most appropriate one for its own CPU.
@@ -64,7 +64,7 @@ If no bottle is there at all, your recipe cards still look fine, but the dish th
 
 ### Name it
 
-- **Native code** is code that was compiled ahead of time into instructions for one kind of CPU, so the CPU can run it directly.
+- **Native code** is code that was compiled on the developer's computer, before the app is installed, into instructions for one kind of CPU, so the CPU can run it directly (general knowledge).
 - A **native library** is a bundle of native code that your app can call. On Android it is a file ending in **`.so`**, short for shared object.
 - The **NDK**, the Native Development Kit, is the set of tools Android gives you to use C and C++ code in an app.
 - An **ABI** is the name for one combination of CPU and instruction set, for example `arm64-v8a`. The documentation says libraries sit at `/lib/<abi>/lib<name>.so` in the package.
@@ -123,7 +123,7 @@ code: |
   What happens when the audio feature runs?
 options:
   - id: a
-    text: "The app crashes at that moment, because the library is not there"
+    text: "The app crashes at runtime, because the library is not there"
     correct: true
     why: "The kitchen goes to pour the sauce and no bottle exists. The Android documentation says an app with no shared-object file builds and installs, but crashes at runtime."
   - id: b
@@ -131,9 +131,9 @@ options:
     why: "You may have thought the Kotlin recipe card could do the same job. Kotlin only calls the bottle. It does not hold a copy of the sauce."
   - id: c
     text: "The app refuses to install"
-    why: "You may have expected the install to stop the problem. The documentation says it installs. The problem shows when the feature runs."
+    why: "You may have expected the install to stop the problem. The documentation says it installs. The documentation says it installs, then crashes at runtime."
 output: |
-  The app crashes at that moment, because the library is not there
+  The app crashes at runtime, because the library is not there
 ```
 
 ## Tricks to remember
@@ -141,26 +141,26 @@ output: |
 - `.so` means a bottle that arrived already cooked.
 - One bottle per stove type: one `.so` per ABI folder.
 - Native is a tool for some jobs, not a faster mode for everything.
-- No bottle at all, no sauce: the app can build and install, then crash when the feature runs.
+- No bottle at all, no sauce: the app can build and install, then crash at runtime.
 
 ## Common mistakes
 
 - **Thinking native code is always faster than Kotlin.** It sounds right because native code runs directly on the CPU. The documentation lists a few jobs where native code helps: low latency, heavy computing such as games or physics simulations, and reuse of C or C++ libraries. It also says the NDK may not suit most novice Android programmers.
 - **Thinking one `.so` works on every phone.** It is one app, so it feels like one file. Phones have different CPUs, and each ABI has its own folder in the package.
-- **Thinking the `cpp` folder is your Kotlin code in disguise.** It sits in the same project, so it feels like part of the same thing. It is a different language, compiled ahead of time into a bottle.
+- **Thinking the `cpp` folder is your Kotlin code in disguise.** It sits in the same project, so it feels like part of the same thing. It is a different language, compiled on the developer's computer into a bottle.
 
 ## Where this shows up in Android
 
 Think of an app that uses a game engine or an audio library. In the project you find a `cpp` folder and, after a build, `.so` files in the package. The Android documentation says Gradle packages your native library, the SO file, into the app package.
 
-Here is a symptom this lesson explains: an app installs fine, but crashes the moment a feature opens. The documentation says that if there is no shared-object file at all, the app builds and installs but crashes at runtime. My own reasoning: a package that carries libraries for only some ABIs could fail the same way on a phone with a different CPU. The page does not say so, but it is worth checking which ABI folders the package has.
+Here is a symptom this lesson explains: an app installs fine, but crashes at runtime. The documentation says that if there is no shared-object file at all, the app builds and installs but crashes at runtime. My own reasoning: a package that carries libraries for only some ABIs could fail the same way on a phone with a different CPU. The page does not say so, but it is worth checking which ABI folders the package has.
 
 ## Say it in an interview
 
 These questions are my own, written for this lesson.
 
 **What is native code, and how does it differ from Kotlin?**
-Native code is compiled ahead of time into instructions for one kind of CPU, so the CPU can run it directly. On Android it is usually C or C++ built with the NDK into a `.so` file. Kotlin code is turned into a form that is not tied to one CPU, and the phone finishes the job (general knowledge).
+Native code is compiled on the developer's computer, before the app is installed, into instructions for one kind of CPU, so the CPU can run it directly (general knowledge). On Android it is usually C or C++ built with the NDK into a `.so` file. Kotlin code is turned into a form that is not tied to one CPU, and the phone finishes the job (general knowledge).
 
 **What is an ABI, and why does an app package have several `lib` folders?**
 An ABI is one combination of CPU and instruction set, such as `arm64-v8a`. The documentation says each combination has its own ABI and libraries sit at `/lib/<abi>/lib<name>.so`. The package manager unpacks only the most appropriate machine code for the phone.
@@ -169,11 +169,11 @@ An ABI is one combination of CPU and instruction set, such as `arm64-v8a`. The d
 The documentation gives three reasons: low latency, heavy computing such as games or physics simulations, and reuse of existing C or C++ libraries. It also says the NDK may not suit most novice Android programmers who need only Java or framework APIs. My own reasoning: native code adds a second language and a second build to maintain, so use it only when one of the three reasons applies.
 
 **What happens if the `.so` file is missing?**
-The documentation says that with no shared-object file at all, the app builds and installs, but crashes at runtime. The crash shows up when the feature that calls the library runs, not at install time.
+The documentation says that with no shared-object file at all, the app builds and installs, but crashes at runtime. My own reasoning: the crash most likely shows up when the feature that calls the library runs, not at install time, because the library is normally loaded when code first asks for it.
 
 ## Recap
 
-1. Native code is compiled ahead of time into instructions for one kind of CPU.
+1. Native code is compiled on the developer's computer into instructions for one kind of CPU.
 2. On Android, native code sits in `.so` files, one per ABI.
 3. Native code helps for some jobs, and it is not faster for everything.
 
