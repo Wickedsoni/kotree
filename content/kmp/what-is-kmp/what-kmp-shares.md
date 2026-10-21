@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 1
 requires: []
-summary: Kotlin Multiplatform shares logic you choose, such as rules and data code. Camera, notifications and other phone features stay with each platform.
+summary: Kotlin Multiplatform shares the logic you choose, such as rules and data code. Camera, notifications and other phone features stay with each platform.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,25 +15,25 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: shadow draft written 21 Oct 2026, author has not yet said he understood this topic. KMP claims were checked on 21 Oct 2026 against https://kotlinlang.org/docs/multiplatform/kmp-overview.html (share isolated modules such as networking or storage; share all business logic with native UI; UI sharing optional via Compose Multiplatform; platforms listed: Android, iOS, desktop, web, server) and https://kotlinlang.org/docs/multiplatform/multiplatform-expect-actual.html (expect/actual give common code access to platform-specific APIs; the page prefers interfaces where they work). Platform stability statuses are deliberately NOT stated: the roadmap row says to reopen the supported-platforms table and copy each status with its date at publish time. Which of the six sim features count as "shared" is the author's roadmap list; the claim that saved-data code and screen layout can be shared rests on the overview page wording (storage module; optional UI sharing) and should be reread at publish. This is a concept leaf (no Mac needed), so no evidence labels are used. The sim id shared-or-platform-bins has no spec in docs/05 yet (sim-engineer / physics-designer must create docs/sims/shared-or-platform-bins.md). Predict items are paper-and-pencil and were hand-checked only. -->
+<!-- SOURCES (read 21 Oct 2026): https://kotlinlang.org/docs/multiplatform/kmp-overview.html ("an open-source technology from JetBrains that enables sharing code across Android, iOS, desktop, web, and server while retaining the advantages of native development"; "share isolated modules, such as networking or storage, and progressively expand shared code over time"; "share all of your business logic while keeping the UI native, or gradually migrate the UI using Compose Multiplatform"; "With Compose Multiplatform, you can also share UI code"). https://kotlinlang.org/docs/multiplatform/multiplatform-expect-actual.html ("Expected and actual declarations allow you to access platform-specific APIs from Kotlin Multiplatform modules"; "rely on standard language constructs wherever possible instead of using expected and actual declarations"). Platform stability statuses are deliberately not stated, because the roadmap says to copy them with their date at publish time. This is a concept leaf, so no Mac evidence labels are used. The six features and the bins are the author's roadmap list. The Predict items were traced by hand. -->
+
 ## The question
 
-A small team has one shop app on Android and wants the same app on iPhone. Their manager says: "Write it once, and it works on both." The team lead says: "Not everything."
-
-So which parts of the app can really be written once, and which parts must still be written for each phone?
+A small team has one shop app on Android and wants the same app on iPhone. Their manager says: "Write it once, and it works on both." The team lead says: "Not everything." So which parts of the app can really be written once, and which parts must still be written for each phone?
 
 ## Mental model
 
 Think of a restaurant chain with one recipe book and a different oven in each kitchen.
 
 - The recipe book is the code you write once.
-- The kitchens are the phones, one kitchen for Android and one for iPhone.
+- The kitchens are the phones, one for Android and one for iPhone.
 - The ovens are the features that belong to each phone, such as its camera or its notification system.
 - The cook in each kitchen follows the same recipe but uses the oven that kitchen has.
+- The dining room is how the app looks. The chain may share one design, or each kitchen may build its own.
 
-The recipes do not change from city to city. The oven knobs do, so each kitchen needs its own cook who knows its oven.
+The recipes do not change from city to city. The oven knobs do, so each kitchen needs a cook who knows its oven.
 
-**Where the analogy stops:** In a real chain the whole menu is shared. Here, you choose how much to share. You can share only a few recipes, or most of them. And one thing is optional: you can even share how the dining room looks, but you do not have to.
+**Where the analogy stops:** In a real chain the whole menu is shared. Here you choose how much to share, from a few recipes to most of them. And a recipe can say "I need an oven that bakes", and each kitchen then supplies its own.
 
 ## See it move
 
@@ -63,11 +63,11 @@ The shop app has six features.
 
 Which of these need to be written twice, once per phone?
 
-- A. All six, because the two phones are different.
-- B. None, because the code is written once.
-- C. Only the ones that use a part of the phone itself, such as the camera and notifications. The rest can be shared.
+- A. None, because the code is written once.
+- B. Only the ones that use a part of the phone itself, such as the camera and notifications. The rest can be shared.
+- C. All six, because the two phones are different.
 
-Idea A is what people say who have tried to share and got stuck. Idea B is what the slogan sounds like. Idea C is closest, with one more twist for screen layout.
+Idea A is what the slogan sounds like. Idea C is what people say after they tried to share and got stuck. Idea B is closest, with one more twist for screen layout.
 
 ### Build
 
@@ -80,20 +80,22 @@ Idea A is what people say who have tried to share and got stuck. Idea B is what 
 
 ### Name it
 
-**Kotlin Multiplatform**, called **KMP**, is a Kotlin technology from JetBrains that lets you share code across Android, iOS, desktop, web and server while keeping the benefits of native development. The Kotlin documentation says you can share code on your own terms: share isolated modules such as networking or storage, or share all your business logic and keep the UI native.
+**Kotlin Multiplatform**, called **KMP**, is an open-source technology from JetBrains. The Kotlin documentation says it enables sharing code across Android, iOS, desktop, web and server while retaining the advantages of native development. It also says you can share code on your terms. You can share a **module**, a self-contained part of a project, such as networking or storage, and expand the shared code over time. Or you can share all of your business logic, the rules of the app, while keeping the UI native.
 
-The **shared code** is the part written once, and the **platform-specific code** is the part each phone gets on its own. To let shared code use something that belongs to one platform, the documentation describes **expect/actual** declarations. Shared code declares what it expects, and each platform supplies the actual version. The same page says that where a standard language feature such as an interface does the job, it is preferred.
+The **shared code** is the part written once. The **platform-specific code** is the part each phone gets on its own. The documentation says **expect/actual** declarations let you access platform-specific APIs from Kotlin Multiplatform modules. Shared code declares what it expects, and each platform supplies the actual version. The same page says to rely on standard language constructs wherever possible instead of expect and actual, so an interface is the first thing to try.
 
-For the screen, the documentation names three options: build the UI natively on each platform, share it with **Compose Multiplatform**, or mix them. Sharing the screen is a choice, not a requirement.
+For the screen, the documentation names three options: keep the UI native on each platform, share it with **Compose Multiplatform**, or move to it gradually. Sharing the screen is a choice, not a requirement.
 
 | Feature | Where it can live | Why |
 |---|---|---|
 | Price rules | Shared | Only numbers and rules |
 | Login rules | Shared | Only text and rules |
-| Saved data | Shared, as a storage module | The documentation names storage as a module you can share |
+| Saved data | Shared | The documentation names storage as a module you can share |
 | Screen layout | Your choice | Native on each phone, or shared with Compose Multiplatform |
-| Camera | Platform-specific, behind a shared promise | The phone's camera is the phone's own feature |
-| Notifications | Platform-specific, behind a shared promise | Each phone has its own notification system |
+| Camera | Platform-specific, behind a shared promise | My own reasoning: the camera is the phone's own feature, which is what expect/actual is for |
+| Notifications | Platform-specific, behind a shared promise | My own reasoning: each phone has its own notification system |
+
+This page has no program to run. The table is the whole map.
 
 ## Predict the output
 
@@ -113,13 +115,14 @@ options:
     text: "All three, because it is all Kotlin"
     why: "You may have thought Kotlin everywhere means the same code everywhere. The camera and notifications need each phone's own system, which Kotlin alone does not provide."
   - id: b
-    text: "Feature 1, the price rule"
-    correct: true
-    why: "It only uses numbers and a rule, so it is the same recipe in every kitchen. The camera and notification are the ovens."
-  - id: c
     text: "Feature 2, the camera"
     why: "You may have picked the feature that sounds like a feature. The camera is the oven, so each kitchen needs its own cook."
-output: "Feature 1, the price rule"
+  - id: c
+    text: "Feature 1, the price rule"
+    correct: true
+    why: "It only uses numbers and a rule, so it is the same recipe in every kitchen. The camera and the notification are the ovens."
+output: |
+  Feature 1, the price rule
 ```
 
 ```challenge
@@ -133,16 +136,17 @@ code: |
   What is the right answer?
 options:
   - id: a
-    text: "Yes, the whole app must be shared once you start"
-    why: "You may have thought sharing is all or nothing. The Kotlin documentation says you share on your own terms, even one module."
-  - id: b
     text: "No, sharing the screen is optional, and each phone can keep a native screen"
     correct: true
-    why: "The recipe book can hold only some recipes. You may share the screen with Compose Multiplatform or build it natively, or mix both."
+    why: "The recipe book can hold only some recipes. The documentation says you can keep the UI native or move to Compose Multiplatform gradually."
+  - id: b
+    text: "Yes, the whole app must be shared once you start"
+    why: "You may have thought sharing is all or nothing. The documentation says you share on your own terms, even one module."
   - id: c
     text: "No, a screen can never be shared"
-    why: "You may have heard that screens differ. Compose Multiplatform exists to share screens, and the choice is yours."
-output: "No, sharing the screen is optional, and each phone can keep a native screen"
+    why: "You may have heard that screens differ. Compose Multiplatform exists to share UI code, and the choice is yours."
+output: |
+  No, sharing the screen is optional, and each phone can keep a native screen
 ```
 
 ```challenge
@@ -157,7 +161,7 @@ code: |
 options:
   - id: a
     text: "It calls the camera directly, because shared code can reach everything"
-    why: "You may have thought shared code can reach every part of a phone. It cannot see the phone's own features by itself."
+    why: "You may have thought shared code can reach every part of a phone. It cannot see a phone's own features by itself."
   - id: b
     text: "It states what it needs, and each phone supplies the real camera code"
     correct: true
@@ -165,7 +169,8 @@ options:
   - id: c
     text: "It leaves the photo out of the app on one of the phones"
     why: "You may have thought a missing feature is the only answer. The shared recipe can wait for each phone to fill in the missing part."
-output: "It states what it needs, and each phone supplies the real camera code"
+output: |
+  It states what it needs, and each phone supplies the real camera code
 ```
 
 ## Tricks to remember
@@ -173,29 +178,43 @@ output: "It states what it needs, and each phone supplies the real camera code"
 - One recipe book, one oven per kitchen.
 - Numbers and rules go in the shared book. Phone features need their own oven.
 - Share on your own terms: a little, or a lot.
-- The screen is a choice. Camera and notifications are not.
+- The screen is a choice. The camera and notifications are not.
 
 ## Common mistakes
 
-- **Thinking Kotlin Multiplatform lets you write the whole app once, and it looks and works the same everywhere.** The slogan makes it sound like magic. In fact you choose what to share, and phone features still need each phone's own part.
-- **Thinking you must share everything or nothing.** Starting small feels risky, so people think the move is all in. The documentation says you can share one module and grow later.
+- **Thinking Kotlin Multiplatform lets you write the whole app once, and it looks and works the same everywhere.** The slogan makes it sound like magic. You choose what to share, and phone features still need each phone's own part.
+- **Thinking you must share everything or nothing.** Starting small feels risky, so a big move feels necessary. The documentation says you can share one module and expand over time.
 - **Thinking shared code can use the camera directly.** Kotlin runs on every phone, so it feels like it can reach everything. Shared code can only say what it expects. Each phone provides the real work.
 - **Thinking sharing the screen is the point of KMP.** Shared screens get the most attention. Sharing price rules or login rules already saves effort and keeps both apps in agreement.
 
 ## Where this shows up in Android
 
-A shop's Android app takes 5 off when the total is over 50, but the iPhone app takes 5 off only over 60. A customer sees different totals on two phones. This is what two copies of one rule do over time. Putting the price rule in shared code means both phones follow the same recipe.
+A shop's Android app takes 5 off when the total is over 50, but its iPhone app takes 5 off only over 60. A customer sees different totals on two phones. This is what two copies of one rule do over time. If the price rule lives in shared code, both phones follow the same recipe.
 
-On the Android side, the shared module works like any other Kotlin code your app uses, and the camera and notification parts remain in the Android part of the project. So when a symptom is "the two apps disagree", look first at logic that was copied. When it is "this feature works on one phone only", look at the part that talks to the phone itself.
+My own reasoning: when a symptom is "the two apps disagree", look first at logic that was copied. When it is "this feature works on one phone only", look at the part that talks to that phone itself.
+
+## Say it in an interview
+
+**What is Kotlin Multiplatform, and what can you share?**
+It is an open-source technology from JetBrains for sharing code across Android, iOS, desktop, web and server while keeping the benefits of native development. You can share one module, such as networking or storage, or all your business logic. Sharing the UI is optional.
+
+**What still has to be written for each platform?**
+Anything that uses a platform's own features, such as the camera or notifications. Shared code declares what it expects, and each platform supplies the actual version. The documentation calls this expect and actual (the camera and notification examples are mine).
+
+**Should you use expect/actual or an interface?**
+Try the interface first. The documentation says to rely on standard language constructs wherever possible instead of expected and actual declarations. Use expect/actual when an interface does not do the job.
+
+**What is the trade-off in sharing as much as possible?**
+This is my own reasoning, built on the documentation's point that you can share on your own terms. More sharing means fewer copies of a rule that can drift apart. But the shared code must hide each platform's differences behind clear promises, and that takes design work. Starting with one module lets a team learn before it commits.
 
 ## Recap
 
 1. Kotlin Multiplatform shares the code you choose, from one module to most of the app.
-2. Rules and data code can be shared. Phone features stay with each platform.
+2. Rules and data code can be shared, while phone features stay with each platform.
 3. Sharing the screen is a choice, not a requirement.
 
 ## You can now
 
-- Sort six features of an app into shared code, platform-specific code, or your choice.
+- Sort a feature such as price rules, a camera or screen layout into shared code, platform-specific code or your choice.
 - Explain why shared code cannot call a phone's camera directly, using the oven.
 - Say why "write the whole app once" is not what KMP promises.
