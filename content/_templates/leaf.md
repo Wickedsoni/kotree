@@ -26,7 +26,7 @@ FRONTMATTER
 - video: "" means NO video. While it is empty the page shows no Watch-the-video button and no video section (L26).
   When the author uploads the video, paste the URL here and nothing else. Accepted forms:
   https://www.youtube.com/watch?v=<id>  or  https://youtu.be/<id>
-- sims: list every sim id used by a SIM marker below. Empty list = no See it move section.
+- sims: list the id of every ```sim block below (rule SM1). Empty list = no See it move section.
 - playground: true if and only if the page has at least one RUNNABLE block (docs/06 section 1): the code of a
   challenge block whose `run` is true or absent, or the code in Try it. Name it blocks are read-only and do not count.
   true = Try it and Fix the bug are kept. false = a theory leaf: delete Try it and Fix the bug, and give every
@@ -48,7 +48,19 @@ BODY RULES (short version)
 - First screenful: the question, a question mark, no term the learner has not met.
 - Every `kotlin` block is a complete program with fun main(), or its first line is `// does not compile`.
 - Mark anything not yet checked against official docs with the word VERIFY and a warning sign. No VERIFY may remain when status becomes live.
-- The SIM marker comment below is filled in later by sim-engineer. Keep the plain-text content next to it.
+- See it move is ONE ```sim YAML block (ADR 009, decision L37), never a SIM comment marker (build error SM0).
+  Fill the skeleton below. Field list, limits and effects: docs/adr/009-generic-sims.md section 2.
+  Pick the template from the "Use for" column of ADR 009 section 2. One working example per template:
+    stepper  line-by-line-stepper  content/foundation/first-code/lines-run-in-order.md
+    zones    snapshot-tray         content/tools/git/what-is-a-commit.md (also the ADR 009 worked example)
+    lanes    post-office-boxes     content/foundation/programming-thinking/what-is-a-list.md
+    flow     input-process-output  content/foundation/how-computers-work/what-does-a-computer-do.md
+    chart    tape-measure-range    content/kotlin/control-flow/ranges-and-for-loops.md
+    states   loop-track-gate       content/foundation/programming-thinking/how-a-program-repeats.md
+    compare  menu-board-cover      content/kotlin/collections/list-vs-mutable-list.md
+  Append "<id> — <leaf id> — <one-line idea> — template: <name>" to docs/sims/needed-ids.md.
+  stepper, lanes and flow have no drag and no text input: write Try steps that use buttons, toggles or sliders.
+  The `phone` and `timeline` add-ons are not rendered yet: do not rely on them in a Try step.
 - Challenges are fenced `challenge` blocks (YAML), defined in docs/06 section 3. There is no CHALLENGE comment marker.
   Predict: 1 to 3 blocks, exactly 3 options each. Fix the bug: exactly 1 block, exactly 2 hints.
   `verified` is `kotlin-2.4.21` only after the code was run with that version; until then write `"UNVERIFIED: <reason>"`.
@@ -67,12 +79,46 @@ BODY RULES (short version)
 ## See it move
 
 <!-- Optional. Omit this section only if sims is [] and the roadmap row says why. -->
-<!-- SIM: sim-id -->
+<!-- One ```sim block. Keys in this order. Delete the optional keys you do not use. Tokens only: no colours,
+sizes or coordinates in the data (the template lays everything out). Every case has exactly one `say`. -->
 
-**Try this:**
-1. <One thing to drag, push or change.>
-2. <A second thing.>
-<!-- One to three items. A sim may add one optional reveal step as the last item (for example, a tick-box that shows the safe path). Delete this line if the sim has none. -->
+```sim
+id: replace-me-sim
+template: zones
+title: "<Accessible name, 60 chars or fewer>"
+intro: "<What the learner sees before any action. One plain sentence in the leaf's analogy.>"
+zones:
+  - { id: here, label: "<Place one>" }
+  - { id: there, label: "<Place two>" }
+items:
+  - { id: thing, label: "<Object>", at: here }
+vars: { count: 0 }
+show:
+  - { var: count, label: "<Readout>" }
+actions:
+  - id: act
+    label: "<Button text>"
+    cases:
+      - when: { at: { thing: there } }
+        do:
+          - add: { count: 1 }
+          - say: "<What happened, one true sentence.>"
+    refuse: "<Why nothing changes.>"
+drops:
+  - item: thing
+    to: there
+    do:
+      - say: "<The object is in place two.>"
+script: ["thing>there", act]
+try:
+  - text: "<Step 1: one thing to drag, press or change.>"
+    done: ["thing>there"]
+  - text: "<Step 2.>"
+    done: [act]
+```
+
+<!-- try: one to three steps, plus at most one last step with `optional: true` (a reveal of the safe path).
+Every `done` event must be reachable with the controls the template has. -->
 
 **What you should notice:** <One sentence. The page must still make sense if the sim does not load.>
 

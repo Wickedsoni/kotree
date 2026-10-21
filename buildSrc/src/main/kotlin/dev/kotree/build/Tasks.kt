@@ -38,7 +38,7 @@ abstract class ValidateContentTask : DefaultTask() {
             throw GradleException("validateContent: ${violations.size} violation(s)\n" + renderViolations(violations))
         }
         val legacy = legacySimMarkers(content)
-        if (legacy > 0) logger.lifecycle("validateContent: SM0 $legacy legacy SIM marker(s) still to convert to ```sim blocks (ADR 009)")
+        if (legacy > 0) throw GradleException("validateContent: SM0 $legacy legacy SIM marker(s); convert them to ```sim blocks (ADR 009)")
         logger.lifecycle("validateContent: ok")
     }
 }

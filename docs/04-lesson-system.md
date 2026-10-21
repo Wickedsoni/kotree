@@ -63,7 +63,7 @@ Keys, order and value formats are fixed by `docs/00` §8.2. This table only expl
 | `video` | string | `""` while there is no video. Later, one `https://www.youtube.com/watch?v=<id>` or `https://youtu.be/<id>` URL (`docs/07` §6.4). Setting it is a one-line edit and makes the button and video section appear (L26). |
 | `publishedOn` | `YYYY-MM-DD` | Empty until `live`. Set by `housekeeper`. |
 | `updatedOn` | `YYYY-MM-DD` | Empty until `live`. Updated on every fact fix (`docs/01` §9). |
-| `sims` | list of sim IDs | Every ID used by a `SIM` marker in the body. `[]` means the page has no See it move section. IDs come from `docs/05`. |
+| `sims` | list of sim IDs | Every `id` of a ```` ```sim ```` block in the body (ADR 009, rule SM1). `[]` means the page has no See it move section. Each ID has a row in `docs/sims/needed-ids.md`. |
 | `playground` | boolean | `true` if and only if the page has at least one **runnable block**, defined in `docs/06` §1: the `code` of a `challenge` block with `run` true or absent, or the code in Try it. Name it blocks and `// does not compile` blocks are read-only and do not count. `true` means Try it and Fix the bug are present; `false` is a theory leaf whose Predict items are paper-and-pencil (`run: false`) (`docs/07` §8 loads the Playground only when `true`). |
 | `fruit` | boolean | Equal to the roadmap (V5). |
 | `upnext` | boolean, optional | `true` forces this leaf to be its branch's up-next leaf (D15). Leave `false` or delete the line. Must never be `true` on a `live` leaf (V9). |
@@ -71,7 +71,7 @@ Keys, order and value formats are fixed by `docs/00` §8.2. This table only expl
 Acceptance:
 
 - [ ] Every key of `docs/00` §8.2 is present, in that order, and no other key is.
-- [ ] `sims` lists exactly the IDs that appear in `SIM` markers.
+- [ ] `sims` lists exactly the IDs of the ```` ```sim ```` blocks (SM1).
 - [ ] `playground` is `true` exactly when the body has a runnable block (`docs/06` §1). It is `true` if any `challenge` block has `run` true or absent, and then Try it and Fix the bug exist. It is `false` only when every `challenge` block is a `run: false` Predict item and neither Try it nor Fix the bug exists.
 
 ---
@@ -113,10 +113,11 @@ Acceptance: no Kotlin keyword or operator appears in Notice, Guess or Build exce
 ### 3.4 See it move (`docs/01` §3.3)
 
 - A leaf about memory, time, order, flow or state change has at least one sim, or its roadmap row says why not.
-- The sim is placed with `<!-- SIM: sim-id -->`. Directly under the marker the author writes, in plain text: **Try this** (one to three things to drag, push or change, plus at most one optional reveal step) and **What you should notice** (one sentence).
-- An optional reveal step shows the safe or fixed path after the learner has seen the problem (for example a "Look inside first" tick-box). It is written as the last Try-this item, so the numbered items still match the sim spec in `docs/05`. The sim spec decides whether it exists.
-- The sim only shows what the text already says. If the sim fails to load, the page still makes sense.
-- Which physics engine and what moves is decided in `docs/05`. This doc fixes only the slot.
+- The sim is **one ```` ```sim ```` YAML block** directly under `## See it move` (ADR 009, decision L37). The block is the sim: `id`, `template` (one of the seven in ADR 009 §2: `stepper`, `zones`, `lanes`, `flow`, `chart`, `states`, `compare`), the scene data and the **Try this** steps (`try:`, one to three steps plus at most one with `optional: true`). It replaces the old `<!-- SIM: id -->` marker, which the build now rejects (rule SM0 is an error).
+- Under the block the author writes, in plain prose, **What you should notice** (one sentence). The Try this steps are not repeated in prose: the build writes them as a numbered list into the static page, so no-JS readers still get them.
+- An optional reveal step shows the safe or fixed path after the learner has seen the problem (for example a "Look inside first" toggle). It is the last `try` item with `optional: true`.
+- The sim only shows what the text already says; every `say` line uses the leaf's analogy. If the sim fails to load, the page still makes sense.
+- The template is picked from the "Use for" column of ADR 009 §2. A bespoke physics sim (`docs/05`) may later replace a template sim by registering the same `id`; the block stays.
 - No Android app or emulator exists on the site (D8, `docs/00` §9). Where a leaf is about Android, the sim is an animation or a `code-to-screen` sim from `docs/05` (no simulator).
 
 ### 3.5 Write, run, break, fix (`docs/01` §3.4)
@@ -184,10 +185,11 @@ A section that may be left out is **removed with its heading**. A heading with n
 
 ### 4.3 `## See it move`
 
-- Layout as in §3.4: the SIM marker, **Try this**, **What you should notice**.
-- The marker form is exactly `<!-- SIM: sim-id -->` with the ID from `docs/05`, and the same ID is listed in frontmatter `sims`.
-- Until `sim-engineer` builds the sim, the marker stays and the plain text still teaches. No placeholder text such as "sim coming soon" on a live page: a live leaf either has a working sim or no See it move section (P2).
-- Acceptance: marker ID is in `sims`; the text works with the sim switched off.
+- Layout as in §3.4: one ```` ```sim ```` block (with its `try` steps), then **What you should notice** in prose. Skeleton: `content/_templates/leaf.md`; full field list and limits: ADR 009 §2.
+- The block's `id` is kebab-case, has a row in `docs/sims/needed-ids.md` (with its `— template: <name>` suffix) and is listed in frontmatter `sims`. At most one block per section and two per leaf (SM9).
+- `validateContent` checks the block with rules SM0–SM11 (ADR 009 §6) and reports `file:line [id] SMn`. A bare `<!-- SIM -->` marker fails (SM0).
+- From layer 3 on, every leaf with a See it move section ships a working sim. No placeholder text such as "sim coming soon" on a live page (P2).
+- Acceptance: block `id` is in `sims`; `validateContent` is green; every Try step can be done in `/preview/<id>`; the text works with the sim switched off.
 
 ### 4.4 `## Build the logic`
 
@@ -297,10 +299,10 @@ After the guess the learner presses "Run it to check" (D9) and sees the real out
 - The `challenge` block is the only challenge format. Authors write no `<!-- CHALLENGE -->` comment and no hand-written Answer, Why or Hint labels. The `challenge` info string, YAML fields, `id` rules and storage key are defined once, in `docs/06` §3.
 - Each `challenge` block has a unique kebab-case `id` on the page. It never changes after publishing.
 - `verified` holds the Kotlin version used for the run (`kotlin-2.4.21`, the version pinned in `docs/06` §5). A leaf with `UNVERIFIED` anywhere is not `live`.
-- The only HTML-comment marker left is `<!-- SIM: sim-id -->`. No other marker is invented in this doc. Write it on its own line with a blank line before and after, in the exact form `<!-- SIM: sim-id -->` (regex in `docs/07` §6.2 R1).
-- **No raw HTML in lesson bodies except the SIM marker** (validation V12, `docs/07` §6.2). No `<div>`, `<br>`, `<img>`, `<details>`, inline tags or other comments. The build escapes raw HTML, so it would show as visible text. Use Markdown for everything. V12 checks `live` leaves only: a `<!-- ⚠️ VERIFY ... -->` comment may sit in a shadow leaf (as in the worked example, §10) and must be removed before the leaf goes live, which the zero-`⚠️ VERIFY` item of the checklist already requires.
-- **Supported Markdown** (ADR 005): CommonMark plus GFM tables. That means headings, paragraphs, emphasis, lists, links, inline code, block quotes, thematic breaks, plain `kotlin` fences, the `challenge` fence (`docs/06` §3) and pipe tables. Not supported: task lists, strikethrough, footnotes, autolink extensions, raw HTML. Prose goes through commonmark-java; a `kotlin` fence becomes a code block and a `challenge` fence becomes a card.
-- `challenge` blocks and the SIM marker are split out of the body by `renderLessons` into the leaf's lesson JSON (`/lessons/<id>.json`) and checked by `validateContent` (`docs/07` §6, ADR 005).
+- No HTML-comment marker is left. A sim is a ```` ```sim ```` fence (§3.4, ADR 009); the old SIM comment marker is an error (SM0).
+- **No raw HTML in lesson bodies** (validation V12, `docs/07` §6.2). No `<div>`, `<br>`, `<img>`, `<details>`, inline tags or other comments. The build escapes raw HTML, so it would show as visible text. Use Markdown for everything. V12 checks `live` leaves only: a `<!-- ⚠️ VERIFY ... -->` comment may sit in a shadow leaf (as in the worked example, §10) and must be removed before the leaf goes live, which the zero-`⚠️ VERIFY` item of the checklist already requires.
+- **Supported Markdown** (ADR 005): CommonMark plus GFM tables. That means headings, paragraphs, emphasis, lists, links, inline code, block quotes, thematic breaks, plain `kotlin` fences, the `challenge` fence (`docs/06` §3), the `sim` fence (ADR 009) and pipe tables. Not supported: task lists, strikethrough, footnotes, autolink extensions, raw HTML. Prose goes through commonmark-java; a `kotlin` fence becomes a code block and a `challenge` fence becomes a card.
+- `challenge` and `sim` blocks are split out of the body by `renderLessons` into the leaf's lesson JSON (`/lessons/<id>.json`) and checked by `validateContent` (`docs/07` §6, ADR 005).
 
 ### 5.4 Code block rules
 
@@ -368,7 +370,7 @@ Extra writing rules for lessons:
 - [ ] `status` is still `shadow` while the review runs. `housekeeper` sets `live` after PASS.
 - [ ] `upnext` is absent or `false` on a leaf about to go live (V9).
 - [ ] `video` is `""` or a valid YouTube URL (`docs/07` §6.4).
-- [ ] `sims` equals the SIM marker IDs. `playground` is true exactly when a runnable block exists (§2, `docs/06` §1).
+- [ ] `sims` equals the ```` ```sim ```` block IDs. `playground` is true exactly when a runnable block exists (§2, `docs/06` §1).
 
 ### 8.2 Structure
 
@@ -378,7 +380,7 @@ Extra writing rules for lessons:
 - [ ] **No Video heading, no video link and no "watch the video" sentence in the body.** When `video` is empty, nothing on the rendered page mentions a video, a button or "coming soon" for one (L26, P10).
 - [ ] Build the logic has Notice, Guess, Build, Name it in that order (§3.3).
 - [ ] Predict the output comes before Try it (P6).
-- [ ] Predict the output has 1 to 3 `challenge` blocks (`type: predict`) and Fix the bug has exactly one (`type: fix`); each block follows `docs/06` §3 and has a unique `id`. No `<!-- CHALLENGE -->` comment exists. See it move has exactly one SIM marker, if present.
+- [ ] Predict the output has 1 to 3 `challenge` blocks (`type: predict`) and Fix the bug has exactly one (`type: fix`); each block follows `docs/06` §3 and has a unique `id`. No `<!-- CHALLENGE -->` comment exists. See it move has exactly one ```` ```sim ```` block, if present, and no SIM comment marker (`docs/lesson-checklist.md` item 14).
 - [ ] No previous/next link, "I finished this" button or breadcrumb is written by hand.
 
 ### 8.3 Teaching quality
@@ -437,7 +439,7 @@ Extra writing rules for lessons:
 
 This is a **filled example for teaching the format**. It is not a published leaf and must not be copied into `content/` without the author's "I understood X" (L5). Its facts were checked on 18 Oct 2026 against four official pages: `https://kotlinlang.org/docs/null-safety.html`, `https://kotlinlang.org/docs/java-interop.html`, `https://kotlinlang.org/docs/strings.html` and the Kotlin language specification, `https://kotlinlang.org/spec/expressions.html` (string interpolation). The code was **not compiled or run** by anyone (no shell in either review), so it carries one `⚠️ VERIFY`, and its `challenge` blocks say `verified: "UNVERIFIED: ..."`. The expected output of each snippet is listed in §10.2 with where it comes from (documented, or derived by reading, never run). The title and difficulty below match the `kotlin` roadmap row (checked 18 Oct 2026); `order` matches the roadmap. `requires` lists only `basic-types`: since 20 Oct 2026 (O5) the example code declares no function of its own and has no `if`, so it does not need `declaring-functions` or `if-as-an-expression`. The code still sits inside the usual `fun main()` wrapper, which the first-programs leaves already taught. The `val` lines sit above `main`, on purpose: Kotlin does not narrow a top-level property from its initialiser, so `!!` and `!= null` stay meaningful and draw no "always null" or "unnecessary" warning (derived, not run, so ⚠️ VERIFY). `requires` holds same-branch leaves only (V3), so the Foundation leaf `foundation/programming-thinking/what-is-a-function` is an `Assumes` line in the Kotlin roadmap, not a `requires` entry. The analogy is the lunch box (decided 20 Oct 2026, O5), as in `docs/05` §10 and the `docs/08` row example.
 
-Frontmatter uses `status: shadow` and empty dates on purpose: nothing goes live without `reviewer` PASS and `housekeeper` (§8.1). The example has one sim marker. The sim ID `null-lunch-box` is specified in `docs/05` §10 (worked spec).
+Frontmatter uses `status: shadow` and empty dates on purpose: nothing goes live without `reviewer` PASS and `housekeeper` (§8.1). The example has one sim block. The sim ID `null-lunch-box` uses the `zones` template (ADR 009 §5); the block below is shortened, and the full, validated block is in `content/kotlin/null-safety/what-is-null.md`. `docs/05` §10 keeps the bespoke physics spec for a later replacement.
 
 The example teaches one idea (P8): `null` means "nothing here", and a program can crash if it treats nothing as something. It leaves `?.`, `?:`, `let`, `if` checks and smart casts to later leaves.
 
@@ -483,13 +485,23 @@ If the label says "always has a sandwich", you can ask about the slices straight
 
 ## See it move
 
-<!-- SIM: null-lunch-box -->
-
-**Try this:**
-1. Drag a sandwich into the box labelled "might be empty". Drag it out again.
-2. Press "Count the slices" while that box is empty.
-3. Try to leave the box labelled "always has a sandwich" empty.
-4. (Optional reveal) Press Reset. Tick "Look inside first", then press "Count the slices" on the empty "might be empty" box.
+```sim
+id: null-lunch-box
+template: zones
+title: Two lunch boxes with different labels
+intro: One box is labelled "might be empty" and holds nothing. The other is labelled "always has a sandwich" and holds one. A spare sandwich is on the table.
+# zones, items, vars, toggles, actions, drops, script: shortened here, see content/kotlin/null-safety/what-is-null.md
+try:
+  - text: "Drag a sandwich into the box labelled \"might be empty\". Drag it out again."
+    done: ["spare>maybe", "spare>table"]
+  - text: "Press \"Count the slices\" while that box is empty."
+    done: [count]
+  - text: "Try to leave the box labelled \"always has a sandwich\" empty."
+    done: ["fixed>table"]
+  - text: "(Optional reveal) Tick \"Look inside first\", then press \"Count the slices\" on the empty \"might be empty\" box."
+    done: ["look=on", count]
+    optional: true
+```
 
 **What you should notice:** The "might be empty" box lets you leave without a sandwich, the "always has a sandwich" box refuses to stay empty, and counting slices in an empty box stops the sim unless you looked first.
 
@@ -731,7 +743,7 @@ The same crash can come from Java code. Kotlin does not report nullability error
 |---|---|---|
 | C1 | `docs/01` §5.3 table says a page cannot be a live leaf without a video, and §5.2 step 2 puts the video before going live. Both are older than L26 and Rule V1 in the same doc. | Follow L26 and Rule V1: a leaf can be live with `video: ""`. `docs/01` §5.2 and §5.3 should be corrected by their owner. | RESOLVED: already corrected in `docs/01` (A2e). |
 | C2 | The extra banned words in T4 ("easy", "trivial", "of course") and the no-exclamation check in T6 go beyond the list in `docs/01` §7. | Kept as stricter checks for lessons. Remove them if the author disagrees. |
-| O1 | ~~Sim IDs belong to `docs/05`.~~ **Resolved 18 Oct 2026:** `null-lunch-box` is specified in `docs/05` §10. | Marker form `<!-- SIM: id -->` stays. |
+| O1 | ~~Sim IDs belong to `docs/05`.~~ **Resolved 18 Oct 2026:** `null-lunch-box` is specified in `docs/05` §10. | Superseded 21 Oct 2026 by ADR 009: a ```` ```sim ```` block replaces the comment marker. |
 | O2 | ~~How Predict and Fix widgets work.~~ **Resolved 18 Oct 2026:** the `challenge` block of `docs/06` §3 is the single format. `renderLessons` (ADR 005; formerly `syncLessons`) and `validateContent` handling is owned by `docs/07` §6. | `docs/06` §3. |
 | O3 | ~~Kobweb and HTML comments (§5.3).~~ **Obsolete 20 Oct 2026 (ADR 005):** lessons no longer go through the Kobweb Markdown plugin. `renderLessons` cuts the SIM marker out of the source, and V12 forbids any other raw HTML in a live leaf. The old export-and-grep test (P6-5) is dropped. | closed |
 | O4 | ~~Marker in `_roadmap.md` for stems with AI-style tasks.~~ **Resolved 18 Oct 2026:** `ai-review` in the stem `Flags:` line and `F(ai):` in the Challenges column (`docs/08` §2.2, §5). | closed |

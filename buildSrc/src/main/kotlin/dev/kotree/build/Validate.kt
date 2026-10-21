@@ -267,7 +267,7 @@ private fun v12(f: LeafFile, v: MutableList<Violation>) {
 
 private val SIM_MARKER_ID = Regex("^<!-- SIM: ([a-z0-9]+(-[a-z0-9]+)*) -->$")
 
-/** Number of legacy `<!-- SIM: id -->` markers in the leaves (rule SM0, a warning until WP7 ends, ADR 009 section 6). */
+/** Number of legacy `<!-- SIM: id -->` markers in the leaves (rule SM0, an error since WP7 ended, ADR 009 section 6). */
 fun legacySimMarkers(c: Content): Int = c.leafFiles.sumOf { f -> f.body.lines().count { SIM_MARKER_ID.matches(it.trim()) } }
 
 /** SM1-SM10 for the ```sim fences of one leaf (ADR 009 section 6). Any status; a leaf without a fence is skipped. */
