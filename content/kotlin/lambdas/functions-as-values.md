@@ -54,11 +54,11 @@ Mia has a card with the header "needs: a name, makes: a greeting". She does not 
 
 When Mia hands Sam the card, when do the steps run? Here are three ideas.
 
-- A. At once, as the card leaves her hand.
-- B. Only when Sam cooks it.
-- C. When the whole program starts.
+- A. When the whole program starts.
+- B. At once, as the card leaves her hand.
+- C. Only when Sam cooks it.
 
-Idea A feels right because handing something over sounds like an action. But the card is only steps on paper. Idea C mixes up writing the card with using it. Idea B is the answer.
+Idea B feels right because handing something over sounds like an action. But the card is only steps on paper. Idea A mixes up writing the card with using it. Idea C is the answer.
 
 ### Build
 
@@ -122,7 +122,7 @@ fun main() {
 type: predict
 run: false
 id: stored-not-cooked
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun task() {
       println("run")
@@ -155,7 +155,7 @@ output: |
 type: predict
 run: false
 id: swap-the-card
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun twice(x: Int): Int {
       return x * 2
@@ -191,7 +191,7 @@ output: |
 type: predict
 run: false
 id: length-of-the-dish
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun label(n: Int, thing: String): String {
       return "$n $thing"

@@ -31,7 +31,7 @@ Think of a tour company with one guide.
 - The guide never reads what is at the stops. The guide only follows the list.
 - Any company can train its own guide with its own routine.
 
-**Where the analogy stops:** A real guide can read your list before the tour and decide what to do. A function does not look inside the lambda it holds. It can only call it and take whatever comes back. Also, no booking office stops you from sending a list that the guide never follows.
+**Where the analogy stops:** A real guide can read your list before the tour and decide what to do. A function does not look inside the lambda it holds (a lambda is a small function written on the spot). It can only call it and take whatever comes back. Also, no booking office stops you from sending a list that the guide never follows.
 
 ## Build the logic
 
@@ -43,11 +43,11 @@ The company has one guide. Customer one hands over the stops "bakery" and "park"
 
 The guide has never seen the stops on a list. How does the routine know what to do at them? Here are three ideas.
 
-- A. The guide has to be rewritten for every customer.
-- B. The routine has an empty slot, "follow the list here". The customer fills it when booking.
-- C. The guide guesses what the stops are.
+- A. The guide guesses what the stops are.
+- B. The guide has to be rewritten for every customer.
+- C. The routine has an empty slot, "follow the list here". The customer fills it when booking.
 
-Idea A defeats the point of one routine. Idea C is how mistakes happen. Idea B is the answer.
+Idea B defeats the point of one routine. Idea A is how mistakes happen. Idea C is the answer.
 
 ### Build
 
@@ -61,7 +61,7 @@ Idea A defeats the point of one routine. Idea C is how mistakes happen. Idea B i
 
 ### Name it
 
-A **higher-order function** is a function that takes another function as an input, which is called a parameter, or gives one back. The Kotlin documentation describes it as a function that receives other functions as parameters. In the function's first line, the slot is a parameter with a function type, for example `visit: (Int) -> Unit`. That reads: the parameter `visit` is a function that takes one whole number and gives back nothing useful. Inside the function's steps, you call it the way you call any function stored in a variable, with `visit(1)`. When you call the higher-order function, you hand it a lambda, often as a trailing lambda.
+A **higher-order function** is a function that takes another function as an input, which is called a parameter, or gives one back. The Kotlin documentation describes it as a function that receives other functions as parameters. In the function's first line, the slot is a parameter with a function type, for example `visit: (Int) -> Unit`. That reads: the parameter `visit` is a function that takes one whole number and gives back nothing useful. Inside the function's steps, you call it the way you call any function stored in a variable, with `visit(1)`. When you call the higher-order function, you hand it a lambda, often written after the round brackets (a trailing lambda).
 
 | Tour company | In Kotlin |
 |---|---|
@@ -112,7 +112,7 @@ fun main() {
 type: predict
 run: false
 id: guide-follows-twice
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun twice(action: () -> Unit) {
       println("start")
@@ -146,7 +146,7 @@ output: |
 type: predict
 run: false
 id: zero-stops-booked
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun times(count: Int, action: () -> Unit) {
       repeat(count) { action() }
@@ -179,7 +179,7 @@ output: |
 type: predict
 run: false
 id: value-given-to-the-stop
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun withTotal(a: Int, b: Int, show: (Int) -> Unit) {
       show(a + b)
@@ -233,7 +233,7 @@ It is a function that takes another function as a parameter, or gives one back. 
 You write the shared routine once, and each caller supplies the part that changes. In the spinner example, the show and hide steps stay in one place. My own reasoning: the trade-off is that a reader must follow where the lambda is called, because the call is no longer on the line that wrote it.
 
 **What does `inline` do, and why would you use it?**
-The documentation says that using functions as values adds run-time cost, because of extra memory use and extra calls. Marking a function `inline` makes the compiler copy the function's body, and the lambdas passed to it, into the place where it is called. The documentation warns that this can make the generated code grow, so you avoid inlining large functions. The documentation shows `repeat` as an `inline` function.
+The documentation says that using functions as values adds run-time cost, because of extra memory use and extra calls. Marking a function `inline` makes the compiler copy the function's body, and the lambdas passed to it, into the place where it is called. The documentation warns that this can make the generated code grow, so you avoid inlining large functions. The `repeat` reference page shows it as `inline`.
 
 **Who decides when the lambda runs, and how often?**
 The function that holds it. It may call it once, many times or never, as `times(0)` shows. My own reasoning: when you hand a lambda to a function you did not write, read what the function does with it.

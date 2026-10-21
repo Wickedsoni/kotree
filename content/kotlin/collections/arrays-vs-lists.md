@@ -32,7 +32,7 @@ Think of an egg box and a shopping bag.
 - Two egg boxes are two things, even when they hold the same eggs in the same slots.
 - Some boxes are built for eggs only, so each egg lies straight in its slot. Other boxes take anything, so each egg sits in its own paper cup first. The cups cost a little space and time.
 
-**Where the analogy stops:** You can see a paper cup in a real box. In Kotlin the compiler adds the cups for you, and you never see them. Also, a real shopper compares two boxes by looking at the eggs. Kotlin's plain "same?" question on an array looks at the box, not the eggs.
+**Where the analogy stops:** You can see a paper cup in a real box. In Kotlin, the cups are added for you, and you never see them. Also, a real shopper compares two boxes by looking at the eggs. Kotlin's plain "same?" question on an array looks at the box, not the eggs.
 
 ## Build the logic
 
@@ -44,11 +44,11 @@ Mia has an egg box with 6 slots. She swaps the egg in slot 2 for a bigger one, a
 
 Mia asks the computer: "Is my brother's box the same as mine?" What does the computer check? Here are three ideas.
 
-- A. Whether the two boxes hold the same eggs in the same slots.
-- B. Whether the two name tags lead to one box.
-- C. Whether the two boxes have the same number of slots.
+- A. Whether the two name tags lead to one box.
+- B. Whether the two boxes have the same number of slots.
+- C. Whether the two boxes hold the same eggs in the same slots.
 
-Idea A is what most people expect, and it is what a shopping bag does. Idea C is too weak, because two boxes with 6 slots can hold different eggs. For an egg box, the plain question is idea B. Looking at the eggs needs a different question.
+Idea C is what most people expect, and it is what a shopping bag does. Idea B is too weak, because two boxes with 6 slots can hold different eggs. For an egg box, the plain question is idea A. Looking at the eggs needs a different question.
 
 ### Build
 
@@ -58,12 +58,12 @@ Idea A is what most people expect, and it is what a shopping bag does. Idea C is
 4. A name tag only says which box to use. Locking the tag does not lock the eggs.
 5. The plain question "are these the same?" asks whether two tags lead to one box.
 6. To ask "do these hold the same eggs in the same slots?", use a different question.
-7. To show the eggs on a screen, first line them up as one piece of text. Handing over the whole box shows a label for the box, not the eggs.
+7. To print the eggs, first line them up as one piece of text. Handing over the whole box shows a label for the box, not the eggs.
 8. A shopping bag can grow and shrink, and it is compared by what it holds. Reach for the bag first. Use the egg box when the size is fixed and speed matters, or when other code asks for one.
 
 ### Name it
 
-An **array** holds a fixed number of values of the same type, in order. The Kotlin documentation says each value is reached by its position, called its **index**, and the first index is 0. You make one with `arrayOf(...)`. For whole numbers you can use `intArrayOf(...)`, which makes an **`IntArray`**. Writing `IntArray(3)` makes a box of 3 slots that all hold 0. You read a slot with `box[1]` and change it with `box[1] = 9`.
+An **array** holds a fixed number of values of the same type, in order. The Kotlin documentation says each value is reached by its position, called its **index**. The first index is 0 (general knowledge). You make one with `arrayOf(...)`. For whole numbers you can use `intArrayOf(...)`, which makes an **`IntArray`**. Writing `IntArray(3)` makes a box of 3 slots that all hold 0. You read a slot with `box[1]` and change it with `box[1] = 9`.
 
 The documentation says `val` on an array only stops you from giving the name a different array. The items stay changeable in both `val` and `var` arrays. It also says an array has a fixed size and has no read-only version. To change the size, you make a new array and copy the items across.
 
@@ -116,7 +116,7 @@ fun main() {
 type: predict
 run: false
 id: same-box-or-same-eggs
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val first = intArrayOf(1, 2)
@@ -147,7 +147,7 @@ output: |
 type: predict
 run: false
 id: copy-before-the-swap
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val box = intArrayOf(5, 6, 7)
@@ -177,7 +177,7 @@ output: |
 type: predict
 run: false
 id: new-box-of-three
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val box = IntArray(3)
@@ -210,7 +210,7 @@ output: |
 
 ## Common mistakes
 
-- **Comparing two arrays with `==` and expecting a check of the items.** It works that way for lists, so it feels right. For arrays it asks whether both names lead to one array, and Kotlin gives `false` without any error. Use `contentEquals`.
+- **Comparing two arrays with `==` and expecting a check of the items.** It works that way for lists, so it feels right. For arrays it asks whether both names lead to one array, and Kotlin gives `false`. The compiler only warns, and the warning is easy to miss. Use `contentEquals`.
 - **Thinking `val` makes the items fixed.** The word sounds like "locked". The documentation says it only stops the name from pointing at a different array. Swap items freely, or copy with `toList()` if you need a frozen set.
 - **Printing an array and expecting the items.** A list prints its items, so an array feels the same. Printing the array itself shows a label for the array (general knowledge). Use `joinToString()`.
 - **Trying to add to an array.** A bag grows, so the box feels like it should. An array has no `add`. Make a new array and copy, or use a `MutableList`.
@@ -219,12 +219,12 @@ output: |
 
 **Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its brush page draws a gradient, which is a colour that fades into another colour. In one snippet the colour stops are written with `arrayOf(...)`, and each entry pairs a position with a colour. Elsewhere on the same page the colours are written with `listOf(...)`. So real Android code uses both kinds side by side. The page does not explain why it picks one or the other.
 
-This next part is my own reasoning. Picture a settings screen that keeps four slider positions in an array. It lights up a Save button when `saved != current`. Two arrays with the same four numbers count as different, so the Save button stays lit when nothing has changed. A check with `contentEquals`, or a list, would ask the question the screen meant.
+This next part is my own reasoning. Picture a settings screen that keeps four slider positions in an array. It lights up a Save button when `saved != current`. Two arrays with the same four numbers count as different. The compiler warns about that `==`, but only warns, which is easy to miss. So the Save button stays lit when nothing has changed. A check with `contentEquals`, or a list, would ask the question the screen meant.
 
 ## Say it in an interview
 
 **What is the difference between an Array and a List in Kotlin?**
-An array has a fixed size, and its items can always be changed. A `List` can be read-only, and a `MutableList` can grow. The documentation's comparison also says `==` on arrays compares references, while on collections it compares what is inside. To grow an array you make a new one and copy. The documentation recommends collections for most uses.
+An array has a fixed size, and its items can always be changed. A `List` can be read-only, and a `MutableList` can grow. The documentation's comparison also says `==` on arrays compares whether both names point at one array, while on collections it compares what is inside. To grow an array you make a new one and copy. The documentation recommends collections for most uses.
 
 **When would you pick an array?**
 The documentation says arrays are for working with Java code and for low-level or speed-sensitive code. Java is another language that Android and many libraries use (general knowledge). My own reasoning: in everyday app code a `List` is safer, because it can be read-only and compares by content. Arrays also turn up in algorithm exercises (general knowledge).
@@ -233,7 +233,7 @@ The documentation says arrays are for working with Java code and for low-level o
 The documentation says the `Array` class boxes number values into objects, and `IntArray` stores them without boxing. The trade-off is that `IntArray` is a different type from `Array<Int>` and from `List<Int>`, so you convert when another function wants the other one. My own reasoning: the saving matters most when there are very many numbers.
 
 **How do you compare the items of two arrays?**
-Use `contentEquals`. The documentation says not to use `==` for that, because `==` checks whether both names point at one array. For arrays inside arrays it names `contentDeepEquals`. The danger of `==` is that it compiles and gives `false`, so the bug hides.
+Use `contentEquals`. The documentation says not to use `==` for that, because `==` checks whether both names point at one array. For arrays inside arrays it names `contentDeepEquals`. The danger of `==` is that it compiles and gives `false`, so the bug hides. The compiler only warns, and the warning is easy to miss.
 
 ## Recap
 

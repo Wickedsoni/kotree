@@ -44,19 +44,19 @@ A teacher gives a helper three name cards: Ana, Bo and Cleo. She also gives a no
 
 The first note never gives the card a label. How can the note talk about the card? Here are three ideas.
 
-- A. It cannot. Every note must give its card a label.
-- B. The helper gives a lone card a short default label.
+- A. The helper gives a lone card a short default label.
+- B. It cannot. Every note must give its card a label.
 - C. The note must always use the word "card".
 
-Idea A feels safe, but Kotlin allows a shortcut when there is exactly one card. Idea C invents a rule. Idea B is the answer.
+Idea B feels safe, but Kotlin allows a shortcut when there is exactly one card. Idea C invents a rule. Idea A is the answer.
 
 The third note has two lines. What does it give back? Here are three ideas.
 
-- A. The result of the first line.
-- B. The result of the last line.
-- C. Nothing, unless a line says "give this back".
+- A. Nothing, unless a line says "give this back".
+- B. The result of the first line.
+- C. The result of the last line.
 
-Idea C comes from writing functions, where a line says it. A note works differently. Idea B is the answer.
+Idea A comes from writing functions, where a line says it. A note works differently. Idea C is the answer.
 
 ### Build
 
@@ -65,7 +65,7 @@ Idea C comes from writing functions, where a line says it. A note works differen
 3. The last line is the answer. No line has to say "give this back".
 4. If the helper hands in exactly one thing, you may drop the labels and the dividing line. The thing gets a short default label.
 5. If the helper's last slot is for a note, you may stick the note outside the round brackets. If that slot is the only one, the round brackets can go.
-6. To leave a note early, say which note you are leaving. Without that, you are leaving the whole job.
+6. To leave a note early, say which note you are leaving. Without that, inside a `forEach` note, you are leaving the whole job. In a stored note such as `val note = { ... }`, a bare `return` does not compile.
 
 ### Name it
 
@@ -73,7 +73,7 @@ A **lambda expression** is a small function written on the spot. The Kotlin docu
 
 The default label is **`it`**. The documentation says that when a lambda has a single input, you do not need to name it, and the arrow can be left out. The input is then named `it`.
 
-A **trailing lambda** is a lambda written outside the round brackets. The documentation says that if the last parameter of a function is a function, the lambda can be placed outside the round brackets. If the lambda is the only argument, the round brackets can be left out entirely.
+A **trailing lambda** is a lambda written outside the round brackets. The documentation says that if the last parameter of a function is a function, the lambda can be placed outside the round brackets. If the lambda is the only input to the call, the round brackets can be left out entirely.
 
 To leave a lambda early, you write a **qualified return**: `return@label`. The returns page says that such a label has the same name as the function the lambda is passed to, so `return@forEach` leaves only the lambda. It says this is similar to `continue` in a loop.
 
@@ -108,7 +108,7 @@ fun main() {
 
 It prints `11`. The note doubles 5 to get 10, and the last line adds 1.
 
-Kotlin refuses to run this one, because it does not know what kind of thing `x` is. The documentation says you must give the types either in the lambda or in the function type.
+Kotlin refuses to run this one, because nothing tells it what type `x` is.
 
 ```kotlin
 // does not compile
@@ -124,7 +124,7 @@ fun main() {
 type: predict
 run: false
 id: last-line-is-the-answer
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val note = { x: Int ->
@@ -152,7 +152,7 @@ output: |
 type: predict
 run: false
 id: print-as-last-line
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val sizeNote = { word: String ->
@@ -182,7 +182,7 @@ output: |
 type: predict
 run: false
 id: leave-the-note-early
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       listOf(1, 2, 3).forEach {
@@ -213,19 +213,20 @@ output: |
 - The last line of a note is its answer. No `return` is needed.
 - One card and no label means the card is called `it`.
 - Curly brackets after round brackets are a lambda in the last slot, not a block of code that runs on the spot.
-- `return@name` leaves the note. A plain return would leave the whole function.
+- `return@name` leaves the note. A plain return would leave the whole function, and only compiles inside a `forEach` lambda.
 
 ## Common mistakes
 
 - **Writing `return` at the end of a lambda, as in a function.** A function needs it, so a note feels the same. The last line is already the answer. Write the value on the last line.
 - **Ending a lambda with a print line and expecting a useful answer.** The print feels like the finishing touch. A print gives back `Unit`, which means nothing useful, and that becomes the answer. Printing a `Unit` shows the text `kotlin.Unit`, which is general knowledge because the documentation pages do not show it. Put the value you want on the last line.
+- **Thinking `it` works for lambdas with two or more parameters.** `it` exists only when there is exactly one input. With two, name both, such as `{ a, b -> ... }`.
 - **Reading `names.forEach { ... }` as a block that runs once on the spot.** Curly brackets in an `if` do run on the spot, so this feels right. Here they are a note handed to `forEach`, and the helper reads it once for each name.
 
 ## Where this shows up in Android
 
-**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its Kotlin page says that the last parameter of every layout, such as `Column`, is `content`, which is a function that adds the child elements to the screen. So `Column { Text("Some text") }` hands a trailing lambda to `content`, and the round brackets are left out because it is the only argument. A `Button` shows both forms in one call: `onClick = { ... }` sits inside the round brackets, and a second lambda follows them.
+**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its Kotlin page says that the last parameter of every layout, such as `Column`, is `content`, which is a function that adds the items inside the layout to the screen. A layout arranges items on the screen. So `Column { Text("Some text") }` hands a trailing lambda to `content`, and the round brackets are left out because it is the only argument. A `Button` shows both forms in one call: `onClick = { ... }` sits inside the round brackets, and a second lambda follows them.
 
-This is a common first puzzle in a Compose file. The braces after `Column` look like a block of code with no function around it. They are the note that `Column` reads to find out what to put on the screen.
+My own reasoning: this is a common first puzzle in a Compose file. The braces after `Column` look like a block of code with no function around it. They are the note that `Column` reads to find out what to put on the screen.
 
 ## Say it in an interview
 
@@ -236,7 +237,7 @@ It is the default name of a lambda's only input. The documentation says you can 
 It is a lambda written outside the round brackets. The documentation says this is allowed when the lambda is the last parameter, and the round brackets can go if it is the only argument. My own reasoning: the call then reads like a built-in block, which is why Compose code looks the way it does.
 
 **What does a lambda give back, and how do you return from the middle?**
-It gives back the value of its last expression, unless it gives back `Unit`. To leave early you use a label, such as `return@forEach`. The documentation says a bare `return`, with no label, returns from the nearest function around it, so inside a lambda it would leave the function that holds the lambda. The label leaves only the lambda.
+It gives back the value of its last expression, unless it gives back `Unit`. To leave early you use a label, such as `return@forEach`. The documentation says a bare `return`, with no label, returns from the nearest function around it, so inside a `forEach` lambda it would leave the function that holds the lambda. A bare `return` in a stored lambda does not compile. The label leaves only the lambda.
 
 **What is the difference between a lambda and a function reference?**
 Both are function values. A lambda is written on the spot and can hold its own small steps. The documentation says a function reference, written `::name`, points at a function that already exists. My own reasoning: use a reference when a function with the right header already exists, and a lambda when the work is small and only needed here.
