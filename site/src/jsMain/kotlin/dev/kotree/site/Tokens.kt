@@ -279,6 +279,14 @@ object Tokens {
         const val leafFadeStartZ = 3.5
         const val leafFadeEndZ = 5.0
         const val leafAlphaBuckets = 8
+        /** Dots of a bough sit on its centre points from this share of the points on; dots of a branch on limb points from this t. */
+        const val boughAnchorFrom = 0.4
+        const val limbAnchorFrom = 0.33
+        /** Green tones, and autumn tones (yellow, mid, orange) of the dot buckets. */
+        const val shades = 3
+        const val autumnTones = 3
+        /** Dots are drawn only above this alpha. */
+        const val minDrawAlpha = 0.01
     }
 
     /** Leaf sway when the camera moves (ADR 008 §Motion). */

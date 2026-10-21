@@ -130,6 +130,7 @@ class VectorRenderer(
     private val labels = LabelLayout(nodes, g)
     private val wood = WoodLayer(this)
     private val backdrop = Backdrop(geometry)
+    private val canopy = CanopyLayer(geometry)
 
     private val surfaceCss = cssColor(Tokens.Color.surface)
     private val stemCss = cssColor(Tokens.Status.treeStem)
@@ -219,7 +220,7 @@ class VectorRenderer(
         wood.invalidate()
     }
 
-    override fun paintWood(g: dynamic, s: Double, k: Double, ox: Double, oy: Double, ww: Double, wh: Double, step: Int, level: Int, branch: Int) {
+    override fun paintWood(g: dynamic, s: Double, k: Double, ox: Double, oy: Double, ww: Double, wh: Double, step: Int, level: Int, branch: Int, leafBucket: Int) {
         val sk = s * k
         g.setTransform(sk, 0.0, 0.0, sk, -ox * sk, -oy * sk)
         for (p in rootPieces) { g.fillStyle = p.color; g.fill(p.path) }
@@ -235,10 +236,12 @@ class VectorRenderer(
             g.lineWidth = (Tokens.Gen.STEM_WIDTH * s).coerceIn(Tokens.Tree.stemLineMinPx, Tokens.Tree.stemLineMaxPx) / s
             for (t in twigPaths) if (t != null) g.stroke(t)
         }
-        if (level >= LEVEL_BRANCH) paintLeaves(g, s, k, ox, oy, ww, wh, level, branch)
+        if (level >= LEVEL_BRANCH) paintLeaves(g, s, k, ox, oy, ww, wh, level, branch, leafBucket)
     }
 
-    private fun paintLeaves(g: dynamic, s: Double, k: Double, ox: Double, oy: Double, ww: Double, wh: Double, level: Int, branch: Int) {
+    private fun paintLeaves(g: dynamic, s: Double, k: Double, ox: Double, oy: Double, ww: Double, wh: Double, level: Int, branch: Int, leafBucket: Int) {
+        if (leafBucket <= 0) return // dots only at this zoom
+        g.globalAlpha = leafBucket.toDouble() / Tokens.Canopy.leafAlphaBuckets
         val strokePx = Tokens.Tree.stemLineMinPx
         val haloPx = Tokens.Space.grid.toDouble()
         val ls = (Tokens.Gen.LEAF_SIZE * s).coerceIn(leafMin, leafMax)
@@ -282,6 +285,7 @@ class VectorRenderer(
                 }
             }
         }
+        g.globalAlpha = 1.0
     }
 
     /**
@@ -324,7 +328,8 @@ class VectorRenderer(
 
         backdrop.draw(g, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
         val step = (splitProgress(cam.z) * Tokens.Zoom.splitSteps).roundToInt()
-        wood.draw(g, cam, s, dpr, step, level, branchIdx, crisp)
+        canopy.draw(g, cam.z, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
+        wood.draw(g, cam, s, dpr, step, level, branchIdx, leafAlphaBucket(cam.z), crisp)
         g.setTransform(dpr, 0.0, 0.0, dpr, 0.0, 0.0)
 
         val hovered = hover
