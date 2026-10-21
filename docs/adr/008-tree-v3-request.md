@@ -51,6 +51,14 @@ Paths: K = `site/src/jsMain/kotlin/dev/kotree/site/`, T = `site/src/jsTest/kotli
 
 ⚠️ VERIFY (WP0): `configAsKobwebApplication` sets up a `js { browser() }` target, so `jsBrowserTest` (Karma, headless Chrome by default) should exist, and `ubuntu-latest` should ship Chrome. Kotlin's docs mark Karma as deprecated. Fallback 1: the experimental `browser { test { chromium() } }` DSL (Playwright). Fallback 2: `js { nodejs() }` + `jsNodeTest`. Every planned test is pure Kotlin (no DOM) so that fallback 2 works.
 
+### WP0 outcome (ui-engineer, 21 Oct 2026)
+
+- **VERIFY resolved with fallback 2.** `jsBrowserTest` exists but cannot be proven here (no Chrome; the sandbox cannot download Compose artifacts, so no JS compile or test run was possible). `site/build.gradle.kts` adds `js { nodejs() }` after `configAsKobwebApplication`; `:site:tasks` lists `jsNodeTest`, and `:site:validateContent` passes. CI runs `./gradlew :site:jsNodeTest`. Later WPs: use `jsNodeTest`, not `jsBrowserTest`.
+- **Baselines measured** by compiling the same pure sources with kotlinc on the JVM: `limbHash=cecb906380417dd8`, `fullHash=c9399b38f0f393cf` (both pinned).
+- **Plan premise wrong:** `layoutReport` does NOT PASS today: 31 failures at 1280x800, 28 at 1440x900 (landing z uses `Camera.branchTarget`, as TreeView does). Mostly "label overlaps leaf" in kotlin, android-core, ui, security. The test is therefore a ratchet (failures <= baseline + 3); WP2 must reach a strict PASS and then tighten it.
+- **Unproven until the one CI build:** the Node test run (first run may expose JS-vs-JVM float differences).
+- Files: `site/build.gradle.kts`, `site/src/jsTest/kotlin/dev/kotree/site/tree/GeometryTest.kt` (new), `.github/workflows/build.yml` (steps jsNodeTest, check-tokens.py, check-hardcoded.sh; both scripts exit non-zero on failure, verified in source), this ADR.
+
 ### Tokens (WP1; colour hex typed only in `Tokens.kt`; Kotlin constants, no CSS vars except `ProgressLegend`, which uses existing vars plus the two autumn swatches through `cssColor`)
 
 | Token | Value (start) | Use |

@@ -37,6 +37,12 @@ jobs:
       - run: chmod +x gradlew
       - name: Validators and buildSrc tests
         run: ./gradlew :site:validateContent
+      - name: Unit tests (Kotlin/JS on Node, ADR 008 WP0)
+        run: ./gradlew :site:jsNodeTest
+      - name: Token contrast and ink checks
+        run: python3 scripts/check-tokens.py
+      - name: Hardcoded colour, font and spacing check
+        run: bash scripts/check-hardcoded.sh
       - name: Gate script (export, file and log check, kotree.js size)
         run: bash scripts/wave-check.sh
       - name: Upload static export

@@ -1,0 +1,54 @@
+# Review L1-b: six rewritten first-leaf shadow leaves
+
+Reviewer: independent. Date: 21 Oct 2026. Checklist: `docs/lesson-checklist.md`; frontmatter rules: `docs/00-decisions.md` 8.2; challenge rules: `docs/06` 3 and 5.
+
+Leaves:
+- `content/testing/why-test/why-tests-exist.md`
+- `content/tools/git/what-is-a-commit.md`
+- `content/ui/first-composable/what-is-declarative-ui.md`
+- `content/dsa/complexity/counting-steps.md`
+- `content/daa/analysis/best-worst-average-case.md`
+- `content/kotlin/reading-code/reading-order-for-code.md`
+
+## What passed
+
+- **Build:** `gradlew :site:validateContent --offline` printed `validateContent: ok`. The full Kobweb export was not run, because only content changed.
+- **Frontmatter:** id, title, difficulty, requires and fruit match the roadmap YAML for all six leaves. Kotlin `order: 63` is correct (position 63 in the branch). Key order follows 8.2, `status: shadow`, and the dates are empty. `playground` is consistent with the sections kept: true keeps Try it and Fix the bug for testing and ui, false removes them for git, dsa, daa and kotlin. Each `sims:` id has one SIM marker and a line in `docs/sims/needed-ids.md`.
+- **Structure:** section order is right, the interview section sits after "Where this shows up in Android" and before Recap, and each has 4 questions. SOURCES comments sit near line 18. No stray VERIFY marks. No "next lesson" promises. No exclamation marks in prose. Prose is 1,168 to 1,407 words per leaf, inside the 900 to 1,600 budget (Interview and Practise excluded).
+- **Code:** all 22 Kotlin snippets compiled and ran with `scripts/kt-run.sh` (kotlinc 2.4.21) with no compiler warnings. Every stated output and every Predict key matches the real stdout. The two intended crashes (reading-order cart, `Profile.shout`) throw NullPointerException after the stated stdout. Fix-the-bug items: broken code fails as described, fixes print all `true` (testing) or `Cart: 2 / Badge: 2` (ui). Predict correct letters vary within each leaf.
+- **Git facts:** checked against the Pro Git source (`recording-changes.asc`, `what-is-git.asc`): "stages a file exactly as it is when you run the git add command", "the commit records the snapshot you set up in your staging area", "Anything you didn't stage is still sitting there modified", the `-m` example, `.gitignore` patterns, "Committed means that the data is safely stored in your local database", snapshots not differences. The `git restore` claims (default source is the staging area, `--source` picks a commit) were confirmed by running git 2.43 locally. All hold.
+- **Android and Kotlin facts:** quotes match the live pages for testing/fundamentals, Compose mental-model, render vitals (under 16 ms, overrun frame dropped), activity lifecycle (onCreate once, rotation makes a new instance, `savedInstanceState` null if never existed), Kotlin classes (init blocks run in body order with property initializers), coding conventions (class order; do not sort by name or visibility; read top to bottom), extensions (static dispatch; member wins), ranges (`1..4` includes both ends).
+- **LeetCode and HackerRank titles:** a web search confirmed 268 Missing Number, 1480 Running Sum of 1d Array, 1342 Number of Steps to Reduce a Number to Zero, 1512 Number of Good Pairs, 28 Find the Index of the First Occurrence in a String, and that the HackerRank `runningtime` page exists and is about insertion sort shifts. LeetCode 268 is right, and it fits the leaf (sum formula against repeated scanning). All six listed problems fit their leaf except for the notes in FIX 3 and FIX 4.
+- **Design and accessibility:** these are Markdown leaves, so tokens and colour are not in play. No images, so no alt text is needed. SIM sections give a "What you should notice" sentence that reads without the sim.
+
+## Could not verify
+
+- git-scm.com and leetcode.com do not resolve from this sandbox. The `git-restore` manual page was replaced by the local run above. The difficulty labels "Easy" for LeetCode 28 and for HackerRank Running Time of Algorithms were not confirmed (they are being removed by FIX 3 anyway).
+- LeetCode 204, 81, 912 and 215 (see FIX 3 and FIX 4) were not checked; they come from `docs/practice/` only.
+- Compose definition sentence for FIX 7 is not yet checked against the official page.
+
+## Notes (not FIX)
+
+- `output:` blocks in the git leaf and in two daa Predicts hold an answer, not stdout (checklist 5 says stdout only). Those items have no program to run, so I left them. Owner may want a rule in `docs/06`.
+- dsa 1342 (Number of Steps to Reduce a Number to Zero) grows like log n, which this leaf has not met. It is a supplied `[both]` problem, so I kept it. dsa 204 (Count Primes) is `[both]` in `practice-dsa.md` and was left out while `[B]` 268 was kept; optional to add 204 as the hard end.
+- The roadmap row for `reading-order-for-code` lists an `F(ai)` Fix idea. The leaf has `playground: false` and teaches it as a worked example in Name it, which `docs/04` 4 allows.
+- daa 28 is substring search and daa Running Time of Algorithms needs insertion sort, neither taught here. Acceptable as "practise later".
+
+VERDICT: FIX
+
+## FIX list
+
+1. `content/dsa/complexity/counting-steps.md`, section "The question": 6 sentences, limit is 5 (checklist 2). Merge or drop one, for example drop "Nobody changed the code." Mechanical (`fixer`).
+2. `content/daa/analysis/best-worst-average-case.md`, section "The question": 6 sentences (the quote counts as two). Merge "Same code, same size of list." into the previous sentence, or cut one. Mechanical (`fixer`).
+3. `content/dsa/complexity/counting-steps.md` lines 276 to 281 and `content/daa/analysis/best-worst-average-case.md` lines 253 to 254: "(rating: Easy)" contains the banned word "easy" (T4), and LeetCode's own label is "difficulty", not "rating". Remove the parenthesised label from every item and delete the line "LeetCode shows a rating beside each title". Keep the easy-to-hard order. Mechanical (`fixer`).
+4. `content/daa/analysis/best-worst-average-case.md`, "Practise on these": 2 problems, checklist 12 needs 4 to 8. `docs/practice/practice-daa.md` supplies LeetCode 81 Search in Rotated Sorted Array II, 912 Sort an Array and 215 Kth Largest Element in an Array. `fixer` must check each number and title before adding, and must not repeat the unverified claim that 912's tests defeat a fixed-pivot quicksort. If the owner thinks these are too advanced for a first DAA leaf, the owner decides to keep 2 and relax checklist 12 for this leaf. Mechanical, then owner only if the checks fail.
+5. `content/dsa/complexity/counting-steps.md`, Guess block, text after the first question: "Idea C is what happens with the habit change" does not match option C ("10 to 1,000"). With the nested habit, 10 to 100 houses takes the steps from 100 to 10,000. Reword so Idea C is simply "the jump you get with a walk inside a walk, not with one walk" without the contradicting numbers. Mechanical (`fixer`).
+6. `content/tools/git/what-is-a-commit.md`, lines 36, 47, 156, 188 (and Interview answer 2 line 177): "A snapshot holds only what you placed in the frame" / "only staged files go into the commit" contradicts the Pro Git text the leaf itself cites (a commit is a snapshot of the whole project; unchanged files are carried forward, only staged changes are new) and interview answer 3. Reword to "only the staged edits are new in the snapshot; edits you did not stage stay in your folder". The same wrong wording is in the sim spec `snapshot-tray` in `docs/sims/needed-ids.md` ("a snapshot holding only the tray files"). Lesson text: mechanical (`fixer`). Sim spec wording: needs the owner (or `physics-designer`) because it changes what the sim shows.
+7. `content/ui/first-composable/what-is-declarative-ui.md`: "Compose" is never defined (title, Mental model "Compose does not redo..."); "composable" is used in Name it paragraph 3 one sentence before its bold definition; "recomposition" appears in Interview answers 3 and 4 with no definition. Define Compose in one sentence in Mental model or Name it (check wording against developer.android.com/compose), swap the order of the composable sentence and its definition, and add a plain-words meaning of recomposition (the page's own wording: Compose "calls only the functions or lambdas that might have changed, and skips the rest"). Mechanical (`fixer`), but `fixer` must verify the Compose definition.
+8. `verified` fields. All snippets were run with kotlin 2.4.21 and every output matched. Set `verified: kotlin-2.4.21` on: testing `break-the-price`, `one-check-misses`, `fix-the-discount` (required, because these are runnable and `not-run` is only allowed for `run: false`, `docs/06` line 107); ui `slides-with-a-list`, `slides-with-a-description`, `fix-badge-left-behind` (required, same reason); dsa `count-nested-3-by-4`, `largest-in-one-pass`, `double-the-street`; daa `best-and-worst-steps`; kotlin `what-runs-first`, `bang-hidden-in-a-tidy-class`, `init-runs-per-object` (optional because `run: false`, but they now have a real run). Leave `not-run` on the git items and the two non-Kotlin daa items (`pick-the-worst-key`, `average-of-five`). Then update the SOURCES sentences in testing and ui that say "none were run ... a 2.4.21 run is still needed", and the "no code was run" lines in dsa and daa. Mechanical (`fixer`).
+9. `content/testing/why-test/why-tests-exist.md`, Interview answer 1 ("because every new feature adds more screens to check by hand") and answer 4 ("The trade-off is that writing tests costs time up front...") are the writer's own reasoning but unlabelled (checklist 4). Add "My own reasoning:" to each. Mechanical (`fixer`).
+10. `content/kotlin/reading-code/reading-order-for-code.md`: The question says the file "is 60 lines long" but the file shown is 26 lines; Build step 1 says "the constructor boxes", a phrase not in the analogy and not defined. Change "60 lines" to match the shown file and replace "constructor boxes" with "the values passed to the constructor" or the like. Mechanical (`fixer`).
+11. `content/ui/first-composable/what-is-declarative-ui.md`, SOURCES comment: add the Compose page sentence behind Common mistakes bullet 4 ("widgets are relatively stateless and don't expose setter or getter functions"); the text drops "relatively stateless", so quote it exactly. Mechanical (`fixer`).
+12. Low priority, T7 (over about 25 words with two ideas), split each: ui Name it paragraph 2 (32 words) and Where this shows up paragraph 1 last sentence (34), ui "What you should notice" (35); daa "What you should notice" (30); git Common mistakes bullet 3 (29); dsa Where this shows up render-page sentence (31); kotlin Name it conventions sentence (29), `!!` sentence (32), interview answer 4 (29). Mechanical (`fixer`).
+
+VERDICT: FIX

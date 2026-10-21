@@ -102,6 +102,9 @@ tasks.register<dev.kotree.build.VerifyLessonExportTask>("verifyLessonExport") {
 kotlin {
     configAsKobwebApplication("kotree")
 
+    // ADR 008 WP0: unit tests are pure Kotlin, so they run on Node (jsNodeTest). No browser or Karma needed in CI.
+    js { nodejs() }
+
     sourceSets {
         jsMain {
             kotlin.srcDir(generateTreeData.flatMap { it.kotlinOut })
@@ -114,6 +117,9 @@ kotlin {
             implementation(libs.compose.html.core)
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
+        }
+        jsTest.dependencies {
+            implementation(kotlin("test"))
         }
     }
 }
