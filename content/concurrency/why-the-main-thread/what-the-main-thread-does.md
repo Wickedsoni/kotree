@@ -238,8 +238,6 @@ The documentation says that when the main thread is blocked, no events can be di
 
 ## Say it in an interview
 
-The interview file for this branch asks about Looper and frame timing. The pages read for this lesson do not cover those, so these questions stay with what they do cover.
-
 **Which thread draws the screen and runs your click code?**
 The main thread, also called the UI thread. The documentation says it dispatches events to the user interface widgets, including drawing events. Your tap code runs on it too, which is why slow tap code delays the next draw.
 

@@ -29,7 +29,7 @@ Think of a restaurant.
 - The kitchen works out of sight. Food keeps cooking even when the dining room is empty.
 - The doorbell rings when something arrives from outside. Someone stops what they are doing and answers it.
 - The shared pantry is a shelf of ingredients. Other people can ask for some of them, but only if the restaurant allows it.
-- The sign by the entrance lists every room that exists.
+- The sign by the entrance lists the rooms. The doorbell may also be put up while the restaurant is open.
 - The owner decides which room to open and when.
 
 A restaurant is not one person doing one long list of jobs. It is a few rooms, each with its own job.
@@ -168,7 +168,7 @@ output: |
 - Four rooms, four jobs: see it, work behind it, hear news, share data.
 - Dining room, kitchen, doorbell, pantry: activity, service, receiver, provider.
 - No `main()`: the system picks which door to open.
-- A room missing from the sign by the entrance can never open.
+- A dining room, kitchen or pantry missing from the sign by the entrance can never open.
 
 ## Common mistakes
 
@@ -184,8 +184,6 @@ Go back to the opening picture. You pressed play and left the screen, yet the mu
 The low-battery message is an example of a system-wide announcement, which is the job the documentation gives a broadcast receiver (my own example). So when you see "something keeps happening after I leave the screen" or "my app reacted with no screen showing", look first at a service or a broadcast receiver, not an activity.
 
 ## Say it in an interview
-
-These questions are my own, written to fit this lesson. The branch's interview file asks about APK contents, which another lesson covers.
 
 **What are the four app components, and what does each one do?**
 Activity, service, broadcast receiver and content provider. An activity is one screen with a user interface. A service runs long work in the background with no interface. A broadcast receiver lets the system deliver an event to the app. A content provider manages shared app data that other apps can use if it permits.

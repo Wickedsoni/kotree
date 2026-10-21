@@ -159,7 +159,7 @@ Here is a symptom this lesson explains: an app installs fine, but crashes the mo
 
 ## Say it in an interview
 
-These questions are my own, written for this lesson. The branch has no interview data file.
+These questions are my own, written for this lesson.
 
 **What is native code, and how does it differ from Kotlin?**
 Native code is compiled ahead of time into instructions for one kind of CPU, so the CPU can run it directly. On Android it is usually C or C++ built with the NDK into a `.so` file. Kotlin code is turned into a form that is not tied to one CPU, and the phone finishes the job (general knowledge).
@@ -182,5 +182,4 @@ The documentation says that with no shared-object file at all, the app builds an
 ## You can now
 
 - Pick the native files out of a list of files in an app package.
-- Predict what happens when an app calls a native library that is missing.
-- Explain what a `.so` file is, using the ready-made sauce.
+- Predict what happens when an app is built with no native library and calls into one.

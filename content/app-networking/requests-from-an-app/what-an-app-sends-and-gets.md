@@ -74,7 +74,7 @@ Idea A is a common guess. It misses that one address can mean different things: 
 
 ### Name it
 
-The computer that answers is the **server**. Apps and servers usually talk in **HTTP**, the web's standard way of sending messages (general knowledge). A message your app sends is a **request**, and what comes back is a **response**. A request has these parts (general knowledge, MDN).
+The computer that answers is the **server**. Apps and servers usually talk in **HTTP**, the web's standard way of sending messages (general knowledge). A message your app sends is a **request**, and what comes back is a **response**. A request has these parts (general knowledge).
 
 | Letter | Part | Meaning |
 |---|---|---|
@@ -116,15 +116,12 @@ id: address-that-does-not-exist
 verified: not-run
 code: |
   data class Response(val status: Int, val body: String)
-
   fun fakeServer(method: String, address: String): Response = when {
       method == "GET" && address == "/books" -> Response(200, "3 books")
       method == "POST" && address == "/books" -> Response(201, "saved")
-      method == "GET" && address.startsWith("/search?q=") ->
-          Response(200, "results for " + address.substringAfter("q="))
+      method == "GET" && address.startsWith("/search?q=") -> Response(200, "results for " + address.substringAfter("q="))
       else -> Response(404, "nothing here")
   }
-
   fun main() {
       val reply = fakeServer("GET", "/shelf")
       println(reply.status)
@@ -152,15 +149,12 @@ id: where-the-search-word-goes
 verified: not-run
 code: |
   data class Response(val status: Int, val body: String)
-
   fun fakeServer(method: String, address: String): Response = when {
       method == "GET" && address == "/books" -> Response(200, "3 books")
       method == "POST" && address == "/books" -> Response(201, "saved")
-      method == "GET" && address.startsWith("/search?q=") ->
-          Response(200, "results for " + address.substringAfter("q="))
+      method == "GET" && address.startsWith("/search?q=") -> Response(200, "results for " + address.substringAfter("q="))
       else -> Response(404, "nothing here")
   }
-
   fun main() {
       val reply = fakeServer("GET", "/search?q=kotlin")
       println(reply.status)
@@ -278,10 +272,8 @@ The Android documentation says most network-connected apps use HTTP to send and 
 
 ## Say it in an interview
 
-The interview file for this branch asks about JSON and HTTPS. This lesson does not cover them, so these questions stay with request parts.
-
 **When your app calls an API, what is in the request and what is in the response?**
-A request has a URL, a method, headers and sometimes a body. A response has a status code, headers and a body (general knowledge, MDN). The status code tells the app whether the call worked before it reads the body.
+A request has a URL, a method, headers and sometimes a body. A response has a status code, headers and a body (general knowledge). The status code tells the app whether the call worked before it reads the body.
 
 **Where would you put a search word, a login token and a new record you want to save?**
 The search word goes on the URL after a question mark. The new record goes in the body of a `POST`. A token is a fact about who is asking, so it goes in a header. My own reasoning: URLs are often written to server logs (general knowledge), which is one reason to keep secrets out of them.

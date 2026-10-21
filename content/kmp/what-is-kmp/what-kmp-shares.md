@@ -80,7 +80,7 @@ Idea A is what the slogan sounds like. Idea C is what people say after they trie
 
 ### Name it
 
-**Kotlin Multiplatform**, called **KMP**, is an open-source technology from JetBrains. The Kotlin documentation says it enables sharing code across Android, iOS, desktop, web and server while retaining the advantages of native development. It also says you can share code on your terms. You can share a **module**, a self-contained part of a project, such as networking or storage, and expand the shared code over time. Or you can share all of your business logic, the rules of the app, while keeping the UI native.
+**Kotlin Multiplatform**, called **KMP**, is an open-source technology from JetBrains. The Kotlin documentation says it enables sharing code across Android, iOS, desktop, web and server while retaining the advantages of native development. Native here means built with each phone's own tools, so the app feels at home on that phone (general knowledge). The documentation also says you can share code on your terms. You can share a **module**, a self-contained part of a project, such as networking or storage, and expand the shared code over time. Or you can share all of your business logic, the rules of the app, while keeping the UI native.
 
 The **shared code** is the part written once. The **platform-specific code** is the part each phone gets on its own. The documentation says **expect/actual** declarations let you access platform-specific APIs from Kotlin Multiplatform modules. Shared code declares what it expects, and each platform supplies the actual version. The same page says to rely on standard language constructs wherever possible instead of expect and actual, so an interface is the first thing to try.
 
@@ -215,6 +215,6 @@ This is my own reasoning, built on the documentation's point that you can share 
 
 ## You can now
 
-- Sort a feature such as price rules, a camera or screen layout into shared code, platform-specific code or your choice.
-- Explain why shared code cannot call a phone's camera directly, using the oven.
-- Say why "write the whole app once" is not what KMP promises.
+- Pick the feature that can be written once in shared code from a list of price rule, camera and notification.
+- Say whether sharing the screen is required when a team already shares its rules and data.
+- Predict what shared code does when it needs the phone's camera.
