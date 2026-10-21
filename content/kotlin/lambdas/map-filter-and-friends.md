@@ -1,21 +1,20 @@
 ---
 id: kotlin/lambdas/map-filter-and-friends
 title: How do I transform a list without writing a loop?
-status: shadow
+status: live
 difficulty: medium
 order: 34
 requires: [kotlin/lambdas/lambda-syntax, kotlin/collections/list-vs-mutable-list]
 summary: Filter and map build a new list from an old one. See how they chain and what stays untouched.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [factory-line-stations]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/collection-filtering.html ; https://kotlinlang.org/docs/collection-transformations.html ; https://kotlinlang.org/docs/collection-ordering.html ; https://kotlinlang.org/docs/collection-grouping.html ; https://kotlinlang.org/docs/collection-elements.html ; https://kotlinlang.org/docs/collection-aggregate.html ; https://kotlinlang.org/docs/sequences.html ; https://developer.android.com/develop/ui/compose/lists -->
 ## The question
 
 A shop app has a list of 200 product names. The screen must show only the names longer than three letters, written in capitals. You could write a loop, a second list and a counter. Is there a shorter way to say what you want, without spelling out how to get it?

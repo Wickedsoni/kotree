@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/what-is-a-class
 title: How do I bundle data and the actions on it into one thing?
-status: shadow
+status: live
 difficulty: easy
 order: 36
 requires: [kotlin/functions/declaring-functions, kotlin/types-and-variables/val-vs-var]
 summary: A class describes a thing once, and each object made from it holds its own data. Learn the difference between the two.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [cookie-cutter-stamp]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/kotlin-tour-classes.html ; https://developer.android.com/guide/components/activities/intro-activities -->
 ## The question
 
 A game has three dogs. Each dog has a name and can bark. You could keep three name variables and three separate bark steps. With 300 dogs, that falls apart. How can you describe "a dog" once, and then get as many dogs as you like, each with its own name?

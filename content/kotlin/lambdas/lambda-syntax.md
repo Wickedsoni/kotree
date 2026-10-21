@@ -1,21 +1,20 @@
 ---
 id: kotlin/lambdas/lambda-syntax
 title: How do I read a lambda, even when it sits outside the brackets?
-status: shadow
+status: live
 difficulty: medium
 order: 32
 requires: [kotlin/lambdas/functions-as-values]
 summary: A lambda is a small function written on the spot between curly brackets. Learn its parts, the name it, and the trailing form.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/lambdas.html ; https://kotlinlang.org/docs/kotlin-tour-functions.html ; https://kotlinlang.org/docs/returns.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/repeat.html ; https://developer.android.com/develop/ui/compose/kotlin -->
 ## The question
 
 You are reading Kotlin code that greets every name in a list. The instruction for each name sits in curly brackets. Sometimes those curly brackets come after the round brackets, not inside them. Sometimes the instruction never gives the name a label at all. How do you read a line like that?

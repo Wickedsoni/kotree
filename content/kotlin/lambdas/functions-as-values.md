@@ -1,21 +1,20 @@
 ---
 id: kotlin/lambdas/functions-as-values
 title: How can a function be stored in a variable?
-status: shadow
+status: live
 difficulty: medium
 order: 31
 requires: [kotlin/functions/declaring-functions]
 summary: A function can sit in a variable, like a number. Learn the type that describes it and how to store it without running it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [recipe-card-handoff]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/lambdas.html ; https://kotlinlang.org/docs/kotlin-tour-functions.html ; https://developer.android.com/develop/ui/compose/kotlin -->
 ## The question
 
 A friend asks you to bring a dessert to a party. You do not bake it now. You write the steps on a card and hand the card over, and your friend bakes it when the guests arrive. Can a program do the same with a piece of code? Can it hand a set of steps to another part of the program and let that part choose when to run them?

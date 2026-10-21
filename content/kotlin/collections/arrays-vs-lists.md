@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/arrays-vs-lists
 title: When does Kotlin code use an Array instead of a List?
-status: shadow
+status: live
 difficulty: easy
 order: 30
 requires: [kotlin/collections/list-vs-mutable-list]
 summary: An array has a fixed number of slots you can change. Learn how it differs from a list and when code uses one.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/arrays.html ; https://kotlinlang.org/docs/collections-overview.html ; https://developer.android.com/develop/ui/compose/graphics/draw/brush -->
 ## The question
 
 You open a teammate's Kotlin file. One place keeps a row of numbers in a List, which you have already met. Another place keeps a row of numbers in something written with the word Array. Both rows hold numbers in order. Why does Kotlin have two kinds, and when would you pick the second one?

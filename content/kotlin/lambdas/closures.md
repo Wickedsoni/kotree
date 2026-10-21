@@ -1,21 +1,20 @@
 ---
 id: kotlin/lambdas/closures
 title: How does a lambda remember variables from outside it?
-status: shadow
+status: live
 difficulty: medium
 order: 35
 requires: [kotlin/lambdas/lambda-syntax, kotlin/functions/scope-and-shadowing]
 summary: A lambda can read and change variables from the code around it. See why it always uses the latest value.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [garden-window-view]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/lambdas.html ; https://kotlinlang.org/docs/inline-functions.html ; https://developer.android.com/develop/ui/compose/state -->
 ## The question
 
 You make a small piece of code that prints a number from outside it. When you make it, the number is 1. Then the number changes to 3. When the piece of code finally runs, it prints 3. Why does it show what the number is now, and not what it was when the piece of code was made?

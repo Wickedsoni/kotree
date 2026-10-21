@@ -1,21 +1,20 @@
 ---
 id: kotlin/lambdas/higher-order-functions
 title: How do I write a function that takes another function?
-status: shadow
+status: live
 difficulty: medium
 order: 33
 requires: [kotlin/lambdas/lambda-syntax]
 summary: A higher-order function takes another function as input and decides when to run it. Learn to write your own.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/lambdas.html ; https://kotlinlang.org/docs/inline-functions.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/repeat.html ; https://developer.android.com/develop/ui/compose/kotlin -->
 ## The question
 
 Three screens in an app each need to show a loading spinner, do some work, and then hide the spinner. The spinner steps are the same every time. Only the work in the middle changes. How can you write the spinner steps once and let each screen hand over its own work?

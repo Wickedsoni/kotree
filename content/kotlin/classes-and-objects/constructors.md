@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/constructors
 title: How does a new object get its starting values?
-status: shadow
+status: live
 difficulty: easy
 order: 37
 requires: [kotlin/classes-and-objects/what-is-a-class]
 summary: A constructor is the form you fill in to make an object. See how its boxes become properties and how defaults work.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/kotlin-tour-classes.html ; https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-factories -->
 ## The question
 
 You join a gym. You fill in a form with your name and age, and only then do you get your membership card. A program that makes a new card can work the same way. Where do the name and age on the new card come from? Must the program write each one onto the card with a separate line after the card exists?

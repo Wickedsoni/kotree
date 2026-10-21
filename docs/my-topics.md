@@ -116,20 +116,20 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] How do I keep only unique values? (easy)
 - [x] How do I look up a value by its key? (easy)
 - [x] How do I unpack two values at once? (easy)
-- - When does Kotlin code use an Array instead of a List? (easy)
+- [x] When does Kotlin code use an Array instead of a List? (easy)
 
 **Lambdas** (5)
 
-- - How can a function be stored in a variable? (medium)
-- - How do I read a lambda, even when it sits outside the brackets? (medium)
-- - How do I write a function that takes another function? (medium)
-- - How do I transform a list without writing a loop? (medium)
-- - How does a lambda remember variables from outside it? (medium)
+- [x] How can a function be stored in a variable? (medium)
+- [x] How do I read a lambda, even when it sits outside the brackets? (medium)
+- [x] How do I write a function that takes another function? (medium)
+- [x] How do I transform a list without writing a loop? (medium)
+- [x] How does a lambda remember variables from outside it? (medium)
 
 **Classes and Objects** (9)
 
-- - How do I bundle data and the actions on it into one thing? (easy)
-- - How does a new object get its starting values? (easy)
+- [x] How do I bundle data and the actions on it into one thing? (easy)
+- [x] How does a new object get its starting values? (easy)
 - - How does an object do things with its own data? (easy)
 - - Why hide some parts of a class with private? (easy)
 - - How can a property run code when it is read or written? (medium)
