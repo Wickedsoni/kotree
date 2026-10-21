@@ -1,6 +1,17 @@
 # Next steps (handoff, written 18 Oct 2026, updated 20 Oct 2026 after Phase 3)
 
-## HANDOFF 21 Oct 2026 (WP2-WP6 built, newest)
+## HANDOFF 21 Oct 2026 (sims WP1-WP5 + WP7a done, newest)
+**State:** `main` = 192d7c9 (layer 2 live, 128 of 482 leaves). `feat/design-v2` = ab8ecf0 (pushed, no CI build yet for it). Generic sims (ADR 009, L37): WP1 buildSrc parser/validators, WP2 core runtime, WP3 zones, WP4 stepper+lanes, WP5 flow+states are built; WP7a backfilled 14 zones leaves with ```sim blocks (53 legacy `<!-- SIM -->` markers remain, SM0 is a warning). Nothing sim-related is verified in a browser; kotree.js gzip not measured.
+**Next, in order:**
+1. WP6 `chart` + `compare` layouts (ChartLayout.kt, CompareLayout.kt, ChartScaleTest). First have the architect add a band `kind` (floor/ceiling) key to the validator and SimCore; today bands are guessed from "floor"/"lower" in the id or label.
+2. Fix `SimSpec.kt` `spawnPattern` (`c{n}` stays literal, so referencing c2 gives a false SM5) and the stale `label` override in SimCore Spawn. Add an opacity token to Tokens.kt for the `ghost` mark (40%).
+3. WP7b-g: backfill the other 53 leaves by template (sim-engineer, ~10 per message, max 3 agents). A reviewer hand-checks the reworded Try this steps on all backfilled leaves.
+4. WP8 docs: docs/04 §3.4/§4.3, docs/05, docs/07 §8, content/_templates/leaf.md, docs/lesson-checklist.md §7, docs/sims/needed-ids.md template suffix; SM0 becomes an error when all markers are converted.
+5. One CI build, check kotree.js gzip vs 600 KB, preview /preview/tools/git/what-is-a-commit (drag, keyboard, reduced motion), push the tested sha to `main`.
+6. Then "next": `python3 scripts/next-layer.py` prints layer 3; every layer-3 leaf must ship with a working sim.
+**Other:** session limit (429) killed two agents once; relaunch after the reset. curriculum-designer: VERIFY note at content/native-ndk/_roadmap.md line 121. `docs/my-topics.md` has no generator (housekeeper edits it by hand). CH10 reminder: `run: false` challenges need `playground: false`, but a `fix` challenge needs `playground: true`, so a leaf with both must make its predicts runnable.
+
+## HANDOFF 21 Oct 2026 (WP2-WP6 built)
 Tree v3 WP2-WP6 are built on feat/design-v2 (commits a05f2a3, c2eba6f, 6fad499, 86adfbb, WP6). **WP2 is a ratchet, not strict:** layoutReport still has 12 failures at 1280x800 and 11 at 1440x900 (kotlin, dsa and os stem clusters; cross-branch stem checks). Constants alone cannot close it, and widening a bough shrinks the fit zoom so it cancels out (the checks scale with the whole tree). Options if wanted: per-branch stem-entry zoom, or relax the invariants for those branches. Pinned hashes: limbHash 69892f0589a95532, fullHash e855f6794973cef2. WP3-WP6 are NOT visually verified: check backdrop, canopy cross-fade (z 3.5-5), Mark as done, autumn sway, idle frames, kotree.js gzip. WP7 (docs alignment, reviewer acceptance) still to do.
 
 ## HANDOFF 21 Oct 2026 (late) — read this first, it replaces the earlier HANDOFF below
