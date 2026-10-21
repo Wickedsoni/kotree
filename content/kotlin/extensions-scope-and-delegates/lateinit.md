@@ -21,7 +21,7 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/kotlin/common-patterns : lateinit lets you defer initialization; reading before initialization throws UninitializedPropertyAccessException; LoginFragment example assigns in onViewCreated.
 - https://developer.android.com/topic/libraries/view-binding : Activity uses "private lateinit var binding"; Fragment uses a nullable _binding cleared in onDestroyView because "Fragments outlive their views".
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/lateinit.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review.
+- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
 -->
 
 ## The question
@@ -80,7 +80,7 @@ Idea A is honest, and it is the right choice when an empty chair is a normal cas
 
 ### Name it
 
-**`lateinit`** is a word you put before a `var` property to promise that it will be filled in later. The Kotlin documentation says it is for cases where you cannot fill a property in the constructor, such as when a helper object is handed in from outside, which is called dependency injection (general knowledge), or when a unit test fills it in during its set-up step.
+**`lateinit`** is a word you put before a `var` property to promise that it will be filled in later. The Kotlin documentation says it is for cases where you cannot fill a property in the constructor. One case is a helper object that is handed in from outside, which is called dependency injection (general knowledge). Another is a unit test that fills it in during its set-up step.
 
 The documentation lists the rules. The property must be a `var`, so it can be changed after the object is made. It may be a top-level property, a local variable or a property in the class body. It cannot be in the primary constructor and cannot have a custom getter or setter. It must not be nullable, and it must not be a primitive type.
 
@@ -128,7 +128,7 @@ fun main() {
 type: predict
 run: false
 id: usher-points-too-early
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Seat {
       lateinit var guest: String
@@ -159,7 +159,7 @@ output: |
 type: predict
 run: false
 id: guest-can-change
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Seat {
       lateinit var guest: String
@@ -192,7 +192,7 @@ output: |
 type: predict
 run: false
 id: usher-in-the-builder
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Seat {
       lateinit var guest: String
@@ -237,7 +237,9 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a screen that crashes the moment it opens, and the note says `lateinit property statusTextView has not been initialized`. A **Fragment** is one part of a screen, with its own steps that Android calls as it starts and stops (general knowledge). The Android Kotlin patterns page shows a `LoginFragment` with a `lateinit` text view that is assigned inside `onViewCreated`, the step Android calls once the part's views exist (general knowledge). The page says that reading a `lateinit` property before it is set throws `UninitializedPropertyAccessException`. A code line that reads the text view before `onViewCreated` has run is the usher pointing at an empty chair. Another page shows an Activity, which is one full screen of an app (general knowledge), using `lateinit var binding`. For a Fragment it uses a nullable value cleared in `onDestroyView`, the step Android calls when the part's views go away, because fragments outlive their views. My own reasoning: a `lateinit` property cannot be set back to empty, so a Fragment needs a nullable property when the guest has to leave.
+Picture a screen that crashes the moment it opens, and the note says `lateinit property statusTextView has not been initialized`. A **Fragment** is one part of a screen, with its own steps that Android calls as it starts and stops (general knowledge). The Android Kotlin patterns page shows a `LoginFragment` with a `lateinit` text view that is assigned inside `onViewCreated`, the step Android calls once the part's views exist (general knowledge). The page says that reading a `lateinit` property before it is set throws `UninitializedPropertyAccessException`. A code line that reads the text view before `onViewCreated` has run is the usher pointing at an empty chair.
+
+Another page shows an Activity, which is one full screen of an app (general knowledge), using `lateinit var binding`. For a Fragment it uses a nullable value cleared in `onDestroyView`, the step Android calls when the part's views go away. The reason is that fragments outlive their views. My own reasoning: a `lateinit` property cannot be set back to empty, so a Fragment needs a nullable property when the guest has to leave.
 
 ## Say it in an interview
 

@@ -21,7 +21,7 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/guide/components/intents-filters : Kotlin example "val sendIntent = Intent().apply { action = ...; putExtra(...); type = ... }".
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/scope-functions.
 - Non-local break and continue in these lambdas: not covered here; the Kotlin scope-functions page had no text on it when read.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review.
+- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
 -->
 
 ## The question
@@ -119,7 +119,7 @@ The documentation's example for a pot that might be missing is `str?.let { ... }
 type: predict
 run: false
 id: pot-or-dish
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Soup(var salt: Int = 0)
 
@@ -152,7 +152,7 @@ output: |
 type: predict
 run: false
 id: pot-missing
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val maybe: String? = null
 
@@ -179,7 +179,7 @@ output: |
 type: predict
 run: false
 id: two-labels
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val outer = "abc"

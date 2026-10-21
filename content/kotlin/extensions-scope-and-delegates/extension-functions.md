@@ -20,7 +20,7 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://kotlinlang.org/docs/extensions.html : extensions do not modify the class; the truncate example; member wins over extension with the same receiver type, name and compatible arguments; extensions are dispatched statically; an extension outside the class cannot reach private or protected members (User example); Shape/Rectangle getName example.
 - https://developer.android.com/kotlin/ktx : Android KTX is a set of Kotlin extensions; SharedPreferences.edit extension function signature and the edit { } call.
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/extension-functions.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review.
+- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
 -->
 
 ## The question
@@ -124,7 +124,7 @@ fun main() {
 type: predict
 run: false
 id: member-beats-case
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Phone {
       fun stand() {
@@ -157,7 +157,7 @@ output: |
 type: predict
 run: false
 id: case-leaves-phone-alone
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun String.shout(): String {
       return this.uppercase() + "!"
