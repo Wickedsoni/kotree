@@ -36,12 +36,93 @@ The cook gets ingredients, follows the recipe, and sends out a dish. Then the ne
 
 ## See it move
 
-<!-- SIM: input-process-output -->
-
-**Try this:**
-1. Drop a keypress token on the belt. Watch where it goes first, where it is changed, and where it comes out.
-2. Drop four tokens one after another. Watch the same three stops repeat for each one.
-3. Press "Remove the middle box" and drop a token again.
+```sim
+id: input-process-output
+template: flow
+title: Key presses through the kitchen
+intro: Four key presses wait at the input. The cook is at the station. Nothing has been sent yet.
+stations:
+  - { id: input, label: "Input: ingredients arrive" }
+  - { id: cook, label: "Processing: the cook follows the recipe" }
+  - { id: output, label: "Output: the dish leaves" }
+items:
+  - { id: k1, label: "Key H", at: input }
+  - { id: k2, label: "Key E", at: input }
+  - { id: k3, label: "Key L", at: input }
+  - { id: k4, label: "Key L again", at: input }
+vars: { cook: "on" }
+toggles:
+  - { id: cook, label: Cook at the station, var: cook }
+actions:
+  - id: send
+    label: Send the next key press
+    cases:
+      - when: { at: { k1: input }, var: { cook: "on" } }
+        do:
+          - move: { k1: output }
+          - label: { k1: "Letter H" }
+          - mark: { k1: good }
+          - light: [ output ]
+          - say: "Key H arrives. The cook follows the recipe and turns it into the letter H. The dish leaves: H on the screen."
+      - when: { at: { k1: input } }
+        do:
+          - move: { k1: cook }
+          - label: { k1: "H waits: no cook" }
+          - mark: { k1: bad }
+          - light: [ cook ]
+          - say: "Key H arrives, but nobody is at the cook's station. Nothing works on it, so nothing comes out."
+      - when: { at: { k2: input }, var: { cook: "on" } }
+        do:
+          - move: { k2: output }
+          - label: { k2: "Letter E" }
+          - mark: { k2: good }
+          - light: [ output ]
+          - say: "Key E takes the same three stops: it arrives, the cook works on it, and the letter E leaves."
+      - when: { at: { k2: input } }
+        do:
+          - move: { k2: cook }
+          - label: { k2: "E waits: no cook" }
+          - mark: { k2: bad }
+          - light: [ cook ]
+          - say: "Key E arrives and waits at the empty station too. Still nothing comes out."
+      - when: { at: { k3: input }, var: { cook: "on" } }
+        do:
+          - move: { k3: output }
+          - label: { k3: "Letter L" }
+          - mark: { k3: good }
+          - light: [ output ]
+          - say: "Key L makes the same three stops again: it arrives, it is worked on, and the letter L leaves."
+      - when: { at: { k3: input } }
+        do:
+          - move: { k3: cook }
+          - label: { k3: "L waits: no cook" }
+          - mark: { k3: bad }
+          - light: [ cook ]
+          - say: "Key L arrives and waits at the empty station. Nothing comes out."
+      - when: { at: { k4: input }, var: { cook: "on" } }
+        do:
+          - move: { k4: output }
+          - label: { k4: "Letter L" }
+          - mark: { k4: good }
+          - light: [ output ]
+          - say: "The last key takes the same three stops too. Four keys, four trips, the same shape every time."
+      - when: { at: { k4: input } }
+        do:
+          - move: { k4: cook }
+          - label: { k4: "L waits: no cook" }
+          - mark: { k4: bad }
+          - light: [ cook ]
+          - say: "The last key arrives and waits at the empty station. With no cook, no key makes a dish."
+    refuse: All four key presses have been sent. Press Reset to send them again.
+script: [ send, send, send, "cook=off", send ]
+try:
+  - text: "Press \"Send the next key press\". Watch the first key arrive, pass the cook and leave as a letter."
+    done: [ send ]
+  - text: "Press it two more times. Each key makes the same three stops."
+    done: [ send, send ]
+  - text: "Switch off \"Cook at the station\" and send the last key. The sim replays the earlier keys with the new setting, so every key waits at the empty station and nothing useful comes out."
+    done: [ "cook=off", send ]
+```
 
 **What you should notice:** Every token takes the same three stops in the same order, and with the middle box gone, nothing useful comes out.
 

@@ -35,12 +35,76 @@ Think of a theatre.
 
 ## See it move
 
-<!-- SIM: launch-path-manifest -->
-
-**Try this:**
-1. Set the cast list to "front door marked", then press "Tap icon". Watch the ball go from the poster board to the stage manager, to a new stage, and then to your first screen.
-2. Set the cast list to "no front door marked", and look at the poster board.
-3. Tick "Stage already set up" and tap again. Count the boxes the ball passes.
+```sim
+id: launch-path-manifest
+template: flow
+title: From a tap on the icon to your first screen
+intro: The cast list marks one front door. Nothing is on the poster board yet, and no stage is set up.
+stations:
+  - { id: board, label: "Poster board (the launcher)" }
+  - { id: manager, label: "Stage manager (the system)" }
+  - { id: stage, label: "Stage (the process)" }
+  - { id: screen, label: First screen }
+items:
+  - { id: ball, label: Your tap, at: board }
+  - { id: stage-note, label: "No stage yet", at: stage }
+  - { id: screen-note, label: "Not created", at: screen }
+vars: { door: "on", stage: "off" }
+toggles:
+  - { id: door, label: Front door marked in the cast list, var: door }
+  - { id: stage, label: Stage already set up, var: stage }
+actions:
+  - id: read-list
+    label: Read the cast list
+    cases:
+      - when: { var: { door: "on", stage: "on" } }
+        do:
+          - spawn: { id: poster, label: Weather poster, at: board }
+          - move: { ball: board }
+          - label: { stage-note: "Stage standing", screen-note: "Not created" }
+          - mark: { ball: plain, screen-note: plain }
+          - light: [ board ]
+          - say: "The launcher reads the cast list, finds the front door marked, and puts a poster on its board. A stage for the app is already standing."
+      - when: { var: { door: "on" } }
+        do:
+          - spawn: { id: poster, label: Weather poster, at: board }
+          - move: { ball: board }
+          - label: { stage-note: "No stage yet", screen-note: "Not created" }
+          - mark: { ball: plain, screen-note: plain }
+          - light: [ board ]
+          - say: "The launcher reads the cast list, finds the front door marked, and puts a poster on its board. No stage is running for the app yet."
+      - do:
+          - move: { ball: board }
+          - mark: { ball: plain }
+          - light: [ board ]
+          - say: "The launcher reads the cast list. No front door is marked, so there is no poster on the board and nothing to tap."
+  - id: tap
+    label: Tap the poster
+    cases:
+      - when: { at: { poster: board, ball: board }, var: { stage: "on" } }
+        do:
+          - move: { ball: screen }
+          - label: { screen-note: "Created, onCreate ran" }
+          - mark: { screen-note: good }
+          - light: [ screen ]
+          - say: "You tap the poster. The launcher asks the system to start that front door, in a simplified picture. The stage is already standing, so the system creates the first screen and calls its onCreate method."
+      - when: { at: { poster: board, ball: board } }
+        do:
+          - move: { ball: screen }
+          - label: { stage-note: "New stage set up", screen-note: "Created, onCreate ran" }
+          - mark: { screen-note: good }
+          - light: [ screen ]
+          - say: "You tap the poster. The launcher asks the system to start that front door, in a simplified picture. No stage is running, so the system sets one up first. Then it creates the first screen and calls its onCreate method."
+    refuse: There is nothing to tap yet. Read the cast list first, with a front door marked.
+script: [ read-list, tap, "door=off", read-list, "door=on", "stage=on", read-list, tap ]
+try:
+  - text: "Press \"Read the cast list\", then \"Tap the poster\". Follow the ball from the poster board to the system, to a new stage and to the first screen."
+    done: [ read-list, tap ]
+  - text: "Switch off \"Front door marked in the cast list\" and press \"Read the cast list\". Look at the poster board."
+    done: [ "door=off", read-list ]
+  - text: "Switch the front door back on, switch on \"Stage already set up\", read the cast list and tap the poster. Look at the stage box."
+    done: [ "door=on", "stage=on", read-list, tap ]
+```
 
 **What you should notice:** With a front door marked, the tap leads to a stage and a first screen. With none marked, the poster board has no poster to tap.
 

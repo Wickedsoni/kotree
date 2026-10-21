@@ -38,12 +38,76 @@ Think of posting a sealed parcel.
 
 ## See it move
 
-<!-- SIM: parcel-to-phone -->
-
-**Try this:**
-1. Press "Send" and follow the sealed parcel from the shop shelf, through the check, to the phone.
-2. Change the phone to one with a different screen and language, and press "Send" again.
-3. Click the locked room in the phone to see which key opens it.
+```sim
+id: parcel-to-phone
+template: flow
+title: A sealed parcel from the shop to a phone
+intro: The master carton sits on the shop shelf. The parcel will be packed for a phone with a small screen and English. The seal is on.
+stations:
+  - { id: shelf, label: Shop shelf }
+  - { id: post, label: "Post office (the internet)" }
+  - { id: door, label: "Front door: seal check" }
+  - { id: room, label: Locked room }
+items:
+  - { id: parcel, label: Master carton, at: shelf }
+vars: { big: "off", seal: "on" }
+toggles:
+  - { id: big, label: Big screen and Hindi phone, var: big }
+  - { id: seal, label: Seal on the parcel, var: seal }
+actions:
+  - id: send
+    label: Send the parcel
+    cases:
+      - when: { at: { parcel: shelf }, var: { seal: "off" } }
+        do:
+          - move: { parcel: door }
+          - label: { parcel: "No seal" }
+          - mark: { parcel: bad }
+          - light: [ door ]
+          - say: "The parcel has no seal. Android requires all APKs to be signed before they are installed, so the check at the front door stops it. It never reaches a locked room."
+      - when: { at: { parcel: shelf }, var: { big: "on" } }
+        do:
+          - move: { parcel: room }
+          - label: { parcel: "Base, big screen, Hindi" }
+          - mark: { parcel: good }
+          - light: [ room ]
+          - say: "The shop works out what this phone is like and packs a parcel for it: a base box, a big-screen box and a Hindi words box. The parcel is sealed and delivered, the seal passes the check at the door, and the app is unpacked into its own locked room."
+      - when: { at: { parcel: shelf } }
+        do:
+          - move: { parcel: room }
+          - label: { parcel: "Base, small screen, English" }
+          - mark: { parcel: good }
+          - light: [ room ]
+          - say: "The shop works out what this phone is like and packs a parcel for it: a base box, a small-screen box and an English words box. The parcel is sealed and delivered, the seal passes the check at the door, and the app is unpacked into its own locked room."
+    refuse: The parcel has already left the shelf. Press "Take the parcel back" first.
+  - id: back
+    label: Take the parcel back
+    do:
+      - move: { parcel: shelf }
+      - label: { parcel: Master carton }
+      - mark: { parcel: plain }
+      - light: [ shelf ]
+      - say: The parcel goes back to the shop shelf as the master carton.
+  - id: look
+    label: Look in the locked room
+    cases:
+      - when: { at: { parcel: room } }
+        do:
+          - mark: { parcel: picked }
+          - say: "The room belongs to this app alone, and its key fits this room only. In Android each app gets its own ID number, and only that ID can reach the app's files."
+    refuse: The parcel is not in a locked room yet. Send it first, with the seal on.
+script: [ send, back, "big=on", send, look ]
+try:
+  - text: "Press \"Send the parcel\". Follow it from the shop shelf, past the seal check, into the locked room."
+    done: [ send ]
+  - text: "Press \"Take the parcel back\", switch on \"Big screen and Hindi phone\" and send again. Compare the boxes named on the parcel."
+    done: [ back, "big=on", send ]
+  - text: "Press \"Look in the locked room\"."
+    done: [ look ]
+  - text: "(Optional reveal) Take the parcel back, switch off \"Seal on the parcel\" and send again. Watch where it stops."
+    done: [ back, "seal=off", send ]
+    optional: true
+```
 
 **What you should notice:** The parcel is packed for each phone, the phone checks the seal at the door, and the app ends up in its own locked room.
 

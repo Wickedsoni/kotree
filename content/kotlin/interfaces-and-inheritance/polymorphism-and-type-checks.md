@@ -35,12 +35,71 @@ Think of a mixed toolbox on a worker's bench.
 
 ## See it move
 
-<!-- SIM: mixed-tools-chute -->
-
-**Try this:**
-1. Press "Send the tools" with the sorter set to "Look first". Watch each tool land in its own tray.
-2. Switch the gate to "Swing without looking" and send the tools again. Watch what happens when a saw arrives.
-3. (Optional reveal) Tick "Ask politely". Send the tools again and watch the saw be handed back with a note saying "not a hammer".
+```sim
+id: mixed-tools-chute
+template: flow
+title: A mixed toolbox and a gate that looks first
+intro: The toolbox holds a hammer, a saw and a second hammer. Both switches are off, so the worker looks at each tool first.
+stations:
+  - { id: box, label: "Toolbox (label: Tool)" }
+  - { id: gate, label: Gate }
+  - { id: swing, label: Hammer tray }
+  - { id: aside, label: Other tray }
+paths:
+  - [ box, gate, swing ]
+  - [ box, gate, aside ]
+items:
+  - { id: h1, label: Hammer, at: box }
+  - { id: s1, label: Saw, at: box }
+  - { id: h2, label: Second hammer, at: box }
+vars: { blind: "off", polite: "off" }
+toggles:
+  - { id: blind, label: Swing without looking, var: blind }
+  - { id: polite, label: Ask politely, var: polite }
+actions:
+  - id: send
+    label: Send the tools
+    cases:
+      - when: { at: { h1: box }, var: { polite: "on" } }
+        do:
+          - move: { h1: swing, s1: aside, h2: swing }
+          - label: { s1: "Saw: not a hammer" }
+          - mark: { h1: good, h2: good, s1: plain }
+          - light: [ swing ]
+          - say: "Asking politely with as?, the worker gets nothing for the saw. The saw is handed back with a note saying not a hammer, and the line carries on. Both hammers swing."
+      - when: { at: { h1: box }, var: { blind: "on" } }
+        do:
+          - move: { h1: swing, s1: gate }
+          - label: { s1: "Saw: line stopped" }
+          - mark: { h1: good, s1: bad }
+          - light: [ gate ]
+          - say: "The first hammer swings. The worker swings the saw without looking, and the line stops there. The second hammer never gets its turn."
+      - when: { at: { h1: box } }
+        do:
+          - move: { h1: swing, s1: aside, h2: swing }
+          - label: { s1: "Saw: set aside" }
+          - mark: { h1: good, h2: good, s1: plain }
+          - light: [ swing ]
+          - say: "The worker looks at each tool first. Both hammers go to the hammer tray and swing. The saw is set aside, and nothing stops."
+    refuse: The tools have already been sent. Press "Put the tools back" first.
+  - id: back
+    label: Put the tools back
+    do:
+      - move: { h1: box, s1: box, h2: box }
+      - label: { s1: Saw }
+      - mark: { h1: plain, s1: plain, h2: plain }
+      - light: [ box ]
+      - say: All three tools are back in the toolbox.
+script: [ send, back, "blind=on", send, back, "polite=on", send ]
+try:
+  - text: "Press \"Send the tools\" with both switches off. Watch each tool land in its own tray."
+    done: [ send ]
+  - text: "Press \"Put the tools back\", switch on \"Swing without looking\" and send again. Watch what happens when the saw arrives."
+    done: [ back, "blind=on", send ]
+  - text: "(Optional reveal) Put the tools back, switch on \"Ask politely\" and send again. The saw is handed back with a note saying not a hammer."
+    done: [ back, "polite=on", send ]
+    optional: true
+```
 
 **What you should notice:** Looking first sends every tool to the right tray, and swinging without looking stops the line at the first saw.
 

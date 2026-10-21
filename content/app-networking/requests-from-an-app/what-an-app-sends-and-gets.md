@@ -36,12 +36,104 @@ You write the envelope, post it and wait. You never visit the other house.
 
 ## See it move
 
-<!-- SIM: request-parcel-pipe -->
-
-**Try this:**
-1. Press "Send" with the kind set to "read" and the address set to the books list. Watch the parcel go to the server and a reply parcel come back.
-2. Change the address to one that does not exist and send again. Look at the label on the reply.
-3. Change the kind from "read" to "save" and send again. Look at what the reply says.
+```sim
+id: request-parcel-pipe
+template: flow
+title: A request envelope and its reply
+intro: The envelope is blank. The kind is GET, which reads something. Pick an address to send it to.
+stations:
+  - { id: app, label: "App: writes the envelope" }
+  - { id: server, label: "Server: the far-away computer" }
+  - { id: back, label: "App: reads the reply" }
+items:
+  - { id: req, label: Blank envelope, at: app }
+vars: { post: "off" }
+toggles:
+  - { id: post, label: Use POST (save) instead of GET (read), var: post }
+actions:
+  - id: send-books
+    label: Send to /books
+    cases:
+      - when: { at: { req: app }, var: { post: "off" } }
+        do:
+          - move: { req: server }
+          - label: { req: "GET /books" }
+          - spawn: { id: reply, label: "200: 3 books", at: back }
+          - mark: { reply: good }
+          - light: [ back ]
+          - say: "The app writes GET and /books on the envelope and posts it. In this lesson's fake server, that gets the reply 200 with the message 3 books."
+      - when: { at: { req: app } }
+        do:
+          - move: { req: server }
+          - label: { req: "POST /books" }
+          - spawn: { id: reply, label: "201: saved", at: back }
+          - mark: { reply: good }
+          - light: [ back ]
+          - say: "The app writes POST and /books and posts it. In this lesson's fake server, that gets the reply 201 with the message saved."
+    refuse: The last request is still on the pipe. Press "Clear the pipe" first.
+  - id: send-search
+    label: Send to /search?q=kotlin
+    cases:
+      - when: { at: { req: app }, var: { post: "off" } }
+        do:
+          - move: { req: server }
+          - label: { req: "GET /search?q=kotlin" }
+          - spawn: { id: reply, label: "200: results for kotlin", at: back }
+          - mark: { reply: good }
+          - light: [ back ]
+          - say: "The search word follows the question mark in the address. In this lesson's fake server, a GET search gets 200 with results for kotlin."
+      - when: { at: { req: app } }
+        do:
+          - move: { req: server }
+          - label: { req: "POST /search?q=kotlin" }
+          - spawn: { id: reply, label: "404: nothing here", at: back }
+          - mark: { reply: bad }
+          - light: [ back ]
+          - say: "This lesson's fake server only answers GET for a search. A POST to the search address falls to its last line, so the reply is 404 with the message nothing here."
+    refuse: The last request is still on the pipe. Press "Clear the pipe" first.
+  - id: send-missing
+    label: Send to /nothing-here
+    cases:
+      - when: { at: { req: app }, var: { post: "off" } }
+        do:
+          - move: { req: server }
+          - label: { req: "GET /nothing-here" }
+          - spawn: { id: reply, label: "404: nothing here", at: back }
+          - mark: { reply: bad }
+          - light: [ back ]
+          - say: "The address does not exist. In this lesson's fake server, the reply is 404 with the message nothing here."
+      - when: { at: { req: app } }
+        do:
+          - move: { req: server }
+          - label: { req: "POST /nothing-here" }
+          - spawn: { id: reply, label: "404: nothing here", at: back }
+          - mark: { reply: bad }
+          - light: [ back ]
+          - say: "The address does not exist, whatever the kind of request. In this lesson's fake server, the reply is 404 with the message nothing here."
+    refuse: The last request is still on the pipe. Press "Clear the pipe" first.
+  - id: clear
+    label: Clear the pipe
+    cases:
+      - when: { at: { reply: back } }
+        do:
+          - remove: reply
+          - move: { req: app }
+          - label: { req: Blank envelope }
+          - light: [ app ]
+          - say: The reply is gone and the envelope is blank again.
+    refuse: The pipe is already clear.
+script: [ send-books, clear, send-missing, clear, "post=on", send-books ]
+try:
+  - text: "Press \"Send to /books\" with the kind on GET. Watch the envelope go to the server and a reply come back."
+    done: [ send-books ]
+  - text: "Press \"Clear the pipe\", then \"Send to /nothing-here\". Read the code on the reply."
+    done: [ clear, send-missing ]
+  - text: "Clear the pipe, switch on \"Use POST (save) instead of GET (read)\" and send to /books. Compare the reply with the first one."
+    done: [ clear, "post=on", send-books ]
+  - text: "(Optional) Clear the pipe and send to /search?q=kotlin with POST still on."
+    done: [ clear, send-search ]
+    optional: true
+```
 
 **What you should notice:** The reply parcel always carries a result label, and a wrong address or a different kind of request changes that label and the message.
 

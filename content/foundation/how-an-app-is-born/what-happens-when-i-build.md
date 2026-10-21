@@ -38,12 +38,83 @@ Think of a bakery line.
 
 ## See it move
 
-<!-- SIM: bakery-build-line -->
-
-**Try this:**
-1. Press "Start" and watch one box travel through mix, bake, pack and stamp.
-2. Click each station to see what goes in and what comes out.
-3. Take the stamp station away and press "Start" again. Then put it back, take the mixing station away and press "Start".
+```sim
+id: bakery-build-line
+template: flow
+title: A bakery line from ingredients to phone
+intro: One box of ingredients waits at the start of the line. Both the mixing station and the stamp station are in place.
+stations:
+  - { id: src, label: Ingredients }
+  - { id: mix, label: Mix }
+  - { id: bake, label: Bake }
+  - { id: pack, label: Pack }
+  - { id: stamp, label: Stamp }
+  - { id: phone, label: Phone }
+items:
+  - { id: box, label: Raw box, at: src }
+vars: { mixer: "on", stamper: "on" }
+toggles:
+  - { id: mixer, label: Mixing station, var: mixer }
+  - { id: stamper, label: Stamp station, var: stamper }
+actions:
+  - id: next
+    label: Move the box on
+    cases:
+      - when: { at: { box: src }, var: { mixer: "off" } }
+        do:
+          - label: { box: "Nothing made" }
+          - mark: { box: bad }
+          - light: [ src ]
+          - say: "The mixing station is missing, so no dough is made. Bake, Pack and Stamp have nothing to work on, and the box cannot move on."
+      - when: { at: { box: src } }
+        do:
+          - move: { box: mix }
+          - label: { box: "Dough" }
+          - mark: { box: plain }
+          - light: [ mix ]
+          - say: "Mix: your code, pictures and words go in. Dough, and pictures and words ready to pack, come out."
+      - when: { at: { box: mix } }
+        do:
+          - move: { box: bake }
+          - label: { box: "Loaves" }
+          - light: [ bake ]
+          - say: "Bake: the dough goes in. Loaves the phone can run come out."
+      - when: { at: { box: bake } }
+        do:
+          - move: { box: pack }
+          - label: { box: "One box" }
+          - light: [ pack ]
+          - say: "Pack: the loaves, the pictures, the words and the label card go in. One box comes out."
+      - when: { at: { box: pack }, var: { stamper: "off" } }
+        do:
+          - move: { box: phone }
+          - label: { box: "Unsigned box" }
+          - mark: { box: bad }
+          - light: [ phone ]
+          - say: "There is no stamp station, so the box skips it and reaches the phone with no stamp. Android requires all APKs to be signed before they are installed."
+      - when: { at: { box: pack } }
+        do:
+          - move: { box: stamp }
+          - label: { box: "Stamped box" }
+          - light: [ stamp ]
+          - say: "Stamp: the finished box goes in. The same box, with a stamp on it, comes out."
+      - when: { at: { box: stamp } }
+        do:
+          - move: { box: phone }
+          - label: { box: "Signed box" }
+          - mark: { box: good }
+          - light: [ phone ]
+          - say: "The signed box leaves the line and reaches the phone."
+    refuse: The box is already at the phone, or stuck at the start. Press Reset to run the line again.
+script: [ next, next, next, next, next, "stamper=off", "stamper=on", "mixer=off", next ]
+try:
+  - text: "Press \"Move the box on\" five times. At each stop, read what goes in and what comes out."
+    done: [ next, next, next, next, next ]
+  - text: "Switch off \"Stamp station\". The sim replays the line without it, and the box reaches the phone with no stamp."
+    done: [ "stamper=off" ]
+  - text: "Switch the stamp station back on, switch off \"Mixing station\" and press \"Move the box on\". Later stations have nothing to work on."
+    done: [ "stamper=on", "mixer=off", next ]
+```
 
 **What you should notice:** Without the stamp, the box reaches the phone unstamped. Without the mixing station, the later stations have nothing to work on.
 

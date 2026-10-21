@@ -37,13 +37,77 @@ You knock, and if someone is there you get an answer. If nobody is there, you do
 
 ## See it move
 
-<!-- SIM: knock-and-note -->
-
-**Try this:**
-1. Send the visitor to the house with someone home and press "Ask for the name's length".
-2. Send the visitor to the empty house and ask again.
-3. Tick "Leave a note: 0" and ask at the empty house again.
-4. (Optional reveal) Tick "Walk straight in" and press "Ask for the name's length" at the empty house.
+```sim
+id: knock-and-note
+template: flow
+title: A visitor knocks at two houses
+intro: The visitor is at home. House 1 has Ada at home. House 2 is empty. No note is written, and the visitor knocks politely.
+stations:
+  - { id: home, label: "Visitor's home" }
+  - { id: ada, label: "House 1: Ada is home" }
+  - { id: empty, label: "House 2: nobody home" }
+paths:
+  - [ home, ada ]
+  - [ home, empty ]
+items:
+  - { id: visitor, label: Visitor, at: home }
+vars: { note: "off", walkin: "off" }
+toggles:
+  - { id: note, label: "Leave a note: 0", var: note }
+  - { id: walkin, label: Walk straight in, var: walkin }
+actions:
+  - id: go-ada
+    label: Send the visitor to Ada's house
+    do:
+      - move: { visitor: ada }
+      - label: { visitor: Visitor }
+      - mark: { visitor: plain }
+      - light: [ ada ]
+      - say: The visitor walks to House 1. Ada is home.
+  - id: go-empty
+    label: Send the visitor to the empty house
+    do:
+      - move: { visitor: empty }
+      - label: { visitor: Visitor }
+      - mark: { visitor: plain }
+      - light: [ empty ]
+      - say: The visitor walks to House 2. Nobody is home.
+  - id: ask
+    label: Ask for the name's length
+    cases:
+      - when: { var: { walkin: "on" } }
+        do:
+          - label: { visitor: "Refused at home" }
+          - mark: { visitor: bad }
+          - say: "Walking straight in means asking for the length of a name that might not be there. The street rules refuse this before the visitor leaves home, so nothing is asked."
+      - when: { at: { visitor: ada } }
+        do:
+          - label: { visitor: "Brought back 3" }
+          - mark: { visitor: good }
+          - say: "Ada answers the knock. The visitor asks how many letters are in her name and brings back 3."
+      - when: { at: { visitor: empty }, var: { note: "on" } }
+        do:
+          - label: { visitor: "Brought back 0" }
+          - mark: { visitor: good }
+          - say: "Nobody answers, so the visitor does not ask. The reply is no reply, so the visitor reads the note and brings back 0 instead."
+      - when: { at: { visitor: empty } }
+        do:
+          - label: { visitor: "Brought back no reply" }
+          - mark: { visitor: plain }
+          - say: "Nobody answers, so the visitor does not ask. The visitor brings back no reply, and carries on."
+    refuse: Send the visitor to a house first.
+script: [ go-ada, ask, go-empty, ask, "note=on" ]
+try:
+  - text: "Press \"Send the visitor to Ada's house\", then \"Ask for the name's length\"."
+    done: [ go-ada, ask ]
+  - text: "Send the visitor to the empty house and ask again."
+    done: [ go-empty, ask ]
+  - text: "Switch on \"Leave a note: 0\" and ask at the empty house again."
+    done: [ "note=on", ask ]
+  - text: "(Optional reveal) Switch on \"Walk straight in\" and press \"Ask for the name's length\"."
+    done: [ "walkin=on", ask ]
+    optional: true
+```
 
 **What you should notice:** A knock at an empty house brings back "no reply" and the visitor goes on, the note turns "no reply" into 0, and walking straight in is refused before the visitor leaves.
 

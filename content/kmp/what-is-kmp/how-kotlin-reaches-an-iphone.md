@@ -33,11 +33,60 @@ Think of one script translated by two different translators.
 
 ## See it move
 
-<!-- SIM: two-belts-one-source -->
-
-**Try this:**
-1. Press Build. Watch the source reach the fork and each belt make its output.
-2. Remove the iOS target and press Build again. Watch what happens on the second belt.
+```sim
+id: two-belts-one-source
+template: flow
+title: One Kotlin source, two belts, two outputs
+intro: The shared Kotlin source waits at the fork. An Android target and an iOS target are both declared.
+stations:
+  - { id: src, label: "Shared Kotlin source" }
+  - { id: jvm, label: "Android belt: Kotlin/JVM compiler makes class files" }
+  - { id: d8, label: "Android belt: d8 makes DEX code" }
+  - { id: nat, label: "iPhone belt: Kotlin/Native compiler makes a native binary" }
+  - { id: fw, label: "iPhone belt: packed as a framework" }
+paths:
+  - [ src, jvm, d8 ]
+  - [ src, nat, fw ]
+items:
+  - { id: ka, label: Kotlin source, at: src }
+  - { id: ki, label: Kotlin source, at: src }
+vars: { ios: "on" }
+toggles:
+  - { id: ios, label: iOS target declared, var: ios }
+actions:
+  - id: build
+    label: Build
+    cases:
+      - when: { at: { ka: src }, var: { ios: "on" } }
+        do:
+          - move: { ka: d8, ki: fw }
+          - label: { ka: "DEX code", ki: "Native framework" }
+          - mark: { ka: good, ki: good }
+          - light: [ d8, fw ]
+          - say: "The shared source goes down both belts. The Android belt ends in DEX code. The iPhone belt ends in a native framework that the Xcode project links, with no virtual machine on the phone."
+      - when: { at: { ka: src } }
+        do:
+          - move: { ka: d8 }
+          - label: { ka: "DEX code", ki: "No belt" }
+          - mark: { ka: good, ki: bad }
+          - light: [ d8 ]
+          - say: "With no iOS target declared, the iPhone belt never starts. No native framework is made, and Xcode would have nothing to link. The Android belt still ends in DEX code."
+    refuse: The build already ran. Press "Clean" to run it again.
+  - id: clean
+    label: Clean
+    do:
+      - move: { ka: src, ki: src }
+      - label: { ka: Kotlin source, ki: Kotlin source }
+      - mark: { ka: plain, ki: plain }
+      - light: [ src ]
+      - say: The outputs are cleared and the source is back at the fork.
+script: [ build, clean, "ios=off", build ]
+try:
+  - text: "Press \"Build\". Watch the source reach the fork and each belt make its output."
+    done: [ build ]
+  - text: "Press \"Clean\", switch off \"iOS target declared\" and press \"Build\" again. Watch what happens on the iPhone belt."
+    done: [ clean, "ios=off", build ]
+```
 
 **What you should notice:** The Android belt keeps working without the iOS target, and the iPhone belt goes dark.
 

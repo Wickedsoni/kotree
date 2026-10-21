@@ -34,12 +34,70 @@ Think of a translator who works for you.
 
 ## See it move
 
-<!-- SIM: translator-box -->
-
-**Try this:**
-1. Drop the clean card into the translator box. Watch the stack of tiles come out and reach the reader.
-2. Drop the card with the typo. Watch where it stops and what the red note says.
-3. Fix the typo on the card and drop it in again.
+```sim
+id: translator-box
+template: flow
+title: A translator box between cards and the reader
+intro: Two cards lie on your desk, one clean and one with a typo. The translator box and the reader are empty.
+stations:
+  - { id: desk, label: Your cards }
+  - { id: box, label: Translator box }
+  - { id: reader, label: "Reader: the main chip" }
+items:
+  - { id: clean, label: Clean card, at: desk }
+  - { id: typo, label: Card with a typo, at: desk }
+vars: { fixed: 0 }
+actions:
+  - id: drop-clean
+    label: Drop the clean card in
+    cases:
+      - when: { at: { clean: desk } }
+        do:
+          - move: { clean: reader }
+          - label: { clean: "Stack of tiles" }
+          - mark: { clean: good }
+          - light: [ reader ]
+          - say: "The translator reads the whole card first and finds nothing wrong. Each sentence becomes a few tiles, and the stack of tiles reaches the reader. The reader follows the tiles one at a time."
+    refuse: The clean card has already been dropped in. Press Reset to start again.
+  - id: drop-typo
+    label: Drop the card with the typo in
+    cases:
+      - when: { at: { typo: desk }, var: { fixed: 0 } }
+        do:
+          - move: { typo: box }
+          - label: { typo: "Handed back: red note" }
+          - mark: { typo: bad }
+          - light: [ box ]
+          - say: "The translator reads the whole card before passing on a single tile. One sentence breaks a rule, so the card is handed back with a red note that names that sentence. No tiles reach the reader, not even for the good sentences."
+      - when: { at: { typo: desk }, var: { fixed: 1 } }
+        do:
+          - move: { typo: reader }
+          - label: { typo: "Stack of tiles (fixed)" }
+          - mark: { typo: good }
+          - light: [ reader ]
+          - say: "The fixed card has no sentence that breaks a rule, so the translator makes tiles and the stack reaches the reader."
+    refuse: The card is not on your desk. Press "Fix the typo" to take it back.
+  - id: fix
+    label: Fix the typo
+    cases:
+      - when: { var: { fixed: 0 } }
+        do:
+          - set: { fixed: 1 }
+          - move: { typo: desk }
+          - label: { typo: "Card, typo fixed" }
+          - mark: { typo: plain }
+          - light: [ desk ]
+          - say: The typo is fixed and the card is back on your desk. Drop it in again.
+    refuse: The typo is already fixed.
+script: [ drop-clean, drop-typo, fix, drop-typo ]
+try:
+  - text: "Press \"Drop the clean card in\". Watch the stack of tiles reach the reader."
+    done: [ drop-clean ]
+  - text: "Press \"Drop the card with the typo in\". See where it stops and read the red note."
+    done: [ drop-typo ]
+  - text: "Press \"Fix the typo\", then drop that card in again."
+    done: [ fix, drop-typo ]
+```
 
 **What you should notice:** A card with one bad sentence is stopped at the door, and none of its tiles reach the reader, not even the ones for the good sentences.
 

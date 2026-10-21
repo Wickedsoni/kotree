@@ -37,12 +37,93 @@ The book is whole only when all five numbers have turned up.
 
 ## See it move
 
-<!-- SIM: postcard-routes -->
-
-**Try this:**
-1. Send the book. Watch which route each numbered card takes and read the order the cards arrive in.
-2. Close one route and send again. Watch the cards pick the other route.
-3. Drop card 3 and watch the receiver's tray after the cards have arrived.
+```sim
+id: postcard-routes
+template: flow
+title: A book posted as numbered postcards
+intro: A book is cut into five numbered cards at the sender. Both routes are open and no card is lost.
+stations:
+  - { id: sender, label: "Sender: the book as 5 cards" }
+  - { id: ra, label: Route A }
+  - { id: rb, label: Route B }
+  - { id: recv, label: "Receiver's tray" }
+paths:
+  - [ sender, ra, recv ]
+  - [ sender, rb, recv ]
+items:
+  - { id: c1, label: Card 1 of 5, at: sender }
+  - { id: c2, label: Card 2 of 5, at: sender }
+  - { id: c3, label: Card 3 of 5, at: sender }
+  - { id: c4, label: Card 4 of 5, at: sender }
+  - { id: c5, label: Card 5 of 5, at: sender }
+vars: { closeb: "off", drop3: "off" }
+toggles:
+  - { id: closeb, label: Route B closed, var: closeb }
+  - { id: drop3, label: Card 3 is lost on the way, var: drop3 }
+actions:
+  - id: send
+    label: Send the book
+    cases:
+      - when: { at: { c1: sender }, var: { closeb: "on" } }
+        do:
+          - move: { c1: ra, c2: ra, c3: ra, c4: ra, c5: ra }
+          - light: [ ra ]
+          - say: "Route B is closed, so every card takes route A."
+      - when: { at: { c1: sender } }
+        do:
+          - move: { c1: ra, c2: rb, c3: ra, c4: rb, c5: ra }
+          - light: [ ra, rb ]
+          - say: "The postal system sends each card on its own. Cards 1, 3 and 5 take route A, and cards 2 and 4 take route B."
+    refuse: The cards have already left the sender. Press "Take the cards back" first.
+  - id: deliver
+    label: Let the cards arrive
+    cases:
+      - when: { at: { c1: ra }, var: { closeb: "on", drop3: "off" } }
+        do:
+          - move: { c1: recv, c2: recv, c3: recv, c4: recv, c5: recv }
+          - label: { c1: "Card 1: arrived 1st", c2: "Card 2: arrived 2nd", c3: "Card 3: arrived 3rd", c4: "Card 4: arrived 4th", c5: "Card 5: arrived 5th" }
+          - light: [ recv ]
+          - say: "All five cards used one route, so they arrive in the order they were sent. All five numbers are in the tray, so the book is whole."
+      - when: { at: { c1: ra }, var: { closeb: "on", drop3: "on" } }
+        do:
+          - move: { c1: recv, c2: recv, c4: recv, c5: recv }
+          - remove: c3
+          - label: { c1: "Card 1: arrived 1st", c2: "Card 2: arrived 2nd", c4: "Card 4: arrived 3rd", c5: "Card 5: arrived 4th" }
+          - light: [ recv ]
+          - say: "Card 3 was lost on the way. Cards 1, 2, 4 and 5 arrived, so the tray has a gap at number 3. The book is not whole, and only card 3 has to be sent again."
+      - when: { at: { c1: ra }, var: { drop3: "off" } }
+        do:
+          - move: { c1: recv, c2: recv, c3: recv, c4: recv, c5: recv }
+          - label: { c2: "Card 2: arrived 1st", c1: "Card 1: arrived 2nd", c4: "Card 4: arrived 3rd", c3: "Card 3: arrived 4th", c5: "Card 5: arrived 5th" }
+          - light: [ recv ]
+          - say: "In this picture route B is quicker than route A, so the cards arrive in the order 2, 1, 4, 3, 5. The reader puts them in order by their numbers, and all five are there."
+      - when: { at: { c1: ra } }
+        do:
+          - move: { c1: recv, c2: recv, c4: recv, c5: recv }
+          - remove: c3
+          - label: { c2: "Card 2: arrived 1st", c1: "Card 1: arrived 2nd", c4: "Card 4: arrived 3rd", c5: "Card 5: arrived 4th" }
+          - light: [ recv ]
+          - say: "Card 3 was lost. The other cards arrive in the order 2, 1, 4, 5, because route B is quicker in this picture. The tray has a gap at number 3, and only card 3 has to be sent again."
+    refuse: The cards are not on the routes. Press "Send the book" first.
+  - id: again
+    label: Take the cards back
+    do:
+      - spawn: { id: c1, label: Card 1 of 5, at: sender }
+      - spawn: { id: c2, label: Card 2 of 5, at: sender }
+      - spawn: { id: c3, label: Card 3 of 5, at: sender }
+      - spawn: { id: c4, label: Card 4 of 5, at: sender }
+      - spawn: { id: c5, label: Card 5 of 5, at: sender }
+      - light: [ sender ]
+      - say: All five cards are back at the sender.
+script: [ send, deliver, again, "closeb=on", send, deliver, again, "closeb=off", "drop3=on", send, deliver ]
+try:
+  - text: "Press \"Send the book\", then \"Let the cards arrive\". Read the order the cards arrive in."
+    done: [ send, deliver ]
+  - text: "Press \"Take the cards back\", switch on \"Route B closed\", then send the book and let the cards arrive again."
+    done: [ again, "closeb=on", send, deliver ]
+  - text: "Take the cards back, switch route B open again, switch on \"Card 3 is lost on the way\", then send and deliver. Look at the receiver's tray."
+    done: [ again, "closeb=off", "drop3=on", send, deliver ]
+```
 
 **What you should notice:** The cards can arrive in a different order than they were sent, and a missing number is the only thing that has to be sent again.
 

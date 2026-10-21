@@ -36,12 +36,105 @@ The letter slides along the rail and meets the labels one at a time. It drops in
 
 ## See it move
 
-<!-- SIM: sorting-chutes -->
-
-**Try this:**
-1. Drop letters numbered 1, 4, 7 and 20 down the rail.
-2. Drag the chute labelled "7 to 12" above the chute labelled "5 to 9", then drop letter 7 again.
-3. Remove the "everything else" bin and drop letter 20.
+```sim
+id: sorting-chutes
+template: flow
+title: Letters sliding past labelled chutes
+intro: Three letters wait at the start of the rail. Four chutes with labels hang below it, and the bin "everything else" is at the end.
+stations:
+  - { id: start, label: Rail start }
+  - { id: p1, label: Chute 1 }
+  - { id: p2, label: Chute 2 }
+  - { id: p3, label: Chute 3 }
+  - { id: p4, label: Chute 4 }
+  - { id: end, label: End of rail }
+items:
+  - { id: l4, label: Letter 4, at: start }
+  - { id: l7, label: Letter 7, at: start }
+  - { id: l20, label: Letter 20, at: start }
+  - { id: cd1, label: "Label: 1", at: p1 }
+  - { id: cd34, label: "Label: 3 or 4", at: p2 }
+  - { id: cd59, label: "Label: 5 to 9", at: p3 }
+  - { id: cd712, label: "Label: 7 to 12", at: p4 }
+  - { id: bin-card, label: "Bin: everything else", at: end }
+actions:
+  - id: drop-4
+    label: Drop letter 4
+    cases:
+      - when: { at: { l4: start } }
+        do:
+          - move: { l4: p2 }
+          - mark: { l4: good }
+          - light: [ p2 ]
+          - say: "Letter 4 meets the label '1' and does not fit. It meets '3 or 4', which fits, so it drops into that chute. The chutes below are never checked."
+    refuse: Letter 4 is already on the rail. Swap the labels or press Reset to drop it again.
+  - id: drop-7
+    label: Drop letter 7
+    cases:
+      - when: { at: { l7: start, cd59: p3 } }
+        do:
+          - move: { l7: p3 }
+          - mark: { l7: good }
+          - light: [ p3 ]
+          - say: "Letter 7 passes '1' and '3 or 4' and meets '5 to 9', which fits, so it drops in there. The chute '7 to 12' also fits, but it is never asked."
+      - when: { at: { l7: start, cd712: p3 } }
+        do:
+          - move: { l7: p3 }
+          - mark: { l7: good }
+          - light: [ p3 ]
+          - say: "Letter 7 passes '1' and '3 or 4' and meets '7 to 12', which fits, so it drops in there. The chute '5 to 9' also fits, but it is never asked."
+    refuse: Letter 7 is already on the rail. Swap the labels or press Reset to drop it again.
+  - id: drop-20
+    label: Drop letter 20
+    cases:
+      - when: { at: { l20: start, bin-card: end } }
+        do:
+          - move: { l20: end }
+          - mark: { l20: good }
+          - light: [ end ]
+          - say: "Letter 20 fits none of the labels, so it slides to the end of the rail and lands in the bin 'everything else'."
+      - when: { at: { l20: start } }
+        do:
+          - move: { l20: end }
+          - mark: { l20: bad }
+          - light: [ end ]
+          - say: "Letter 20 fits none of the labels. With no bin it has nowhere to go, so the rail has no answer for it."
+    refuse: Letter 20 is already on the rail. Take away the bin or press Reset to drop it again.
+  - id: swap
+    label: Swap labels 5 to 9 and 7 to 12
+    cases:
+      - when: { at: { cd59: p3 } }
+        do:
+          - move: { cd59: p4, cd712: p3, l4: start, l7: start, l20: start }
+          - mark: { l4: plain, l7: plain, l20: plain }
+          - light: [ p3 ]
+          - say: "The labels '5 to 9' and '7 to 12' trade places, and the letters go back to the start."
+      - when: { at: { cd712: p3 } }
+        do:
+          - move: { cd59: p3, cd712: p4, l4: start, l7: start, l20: start }
+          - mark: { l4: plain, l7: plain, l20: plain }
+          - light: [ p3 ]
+          - say: "The labels trade places again, so '5 to 9' is above '7 to 12', and the letters go back to the start."
+  - id: remove-bin
+    label: Take away the bin
+    cases:
+      - when: { at: { bin-card: end } }
+        do:
+          - remove: bin-card
+          - move: { l20: start }
+          - mark: { l20: plain }
+          - light: [ end ]
+          - say: The bin is gone. Drop letter 20 again.
+    refuse: The bin is already gone.
+script: [ drop-4, drop-7, drop-20, swap, drop-7, remove-bin, drop-20 ]
+try:
+  - text: "Drop letter 4, letter 7 and letter 20 down the rail."
+    done: [ drop-4, drop-7, drop-20 ]
+  - text: "Press \"Swap labels 5 to 9 and 7 to 12\", then drop letter 7 again."
+    done: [ swap, drop-7 ]
+  - text: "Press \"Take away the bin\", then drop letter 20 again."
+    done: [ remove-bin, drop-20 ]
+```
 
 **What you should notice:** A letter falls into the first chute that fits, the order of the chutes can change which one that is, and a letter with no chute at all has nowhere to go.
 

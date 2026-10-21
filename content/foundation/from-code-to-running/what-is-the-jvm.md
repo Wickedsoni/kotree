@@ -33,12 +33,75 @@ Think of a traveller with one favourite lamp and a bag of power adapters.
 
 ## See it move
 
-<!-- SIM: bytecode-adapters -->
-
-**Try this:**
-1. Press "Send the stack" and watch the same tiles reach the three machine boxes.
-2. Take the adapter off one machine and send the stack again.
-3. Put the adapter back. Add a fourth machine box and see what it needs before it can run the stack.
+```sim
+id: bytecode-adapters
+template: flow
+title: One stack of tiles, three machines, three adapters
+intro: One stack of identical tiles waits to be sent. Each of the three machine boxes holds the adapter for its own kind of computer.
+stations:
+  - { id: source, label: "The stack of tiles (shared form)" }
+  - { id: win, label: Windows laptop }
+  - { id: mac, label: Mac }
+  - { id: srv, label: Office server }
+paths:
+  - [ source, win ]
+  - [ source, mac ]
+  - [ source, srv ]
+items:
+  - { id: tw, label: Same stack, at: source }
+  - { id: tm, label: Same stack, at: source }
+  - { id: ts, label: Same stack, at: source }
+  - { id: ad-win, label: Adapter, at: win }
+  - { id: ad-mac, label: Adapter, at: mac }
+  - { id: ad-srv, label: Adapter, at: srv }
+actions:
+  - id: send
+    label: Send the stack
+    cases:
+      - when: { at: { tw: source, ad-mac: mac } }
+        do:
+          - move: { tw: win, tm: mac, ts: srv }
+          - mark: { tw: good, tm: good, ts: good }
+          - light: [ win, mac, srv ]
+          - say: "The same stack of tiles reaches all three machine boxes. Each box holds the adapter for its own kind of computer, so all three run it."
+      - when: { at: { tw: source } }
+        do:
+          - move: { tw: win, tm: mac, ts: srv }
+          - mark: { tw: good, tm: bad, ts: good }
+          - light: [ win, srv ]
+          - say: "The same stack reaches the Mac box too, but the Mac has no adapter, so it cannot run the stack there. The other two machines still run it. The stack itself did not change."
+    refuse: The stack has already been sent. Take the adapter off the Mac or put it back to send again.
+  - id: take-off
+    label: Take the adapter off the Mac
+    cases:
+      - when: { at: { ad-mac: mac } }
+        do:
+          - remove: ad-mac
+          - move: { tw: source, tm: source, ts: source }
+          - mark: { tw: plain, tm: plain, ts: plain }
+          - light: [ mac ]
+          - say: The Mac box has no adapter now, and the stack copies are back at the start. Send the stack again.
+    refuse: The Mac box has no adapter to take off.
+  - id: put-back
+    label: Put the Mac adapter back
+    cases:
+      - unless: { at: { ad-mac: mac } }
+        do:
+          - spawn: { id: ad-mac, label: Adapter, at: mac }
+          - move: { tw: source, tm: source, ts: source }
+          - mark: { tw: plain, tm: plain, ts: plain }
+          - light: [ mac ]
+          - say: The Mac box has its adapter again, and the stack copies are back at the start. Send the stack again.
+    refuse: The Mac box already has its adapter.
+script: [ send, take-off, send, put-back, send ]
+try:
+  - text: "Press \"Send the stack\". Watch the same stack reach all three machine boxes and run."
+    done: [ send ]
+  - text: "Press \"Take the adapter off the Mac\" and send the stack again."
+    done: [ take-off, send ]
+  - text: "Press \"Put the Mac adapter back\" and send the stack once more."
+    done: [ put-back, send ]
+```
 
 **What you should notice:** A machine runs the stack only when it has its own adapter, and the stack itself never changes.
 

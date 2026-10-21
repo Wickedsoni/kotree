@@ -38,12 +38,93 @@ The ball does not look at both paths. It reads the sign, the gate swings, and th
 
 ## See it move
 
-<!-- SIM: fork-and-gate -->
-
-**Try this:**
-1. Drag the temperature slider and watch the gate swing before the ball rolls.
-2. Add a second fork, then roll the ball with a temperature of 30 and again with 20.
-3. Swap the order of the two signs and roll the ball with a temperature of 30 again.
+```sim
+id: fork-and-gate
+template: flow
+title: A ball, a fork and a gate
+intro: The ball waits at the fork. The temperature is {temp}. Only one sign is on the fork, and it asks "above 25?".
+stations:
+  - { id: fork, label: "Fork: the sign reads the temperature" }
+  - { id: hot, label: "Hot path: prints Hot" }
+  - { id: warm, label: "Warm path: prints Warm" }
+  - { id: cool, label: "Cool path: prints Cool" }
+  - { id: done, label: "Paths meet: prints Done" }
+paths:
+  - [ fork, hot, done ]
+  - [ fork, warm, done ]
+  - [ fork, cool, done ]
+items:
+  - { id: ball, label: Ball, at: fork }
+  - { id: gate, label: "Gate: not swung yet", at: fork }
+vars: { temp: 20, second: "off", loose: "off" }
+sliders:
+  - { id: temp, label: Temperature, var: temp, min: 10, max: 30, step: 10 }
+toggles:
+  - { id: second, label: Second sign above 15, var: second }
+  - { id: loose, label: Above-15 sign first, var: loose }
+actions:
+  - id: roll
+    label: Roll the ball
+    cases:
+      - when: { var: { second: "off", temp: 30 } }
+        do:
+          - move: { ball: hot }
+          - label: { gate: "Gate: swung to hot" }
+          - light: [ hot ]
+          - say: "The temperature is {temp}, which is above 25, so the gate swings to the hot path. The ball walks that path only."
+      - when: { var: { second: "off" } }
+        do:
+          - move: { ball: cool }
+          - label: { gate: "Gate: swung to cool" }
+          - light: [ cool ]
+          - say: "The temperature is {temp}, which is not above 25. This fork has only one sign, so the gate swings to the other path, the cool path."
+      - when: { var: { second: "on", loose: "on", temp: 10 } }
+        do:
+          - move: { ball: cool }
+          - label: { gate: "Gate: swung to cool" }
+          - light: [ cool ]
+          - say: "The above-15 sign comes first. The temperature is {temp}, which is not above 15, so the ball moves to the next sign. {temp} is not above 25 either, so it takes the cool path."
+      - when: { var: { second: "on", loose: "on" } }
+        do:
+          - move: { ball: warm }
+          - label: { gate: "Gate: swung to warm" }
+          - light: [ warm ]
+          - say: "The above-15 sign comes first. The temperature is {temp}, which is above 15, so the ball leaves here on the warm path. The above-25 sign is never read."
+      - when: { var: { second: "on", temp: 30 } }
+        do:
+          - move: { ball: hot }
+          - label: { gate: "Gate: swung to hot" }
+          - light: [ hot ]
+          - say: "The above-25 sign comes first. The temperature is {temp}, which is above 25, so the ball takes the hot path. The above-15 sign is never read."
+      - when: { var: { second: "on", temp: 20 } }
+        do:
+          - move: { ball: warm }
+          - label: { gate: "Gate: swung to warm" }
+          - light: [ warm ]
+          - say: "The temperature is {temp}, which is not above 25, so the ball moves to the next sign. {temp} is above 15, so the gate swings to the warm path."
+      - do:
+          - move: { ball: cool }
+          - label: { gate: "Gate: swung to cool" }
+          - light: [ cool ]
+          - say: "The temperature is {temp}, which is not above 25 and not above 15, so the ball takes the cool path."
+  - id: roll-on
+    label: Roll on past the meeting point
+    cases:
+      - unless: { at: { ball: fork } }
+        do:
+          - move: { ball: done }
+          - light: [ done ]
+          - say: "The paths meet here, so the ball carries on with the next step whichever path it walked."
+    refuse: The ball has not chosen a path yet. Press "Roll the ball" first.
+script: [ "temp=30", roll, "second=on", "temp=20", roll, "loose=on", "temp=30", roll ]
+try:
+  - text: "Slide the temperature to 30 and press \"Roll the ball\". The gate chip tells you which way it swung."
+    done: [ "temp=30", roll ]
+  - text: "Switch on \"Second sign above 15\". Roll with 30, slide the temperature to 20 and roll again."
+    done: [ "second=on", roll, "temp=20", roll ]
+  - text: "Switch on \"Above-15 sign first\", slide the temperature to 30 and roll. Which path does the ball take now?"
+    done: [ "loose=on", "temp=30", roll ]
+```
 
 **What you should notice:** The ball takes exactly one path, and the order of the signs can change which one.
 

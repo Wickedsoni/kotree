@@ -35,12 +35,104 @@ Think of a factory line for apples.
 
 ## See it move
 
-<!-- SIM: factory-line-stations -->
-
-**Try this:**
-1. Snap on "throw out tags of 3 letters or fewer" and press Run. Look at the crate and at the basket.
-2. Add "put Mr in front of each tag" after it and run again.
-3. Drag "put Mr in front" above the throw-out station and run again.
+```sim
+id: factory-line-stations
+template: flow
+title: An apple line with snap-on stations
+intro: The basket holds four apples tagged Braeburn, Cox, Fuji and Pippin. Both stations are empty, and so is the crate.
+stations:
+  - { id: basket, label: Basket (original list) }
+  - { id: st1, label: Station 1 }
+  - { id: st2, label: Station 2 }
+  - { id: crate, label: Crate (new list) }
+items:
+  - { id: basket-list, label: "Braeburn, Cox, Fuji, Pippin", at: basket }
+vars: { one: "nothing", two: "nothing" }
+show:
+  - { var: one, label: Station 1 note }
+  - { var: two, label: Station 2 note }
+actions:
+  - id: snap-throw
+    label: Snap throw-out note on station 1
+    cases:
+      - when: { var: { one: "nothing" } }
+        do:
+          - set: { one: "throw-out" }
+          - say: "Station 1 now follows the throw-out note: it throws out tags of 3 letters or fewer."
+    refuse: Station 1 already holds a note.
+  - id: snap-mr
+    label: Snap Mr-in-front note on station 2
+    cases:
+      - when: { var: { two: "nothing" } }
+        do:
+          - set: { two: "Mr-in-front" }
+          - say: "Station 2 now follows the repaint note: it puts Mr in front of each tag."
+    refuse: Station 2 already holds a note.
+  - id: swap
+    label: Swap the two notes
+    cases:
+      - when: { var: { one: "throw-out", two: "Mr-in-front" } }
+        do:
+          - set: { one: "Mr-in-front", two: "throw-out" }
+          - say: "The notes trade places. Station 1 now puts Mr in front, and station 2 throws out short tags."
+      - when: { var: { one: "Mr-in-front", two: "throw-out" } }
+        do:
+          - set: { one: "throw-out", two: "Mr-in-front" }
+          - say: "The notes trade places again. Station 1 throws out short tags, and station 2 puts Mr in front."
+    refuse: Snap both notes on before swapping them.
+  - id: run
+    label: Run the line
+    cases:
+      - when: { var: { one: "throw-out", two: "Mr-in-front" } }
+        do:
+          - spawn: { id: c-braeburn, label: Mr Braeburn, at: crate }
+          - spawn: { id: c-cox, label: Cox (thrown out), at: st1 }
+          - mark: { c-cox: ghost }
+          - spawn: { id: c-fuji, label: Mr Fuji, at: crate }
+          - spawn: { id: c-pippin, label: Mr Pippin, at: crate }
+          - light: [ crate ]
+          - say: "Station 1 throws out Cox, because its tag has 3 letters. Station 2 puts Mr in front of the other three. The crate holds Mr Braeburn, Mr Fuji and Mr Pippin. The basket still holds all four apples as they were."
+      - when: { var: { one: "Mr-in-front", two: "throw-out" } }
+        do:
+          - spawn: { id: c-braeburn, label: Mr Braeburn, at: crate }
+          - spawn: { id: c-cox, label: Mr Cox, at: crate }
+          - spawn: { id: c-fuji, label: Mr Fuji, at: crate }
+          - spawn: { id: c-pippin, label: Mr Pippin, at: crate }
+          - light: [ crate ]
+          - say: "Station 1 puts Mr in front first, so Cox becomes Mr Cox, which is longer than 3 letters. Station 2 then throws out tags of 3 letters or fewer, and none is that short. All four stay on the belt. The basket is unchanged."
+      - when: { var: { one: "throw-out" } }
+        do:
+          - spawn: { id: c-braeburn, label: Braeburn, at: crate }
+          - spawn: { id: c-cox, label: Cox (thrown out), at: st1 }
+          - mark: { c-cox: ghost }
+          - spawn: { id: c-fuji, label: Fuji, at: crate }
+          - spawn: { id: c-pippin, label: Pippin, at: crate }
+          - light: [ crate ]
+          - say: "Station 1 throws out Cox. The crate holds Braeburn, Fuji and Pippin. The basket still holds all four apples."
+      - when: { var: { two: "Mr-in-front" } }
+        do:
+          - spawn: { id: c-braeburn, label: Mr Braeburn, at: crate }
+          - spawn: { id: c-cox, label: Mr Cox, at: crate }
+          - spawn: { id: c-fuji, label: Mr Fuji, at: crate }
+          - spawn: { id: c-pippin, label: Mr Pippin, at: crate }
+          - light: [ crate ]
+          - say: "Station 2 puts Mr in front of every tag. Nothing is thrown out, so the crate holds four new tags. The basket is unchanged."
+      - do:
+          - spawn: { id: c-braeburn, label: Braeburn, at: crate }
+          - spawn: { id: c-cox, label: Cox, at: crate }
+          - spawn: { id: c-fuji, label: Fuji, at: crate }
+          - spawn: { id: c-pippin, label: Pippin, at: crate }
+          - light: [ crate ]
+          - say: "No notes are snapped on, so the belt carries all four copies through unchanged. The basket still holds all four apples."
+script: [ snap-throw, run, snap-mr, run, swap, run ]
+try:
+  - text: "Press \"Snap throw-out note on station 1\" and \"Run the line\". Look at the crate and at the basket."
+    done: [ snap-throw, run ]
+  - text: "Press \"Snap Mr-in-front note on station 2\" and run again."
+    done: [ snap-mr, run ]
+  - text: "Press \"Swap the two notes\" and run again. Which tags stay on the belt now?"
+    done: [ swap, run ]
+```
 
 **What you should notice:** The crate changes with every run, the basket always stays full, and putting "Mr" first lets short tags stay on the belt.
 
