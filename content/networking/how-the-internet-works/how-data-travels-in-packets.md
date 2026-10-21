@@ -1,29 +1,20 @@
 ---
 id: networking/how-the-internet-works/how-data-travels-in-packets
 title: How does a message cross the internet as many small packets?
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [networking/how-the-internet-works/clients-and-servers]
 summary: A big message is cut into numbered packets that can take different routes. The receiver puts them back in order.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [postcard-routes]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!--
-SOURCES
-- MDN, How the web works ("Packets explained": header with IP addresses, packet number and total, payload; reasons for packets): https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works (page said last modified Jul 20, 2026). The practice file listed an older MDN path, so I used this one.
-- RFC 9293, TCP, section 2.2 ("TCP provides a reliable, in-order, byte-stream service to applications"; reliability is detecting packet losses via sequence numbers): https://www.rfc-editor.org/rfc/rfc9293.html
-- Android, Media3 ExoPlayer, listening to player events (Player.STATE_BUFFERING: "not able to immediately play from its current position. This mostly happens because more data needs to be loaded"): https://developer.android.com/media/media3/exoplayer/listening-to-player-events (page said last updated 2026-09-08)
-- Kotlin stdlib calls used in the code (chunked, mapIndexed, sortedBy, joinToString): not re-fetched in this draft; reviewer to confirm against kotlinlang.org/api/core/kotlin-stdlib.
-- Router queues and dropped packets, the photo-in-strips explanation: general knowledge or my own reasoning, labelled in the text.
-- The practice file's MTU and fragmentation points and the "ADB network dump" exercise are unverified, so they are left out.
--->
 
 ## The question
 
@@ -42,7 +33,7 @@ Think of a book posted as numbered postcards.
 
 The book is whole only when all five numbers have turned up.
 
-**Where the analogy stops:** The post office never asks you for a missing card. On the internet, the receiving side notices a gap and asks for that one packet again. Also, a packet carries bytes, not lines of a book, and the receiving computer joins the bytes back into the message. Finally, your app code normally never sees the packets at all. The operating system's network code does the joining (general knowledge).
+**Where the analogy stops:** The post office never asks you for a missing card. On the internet, with a protocol such as TCP, the receiving side notices a gap and asks for that one packet again. Also, a packet carries bytes, not lines of a book, and the receiving computer joins the bytes back into the message. Finally, your app code normally never sees the packets at all. The operating system's network code does the joining (general knowledge).
 
 ## See it move
 
@@ -83,15 +74,15 @@ Idea A is the answer. Idea B would give you pages in the wrong order. Idea C wor
 
 ### Name it
 
-A **packet** is a small chunk of data sent across a network. The MDN page says each packet has a **header** and a **payload**. The header holds details such as the sender and receiver addresses, the packet number, the total number of packets and details of the protocols used. The payload is the actual data. A **protocol** is an agreed set of rules for sending messages.
+A packet is a small chunk of data sent across a network. The MDN page says each packet has a **header** and a **payload**. The header holds details such as the sender and receiver addresses, the packet number, the total number of packets and details of the protocols used. The payload is the actual data. A **protocol** is an agreed set of rules for sending messages.
 
 A **router** is a device that passes packets on towards where they are going (general knowledge). A router keeps packets waiting in a **queue**, which is a line where the first packet in is the first one out. If the line is full, the router can drop a packet (general knowledge). That is one way a packet goes missing.
 
 The MDN page gives two reasons for sending packets. A packet that is dropped or corrupted can be asked for again without resending the whole file. And packets can travel along different paths, which keeps the network efficient when many people ask for the same thing. The packets may arrive out of order, and the receiver uses the headers to put them right.
 
-The MDN picture is simplified. Real headers differ by protocol (general knowledge). The official specification of TCP (called RFC 9293) says that TCP, a protocol that carries much app data, provides a reliable, in-order, byte-stream service to applications, and that it detects lost packets using sequence numbers. So your app gets an ordered stream, and the repair work happens below it.
+The MDN picture is simplified. Real headers differ by protocol (general knowledge). The official specification of TCP (called RFC 9293) says that TCP, a protocol that carries much app data (general knowledge), provides a reliable, in-order, byte-stream service to applications (a stream is data that arrives as one ordered flow), and that it detects lost packets using sequence numbers. So your app gets an ordered stream, and the repair work happens below it.
 
-The code below is a toy model of the receiver. A **data class** is a Kotlin class that just holds values, such as `Packet`. The call `chunked(4)` cuts the text into pieces of 4 characters. The call `mapIndexed` builds one value for each piece and gives you its position `i` starting at 0. The call `sortedBy` orders the list by a value. The call `joinToString("")` glues the pieces together with nothing between them.
+The code below is a toy model of the receiver. A **data class** is a Kotlin class that holds values, such as `Packet`. The call `chunked(4)` cuts the text into pieces of 4 characters. The call `mapIndexed` builds one value for each piece and gives you its position `i` starting at 0. The call `sortedBy` orders the list by a value. The call `joinToString("")` glues the pieces together with nothing between them.
 
 ```kotlin
 data class Packet(val number: Int, val total: Int, val payload: String)
@@ -206,12 +197,12 @@ output: |
 
 - **Thinking a message crosses the internet as one piece on one fixed wire.** The answer arrives as one thing, so it feels like one thing. It is many numbered packets that can take different paths.
 - **Thinking every packet takes a different path.** The postcard picture makes it sound that way. Packets can take different paths, and many take the same one.
-- **Thinking one lost packet loses the whole message.** A gap looks like a failure. The receiver can see which number is missing and ask for just that one.
+- **Thinking one lost packet loses the whole message.** A gap looks like a failure. The receiver can see which number is missing and ask for that one only.
 - **Thinking your app sees the packets.** The network code in the operating system joins them. Your app gets a stream in order (general knowledge, and the TCP specification).
 
 ## Where this shows up in Android
 
-Take the video that stops and shows a spinner. The Android documentation for the Media3 player says its buffering state means the player is not able to play from its current position right now, mostly because more data needs to be loaded. The player had played everything it had and was waiting for more packets to arrive.
+Take the video that stops and shows a spinner. The Android documentation for the Media3 player says its buffering state means the player is not able to play from its current position right now, mostly because more data needs to be loaded. My own reasoning: the player had played everything it had and was waiting for more data to arrive.
 
 Take the photo that fills in bit by bit. This part is my own reasoning, and I did not find an Android page that says it. A picture file arrives in pieces, so on a slow connection the app can draw what has arrived so far. Both symptoms come from the same fact: the data arrives in pieces over time, not as one block.
 
@@ -224,7 +215,7 @@ Two reasons, both from the MDN page. If a packet is dropped or damaged, only tha
 The MDN page lists the sender and receiver addresses, the packet number, the total number of packets and details of the protocols used. That is a simplified picture, and real headers differ by protocol. The payload is the data itself.
 
 **What happens when a packet is lost?**
-The receiver sees a gap in the numbers and the missing piece is sent again. The TCP specification says TCP detects packet loss with sequence numbers, so the app does not see the gap. The cost is a pause, because the data after the gap cannot be handed on until the gap is filled (my own reasoning from the in-order promise).
+With TCP, the receiver sees a gap in the numbers and the missing piece is sent again. The TCP specification says TCP detects packet loss with sequence numbers, so the app does not see the gap. The cost is a pause, because the data after the gap cannot be handed on until the gap is filled (my own reasoning from the in-order promise).
 
 **Packets can arrive out of order. Who fixes that, and does the app see it?**
 The receiving side uses the packet numbers to sort them. For TCP, the specification says the service to applications is in-order, so the app gets a clean stream. If you read a stream and the data looks complete, this repair has already happened below your code.

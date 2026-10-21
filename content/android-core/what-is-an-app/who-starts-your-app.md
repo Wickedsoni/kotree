@@ -1,21 +1,20 @@
 ---
 id: android-core/what-is-an-app/who-starts-your-app
 title: "Who starts my app if I never call main()?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [android-core/what-is-an-app/what-is-inside-an-app]
 summary: "No main() starts an Android app. The system starts one screen your manifest marks as the front door, and calls its first method."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [launch-path-manifest]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://developer.android.com/guide/components/fundamentals (no single entry point, no main(); the system starts the process when a component needs to run; the manifest declares components) ; https://developer.android.com/guide/components/intents-filters (MAIN plus LAUNCHER must be paired for the activity to appear in the app launcher; the Home app finds them; the system starts the matching activity by calling onCreate) ; https://developer.android.com/guide/components/activities/activity-lifecycle (onCreate fires when the system first creates the activity) ; https://developer.android.com/topic/performance/memory-overview (each app process is forked from Zygote; a process is kept cached after the user leaves). ⚠️ VERIFY: compile not run for the kotlin block (no shell). ⚠️ VERIFY: the hop "the home screen asks the system to start the screen" is my own simplified reasoning, no official page states the tap mechanics. ⚠️ VERIFY: the roadmap sim text says the app "fails to open" without the launcher pair, but the docs only say the activity does not appear in the launcher; the sim should show a missing icon. -->
 
 ## The question
 
@@ -31,7 +30,6 @@ Think of a theatre.
 - The poster board in the lobby has one poster for each show. Tapping a poster tells the stage manager to start that show.
 - The stage is where a show happens. If no show of yours is running, the stage manager sets up a stage first.
 
-So your code does not start the show. It waits to be called on.
 
 **Where the analogy stops:** A theatre show starts once and runs to the end. Android can also start your parts through other doors, for example when another app asks. It may keep the stage standing after you leave, so the next start is faster. And the poster board is itself an app on the phone, not a person in the lobby.
 
@@ -125,7 +123,7 @@ code: |
     2. The home screen asks the system to start the front door
     3. The system sets up a new process, if the app has none running
     4. The system creates the first screen and calls its onCreate
-  Which of these is there before the first screen exists?
+  Which of these must already be in place before the system creates your first screen?
 options:
   - id: a
     text: "Your own main() function, which starts the app"
@@ -135,8 +133,8 @@ options:
     correct: true
     why: "The stage comes first. The system sets it up if no show of yours is running, and only then creates the screen on it."
   - id: c
-    text: "The onCreate call, which runs before the screen is made"
-    why: "You may have taken onCreate for a setup step that comes first. The system calls it as it creates the screen, so the screen has to exist."
+    text: "The onCreate call, which runs before the screen object exists"
+    why: "You may have taken onCreate for a setup step that comes first. The system calls onCreate on a screen object that already exists, so the object comes before the call."
 output: |
   The process the system sets up for the app
 ```
@@ -169,26 +167,20 @@ output: |
 type: predict
 run: false
 id: trace-the-stage-manager
-verified: not-run
+verified: kotlin-2.4.21
 code: |
-  class Screen(val name: String) {
-      fun onCreate() {
-          println("onCreate runs for " + name)
-      }
-  }
-
-  fun systemStarts(frontDoor: Screen?) {
-      if (frontDoor == null) {
-          println("No poster on the board")
-      } else {
-          println("Poster shown, user taps")
-          frontDoor.onCreate()
-      }
+  fun systemStarts(frontDoor: String?) {
+    if (frontDoor == null) {
+      println("No poster on the board")
+    } else {
+      println("Poster shown, user taps")
+      println("onCreate runs for " + frontDoor)
+    }
   }
 
   fun main() {
-      systemStarts(null)
-      systemStarts(Screen("Maps"))
+    systemStarts(null)
+    systemStarts("Maps")
   }
 options:
   - id: a
@@ -212,7 +204,7 @@ output: |
 - No main(): the stage manager rings the bell.
 - Two marks on the cast list put a screen on the poster board.
 - Your screen never walks on by itself. The system calls its onCreate.
-- The stage comes first, then the screen.
+- Task, in Android Studio: open AndroidManifest.xml in a new project and find the activity whose intent-filter holds the MAIN action and LAUNCHER category.
 
 ## Common mistakes
 
@@ -238,7 +230,7 @@ The memory documentation says each app process is forked from an existing proces
 The documentation gives the reason: most of the RAM pages for framework code and resources can be shared across all app processes. The trade-off is that every app process starts from the same preloaded base, so shared code is loaded once. My own reasoning: this is why starting an app is cheaper than loading all of Android again.
 
 **What goes wrong if the first screen does heavy work in onCreate?**
-The screen is drawn by the main thread, the one worker that also runs your onCreate code. The documentation says no drawing events can be dispatched while that thread is blocked. So the user sees a blank or frozen start (my own reasoning). Keep onCreate light, and move slow work elsewhere.
+The screen is drawn by the main thread, the one worker that also runs your onCreate code (general knowledge). The documentation says no drawing events can be dispatched while that thread is blocked. So the user sees a blank or frozen start (my own reasoning). Keep onCreate light, and move slow work elsewhere.
 
 ## Recap
 

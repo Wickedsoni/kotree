@@ -1,33 +1,24 @@
 ---
 id: security/secure-storage/where-data-lives-on-a-phone
 title: "Which of my app's saved data can another app or person read?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [security/threat-thinking/who-would-attack-my-app]
 summary: Files in your app's own private area are closed to other apps, files in shared places are open, and a saved password is a risk in either.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [hotel-corridor-files]
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://developer.android.com/privacy-and-security/security-tips : "By default, files that you create on internal storage are accessible only to your app"; external storage "globally readable and writable ... only store non-sensitive information"; "don't store user IDs and passwords on the device ... use a short-lived, service-specific authorization token"; the application sandbox and the unique UID per app.
-- https://developer.android.com/training/data-storage : app-specific storage, shared storage, preferences ("Store private, primitive data in key-value pairs"), databases.
-- https://developer.android.com/training/data-storage/app-specific : other apps cannot access internal storage; on Android 10 and higher "these locations are encrypted"; files in app-specific storage are removed on uninstall.
-- https://developer.android.com/training/data-storage/shared/media : "Even after your app is uninstalled, these files remain on the user's device."
-- https://developer.android.com/identity/data/autobackup : Auto Backup includes shared preferences files and files from getFilesDir() by default; android:allowBackup defaults to true for apps targeting Android 6.0 and higher; set it to false for sensitive data; tip to use Block Store for credentials and authentication tokens.
-- Left out on purpose: EncryptedSharedPreferences (the roadmap records it as deprecated; keys are a separate topic); getExternalFilesDir access rules (the pages I read differ by Android version, so the Predict items use only "private" and "shared" places).
-- Author data (docs/practice/interview-security.md) used as questions only. Its "Linux UID sandbox" point is verified above; its "plaintext on rooted devices" point is labelled general knowledge.
--->
 
 ## The question
 
-Your app saves a login token and a few notes on the phone. The user closes the app, and the data is still there. Who else can open it, another app or a person holding the phone? And what changes if you save the file in a different place?
+Your app saves a login token (a short pass from the server that keeps the user signed in) and a few notes on the phone. The user closes the app, and the data is still there. Who else can open it, another app or a person holding the phone? And what changes if you save the file in a different place?
 
 ## Mental model
 
@@ -40,7 +31,7 @@ Think of a hotel.
 
 A guest does not leave a password note in the hall. But a guest also should not leave it in the room, if the note never needed to exist.
 
-**Where the analogy stops:** A hotel has staff with a master key. On a phone, the owner of the phone and anything that runs with higher rights can get into more than your app can (general knowledge). Also, newer Android versions put limits on the hall, so "anyone" means any app that has the right permission. And a hotel has one front desk, but a phone's backup copy can leave the phone, which is why it is in the picture.
+**Where the analogy stops:** A hotel has staff with a master key. On a phone, the owner of the phone and anything that runs with higher rights can get into more than your app can (general knowledge). Also, newer Android versions put limits on the hall (general knowledge), so "anyone" means any app that has the right permission. And a hotel has one front desk, but a phone's backup copy can leave the phone, which is why it is in the picture.
 
 ## See it move
 
@@ -59,8 +50,6 @@ A guest does not leave a password note in the hall. But a guest also should not 
 
 Your app saves four things: a list of notes, a photo the user wants to share, some settings and a login token. You have to decide where each one goes.
 
-The phone has more than one place to keep a file. Some places are only for your app. Others are meant to be seen by other apps.
-
 ### Guess
 
 Where should the login token go?
@@ -75,7 +64,7 @@ Idea B sounds helpful, but anything that survives an uninstall is lying where ot
 
 1. List what your app saves.
 2. For each item, ask: should another app ever see this?
-3. If no, keep it in your private area. The Android documentation says files in internal storage are by default accessible only to your app.
+3. If no, keep it in your private area. The Android documentation says files in internal storage (your app's private area) are by default accessible only to your app.
 4. If the user wants to share it, put it in a shared place on purpose.
 5. Ask whether a password needs to be saved at all. The documentation says not to store user IDs and passwords on the device, and to use a short-lived authorization token instead.
 6. Ask whether the backup copy should contain it.
@@ -84,10 +73,9 @@ Idea B sounds helpful, but anything that survives an uninstall is lying where ot
 
 - The **sandbox** is the Android rule that isolates your app's data and code from other apps. The documentation says each app is given a unique user identifier, a **UID**, with very limited permissions.
 - **Internal storage** is your app's private area. The documentation says that by default, files in it are accessible only to your app. The app-specific storage page adds that on Android 10 and higher these locations are encrypted.
-- **External storage** is the shared kind of place. The documentation says files on external storage are globally readable and writable, so you should only store non-sensitive information there.
+- **External storage** is the shared kind of place.
 - **Preferences** are small saved settings kept as key-value pairs. The storage page calls them private, primitive data.
-- A **token** is a short-lived pass that the server gives your app after sign-in. It stands in for the password.
-- **Auto Backup** is the front desk. By default it includes shared preferences files and the files in your internal storage. The default for `android:allowBackup` is `true`, and the documentation suggests setting it to `false` if your app deals with sensitive information.
+- **Auto Backup** is the front desk. By default it includes shared preferences files and the files saved with `getFilesDir()` in internal storage. The default for `android:allowBackup` is `true`, and the documentation suggests setting it to `false` if your app deals with sensitive information.
 
 | Hotel | Official name | What it means |
 |---|---|---|
@@ -96,7 +84,7 @@ Idea B sounds helpful, but anything that survives an uninstall is lying where ot
 | The sticky note with the password | A saved password | Risky anywhere; do not store it |
 | The front desk photo | Auto Backup | Can copy private files off the phone |
 
-My own reasoning: encrypted storage on Android 10 and higher keeps your files from other people. It does not hide them from your own app, which reads them as normal text. Locking data with a key that your app cannot copy is a different topic, and this page does not cover it.
+My own reasoning, general knowledge: the encryption protects stored files if someone gets at the storage without unlocking the phone. Other apps are kept out by the sandbox. Your own app reads its files as normal text, because the system decrypts them for it. The page does not say more.
 
 The code below is a model in plain Kotlin, not real Android. It shows the rule with a map of file names to places.
 
@@ -266,31 +254,30 @@ For this code, question 4 has a short answer: if `saveLoginToken` runs twice, th
 ## Tricks to remember
 
 - Room is locked, hall is open, front desk keeps a photo.
-- Private does not mean safe to store a password.
+- Private does not mean safe to store a password, so ask first whether it needs to be saved at all.
 - Survives an uninstall means it is lying in the hall.
-- Ask first whether the data needs to be saved at all.
-- Task, on an emulator and with a fake value only: save a fake password in preferences, then use Android Studio's device file viewer to open the file. You will see the text as plain text. The viewer's name differs between Studio versions. Delete the project afterwards.
+- Task, on an emulator and with a fake value only: save a fake password in preferences, then use Android Studio's device file viewer to open the file. The viewer's name differs between Studio versions. Delete the project afterwards.
 
 ## Common mistakes
 
-- **Thinking anything saved on the phone is private to my app.** The word "saved" makes it feel like one place. The Android documentation says external storage is globally readable and writable. Ask which place the file is in.
-- **Thinking private means safe for a password.** A locked room feels like a safe. The documentation says not to store user IDs and passwords on the device, and to use a short-lived token. Keep the token private, and do not save the password.
-- **Forgetting the front desk photo.** Backup runs by itself, so it is hard to notice. The Auto Backup documentation says shared preferences and internal files are included by default, and `allowBackup` defaults to `true`. Decide on purpose what the backup should hold.
-- **Writing to shared storage so a file survives an uninstall.** It feels helpful for the user. The documentation says shared files remain after an uninstall, and anyone with access can still read them. A token is better off gone and issued again by the server.
+- **Thinking anything saved on the phone is private to my app.** The word "saved" makes it feel like one place. Ask which place the file is in.
+- **Thinking private means safe for a password.** A locked room feels like a safe. Keep the token private, and do not save the password.
+- **Forgetting the front desk photo.** Backup runs by itself, so it is hard to notice. The Auto Backup documentation says shared preferences and files from `getFilesDir()` are included by default. Decide on purpose what the backup should hold.
+- **Writing to shared storage so a file survives an uninstall.** It feels helpful for the user. The documentation says shared files remain after an uninstall, and anyone with access can still read them (my own reasoning). A token is better off gone and issued again by the server.
 
 ## Where this shows up in Android
 
 You generate a helper with an AI tool and it saves the login token into a file in a downloads folder, with the comment "so it survives uninstall". The code compiles, the app works, and the token is sitting in a shared place. That is the helper in the Fix the bug section.
 
-A second symptom is a user who restores a phone from a backup and finds the app still holding an old token. My own reasoning: the backup copy brought it back. The Auto Backup documentation says that by default, shared preferences and internal files are in the backup. For credentials and authentication tokens it suggests Block Store instead of shared preferences or a file.
+A second symptom is a user who restores a phone from a backup and finds the app still holding an old token. My own reasoning: the backup copy brought it back. The Auto Backup documentation says that by default, shared preferences and files from `getFilesDir()` are in the backup. For credentials and authentication tokens it suggests Block Store (a Google service for saving sign-in credentials) instead of shared preferences or a file.
 
 ## Say it in an interview
 
 **Where does an Android app store its data locally?**
-The storage documentation describes app-specific storage in internal storage, reached with `getFilesDir()` or `getCacheDir()`, plus preferences for small key-value data and databases through the Room library. Shared storage is for files meant to be shared with other apps. I pick the place by asking who should be able to read the data.
+The storage documentation describes app-specific storage in internal storage, reached with `getFilesDir()` or `getCacheDir()`, plus preferences for small key-value data and databases through the Room library (Room is a library that stores data in a database). Shared storage is for files meant to be shared with other apps. I pick the place by asking who should be able to read the data.
 
 **Can another app read my app's private files?**
-By default, no. The documentation says files on internal storage are accessible only to your app, and each app has its own UID inside the sandbox. My own reasoning, general knowledge: that protection can be bypassed by someone with higher rights on the phone, such as on a rooted device.
+By default, no. The documentation says files on internal storage are accessible only to your app, and each app has its own UID inside the sandbox. General knowledge: that protection can be bypassed by someone with higher rights on the phone, such as on a rooted device.
 
 **What are the risks of external storage?**
 The documentation says files on external storage are globally readable and writable, and that the storage can be removed by the user and modified by any application. So store only non-sensitive information there, and validate any data you read from it as you would from an untrusted source.

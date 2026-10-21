@@ -1,32 +1,20 @@
 ---
 id: kmp/what-is-kmp/how-kotlin-reaches-an-iphone
 title: "How does the same Kotlin end up inside an app on an iPhone?"
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [kmp/what-is-kmp/what-kmp-shares]
 summary: One Kotlin source is built twice. For Android it becomes Android bytecode. For iPhone it becomes a native framework, with no Java virtual machine.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [two-belts-one-source]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!--
-SOURCES (all fetched on 21 Oct 2026; the footer dates are the dates the pages showed)
-- Kotlin/Native overview (native binaries without a virtual machine, LLVM-based backend, iOS named, Xcode needed for Apple targets; footer 01 September 2026): https://kotlinlang.org/docs/native-overview.html
-- Kotlin/Native target support (final binaries for Apple targets cannot be built on Linux or Windows; footer 19 August 2026): https://kotlinlang.org/docs/native-target-support.html
-- Multiplatform, discover your project (same code gives JVM class files and native files; Android library is Kotlin/JVM, iOS framework is Kotlin/Native; iosArm64 and iosSimulatorArm64; footer 01 October 2026): https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html
-- Multiplatform, build native binaries (binaries.framework gives an Objective-C framework for iOS targets, baseName; footer 13 May 2026): https://kotlinlang.org/docs/multiplatform/multiplatform-build-native-binaries.html
-- Multiplatform, direct integration with Xcode (Run Script phase, embedAndSignAppleFrameworkForXcode registers only if binaries.framework is declared, phase before Compile Sources; footer 01 October 2026): https://kotlinlang.org/docs/multiplatform/multiplatform-direct-integration.html
-- Multiplatform, integrate into an existing app (framework name sharedKit, import sharedKit in Swift; footer 01 October 2026): https://kotlinlang.org/docs/multiplatform/multiplatform-integrate-in-existing-app.html
-- Android d8 tool (Java bytecode to DEX bytecode that runs on Android devices; page last updated 2026-03-05): https://developer.android.com/tools/d8
-- Mac needed leaf (docs/04 section 4.13): no CI run exists yet, so every iPhone-side claim carries "From the docs, not run by me". There is no "Seen in this CI run" and no "Ran on my Windows machine" label.
-- The Kotlin/Native memory manager is deliberately not covered (roadmap Notes). The practice file's memory-manager and freezing points are left out.
--->
 
 ## The question
 
@@ -40,7 +28,6 @@ Think of one script translated by two different translators.
 - Translator A prints a book for Android readers. The Android runtime reads it.
 - Translator B prints a different book for iPhone readers. The iPhone app reads it directly, with no helper in between.
 - Both books tell the same story.
-- If you take away the order for the iPhone book, translator B never works, and the iPhone shelf stays empty.
 
 **Where the analogy stops:** A human translator can change the meaning. A compiler has to keep the behaviour the same. The parts of the script that say "each phone supplies its own" are the exception, because there each book gets different words. Also, a book is just read. The iPhone's book is a program the processor runs.
 
@@ -60,7 +47,7 @@ Think of one script translated by two different translators.
 
 The shared function lives in a shared module. The Android app and the iPhone app each need a version they can use. The two phones understand different kinds of files.
 
-Three tools appear below, so here they are in plain words (general knowledge). **Gradle** is the build tool that runs the compile steps. **Xcode** is Apple's tool for building iPhone apps. **Swift** is the language iPhone apps are usually written in.
+Three tools appear below, so here they are in plain words (general knowledge). **Gradle** is the build tool that runs the compile steps. **Xcode** is Apple's tool for building iPhone apps. **Bytecode** is a compact, ready-made instruction format that a runtime reads instead of source code. **Swift** is the language iPhone apps are usually written in. A **framework** is a bundle of compiled code that an Apple app project links in (general knowledge).
 
 ### Guess
 
@@ -85,7 +72,7 @@ From the docs, not run by me. ([Kotlin/Native overview](https://kotlinlang.org/d
 
 ### Name it
 
-A **compiler** turns source code into another form. A **target** is one kind of device you build the shared code for. A **native binary** is a program file made of instructions the processor runs directly, with no virtual machine in between (general knowledge). A **framework** is a bundle of compiled code that an Apple app project links in (general knowledge).
+A **compiler** turns source code into another form. A **target** is one kind of device you build the shared code for. A **native binary** is a program file made of instructions the processor runs directly, with no virtual machine in between (general knowledge).
 
 The Android belt. The Kotlin documentation says that when the shared module is built into an Android library, the common Kotlin is treated as Kotlin/JVM. The compiler produces JVM class files. The Android d8 tool then compiles Java bytecode into DEX bytecode that runs on Android devices.
 
@@ -93,8 +80,7 @@ The iPhone belt. The Kotlin documentation says **Kotlin/Native** is a technology
 
 From the docs, not run by me. ([Kotlin/Native overview](https://kotlinlang.org/docs/native-overview.html), [Discover your project](https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html))
 
-**Objective-C** is an older Apple language, and Swift can import frameworks in that form (general knowledge). The documentation says a framework declared with `binaries.framework` is an Objective-C framework, and `baseName` sets its name. One of its own examples names the framework `sharedKit`, and the Swift code then writes `import sharedKit`. The Swift side imports the framework by name and finds the shared code inside.
-
+**Objective-C** is an older Apple language, and Swift can import frameworks in that form (general knowledge). The documentation says a framework declared with `binaries.framework` is an Objective-C framework, and `baseName` sets its name. One of its own examples names the framework `sharedKit`, and the Swift code then writes `import sharedKit`.
 From the docs, not run by me. ([Build native binaries](https://kotlinlang.org/docs/multiplatform/multiplatform-build-native-binaries.html), [Integrate into an existing app](https://kotlinlang.org/docs/multiplatform/multiplatform-integrate-in-existing-app.html))
 
 Here is the shared source. It is ordinary Kotlin, and it is the single input to both belts.
@@ -107,7 +93,7 @@ fun main() {
 }
 ```
 
-This prints `Hello, Ana`. The function `greeting` uses only text, so it needs nothing from either phone. That is why one source can feed both belts.
+This prints `Hello, Ana`. The function `greeting` uses only text, so it needs nothing from either phone.
 
 Here is the shape of the build-file part that adds the iPhone framework. It is a piece of a build file, so it does not compile on its own.
 
@@ -125,11 +111,11 @@ kotlin {
 }
 ```
 
-The list holds the two iOS targets. For each one, `binaries.framework` asks for a framework named `shared`. This follows the shape of the example in the Kotlin documentation, without its XCFramework lines.
+For each iOS target, `binaries.framework` asks for a framework named `shared`. This follows the shape of the example in the Kotlin documentation, without its XCFramework lines.
 
 From the docs, not run by me. ([Build native binaries](https://kotlinlang.org/docs/multiplatform/multiplatform-build-native-binaries.html))
 
-Two more rules from the docs complete the iPhone belt. A **Run Script build phase** is a step inside an Xcode build that runs a command you supply (general knowledge). The Xcode project calls the Gradle task `embedAndSignAppleFrameworkForXcode` in such a phase. The documentation says this task is registered only if `binaries.framework` is declared, and that the phase belongs before the Compile Sources phase. And the Kotlin/Native target support page says that building final binaries for Apple targets on Linux and Windows is not possible, and the overview says Xcode and its command-line tools are needed. So the iPhone belt needs a Mac.
+Two more rules from the docs complete the iPhone belt. A **Run Script build phase** is a step inside an Xcode build that runs a command you supply (general knowledge). The Xcode project calls the Gradle task `embedAndSignAppleFrameworkForXcode` in such a phase. The documentation says this task is registered only if `binaries.framework` is declared, and that the phase belongs before the Compile Sources phase. The Kotlin/Native target support page says that building final binaries for Apple targets on Linux and Windows is not possible. The overview says Xcode and its command-line tools are needed. So the iPhone belt needs a Mac.
 
 From the docs, not run by me. ([Direct integration](https://kotlinlang.org/docs/multiplatform/multiplatform-direct-integration.html), [Target support](https://kotlinlang.org/docs/native-target-support.html), [Kotlin/Native overview](https://kotlinlang.org/docs/native-overview.html))
 
@@ -138,6 +124,8 @@ From the docs, not run by me. ([Direct integration](https://kotlinlang.org/docs/
 | The Android translator | Kotlin/JVM, then d8 | Class files, then DEX bytecode for Android |
 | The iPhone translator | Kotlin/Native | A native framework for the iPhone app |
 | The order for a book | A target in the build file | Tells the build which belts to run |
+
+From the docs, not run by me. ([Kotlin/Native overview](https://kotlinlang.org/docs/native-overview.html), [Discover your project](https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html))
 
 ## Predict the output
 
@@ -166,6 +154,8 @@ options:
 output: |
   Android gives JVM class files (then DEX), and iosArm64 gives a native framework
 ```
+
+From the docs, not run by me. ([Kotlin/Native overview](https://kotlinlang.org/docs/native-overview.html), [Discover your project](https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html))
 
 ```challenge
 type: predict
@@ -222,8 +212,7 @@ From the docs, not run by me. ([Direct integration with Xcode](https://kotlinlan
 
 ## Tricks to remember
 
-- One script, two translators, two books.
-- The iPhone belt makes a native framework. No Java virtual machine rides inside.
+- The iPhone belt makes a native framework. No Java virtual machine rides inside. One script, two translators, two books.
 - No iOS target means no framework, and nothing for Xcode to link.
 - Final iPhone binaries need a Mac.
 - Try this on a real project by reading only: open the build file of a shared module and look for `binaries.framework` inside the iOS target block. If it is missing, the Xcode step has nothing to call.
@@ -233,7 +222,7 @@ From the docs, not run by me. ([Direct integration with Xcode](https://kotlinlan
 ## Common mistakes
 
 - **Thinking Kotlin on iPhone runs on a Java virtual machine.** Kotlin is often linked with Java, so it feels natural. The docs describe Kotlin/Native as compiling to native binaries without a virtual machine.
-- **Thinking Kotlin on iPhone is read line by line.** Scripting languages work that way, so it feels familiar. The iPhone app gets a compiled framework that the build made before the app ever starts.
+- **Thinking Kotlin on iPhone is read line by line.** The iPhone app gets a compiled framework that the build made before the app ever starts.
 - **Thinking one compiled file serves both phones.** The word shared suggests one file. The source is shared, and each target builds its own output.
 - **Thinking a Windows laptop can build the whole project.** The Android half works anywhere, so the whole thing feels portable. The iPhone half needs a Mac.
 
@@ -241,11 +230,13 @@ From the docs, not run by me. ([Kotlin/Native overview](https://kotlinlang.org/d
 
 ## Where this shows up in Android
 
-A common sentence on a team is: "I can build the Android app, but not the iPhone framework, on my Windows laptop." The Android belt finishes with DEX bytecode, and it does not depend on the iOS target (my own reasoning). The iPhone belt needs Apple's tools.
+A common sentence on a team is this. "I can build the Android app, but not the iPhone framework, on my Windows laptop." The Android belt finishes with DEX bytecode, and it does not depend on the iOS target (my own reasoning). The iPhone belt needs Apple's tools.
 
 From the docs, not run by me. ([Kotlin/Native target support](https://kotlinlang.org/docs/native-target-support.html))
 
 The other everyday case is the reverse: a build file that lists only an Android target. The Android app builds and runs fine, and the iPhone project finds nothing to link. My own reasoning from the docs' rule is that Xcode then fails at the Run Script step, because the task it asks for is not registered. I did not see that failure message in any document, so I do not quote one.
+
+From the docs, not run by me. ([Direct integration with Xcode](https://kotlinlang.org/docs/multiplatform/multiplatform-direct-integration.html))
 
 ## Say it in an interview
 

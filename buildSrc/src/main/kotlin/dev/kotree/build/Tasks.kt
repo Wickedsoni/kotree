@@ -32,10 +32,13 @@ abstract class ValidateContentTask : DefaultTask() {
         val ref = baselineRef.getOrElse("origin/main")
         val baseline = readBaselineLive(dir.parentFile, ref)
         baseline.warning?.let { logger.warn(it) }
-        val violations = validate(loadContent(dir), baseline.live)
+        val content = loadContent(dir)
+        val violations = validate(content, baseline.live)
         if (violations.isNotEmpty()) {
             throw GradleException("validateContent: ${violations.size} violation(s)\n" + renderViolations(violations))
         }
+        val legacy = legacySimMarkers(content)
+        if (legacy > 0) logger.lifecycle("validateContent: SM0 $legacy legacy SIM marker(s) still to convert to ```sim blocks (ADR 009)")
         logger.lifecycle("validateContent: ok")
     }
 }

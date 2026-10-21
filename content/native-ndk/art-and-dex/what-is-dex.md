@@ -1,31 +1,20 @@
 ---
 id: native-ndk/art-and-dex/what-is-dex
 title: "What is inside classes.dex?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [native-ndk/what-is-native/what-is-native-code]
-summary: A dex file holds your app's compiled code in a compact form that Android's runtime reads, and native C++ code is kept out of it.
+summary: A dex file holds your app's compiled code in a compact form that Android's runtime reads, and native C++ code stays out of it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [dex-packer]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://source.android.com/docs/core/runtime/dex-format : .dex files "hold a set of class definitions and their associated adjunct data"; lists of identifiers for methods referred to by the file.
-- https://developer.android.com/tools/d8 : d8 compiles Java bytecode into DEX bytecode; input is *.class files or JAR/APK/ZIP; "the main DEX file, which is typically named classes.dex".
-- https://developer.android.com/build/multidex : 65,536 method-reference limit per DEX file; classes.dex, classes2.dex, ...; minSdk 21 and higher enables multidex by default; error text "Too many field references: 131000; max is 65536".
-- https://developer.android.com/guide/platform : ART executes DEX files, "a bytecode format designed specifically for Android that's optimized for a minimal memory footprint"; each app has its own ART instance.
-- https://source.android.com/docs/core/runtime : "ART as the runtime executes the Dalvik executable (DEX) format and DEX bytecode specification."
-- https://developer.android.com/studio/debug/apk-analyzer : DEX file viewer, Referenced Methods counts methods defined in your code AND dependency libraries.
-- https://developer.android.com/topic/performance/app-optimization/enable-app-optimization : R8 removes unused code and resources, rewrites code; shortens names "to reduce the size of the DEX file".
-- Not in any page I read, labelled in the text as general knowledge: one .class file per class; Kotlin compiles to bytecode.
-- Not verified, so not claimed: that R8 itself writes the DEX output; that a package with no classes.dex cannot start (the sim only shows that the compiled Kotlin is gone).
--->
 
 ## The question
 
@@ -39,7 +28,7 @@ Think of a pocket edition of a cookbook.
 - The packer is a machine that reads all the loose pages and prints them tightly into one small book.
 - The pocket edition is the small book. It is `classes.dex`.
 - The pocket reader is a cook who can only read pocket editions. On a phone, that cook is the Android runtime.
-- A ready-made jar from a factory is not a recipe. It cannot be printed in the book, so it travels in its own bag.
+- A ready-made tin from a factory is not a recipe. It cannot be printed in the book, so it travels in its own bag.
 
 Your recipes are not thrown away. They are packed so they fit a small bag. The reader never sees your loose pages.
 
@@ -51,10 +40,10 @@ Your recipes are not thrown away. They are packed so they fit a small bag. The r
 
 **Try this:**
 1. Press "Pack" and watch the loose class pages slide into the packer and come out as one dex box inside the package.
-2. Click the package. Find the dex box and the separate bag for the ready-made jars.
+2. Click the package. Find the dex box and the separate bag for the ready-made tins.
 3. (Optional reveal) Remove the dex box and look at what is left of the Kotlin code.
 
-**What you should notice:** The compiled Kotlin code lives in the dex box, and the C++ jars sit in a different bag.
+**What you should notice:** The compiled Kotlin code lives in the dex box, and the C++ tins sit in a different bag.
 
 ## Build the logic
 
@@ -104,7 +93,7 @@ The Kotlin text is gone from the package. The compiled classes took its place.
 | The packer | D8 | Part of the build |
 | The pocket edition | A dex file | `classes.dex` |
 | The pocket reader | ART | Runs on the phone |
-| The ready-made jar | A native library | `lib/<abi>/lib<name>.so` |
+| The ready-made tin | A native library | `lib/<abi>/lib<name>.so` (abi is the kind of CPU) |
 
 This page has no program to run. You read a package like a map.
 
@@ -118,14 +107,14 @@ verified: not-run
 code: |
   An app package holds these four files (an invented example):
     1. classes.dex
-    2. AndroidManifest.xml
+    2. AndroidManifest.xml (describes the app)
     3. lib/arm64-v8a/libgame.so
     4. res/drawable/logo.png
   Which file holds the compiled Kotlin classes?
 options:
   - id: a
     text: "File 3, because the library is the code"
-    why: "You may have counted the compiled library as your Kotlin. A .so file is a ready-made jar built from C or C++, and it is not a dex file."
+    why: "You may have counted the compiled library as your Kotlin. A .so file is a ready-made tin built from C or C++, and it is not a dex file."
   - id: b
     text: "File 1"
     correct: true
@@ -150,7 +139,7 @@ options:
   - id: a
     text: "One dex file and one .so file"
     correct: true
-    why: "One pocket edition holds the compiled Kotlin and the libraries' classes, and the jar travels in its own bag."
+    why: "One pocket edition holds the compiled Kotlin and the libraries' classes, and the tin travels in its own bag."
   - id: b
     text: "Two dex files, one for Kotlin and one for C++, and no .so file"
     why: "You may have thought each language gets its own volume. C++ is compiled to machine instructions for a CPU, and it does not go into a dex file."
@@ -163,7 +152,7 @@ output: |
 
 ## Tricks to remember
 
-- The pocket edition holds recipes. The jars travel in their own bag.
+- The pocket edition holds recipes. The tins travel in their own bag.
 - Loose pages in, pocket edition out. D8 is the packer.
 - The pocket edition holds your recipes and your libraries' recipes.
 - No `.kt` file ships. The compiled classes do.
@@ -178,6 +167,8 @@ output: |
 ## Where this shows up in Android
 
 You can look inside a package without running it. The APK Analyzer in Android Studio shows the size of files such as the DEX and resource files, and you can open the `classes.dex` file in its DEX file viewer. You will not find your `.kt` files there. You will find compiled classes and packages.
+
+A symptom: an app with many libraries can pass the 64K limit, and the build then reports too many method references. With a minimum Android version of 21 or higher, the build tools add `classes2.dex` by themselves (multidex page). The 64K limit is explained by the Referenced Methods count above.
 
 The viewer's Referenced Methods column counts the methods the dex file refers to, including methods defined in dependency libraries. The Defined Methods column counts only the methods defined in the dex file. The documentation says a dependency you package adds to both counts. So the numbers are bigger than the number of functions you wrote.
 

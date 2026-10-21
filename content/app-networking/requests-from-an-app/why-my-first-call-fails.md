@@ -1,25 +1,24 @@
 ---
 id: app-networking/requests-from-an-app/why-my-first-call-fails
 title: "Why does my first network call fail before it even leaves the phone?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [app-networking/requests-from-an-app/what-an-app-sends-and-gets]
 summary: "A new app needs two things before a call can leave the phone: a permission line in the manifest and a secure address."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://developer.android.com/develop/connectivity/network-ops/connecting (manifest must include INTERNET and ACCESS_NETWORK_STATE; both are normal permissions granted at install; network on the main thread throws NetworkOnMainThreadException) ; https://developer.android.com/privacy-and-security/security-config (cleartext enabled by default up to API 27, disabled by default from API 28; base-config default cleartextTrafficPermitted false for apps targeting 28 and higher; opting in for any domain "should be avoided whenever possible"). ⚠️ VERIFY: compile not run for the kotlin block (no shell). ⚠️ VERIFY: the claim that the call "never leaves the phone" for a blocked cleartext address or a missing permission is from the roadmap title; no official page uses those words. ⚠️ VERIFY: the exact exception thrown for a missing INTERNET permission and for blocked cleartext is not stated on the pages above, so the leaf names neither. -->
 
 ## The question
 
-Your app asks a server for a list of books, and the same address opens fine in your laptop's browser. In the app, the call fails at once, and the server's log shows nothing arriving. Is the server broken? Or did the phone stop the request before it left?
+Your app asks a server for a list of books, and the same address opens fine in your laptop's browser. In the app, the call fails at once, and the server's log shows nothing arriving (general knowledge, not stated by the pages I read). Is the server broken? Or did the phone stop the request before it left?
 
 ## Mental model
 
@@ -55,16 +54,16 @@ Idea A does not fit, because the browser works. Idea C does not fit, because the
 1. Before any call, ask for the ticket. Put one line in the manifest that says the app uses the internet.
 2. Know that the ticket needs no popup. The user is not asked, and the system gives it when the app is installed.
 3. Write the address with the sealed-bag form, so it starts with `https://`.
-4. If you must reach one plain address, tell the phone about that one address only.
+4. If you must reach one plain domain, tell the phone about that one domain only.
 5. Never open the gate for every address to make an error disappear.
 
 ### Name it
 
 A **permission** is a line in the manifest that tells the system your app needs a capability. For the internet the line is `<uses-permission android:name="android.permission.INTERNET" />`. The Android documentation says the manifest must include `INTERNET` and `ACCESS_NETWORK_STATE`, and that both are **normal permissions**, granted at install time with no request at runtime.
 
-**HTTPS** is HTTP sent in an encrypted form (general knowledge). Traffic sent without encryption is **cleartext**. The security documentation says cleartext support is enabled by default up to Android 8.1 (API 27) and disabled by default starting with Android 9 (API 28). For apps that target API 28 and higher, the default setting is `cleartextTrafficPermitted="false"`.
+**HTTPS** is HTTP sent in an encrypted form (general knowledge). Traffic sent without encryption is **cleartext**. The security documentation says cleartext support is enabled by default up to Android 8.1 (API 27, the API level, a number for the Android version) and disabled by default starting with Android 9 (API 28). For apps that target API 28 and higher, the default setting is `cleartextTrafficPermitted="false"`.
 
-An app can opt in to cleartext for one domain in a **network security configuration**, a small settings file. The documentation says opting in for any domain should be avoided whenever possible.
+An app can opt in to cleartext for one domain in a **network security configuration**, a small settings file. The documentation says the app-wide setting, which allows cleartext for every domain, is insecure and should be avoided whenever possible.
 
 Here is the gate in plain Kotlin. It is a model, not real Android.
 
@@ -102,15 +101,15 @@ code: |
     3. http://api.example.com/books?page=1
 options:
   - id: a
-    text: "Address 1, because the page does not change"
-    why: "You may have thought only the part after the address matters. The check is on the start of the address, http or https."
+    text: "Address 1, because only the part after the domain matters"
+    why: "You may have thought only the part after the domain matters. The check is on the start of the address, http or https."
   - id: b
     text: "Address 2 only"
     correct: true
     why: "From API 28 the default turns cleartext off, so only the sealed-bag address passes the second check."
   - id: c
     text: "Addresses 1 and 3, because they are the same address"
-    why: "You may have thought the extra words after the question mark make it secure. They do not. Both start with http, so both are open bags."
+    why: "You may have thought a longer address is treated differently. Both start with http, so both are open bags."
 output: |
   Address 2 only
 ```
@@ -143,7 +142,7 @@ output: |
 type: predict
 run: false
 id: trace-the-gate
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun gate(hasTicket: Boolean, address: String): String {
       if (!hasTicket) return "Stopped: no internet permission"
@@ -174,13 +173,13 @@ output: |
 - Two checks at the gate: a ticket, then a sealed bag.
 - The ticket is one manifest line, and no popup comes with it.
 - A browser accepts open bags. A new app does not.
-- An error is a clue. Read which check stopped you before changing anything.
+- Task, in an Android project: remove the INTERNET permission line, run a call, and read the error in Logcat; then add the line back.
 
 ## Common mistakes
 
 - **Thinking an address that works in the browser works in the app.** The browser and the app are two different visitors with different rules. Check the app's ticket and its bag.
 - **Looking for a popup to allow the internet.** Other permissions ask the user, so it feels the same. The documentation says the internet permission is granted at install, so a missing manifest line is the only fix.
-- **Opening the gate for every address to make the error disappear.** It works at once, so it feels like the fix. The documentation says to avoid opting in for any domain whenever possible. Open the gate for one address, or change the address to https.
+- **Opening the gate for every address to make the error disappear.** It works at once, so it feels like the fix. The documentation says the app-wide cleartext setting is insecure and should be avoided whenever possible. Open the gate for one domain, or change the address to https.
 - **Blaming the server.** The call fails at once, so the server feels guilty. If the server's log shows nothing arriving, look at the gate first.
 
 ## Where this shows up in Android
@@ -192,10 +191,10 @@ My own reasoning: when a first call fails and the server log is empty, check the
 ## Say it in an interview
 
 **Your first network call fails in a new app. What do you check?**
-First, the manifest must include the internet permission. Second, the address must be https, because the documentation says cleartext is off by default from Android 9. Third, the call must not run on the main thread, the one worker that draws the screen, because the documentation says Android refuses network calls there with an exception.
+First, the manifest must include the internet permission. Second, the address must be https, because the documentation says cleartext is off by default from Android 9 for apps that target API 28 or higher. Third, the call must not run on the main thread, the one worker that draws the screen, because the documentation says Android refuses network calls there with an exception.
 
 **Why does an `http` address fail on modern Android?**
-The security documentation says cleartext support is disabled by default starting with Android 9 (API 28). An app that needs it must opt in. Protecting users from open traffic is the trade-off: the default is safer, and old servers that only speak http need a setting or an upgrade.
+The security documentation says cleartext support is disabled by default starting with Android 9 (API 28), for apps that target API 28 or higher. An app that needs it must opt in. Protecting users from open traffic is the trade-off: the default is safer, and old servers that only speak http need a setting or an upgrade.
 
 **Is the internet permission a runtime permission with a popup?**
 No. The documentation says `INTERNET` and `ACCESS_NETWORK_STATE` are normal permissions, granted at install time and not requested at runtime. A missing manifest line cannot be fixed by tapping Allow.

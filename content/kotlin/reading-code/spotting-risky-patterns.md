@@ -1,31 +1,30 @@
 ---
 id: kotlin/reading-code/spotting-risky-patterns
 title: "Which lines in tidy-looking Kotlin deserve a second look?"
-status: shadow
+status: live
 difficulty: hard
 order: 64
 requires: [kotlin/reading-code/reading-order-for-code, kotlin/errors-and-results/result-and-runcatching]
 summary: "Five kinds of line hide most bugs in neat Kotlin: a not-null promise, a shadowed name, a look-alike comparison, a swallowed failure, and a call on an empty list."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/null-safety.html (!! and NullPointerException) ; https://kotlinlang.org/docs/equality.html (== calls equals, structural; === is referential; data classes override equals) ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html (runCatching catches any Throwable and wraps it as a failure) ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/first.html (first() throws NoSuchElementException if the list is empty) ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/max-or-null.html (maxOrNull returns null if the collection is empty) ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int-or-null.html (toIntOrNull returns null if the string is not a valid Int) ; https://developer.android.com/kotlin/coroutines/coroutines-best-practices (do not consume CancellationException; prefer specific exception types) ; https://developer.android.com/guide/components/activities/activity-lifecycle (savedInstanceState is null if the activity has never existed before). ⚠️ VERIFY: compile not run for any kotlin block (no shell), including that the shadowed-name code compiles with only warnings. ⚠️ VERIFY: getOrNull, firstOrNull and getOrDefault are used from stdlib knowledge; their pages were not fetched. ⚠️ VERIFY: the roadmap lists three F(ai) tasks but a leaf has exactly one Fix block; this leaf uses the runCatching task for Fix and the other two as Predict items. -->
 
 ## The question
 
-A teammate hands you a 40-line Kotlin file. The names are clear, the spacing is neat, and the compiler has nothing to say. Does that mean it is safe? And if you have only five minutes, which lines do you look at first?
+A teammate hands you a 40-line Kotlin file. The names are clear, the spacing is neat, and the compiler accepts it. Does that mean it is safe? And if you have only five minutes, which lines do you look at first?
 
 ## Mental model
 
 Think of a home inspector walking through a tidy house.
 
-- The house looks fine from the street. The paint is fresh and the garden is cut.
+- The house looks fine from the street.
 - The inspector does not check every brick. Damp, the slow water that rots a house, hides in the same five spots every time.
 - Under the sink is the first spot. A pipe there can leak for months behind a closed door.
 - Under a fresh coat of paint is the second spot. A stain can be covered, and the stain is still there.
@@ -35,7 +34,7 @@ Think of a home inspector walking through a tidy house.
 
 The inspector goes straight to the five spots, and asks what damage each one could be hiding.
 
-**Where the analogy stops:** An inspector can see and touch damp. A risky line of code looks as neat as a safe one, and only reading what it does with an odd input shows the problem. Also, damp spreads by itself, while a bug waits for one particular input, such as an empty list. And five spots are the common ones, not every one.
+**Where the analogy stops:** An inspector can see and touch damp. A risky line of code looks as neat as a safe one, and only reading what it does with an odd input shows the problem. And five spots are the common ones, not every one.
 
 ## Build the logic
 
@@ -75,10 +74,10 @@ Each spot is a Kotlin pattern, shown in the table below.
 | Spot | Pattern | Why damp hides there | Safer habit |
 |---|---|---|---|
 | Under the sink | `!!`, the **not-null assertion** | The compiler trusts your promise. The program stops with a NullPointerException only when the value is missing | Check for null, or use `?.` and `?:` |
-| Under fresh paint | A **shadowed** name: a variable inside a block with the same name as one outside | The inner one hides the outer one, and a change to the inner one never reaches the outer | Use a different name, or assign to the outer one without `val` |
-| Look-alike doors | `==` against `===` | `==` asks whether two things have equal content. `===` asks whether they are the same object. A data class makes `==` compare content | Use `==` for "same content". Use `===` only for "same object" |
+| Under fresh paint | A **shadowed** name: a variable inside a block with the same name as one outside (the compiler may show a Name shadowed warning, general knowledge, and a warning is easy to miss) | The inner one hides the outer one, and a change to the inner one never reaches the outer | Use a different name, or make the outer one a `var` and assign to it without `val` |
+| Look-alike doors | `==` against `===` | `==` asks whether two things have equal content. `===` asks whether they are the same object. A **data class** (a Kotlin class that gets a content-based `equals` automatically) makes `==` compare content | Use `==` for "same content". Use `===` only for "same object" |
 | Sealed drain | `runCatching` with a default value | It catches any **`Throwable`**, anything that can be thrown, and wraps it as a failure. A default then makes a bad input look like a real answer | Use `toIntOrNull()` and handle `null` by name |
-| Empty loft | `first()` on a list | The Kotlin API page says it throws a `NoSuchElementException` if the list is empty | Use `firstOrNull()`, `getOrNull(0)` or `maxOrNull()` and handle `null` |
+| Empty loft | `first()` on a list | The Kotlin API page says it throws a `NoSuchElementException` if the list is empty | Use `firstOrNull()` or `getOrNull(0)`, and handle `null`. `maxOrNull()` does the same job for the biggest value. |
 
 Here are the five spots in one program. Only the safe versions run.
 
@@ -124,7 +123,7 @@ This prints nine lines: `null`, `5`, `10`, `10`, `true`, `false`, `0`, `0` and `
 ```challenge
 type: predict
 id: shadowed-best
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var best = 0
@@ -153,7 +152,7 @@ output: |
 ```challenge
 type: predict
 id: look-alike-doors
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   data class Door(val number: Int)
 
@@ -184,23 +183,22 @@ output: |
 
 ```challenge
 type: predict
-run: false
 id: which-line-stops
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val names = emptyList<String>()
       println(names.getOrNull(0))
       println(names.firstOrNull())
       println(names.maxOrNull())
-      println(names.first())
+      println(runCatching { names.first() }.exceptionOrNull()?.javaClass?.simpleName)
       println("done")
   }
 options:
   - id: a
-    text: "null, null, null, then the program stops on the fourth line and done never prints"
+    text: "null, null, null, NoSuchElementException, done"
     correct: true
-    why: "The first three calls hand back null for an empty loft and print it. Only first() has no null to hand back, so it stops the program."
+    why: "The first three calls hand back null for an empty loft and print it. Only first() has no null to hand back, so it fails on the fourth line. The runCatching wrapper catches that failure and prints its name, and the program goes on to done."
   - id: b
     text: "null, null, null, null, done"
     why: "You may have thought every call returns null for an empty list. first() throws instead, as its documentation says."
@@ -211,12 +209,14 @@ output: |
   null
   null
   null
+  NoSuchElementException
+  done
 ```
 
 ## Try it
 
 1. **Write.** Type the five-spots program from Name it into the editor.
-2. **Run.** You should see nine lines: `null`, `5`, `10`, `10`, `true`, `false`, `0`, `0` and `null`.
+2. **Run.** You should see the nine lines above.
 3. **Break.** Change `println(nickname?.length)` to `println(nickname!!.length)` and change nothing else. Run it again. The program stops at once with a NullPointerException, and none of the other eight lines print.
 4. **Fix.** Put `?.` back in place of `!!` and run it. The nine lines return.
 
@@ -226,7 +226,7 @@ output: |
 type: fix
 id: fix-swallowed-age
 generated: true
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   fun readAge(text: String): Int {
       // Turn the typed text into a number. Any problem gives 0.
@@ -290,10 +290,10 @@ Question 3 is the point of this task: in the original, nothing is ever missing, 
 
 ## Common mistakes
 
-- **Thinking tidy formatting and good names mean the code is correct.** A neat file feels cared for. The compiler checks that the types fit together, not what a line does with a missing value or an empty list.
-- **Testing only with normal data.** If it works once, it feels finished. These five lines work with normal data and wait for the one odd input. Try the empty list, the missing value and the bad text.
+- **Thinking tidy formatting and good names mean the code is correct.** The compiler checks that the types fit together, not what a line does with a missing value or an empty list.
+- **Testing only with normal data.** These five lines work with normal data and wait for the one odd input. Try the empty list, the missing value and the bad text.
 - **Wrapping a failing line in `runCatching` to make the crash go away.** The crash stops, so it feels fixed. The failure is still there. It has moved into a default that looks like a real answer.
-- **Using `===` to ask whether two values are equal.** It reads as "equal, with extra strength". It asks about the same object, which can be false for two equal data class values.
+- **Using `===` to ask whether two values are equal.** It asks about the same object, which can be false for two equal data class values.
 
 ## Where this shows up in Android
 

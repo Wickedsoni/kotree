@@ -1,34 +1,24 @@
 ---
 id: os/what-an-os-does/kernel-and-system-calls
 title: How does my app ask the operating system to use the hardware for it?
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [os/what-an-os-does/what-the-os-does-for-apps]
 summary: Your app cannot touch the hardware itself. It passes a request through one doorway, and the kernel decides whether to do it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!--
-SOURCES
-- Android, Platform architecture ("The foundation of the Android platform is the Linux kernel"): https://developer.android.com/guide/platform (page said last updated 2024-05-20)
-- Android Open Source Project, Application Sandbox (UID, kernel-level enforcement): https://source.android.com/docs/security/app-sandbox (page said last updated 2026-09-30)
-- Linux man-pages syscalls(2) ("The system call is the fundamental interface between an application and the Linux kernel"): https://man7.org/linux/man-pages/man2/syscalls.2.html
-- Linux man-pages open(2) (EACCES, ENOENT): https://man7.org/linux/man-pages/man2/open.2.html
-- Android 14 change, exact alarms (SecurityException without SCHEDULE_EXACT_ALARM): https://developer.android.com/about/versions/14/changes/schedule-exact-alarms (page said last updated 2026-03-03)
-- User mode and kernel mode, the cost of a system call, buffering: general knowledge. The roadmap VERIFY about Android using the Linux kernel is covered by the first two pages above.
-- Practice data: docs/practice/practice-os.md says "problems: none" for this leaf, so there is no Practise section.
--->
 
 ## The question
 
-Your app says "read this file", and the text appears. Your code never moved the disk's parts or told the storage chip what to do. So who did? And why is your app not simply allowed to do it itself?
+Your app says "read this file", and the text appears. Your code never moved the disk's parts or told the storage chip what to do. So who did? And why is your app not allowed to do it itself?
 
 ## Mental model
 
@@ -42,7 +32,7 @@ Think of a bank counter behind glass.
 
 You do not walk into the vault. You write a slip and push it through the slot. The staff read it, decide if they will do it, and push an answer back. The answer may be "done" or "refused".
 
-**Where the analogy stops:** A teller can chat, bend a rule, or take a verbal request. The kernel takes only the exact forms it knows. The glass is not a building feature either. The processor itself enforces it, so a program cannot simply climb over. Also, a bank has one counter. A phone runs many apps, and each passes slips through the same doorway at once.
+**Where the analogy stops:** A teller can chat, bend a rule, or take a verbal request. The kernel takes only the exact forms it knows. The glass is not a building feature either. The processor itself enforces it (general knowledge), so a program cannot climb over. Also, a bank has one counter. A phone runs many apps, and each passes slips through the same doorway at once.
 
 ## Build the logic
 
@@ -70,7 +60,7 @@ Idea A fails because one buggy app could overwrite another app's files. Idea B f
 ### Build
 
 1. Split the world in two. One side is where apps run, with limited rights. The other side is where the kernel runs, with full rights over the hardware.
-2. Put the wall between them in the processor, not only in software. A normal program cannot step over it.
+2. Put the wall between them in the processor, not only in software (general knowledge). A normal program cannot step over it.
 3. Cut exactly one doorway through the wall. Every request must go through it.
 4. Give requests a fixed form: a number for the kind of job, such as read, write or open, and the details.
 5. At the doorway, the kernel checks who is asking and whether they have the right. Then it either does the job or refuses with an error code.
@@ -84,7 +74,7 @@ Your app runs in **user mode**, which is a limited setting of the processor. The
 
 A **system call** is a request from a program to the kernel through the one doorway. The Linux manual page says the system call is the fundamental interface between an application and the Linux kernel. The same page says programs usually do not make system calls directly but through wrapper functions in a library. A **wrapper function** is a small ready-made function that makes the call for you.
 
-Kotlin never shows you the doorway. Library calls such as reading a file go through the runtime and the library, and one of them makes the system call (general knowledge). The code below has one line that stays on the processor's own side and one that has to ask.
+Kotlin never shows you the doorway. Library calls such as reading a file go through the runtime (the program that runs your Kotlin code) and a library, and one of them makes the system call (general knowledge). The code below has one line that stays on the processor's own side and one that has to ask.
 
 ```kotlin
 import java.io.File
@@ -190,15 +180,15 @@ output: |
 ## Common mistakes
 
 - **Thinking the app runs straight on the hardware.** The screen shows your code drawing a button, so it feels direct. Your code asks and the kernel does the work. Look for the request in the path.
-- **Thinking a system call is just another function call.** It looks like one in the code. It crosses a wall, so it costs more than a normal call (general knowledge). Make fewer, bigger requests.
+- **Thinking a system call is another ordinary function call.** It looks like one in the code. It crosses a wall, so it costs more than a normal call (general knowledge). Make fewer, bigger requests.
 - **Ignoring the error that comes back.** A refusal feels rare. Missing files and missing rights are everyday cases, so read the answer.
 - **Thinking the kernel is the whole operating system.** The words get used together. The kernel is the core part. The apps, services and settings around it are also part of what you use.
 
 ## Where this shows up in Android
 
-The symptom is an error that says an app was not allowed. Two common forms are a "permission denied" message when opening a file, and a `SecurityException`, which is Java's name for a refused request.
+The symptom is an error that says an app was not allowed. Two common forms are a "permission denied" message when opening a file, and a `SecurityException`, which Java and Android throw when a request is refused (general knowledge).
 
-The Android documentation gives an example. Its Android 14 page says the `SCHEDULE_EXACT_ALARM` permission is required to set exact alarms with calls like `setExact()`, or a `SecurityException` will be thrown. Your app asked for something, and the system said no because the right was missing.
+The Android documentation gives an example. Its Android 14 page says the `SCHEDULE_EXACT_ALARM` permission is required to set exact alarms with calls like `setExact()`, or a `SecurityException` will be thrown. Your app asked for something, and the system said no because the right was missing. The page does not say whether the kernel or an Android system service made this check.
 
 The Android security page adds why files behave this way. Android gives each app its own user ID and uses it to set up a kernel-level sandbox, and by default apps have limited access to the operating system. So a request to open another app's file is checked by the kernel. That last step is my own reasoning from those sentences. Which layer produces which kind of refusal is not stated on the pages. The lesson is that when you see an access error, ask which request was refused and what right it lacked.
 

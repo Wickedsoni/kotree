@@ -18,7 +18,13 @@ const val SITE_ORIGIN = "https://kotree.garvitmaheshwari.in"
 sealed interface LessonBlock
 
 data class HtmlLessonBlock(val html: String) : LessonBlock
-data class SimLessonBlock(val id: String) : LessonBlock
+/** A sim. A legacy bare marker has only [id]; a ```sim fence adds [tpl], [spec] and [tryList] (ADR 009 section 1). */
+data class SimLessonBlock(
+    val id: String,
+    val tpl: String? = null,
+    val spec: Map<String, Any?>? = null,
+    val tryList: List<SimTryStep> = emptyList(),
+) : LessonBlock
 data class CodeLessonBlock(val lang: String, val code: String, val runnable: Boolean) : LessonBlock
 
 data class PredictOption(val id: String, val text: String, val why: String, val correct: Boolean)
@@ -82,7 +88,7 @@ fun renderMarkdown(markdown: String): String = markdownRenderer.render(markdownP
 
 /**
  * Cuts the body of [f] into lesson blocks (docs/07 section 6.2, ADR 005). Rules:
- * - an exact SIM marker line becomes a `sim` block;
+ * - an exact SIM marker line (legacy) or a ```` ```sim ```` fence (ADR 009) becomes a `sim` block;
  * - a ```` ```challenge ```` fence becomes `predict` or `fix` (structure checked, docs/06 section 3);
  * - a ```` ```kotlin ```` fence becomes `code`; ```` ```kotlin run ```` makes it runnable (needs `playground: true`);
  * - any other fence stays in the prose;
@@ -116,7 +122,12 @@ fun renderLesson(f: LeafFile, keepNotes: Boolean): Lesson {
             val closed = end < lines.size
             val inner = lines.subList(minOf(i + 1, lines.size), end).joinToString("\n")
             val firstWord = info.substringBefore(' ')
-            if (firstWord == "challenge" || (mark.startsWith("`") && info.startsWith("challenge"))) {
+            if (mark.startsWith("`") && firstWord == "sim") {
+                if (info != "sim") fail(i, "SM2: the fence must be exactly ```sim")
+                if (!closed) fail(i, "SM2: the sim block is never closed")
+                flush()
+                blocks += parseSimBlock(inner, f.branch) { off, msg -> fail(i + 1 + off, msg) }
+            } else if (firstWord == "challenge" || (mark.startsWith("`") && info.startsWith("challenge"))) {
                 if (info != "challenge") fail(i, "CH1: the fence must be exactly ```challenge")
                 if (!closed) fail(i, "CH1: the challenge block is never closed")
                 flush()
@@ -242,7 +253,7 @@ private fun parseChallenge(
 
 // ---- Output: lesson JSON, static body, config, sitemap ----
 
-private fun StringBuilder.jsonString(s: String) {
+internal fun StringBuilder.jsonString(s: String) {
     append('"')
     for (c in s) when {
         c == '"' -> append("\\\"")
@@ -283,7 +294,7 @@ fun lessonJson(lesson: Lesson): String {
             append('{')
             when (b) {
                 is HtmlLessonBlock -> { kv("t", true) { jsonString("html") }; kv("html") { jsonString(b.html) } }
-                is SimLessonBlock -> { kv("t", true) { jsonString("sim") }; kv("id") { jsonString(b.id) } }
+                is SimLessonBlock -> append(simBlockJson(b).removePrefix("{").removeSuffix("}"))
                 is CodeLessonBlock -> {
                     kv("t", true) { jsonString("code") }; kv("lang") { jsonString(b.lang) }
                     kv("code") { jsonString(b.code) }; kv("runnable") { append(b.runnable) }
@@ -335,7 +346,7 @@ fun lessonStaticBody(lesson: Lesson): String {
         is CodeLessonBlock -> pre(b.code)
         is PredictLessonBlock -> pre(b.code)
         is FixLessonBlock -> pre(b.code)
-        is SimLessonBlock -> Unit
+        is SimLessonBlock -> sb.append(simStaticHtml(b))
     }
     return sb.toString()
 }

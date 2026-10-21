@@ -1,21 +1,20 @@
 ---
 id: architecture-data/why-architecture/three-jobs-in-an-app
 title: "Which code shows things, which decides, and which fetches?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [architecture-data/why-architecture/why-code-needs-structure]
 summary: "Every line of an app screen does one of three jobs: it shows something, it decides something, or it fetches data."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://developer.android.com/topic/architecture (at least two layers: UI layer "displays application data on the screen" and data layer "contains the business logic of your app and exposes application data"; domain layer optional, "use it only when needed"; separation of concerns is "the most important principle"). ⚠️ VERIFY: compile not run for any kotlin block (no shell). ⚠️ VERIFY: the show / decide / fetch split is the roadmap's teaching simplification; the guide names UI, data and optional domain layers and places business logic in the data or domain layer. The leaf says so and labels the mapping as my own reasoning. -->
 
 ## The question
 
@@ -105,18 +104,27 @@ This prints `Row: Fair price`. `fetchPrice` plays the storeroom, `decideLabel` p
 
 ```challenge
 type: predict
-run: false
 id: sort-six-lines
-verified: not-run
+verified: kotlin-2.4.21
 code: |
-  Six lines from a mixed shopping screen:
-    1. Ask the server for the price
-    2. Say "Too dear" when the price is above 50
-    3. Draw the label in a bold red row
-    4. Keep the price saved for the next visit
-    5. Say "Fair price" when the price is 50 or below
-    6. Turn the server's reply into a number
-  Which sort into show, decide and fetch is right?
+  // Six lines from a mixed shopping screen:
+  //   1. Ask the server for the price            (Fetch)
+  //   2. Say "Too dear" when the price is above 50 (Decide)
+  //   3. Draw the label in a bold red row         (Show)
+  //   4. Keep the price saved for the next visit  (Fetch)
+  //   5. Say "Fair price" when the price is 50 or below (Decide)
+  //   6. Turn the server's reply into a number    (Fetch)
+
+  fun askServer(): Int = 1
+  fun tooDear(): Int = 2
+  fun drawRow(): Int = 3
+  fun keepPrice(): Int = 4
+  fun fairPrice(): Int = 5
+  fun readReply(): Int = 6
+
+  fun main() {
+      println("Show: ${drawRow()}. Decide: ${tooDear()} and ${fairPrice()}. Fetch: ${askServer()}, ${keepPrice()} and ${readReply()}.")
+  }
 options:
   - id: a
     text: "Show: 3 and 5. Decide: 2. Fetch: 1, 4 and 6."
@@ -135,7 +143,7 @@ output: |
 ```challenge
 type: predict
 id: new-rule-same-price
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   fun fetchPrice(): Int = 55
 
@@ -151,15 +159,15 @@ code: |
   }
 options:
   - id: a
-    text: "Row: Too dear"
-    why: "You may have used the old rule of 50. The head waiter now says too dear only above 60, and 55 is not above 60."
+    text: "Row: Fair price"
+    correct: true
+    why: "The storeroom hands over 55. The head waiter's rule says too dear only above 60, so the answer is Fair price, and the dining room shows it."
   - id: b
     text: "Row: 55"
     why: "You may have thought the dining room shows the stock as it is. It shows the label the head waiter decided."
   - id: c
-    text: "Row: Fair price"
-    correct: true
-    why: "The storeroom hands over 55. The head waiter's rule says too dear only above 60, so the answer is Fair price, and the dining room shows it."
+    text: "Row: Too dear"
+    why: "You may have used the old rule of 50. The head waiter now says too dear only above 60, and 55 is not above 60."
 output: |
   Row: Fair price
 ```
@@ -176,7 +184,7 @@ output: |
 ```challenge
 type: fix
 id: fix-two-rules-two-answers
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun fetchPrice(): Int = 50

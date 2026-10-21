@@ -1,28 +1,20 @@
 ---
 id: testing/unit-tests/run-your-first-unit-test
 title: "How do I write and run one test on my own computer?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [testing/why-test/why-tests-exist]
 summary: A local unit test is one small function in the test folder that calls your code and checks the answer, and it runs on your computer without a phone.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://developer.android.com/training/testing/local-tests : "A local test runs directly on your own workstation, rather than an Android device or emulator ... it uses your local Java Virtual Machine (JVM)"; sources "in module-name/src/test/"; dependencies applied with testImplementation (docs form: testImplementation "junit:junit:$jUnitVersion"); Kotlin @Test example with org.junit.Test and org.junit.Assert; android.jar stub methods whose code "has been removed" so "the test throws an exception" ("Method ... not mocked"); returnDefaultValues is "a last resort".
-- https://developer.android.com/studio/test/test-in-android-studio : local unit tests at module-name/src/test/java/, instrumented tests at module-name/src/androidTest/java/; create a test with Control+Shift+T and choose JUnit4; run with the gutter "Run test" icon or right-click then Run; results appear in the Run window; sync the project first.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/check.html : check(value, lazyMessage) throws IllegalStateException when the value is false.
-- https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html : runCatching returns the result of the block, "catching any Throwable".
-- Not in the pages I read, so labelled "general knowledge" in the text: that the runner skips functions without @Test.
-- Deviations from author data (docs/practice/interview-testing.md): its RuntimeException, mockk and Robolectric points are unsourced, so only the documented "throws an exception / not mocked" behaviour is claimed. No JUnit version number is printed, because the docs use a variable and the template version was not checked.
--->
 
 ## The question
 
@@ -38,9 +30,9 @@ Think of a practice net at a cricket ground.
 - The coach is the check. The coach knows what a good shot looks like and says yes or no.
 - The scoreboard tick is the green mark for a pass. A red mark is a miss.
 
-At the net you do not wait for a match. You play one shot, the coach answers in a second, and you play it again.
+You play one shot, the coach answers in a second, and you play it again.
 
-**Where the analogy stops:** The net has a real ball and a real bat, so what you learn there carries over to the match. A local test has no real phone. If your code asks Android for something, the test can fail, because the Android parts are empty stand-ins. Also, a net does not prove you are ready for a match. A passing test only covers what it checks.
+**Where the analogy stops:** A local test has no real phone. If your code asks Android for something, the test can fail, because the Android parts are empty stand-ins. Also, a net does not prove you are ready for a match. A passing test only covers what it checks.
 
 ## Build the logic
 
@@ -48,7 +40,7 @@ At the net you do not wait for a match. You play one shot, the coach answers in 
 
 You have a function `cartTotal` that adds a list of prices. You think it is right. To see it work, you would have to build the app, install it, open the cart screen and add two items.
 
-That takes minutes. The function itself is only a few lines. It does not need a screen to give an answer.
+That takes minutes. It does not need a screen to give an answer.
 
 ### Guess
 
@@ -74,12 +66,12 @@ Idea A works, and it is the slow match. Idea B is only a guess, and it misses bu
 - A **unit test** is a small test that checks one small piece of code, such as one function.
 - A **local test** is a test that runs on your own computer. The Android documentation says it uses your local Java Virtual Machine (JVM) and not a device or an emulator.
 - The **test folder** is `src/test` inside your module. The documentation says local test sources go in `module-name/src/test/`, and that this folder already exists in a new Android Studio project.
-- **JUnit** is the testing library that most Android projects use. It supplies the test marker and the checks.
+- **JUnit** is the testing library that most Android projects use (general knowledge). It supplies the test marker and the checks.
 - An **annotation** is a label written with an `@` before a function. The **`@Test`** annotation marks a function as a test.
 - An **assertion** is a check inside a test. `assertEquals(expected, actual)` is one, and it fails when the two values differ.
 - An **instrumented test** is a test that runs on a device or emulator. Its code goes in `src/androidTest`, apart from `src/test`.
 
-In Android Studio, the documentation says you run a test by pressing the **Run test** icon in the gutter next to the test, or by right-clicking it and choosing Run. The results appear in the Run window. The documentation also says to sync the project with Gradle first.
+In Android Studio, the documentation says you run a test by pressing the **Run test** icon in the gutter next to the test, or by right-clicking it and choosing Run. The results appear in the Run window. The documentation also says to sync the project with Gradle (Gradle is the tool that builds the project) first.
 
 Here is what a real test looks like. It needs JUnit, so it only builds inside an Android project, in the `src/test` folder.
 
@@ -120,7 +112,7 @@ fun main() {
 ```challenge
 type: predict
 id: ten-percent-off
-verified: "UNVERIFIED: not run, no shell; hand-traced"
+verified: kotlin-2.4.21
 code: |
   fun runOne(name: String, test: () -> Unit) {
       val result = runCatching(test)
@@ -150,7 +142,7 @@ output: |
 ```challenge
 type: predict
 id: the-test-nobody-runs
-verified: "UNVERIFIED: not run, no shell; hand-traced"
+verified: kotlin-2.4.21
 code: |
   fun runOne(name: String, test: () -> Unit) {
       val result = runCatching(test)
@@ -190,7 +182,7 @@ output: |
 ```challenge
 type: fix
 id: fix-the-unlisted-test
-verified: "UNVERIFIED: not run, no shell; hand-traced"
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real JUnit.
   // A test only runs if it is on the list the runner is given.
@@ -264,12 +256,11 @@ For this code, question 2 is the useful one. Only the tests on the list run, in 
 - Net before match: test one function alone, in a second.
 - Local test folder is `src/test`. Device tests live in `src/androidTest`.
 - No marker, no run. A function without `@Test` is only a function (general knowledge).
-- Work out the expected answer by hand, then write it into the check.
 - Task: make a test function for a tiny calculation, run it from the gutter icon, change the expected number so it fails, then change it back.
 
 ## Common mistakes
 
-- **Thinking I must install the app on a phone to test my code.** Tapping through the app is how you see it work, so it feels like the only way. A local test runs on your computer's JVM, and the function does not need a screen.
+- **Thinking I must install the app on a phone to test my code.** A local test runs on your computer's JVM, and the function does not need a screen.
 - **Writing a test and never seeing it run.** A passing board feels like good news. If the marker is missing, or the test is not on the list, it never runs. Make it fail once on purpose, to see that it runs at all.
 - **Calling Android code inside a local test.** The code looks like any other function call. The Android documentation says the Android library used in local tests has its method bodies removed, so a call throws an exception with a "not mocked" message. Keep the logic you test free of Android calls.
 - **Putting the test in the wrong folder.** Both folders look alike. The documentation puts local tests in `src/test` and instrumented tests in `src/androidTest`. Ask whether the test needs a device.

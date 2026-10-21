@@ -36,6 +36,7 @@ fun validate(c: Content, baselineLive: Set<String>?): List<Violation> {
         v4v5(f, roadmapByBranch[f.branch], leafIndex, v)
         v10(f, v)
         if (f.fm["status"] == "live") v12(f, v)
+        simRules(f, v)
     }
     v9(c, v)
     if (baselineLive != null) v8(c, baselineLive, v)
@@ -263,3 +264,58 @@ private fun v12(f: LeafFile, v: MutableList<Violation>) {
         }
     }
 }
+
+private val SIM_MARKER_ID = Regex("^<!-- SIM: ([a-z0-9]+(-[a-z0-9]+)*) -->$")
+
+/** Number of legacy `<!-- SIM: id -->` markers in the leaves (rule SM0, a warning until WP7 ends, ADR 009 section 6). */
+fun legacySimMarkers(c: Content): Int = c.leafFiles.sumOf { f -> f.body.lines().count { SIM_MARKER_ID.matches(it.trim()) } }
+
+/** SM1-SM10 for the ```sim fences of one leaf (ADR 009 section 6). Any status; a leaf without a fence is skipped. */
+private fun simRules(f: LeafFile, v: MutableList<Violation>) {
+    var fence: String? = null
+    var open = -1
+    var info = ""
+    val inner = ArrayList<String>()
+    var section = 0
+    val perSection = HashMap<Int, Int>()
+    val fenceIds = ArrayList<String>()
+    val markerIds = ArrayList<String>()
+    f.body.lines().forEachIndexed { i, raw ->
+        val line = raw
+        val t = line.trimStart()
+        val marker = if (t.startsWith("```")) "```" else if (t.startsWith("~~~")) "~~~" else null
+        if (fence != null) {
+            if (line.trimEnd() == fence) {
+                if (fence == "```" && info == "sim") {
+                    val at = f.bodyStartLine + open
+                    val count = perSection.merge(section, 1, Int::plus)!!
+                    if (count > 1) v += Violation("SM9", f.file, at, f.pathId, "more than one sim block in one `##` section")
+                    try {
+                        fenceIds += parseSimBlock(inner.joinToString(System.lineSeparator()), f.branch) { off, msg -> throw SimFail(off, msg) }.id
+                    } catch (e: SimFail) {
+                        val rule = e.msg.substringBefore(':')
+                        v += Violation(rule, f.file, at + 1 + e.off, f.pathId, e.msg.substringAfter(": "))
+                    }
+                }
+                fence = null
+            } else inner += line
+            return@forEachIndexed
+        }
+        if (marker != null) {
+            fence = marker
+            open = i; info = t.removePrefix(marker).trim(); inner.clear()
+            return@forEachIndexed
+        }
+        if (line.startsWith("## ")) section++
+        SIM_MARKER_ID.matchEntire(line.trim())?.let { markerIds += it.groupValues[1] }
+    }
+    if (fenceIds.size > 2) v += Violation("SM9", f.file, f.bodyStartLine, f.pathId, "a leaf may hold at most 2 sim blocks, found ${fenceIds.size}")
+    for (d in fenceIds.groupBy { it }.filter { it.value.size > 1 }.keys) {
+        v += Violation("SM2", f.file, f.bodyStartLine, f.pathId, "duplicate sim id `$d` in the leaf")
+    }
+    if (fenceIds.isNotEmpty() && (fenceIds + markerIds).toSet() != (f.sims ?: emptyList()).toSet()) {
+        v += Violation("SM1", f.file, f.line("sims"), f.pathId, "frontmatter `sims` must list exactly the sim ids of the body: ${(fenceIds + markerIds).distinct()}")
+    }
+}
+
+private class SimFail(val off: Int, val msg: String) : RuntimeException(msg)

@@ -1,27 +1,20 @@
 ---
 id: ui/first-composable/what-is-a-composable
 title: "What makes a Kotlin function a composable?"
-status: shadow
+status: live
 difficulty: easy
 order: 2
 requires: [ui/first-composable/what-is-declarative-ui]
 summary: A composable is a Kotlin function marked with @Composable that describes a piece of the screen, and only another composable can call it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://developer.android.com/develop/ui/compose/tutorial : "To create a composable function, just add the @Composable annotation to the function name."; "The setContent block defines the activity's layout where composable functions are called."; "Composable functions can only be called from other composable functions."; "Jetpack Compose uses a Kotlin compiler plugin to transform these composable functions into the app's UI elements."; the Text composable "displays a text label on the screen"; examples MessageCard and Text(text = "Hello $name!").
-- https://developer.android.com/develop/ui/compose/mental-model : "defining a set of composable functions that take in data and emit UI elements"; "All composable functions must have this annotation. This annotation informs the Compose compiler that this function is intended to convert data into UI."; "No return value: The function doesn't return anything ... they describe the target screen state instead of constructing UI widgets."; "fast, idempotent, and free of side-effects"; "Composable functions can execute in any order"; "Composable functions cannot currently be run in parallel, but you should write Compose code in a multithreaded way"; "Recomposition skips as much as possible".
-- Left out on purpose: the exact signature of ComponentActivity.setContent (my fetch of its reference page failed); the exact compiler error message text; the Compose naming guideline (not confirmed from an official page).
-- Author data (docs/practice/interview-ui.md): the "Composer parameter" and "infinite recomposition loops or UI crashes" claims are not on the pages above, so the first is labelled general knowledge and the second is labelled my own reasoning. "Executes concurrently" is not claimed, because the docs say composables cannot currently run in parallel.
-- Compose snippets cannot run in the Playground, so they start with "// does not compile" and the Predict items use run: false.
--->
 
 ## The question
 
@@ -78,6 +71,7 @@ Idea B breaks as soon as someone picks a different name. Idea A would run code o
 - An **annotation** is a label written with an `@` before a function. It gives the tools extra information about that function.
 - **`@Composable`** is the annotation for composables. The Android documentation says all composable functions must have it, and that it informs the Compose compiler that the function is meant to convert data into UI.
 - A **composable function**, or a **composable**, is a function with that annotation. The documentation says composable functions take in data and emit UI elements.
+- **Recomposition** is the process of calling your composable functions again when their inputs change (mental-model docs). A **side-effect** is any change that is visible to the rest of your app. **Idempotent** means that running the function again with the same input gives the same result (general knowledge).
 - **`setContent`** is where an activity starts its screen. The tutorial says the `setContent` block defines the activity's layout, and that composable functions are called there. An **activity** is one screen of an Android app.
 - **`Text`** is a composable from the Compose library. The tutorial says it displays a text label on the screen.
 - A **compiler plugin** is an add-on to the Kotlin compiler. The documentation says Compose uses one to transform composable functions into the app's UI elements.
@@ -202,8 +196,7 @@ output: |
 
 ## Tricks to remember
 
-- Stamp the card, and then it may go on the shelf.
-- Stamped can call stamped. Plain cannot call stamped.
+- Stamp the card, and then it may go on the shelf. Stamped can call stamped. Plain cannot call stamped.
 - A composable describes the screen, and it gives nothing back.
 - A click handler changes data. It does not draw.
 - Task, in an Android project with Compose: write a small `@Composable` function that shows a `Text`, call it from the `setContent` block, then remove the stamp and read the build error.

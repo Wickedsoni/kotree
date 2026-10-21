@@ -1,29 +1,20 @@
 ---
 id: dsa/complexity/big-o-notation
 title: What does O(n) say about my code, and what does it ignore?
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [dsa/complexity/counting-steps]
 summary: O(n) names how fast the step count grows as the input grows. It ignores the number in front and the small parts.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [drop-the-small-parts]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!--
-SOURCES
-- Android, "Slow rendering" (16 ms frame, jank): https://developer.android.com/topic/performance/vitals/render (page said last updated 2026-09-21)
-- Java SE 21 ArrayList class description (constant time get, linear time for the rest): https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html
-- Kotlin binarySearch (sorted list needed; page states no complexity): https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/binary-search.html
-- Kotlin sorted() (stable; page states no complexity): https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/sorted.html
-- Everything else is general knowledge or my own reasoning and is labelled in the text.
-- Practice data: docs/practice/practice-dsa.md, section dsa/complexity/big-o-notation.
--->
 
 ## The question
 
@@ -103,7 +94,7 @@ Here are the five names you will meet most. The steps column is for n = 1000 (th
 | Linearithmic | O(n log n) | A pass for each halving | Sort a list with a good general sort | about 10,000 |
 | Quadratic | O(n²) | A loop inside a loop | Compare every item with every other | 1,000,000 |
 
-Some of these are written down by a library. The Java SE documentation says the `get` operation of `ArrayList` runs in constant time and that most other operations run in linear time, "roughly speaking". The rest of the table is general knowledge. The Kotlin pages for `binarySearch` and `sorted` state no complexity at all.
+Some of these are written down by a library. The Java SE documentation says that `size`, `get` and `set` run in constant time, that `add` takes amortized constant time, and that all of the other operations run in linear time, "roughly speaking". The rest of the table is general knowledge. The Kotlin pages for `binarySearch` and `sorted` state no complexity at all.
 
 ```kotlin
 fun stepsA(n: Int): Int = 3 * n + 7
@@ -196,7 +187,7 @@ options:
     why: "You may have trusted the Big O names alone. At n = 3, B takes 9 steps and A takes 16."
   - id: c
     text: "B is dearer at every n"
-    why: "You may have expected the quadratic shape to lose everywhere. At n = 3 it wins, because the start fee 7 is bigger than the n * n part."
+    why: "You may have expected the quadratic shape to lose everywhere. At n = 3 it wins, because 3n + 7 is already 16 and n * n is only 9."
 output: |
   B is cheaper at n = 3 (9 against 16), but dearer at n = 10 (100 against 37)
 ```
@@ -217,7 +208,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android documentation on slow rendering says an app must render each frame in under 16 ms to reach 60 frames per second. If it overruns, the system drops the frame, and the user sees stutter, which the page calls jank.
+The Android documentation on slow rendering says an app must render each frame (one picture the screen draws; 60 of them make one second) in under 16 ms to reach 60 frames per second. If it overruns, the system drops the frame, and the user sees stutter, which the page calls jank.
 
 Now picture the screen that re-sorts its list on every redraw. This part is my own reasoning, and I do not have an official number. A good general sort is O(n log n) work, and here it runs again for every frame. With 20 items the cost is tiny. With 5,000 items the same sort has far more to do on every frame, so some frames overrun the 16 ms. The symptom is a list that scrolls fine in testing and stutters for a real user. The shape of the growth, not the first test, is what explains it.
 
@@ -233,7 +224,7 @@ When n is small, or when each step of the O(n²) code is very cheap. This is gen
 No. O(1) means the work does not grow with the input size. A single constant step could still be slow. And a quick O(n) loop over 10 items can beat a slow O(1) call.
 
 **What is the time complexity of looping over a list of n items and calling `contains` on a set inside the loop?**
-With a hash-based set, `contains` is O(1) on average (general knowledge), so the loop is O(n). If the second collection is a list of m items, `contains` scans it, so the loop is O(n × m). The answer depends on what kind of collection is behind `contains`.
+With a hash-based set (a set that jumps straight to a value instead of scanning), `contains` is O(1) on average (general knowledge), so the loop is O(n). If the second collection is a list of m items, `contains` scans it, so the loop is O(n × m). The answer depends on what kind of collection is behind `contains`.
 
 ## Recap
 

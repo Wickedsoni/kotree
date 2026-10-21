@@ -174,7 +174,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Reading Code** (3)
 
 - [x] In what order should I read an unfamiliar Kotlin file? (medium)
-- - Which lines in tidy-looking Kotlin deserve a second look? (hard)
+- [x] Which lines in tidy-looking Kotlin deserve a second look? (hard)
 - - Would I accept this generated file in review? (hard)
 
 ### Android core and lifecycles (37 leaves, 12 stems)
@@ -183,7 +183,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **What Is an App** (2)
 
 - [x] What is actually inside an Android app? (easy)
-- - Who starts my app if I never call main()? (easy)
+- [x] Who starts my app if I never call main()? (easy)
 
 **Activities** (3)
 
@@ -259,7 +259,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **First Composable** (4)
 
 - [x] Why does Compose describe the screen instead of changing it step by step? (medium)
-- - What makes a Kotlin function a composable? (easy)
+- [x] What makes a Kotlin function a composable? (easy)
 - - How do I put words and pictures on the screen? (easy)
 - - How can I see my screen without running the app? (easy)
 
@@ -353,7 +353,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Why the Main Thread Matters** (2)
 
 - [x] Which thread draws my screen and runs my click code? (easy)
-- - Why does one slow job freeze the whole screen? (medium)
+- [x] Why does one slow job freeze the whole screen? (medium)
 
 **Threads** (2)
 
@@ -430,7 +430,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Why Architecture** (2)
 
 - [x] Why does an app with everything in one file become impossible to change? (easy)
-- - Which code shows things, which decides, and which fetches? (easy)
+- [x] Which code shows things, which decides, and which fetches? (easy)
 
 **ViewModel** (4)
 
@@ -502,7 +502,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Requests from an App** (2)
 
 - [x] What does my app actually send to a server, and what comes back? (easy)
-- - Why does my first network call fail before it even leaves the phone? (easy)
+- [x] Why does my first network call fail before it even leaves the phone? (easy)
 
 **The HTTP Client** (3)
 
@@ -549,7 +549,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **What Is Kotlin Multiplatform** (2)
 
 - [x] Which parts of an app can I write once, and which must I still write for each phone? (easy)
-- - How does the same Kotlin end up inside an app on an iPhone? (medium)
+- [x] How does the same Kotlin end up inside an app on an iPhone? (medium)
 
 **Source Sets** (2)
 
@@ -607,7 +607,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Complexity** (4)
 
 - [x] How many steps does this code take for 10 items, 100 items and 1000 items? (easy)
-- - What does O(n) say about my code, and what does it ignore? (medium)
+- [x] What does O(n) say about my code, and what does it ignore? (medium)
 - - Which of these loops hides an O(n²) cost? (medium)
 - - When is it right to spend more memory to save time? (easy)
 
@@ -704,7 +704,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Analysis of Algorithms** (3)
 
 - [x] Why can the same code be fast on one input and slow on another? (easy)
-- - What do O, Omega and Theta each promise? (medium)
+- [x] What do O, Omega and Theta each promise? (medium)
 - - How can I be sure a loop gives the right answer for every input, not just my tests? (medium)
 
 **Recurrences** (2)
@@ -756,7 +756,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **What an Operating System Does** (2)
 
 - [x] What does the operating system do for my app that my code cannot do alone? (easy)
-- - How does my app ask the operating system to use the hardware for it? (easy)
+- [x] How does my app ask the operating system to use the hardware for it? (easy)
 
 **Processes** (3)
 
@@ -812,7 +812,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **How the Internet Works** (2)
 
 - [x] When my app loads data, which computer asks and which one answers? (easy)
-- - How does a message cross the internet as many small packets? (easy)
+- [x] How does a message cross the internet as many small packets? (easy)
 
 **Layers** (1)
 
@@ -872,7 +872,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Unit Tests** (2)
 
-- - How do I write and run one test on my own computer? (easy)
+- [x] How do I write and run one test on my own computer? (easy)
 - - What are the three parts of a test that anyone can read? (easy)
 
 **Assertions** (2)
@@ -930,7 +930,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Profiler Tour** (1)
 
-- - What do the timeline and the charts on a profiler show me? (medium)
+- [x] What do the timeline and the charts on a profiler show me? (medium)
 
 **CPU** (2)
 
@@ -979,7 +979,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **ART and Dex** (2)
 
-- - What is inside classes.dex? (easy)
+- [x] What is inside classes.dex? (easy)
 - - How does ART turn my app's code into fast machine code over time? (medium)
 
 **JNI Basics** (3)
@@ -1011,7 +1011,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Secure Storage** (2)
 
-- - Which of my app's saved data can another app or person read? (easy)
+- [x] Which of my app's saved data can another app or person read? (easy)
 - - How can an app lock data with a key that the app itself cannot copy? (hard)
 
 **Network Security** (2)
@@ -1056,7 +1056,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 **Git** (4)
 
 - [x] How do I save a snapshot of my project that I can return to later? (medium)
-- - How can I try an idea without breaking my working code? (medium)
+- [x] How can I try an idea without breaking my working code? (medium)
 - - What do I do when git says two changes collide? (hard)
 - - How does my code get to GitHub and into a teammate's project? (hard)
 

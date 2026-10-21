@@ -1,29 +1,20 @@
 ---
 id: profiling/profiler-tour/read-a-profiler-screen
 title: "What do the timeline and the charts on a profiler show me?"
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [profiling/measure-first/measure-before-you-fix]
 summary: A profiler shows several rows on one clock, and each row or chart answers a different question about where time or memory went.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [hospital-monitor]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://developer.android.com/studio/profile/inspect-app-live : the "View Live Telemetry" task; rows Interactions (needs a debuggable app and API 26+), CPU usage (percentage of total available CPU time, plus total thread count), Threads (green running or runnable, yellow waiting on I/O, gray sleeping), Memory (stacked graph by memory category).
-- https://developer.android.com/studio/profile/inspect-traces : Call Chart, Flame Chart, Top Down, Bottom Up, Events; axes and colours; "the horizontal axis doesn't represent a timeline" for the flame chart; Self, Children, Total; percentages "over the selected range".
-- https://developer.android.com/studio/profile/chart-glossary/top-bottom-charts : Top Down expands to callees; Bottom Up expands to callers; Self, Children, Total.
-- https://developer.android.com/studio/profile : debuggable apps "come with some performance costs"; a profileable app is based on the release variant; allocations and heap dumps need a debuggable app.
-- https://developer.android.com/studio/profile/android-profiler : start a task from the Home tab; finished tasks are saved in Past Recordings.
-- Deviations from author data (docs/practice/interview-profiling.md): the data lists Energy and Network timelines and "Sampled vs Instrumented" recordings. The pages above do not show them, so they are not claimed. The roadmap's "busiest 200 ms in a flame chart" is not used, because the flame chart's horizontal axis is not time.
-- Task labels in the IDE change between releases (roadmap note); the lesson names one label from the docs and says so.
--->
 
 ## The question
 
@@ -41,7 +32,7 @@ Think of the monitor beside a hospital bed.
 
 A nurse does not read one line alone. The nurse looks at the same moment on every line and asks what changed together.
 
-**Where the analogy stops:** A monitor tells a nurse that the patient is unwell. A profiler does not tell you where the bug is. It shows where time and memory went, and you decide what that means. Also, a monitor has fixed lines. The rows you get depend on the app and on the kind of recording you start. And a hospital sensor does not change the patient, but a debug build does change how fast your app runs.
+**Where the analogy stops:** A monitor tells a nurse that the patient is unwell. A profiler does not tell you where the bug is. It shows where time and memory went, and you decide what that means. Also, a monitor has fixed lines, while profiler rows depend on the app and the recording. Unlike a sensor, a debug build changes how fast your app runs.
 
 ## See it move
 
@@ -95,7 +86,7 @@ The profiler can show a live overview. The Android documentation says to start i
 
 In the thread row, green means the thread is active or ready to use the CPU. Yellow means it is active but waiting on an **I/O operation**, which is a read or write to something slow, such as the disk or the network. Gray means it is sleeping and using no CPU time.
 
-When you record a trace of calls, you get **charts** for the stretch you pick. A **call** is one function being run. A **callee** is a function that was called, and a **caller** is the function that called it. A **call stack** is the chain of calls that led to the current one. The Android documentation describes the charts like this.
+When you record a trace of calls (a recording of which calls ran), you get **charts** for the stretch you pick. A **call** is one function being run. A **callee** is a function that was called, and a **caller** is the function that called it. A **call stack** is the chain of calls that led to the current one. The Android documentation describes the charts like this.
 
 | Chart | How to read it |
 |---|---|
@@ -106,7 +97,7 @@ When you record a trace of calls, you get **charts** for the stretch you pick. A
 
 Three numbers describe each call. **Self** is the time a call spent in its own code. **Children** is the time it spent running the calls it made. **Total** is Self plus Children.
 
-One more thing is about the build. A **debuggable** app is built from the debug variant, and the documentation says it comes with some performance costs. A **profileable** app is built from the release variant, the one users get, and it still lets the profiler in. A **heap dump** is a snapshot of what the app holds in memory, and an **allocation recording** lists each time the app asked for memory (general knowledge). The documentation says both need a debuggable app.
+One more thing is about the build. A **debuggable** app is built from the debug variant (a variant is one version of the build, such as debug or release; general knowledge), and the documentation says it comes with some performance costs. A **profileable** app is built from the release variant, the one users get, and it still lets the profiler in. A **heap dump** is a snapshot of what the app holds in memory, and an **allocation recording** lists each time the app asked for memory (general knowledge). The documentation says both need a debuggable app.
 
 This page has no program to run. The numbers on it are invented for teaching.
 
@@ -196,11 +187,9 @@ output: |
 
 ## Tricks to remember
 
-- Rows say when. Charts say what.
+- Rows say when. Charts say what. Self plus Children is Total.
 - The Flame Chart's width is a share of time, and it is not a clock.
-- Self plus Children is Total.
 - Yellow thread: active but waiting on I/O. Gray thread: sleeping.
-- Check the build first, because a debug build changes the speed.
 - Task: start the View Live Telemetry task on a debuggable run of any app, tap around, and match one spike on the CPU row with an event on the Interactions row.
 
 ## Common mistakes
@@ -212,7 +201,7 @@ output: |
 
 ## Where this shows up in Android
 
-A screen stutters when you scroll. In the profiler, you record while scrolling, then look at the same moment on every row. The CPU row shows a spike. The thread row shows which thread was green and which was waiting in yellow.
+A screen stutters when you scroll. In the profiler, you record while scrolling, then look at the same moment on every row. You might see a spike on the CPU row and a thread in yellow (an example: what you see depends on the cause).
 
 Then you pick that stretch and open a chart. If one call has a large Self time in the Top Down tab, you have the function to look at. If the biggest Total belongs to a call that mostly waits on its children, the Children number points to the calls under it.
 
@@ -228,7 +217,7 @@ The Call Chart uses the horizontal axis as time and shows callees below. The Fla
 Self is the time a call spent in its own code. Children is the time it spent in the calls it made. Total is Self plus Children. My own reasoning: a large Total with a small Self means I should look at the calls underneath.
 
 **Why record on a profileable build and not a debuggable one?**
-The documentation says a debuggable app comes with some performance costs, and a profileable app is based on the release variant. So the numbers from a profileable build are closer to what users see. The trade-off is that heap dumps and Java or Kotlin allocation recordings need a debuggable app.
+The documentation says a debuggable app comes with some performance costs, and a profileable app is based on the release variant. (my own reasoning) So the numbers from a profileable build are closer to what users see. The trade-off is that heap dumps and Java or Kotlin allocation recordings need a debuggable app.
 
 ## Recap
 

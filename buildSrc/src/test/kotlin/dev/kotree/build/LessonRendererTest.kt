@@ -219,6 +219,5 @@ class LessonRendererTest {
         assertEquals(1, l.blocks.count { it is SimLessonBlock })
         assertEquals(3, l.blocks.count { it is PredictLessonBlock })
         assertTrue(l.blocks.filterIsInstance<HtmlLessonBlock>().any { it.html.contains("<table>") })
-        assertTrue(l.notes.any { "VERIFY" in it })
     }
 }

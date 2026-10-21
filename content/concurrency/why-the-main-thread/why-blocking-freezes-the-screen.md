@@ -1,21 +1,20 @@
 ---
 id: concurrency/why-the-main-thread/why-blocking-freezes-the-screen
 title: "Why does one slow job freeze the whole screen?"
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [concurrency/why-the-main-thread/what-the-main-thread-does]
 summary: "One thread draws your screen and runs your tap code, so a slow tap job stops the drawing until it ends."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [blocked-main-thread-timeline]
 playground: true
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://developer.android.com/guide/components/processes-and-threads ("When the thread is blocked, no events can be dispatched, including drawing events"; ANR dialog if blocked for more than a few seconds; two rules of the single-thread model) ; https://developer.android.com/topic/performance/vitals/anr (input event not answered within 5 seconds triggers an ANR; the system shows a dialog that lets the user force quit) ; https://developer.android.com/topic/performance/vitals/render (frames must render in under 16 ms for 60 fps, 11 ms for 90, 8 ms for 120; Choreographer drops an overrun frame; jank; slow frames 16 to 700 ms; frozen frames over 700 ms; ANRs over 5 s). ⚠️ VERIFY: compile not run for any kotlin block (no shell). ⚠️ VERIFY: the model uses exactly 16 steps per draw job and one step per millisecond; the docs say "under 16 ms" for 60 fps, so the 800-step example is my own round-number simplification. ⚠️ VERIFY: the roadmap says the ANR rule is volatile (checked 18 Oct 2026); re-check the 5-second input timeout before live. ⚠️ VERIFY: the sim spec (new id) is not built or registered. -->
 
 ## The question
 
@@ -29,11 +28,11 @@ Think again of the small shop with one cashier.
 - The customers are the jobs. A tap customer wants the Save code to run. A draw customer wants the window display tidied.
 - The line is where the customers wait their turn.
 - The window display is the screen. If the cashier does not tidy it, it stays as it was.
-- The stockroom is where the big file is kept. Counting every box in it takes a long time.
+- The stockroom is where the big file is kept.
 
-Every 16 ticks of the shop clock, a new draw customer joins the line. A tick is a tiny slice of time. Now the cashier takes the tap customer, who asks for a count of the stockroom. The cashier walks into the stockroom and starts counting. The line stands still. Customers who arrive keep waiting, and a few give up and leave.
+A tick is a tiny slice of time on the shop clock. Every 16 ticks, a new draw customer joins the line. Now the cashier takes the tap customer, who asks for a count of the stockroom. The cashier starts counting. The line stands still, and customers who arrive keep waiting.
 
-**Where the analogy stops:** A shopper can see that the cashier has gone, but on a phone nothing says so. The picture just stops. Customers leave a shop by themselves, while the phone only offers a box to close the app after a few seconds. And a shop can hire a second cashier, as an app can start other workers. In this page I call the first cashier's line the main line, and any second cashier's line a helper line. The page is about what one long job does to the main line.
+**Where the analogy stops:** A shopper can see that the cashier has gone, but on a phone the picture just stops. A shop can also hire a second cashier, as an app can start other workers. Here I call the first cashier's line the main line, and any second cashier's line a helper line.
 
 ## See it move
 
@@ -50,7 +49,7 @@ Every 16 ticks of the shop clock, a new draw customer joins the line. A tick is 
 
 ### Notice
 
-A shop has one cashier. Every 16 ticks, a draw customer joins the line. A tap customer arrives and needs 800 ticks, because the stockroom is big. The cashier starts at once. During those 800 ticks, draw customers keep joining the line.
+A shop has one cashier. Every 16 ticks, a draw customer joins the line. A tap customer arrives and needs 800 ticks, because the stockroom is big.
 
 ### Guess
 
@@ -66,14 +65,14 @@ Idea A treats each job on its own. But one cashier serves one job at a time. Ide
 
 1. Every 16 ticks, a draw customer joins the line.
 2. The cashier takes the first customer in the line and finishes that job before the next one.
-3. The tap customer needs 800 ticks, so for 800 ticks nobody else is served.
+3. For those 800 ticks nobody else is served.
 4. In that time 800 divided by 16 draw customers join the line, which is 50. The window display is not tidied for any of them.
-5. When the long job ends, the cashier goes on with the line. The 50 chances to update the picture have already passed, and the picture stood still all that time.
+5. When the long job ends, the cashier goes on with the line. The 50 chances to update the picture have already passed.
 6. If the wait gets long enough, the box that offers to close the app appears.
 
 ### Name it
 
-A thread that cannot take its next job because it is busy with a long one is **blocked**. The Android documentation says that when the main thread is blocked, no events can be dispatched, including drawing events. An **event** is something that happens, such as a tap. A **frame** is one picture of the screen. The render documentation says an app must render a frame in under 16 ms to reach 60 frames per second (fps). It says 11 ms for 90 fps and 8 ms for 120 fps. If a frame takes longer, the system is forced to skip frames and the user sees stuttering, which the documentation calls **jank**.
+The **main thread** is the one thread, or worker, that draws your screen and runs your tap code (the documentation also calls it the UI thread). A thread that cannot take its next job because it is busy with a long one is **blocked**. The Android documentation says that when the main thread is blocked, no events can be dispatched, including drawing events. An **event** is something that happens, such as a tap. A **frame** is one picture of the screen. The render documentation says an app must render a frame in under 16 ms to reach 60 frames per second (fps). It says 11 ms for 90 fps and 8 ms for 120 fps. If a frame takes longer, the system is forced to skip frames and the user sees stuttering, which the documentation calls **jank**.
 
 The documentation puts the times in bands.
 
@@ -105,7 +104,7 @@ This prints `Draw jobs missed: 50`. The `/` between two whole numbers drops any 
 ```challenge
 type: predict
 id: missed-draws-in-480
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android. One step is one millisecond.
   fun main() {
@@ -131,7 +130,7 @@ output: |
 ```challenge
 type: predict
 id: name-the-wait-band
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val ms = 900
@@ -162,7 +161,7 @@ output: |
 
 1. **Write.** Type the program from Name it into the editor.
 2. **Run.** You should see one line: `Draw jobs missed: 50`.
-3. **Break.** Change `800` to `8000` and change nothing else. Run it again. The program still runs, and it prints `Draw jobs missed: 500`. The code is not wrong. The number is a picture of a screen that stood still for eight seconds, longer than the five-second mark.
+3. **Break.** Change `800` to `8000` and change nothing else. Run it again. The program still runs, and it prints `Draw jobs missed: 500`. The number is a picture of a screen that stood still for eight seconds, longer than the five-second mark.
 4. **Fix.** Change `8000` to `8` and run it. It prints `Draw jobs missed: 0`, because a job shorter than one draw interval is done before the next draw customer arrives.
 
 ## Fix the bug
@@ -170,7 +169,7 @@ output: |
 ```challenge
 type: fix
 id: fix-file-read-on-main-line
-verified: "UNVERIFIED: not run, no shell"
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android. One step is one millisecond.
   const val DRAW_EVERY = 16
@@ -222,20 +221,20 @@ This code has no null values in play. Question 4 matters here: a click handler r
 
 - One cashier, one line. A long job in front stops everything behind it.
 - Draw jobs arrive every 16 ticks. A job longer than that makes the picture skip.
-- The screen does not crash. It stands still.
+- Task, in an Android project: add Thread.sleep(200) to a button's click handler, run it, then change it to 6000 ms and see what the screen does.
 - 16 ms is the frame, 700 ms is frozen, and 5 s is the box to close the app.
 
 ## Common mistakes
 
 - **Thinking freezing happens only on slow phones or with huge data.** A slow phone feels like the cause. The render documentation says a frame that takes more than 16 ms is slow, so even a short read can skip a draw. Check the job length, not the phone.
 - **Thinking nothing bad happens before 5 seconds.** The five-second box is the number people remember, so it feels like the limit. It is only the point where the system gives up and offers to close the app. The stutter starts at 16 ms.
-- **Thinking a frozen screen means the app crashed.** The screen stands still, so it feels broken. The code is running correctly and the line is waiting. The ANR page says the dialog lets the user force quit, which is a different thing from a crash.
+- **Thinking a frozen screen means the app crashed.** The screen stands still, so it feels broken. The ANR page says the dialog lets the user force quit, which is a different thing from a crash.
 
 ## Where this shows up in Android
 
-You tap Save, the button stays pressed, the spinner stops, and your next taps do nothing. Your Save code was a long job at the front of the line, and every draw job waited behind it. This is the picture from the opening question.
+You tap Save, the button stays pressed, the spinner stops, and your next taps do nothing. Your Save code was a long job at the front of the line, and every draw job waited behind it.
 
-The processes-and-threads documentation says that if the UI thread (another name for the main thread) is blocked for more than a few seconds, the user is presented with the "application not responding" dialog. It also lists two rules for the single-thread model: do not block the UI thread, and do not access the UI toolkit from outside it. My own reasoning: when a screen freezes right after one tap, look first at what that tap's code does before it returns.
+The processes-and-threads documentation says that if the UI thread is blocked for more than a few seconds, the user sees the "application not responding" dialog. It also lists two rules for the single-thread model: do not block the UI thread, and do not access the UI toolkit from outside it. My own reasoning: when a screen freezes right after one tap, look first at what that tap's code does before it returns.
 
 ## Say it in an interview
 

@@ -1,28 +1,20 @@
 ---
 id: tools/git/branches
 title: "How can I try an idea without breaking my working code?"
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [tools/git/what-is-a-commit]
 summary: A branch is a movable label on one snapshot, so you can try an idea on a new label while the label for your working code stays where it is.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [branch-labels]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (housekeeper strips at go-live):
-- https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell : "A branch in Git is simply a lightweight movable pointer to one of these commits."; HEAD "is a pointer to the local branch you're currently on"; git branch "creates a new pointer to the same commit you're currently on" and "didn't switch to that branch"; "Every time you commit, the master branch pointer moves forward automatically"; git switch from Git 2.23, git switch -c creates and switches; "The 'master' branch in Git is not a special branch."
-- https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging : "when you switch branches, Git resets your working directory to look like it did the last time you committed on that branch"; Git "won't let you switch branches" when uncommitted changes conflict; fast-forward definition; git merge; git branch -d.
-- https://git-scm.com/docs/git-switch : "Switch to a specified branch. The working tree and the index are updated to match the branch."; -c / --create.
-- https://git-scm.com/docs/git-init : the default initial branch name is currently master and "will change to main when Git 3.0 is released"; it can be set with init.defaultBranch. So the lesson says "your main line" and does not hard-code a name outside the quote.
-- https://git-scm.com/book/en/v2/Git-Branching-Rebasing : "Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints and merges them together."; "Do not rebase commits that exist outside your repository and that people may have based work on."; the snapshot at the end is the same, only the history differs.
-- Author data (docs/practice/interview-tools.md) used for the interview questions and the build exercise; the "rebasing shared branches is clean" belief is addressed in the interview answer only.
--->
 
 ## The question
 
@@ -40,8 +32,7 @@ Think of the photo album from the last lesson.
 
 A second note does not make a second album. It is only another label on a photo. When you take a new photo, it goes after the photo under your thumb's note, and only that note slides forward to the new photo. The other notes stay where they were.
 
-**Where the analogy stops:** A sticky note is moved by hand. A branch label moves itself when you take a snapshot while your thumb is on it. Also, when you move your thumb to another note, the room changes to match that photo, and an album page does not do that. And notes can be joined: two lines of photos can be brought back together.
-
+**Where the analogy stops:** A sticky note is moved by hand. A branch label moves itself when you take a snapshot while your thumb is on it. Also, when you move your thumb to another note, the room changes to match that photo, and an album page does not do that.
 ## See it move
 
 <!-- SIM: branch-labels -->
@@ -79,11 +70,11 @@ Idea B makes copies you must keep in step. Idea C puts a half-finished idea unde
 4. When you want your working code back, move your thumb to the `main` note. Your room goes back to photo 3.
 5. If the idea is good, bring its photos into the main line. If main has not moved since you started, the main note can slide forward. If the idea is bad, peel off its note.
 
-Your working code was never touched, because the `main` note stayed on photo 3 all the time.
+Your working code was never touched, because the `main` note stayed on photo 3.
 
 ### Name it
 
-- A **branch** is a lightweight movable pointer to one of the commits. This is how the Git book defines it. Your main line is a branch too. The Git book says it is not a special branch.
+- A **branch** is a lightweight movable pointer (a label that points at one commit) to one of the commits. This is how the Git book defines it. Your main line is a branch too. The Git book says it is not a special branch.
 - **HEAD** is the pointer to the local branch you are currently on.
 - **Switching** means moving HEAD to another branch. The Git book says that when you switch branches, Git resets your working directory to look like it did the last time you committed on that branch.
 - **Merging** brings the work of one branch into another. A **fast-forward** is the simple case, when you merge a commit that can be reached by following the first commit's history. Git moves the pointer forward, because there is no divergent work.
@@ -96,11 +87,11 @@ Your working code was never touched, because the `main` note stayed on photo 3 a
 | Join a note's photos into this line | Merge | `git merge try-layout` |
 | Peel a note off | Delete a branch | `git branch -d try-layout` |
 
-The Git book says that `git branch` creates a new pointer to the same commit, and that it does not switch to the new branch. It says `git switch` is available from Git version 2.23, and the older way is `git checkout`. The Git book says Git will not let you switch if uncommitted changes in your working directory conflict with the branch you are switching to.
+The Git book says that `git branch` creates a new pointer to the same commit, and that it does not switch to the new branch. The Git book says Git will not let you switch if uncommitted changes in your working directory conflict with the branch you are switching to.
 
 The name of the main line depends on how the repository was created. The Git documentation says the default name is currently `master`, and that it will change to `main` in Git 3.0. It can also be set with the `init.defaultBranch` setting. So check which name your repository uses.
 
-There is no code to run on this page. It follows a small story on paper.
+There is no code to run on this page.
 
 ## Predict the output
 
@@ -188,8 +179,7 @@ output: |
 
 - A branch is a sticky note, not a copy of the album.
 - The note under your thumb is the only one that moves.
-- Before you try an idea, make a note and move your thumb to it.
-- Switch your thumb, and the room changes with it.
+- Before you try an idea, make a note and move your thumb to it. Switch your thumb, and the room changes with it.
 - Task: make a branch, take one snapshot on it, switch back to your main line, and merge it. Look at the result with `git log`.
 
 ## Common mistakes
@@ -197,14 +187,13 @@ output: |
 - **Thinking a branch is a full copy of the project folder.** Switching changes the files in your folder, so it feels like a copy. The Git book says a branch is a lightweight movable pointer to a commit. Think of a label.
 - **Thinking `git branch` also switches to the new branch.** The name sounds like an action on you. The Git book says it only creates the pointer. Use `git switch -c` to create and switch in one step.
 - **Committing on the main line when you meant a branch.** Your thumb was still on `main`. Before you commit, check which branch you are on. If you already did, the work is now under the working-code note.
-- **Being surprised that the files change when you switch.** The Git book says switching resets your working directory to match the branch. Commit or put aside your work first, since Git will not switch if uncommitted changes conflict.
+- **Being surprised that the files change when you switch.** Commit or put aside your work first, since Git will not switch if uncommitted changes conflict.
 
 ## Where this shows up in Android
 
 You ask an AI tool to rewrite a screen. The result might break the app. If you first made a branch for it, your main line still builds, and you can throw the branch away.
 
-My own reasoning: teams use one branch per feature or fix, so that unfinished work stays out of the main line until it is ready. That is the same idea as the sticky note on this page, with the notes shared between people.
-
+My own reasoning: teams use one branch per feature or fix, so that unfinished work stays out of the main line until it is ready.
 ## Say it in an interview
 
 **What is a Git branch, and how does it let you work without breaking your working code?**

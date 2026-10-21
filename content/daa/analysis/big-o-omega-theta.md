@@ -1,27 +1,20 @@
 ---
 id: daa/analysis/big-o-omega-theta
 title: What do O, Omega and Theta each promise?
-status: shadow
+status: live
 difficulty: medium
 order: 2
 requires: [daa/analysis/best-worst-average-case]
 summary: O is a ceiling on the steps, Omega is a floor, and Theta says both hold. None of them means worst case.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [ceiling-and-floor-band]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!--
-SOURCES
-- The definitions of O, Omega and Theta are general knowledge (standard algorithms textbooks, for example CLRS chapter 3). I did not fetch a web page for them.
-- Java SE 21 ArrayList class description (a library page that states costs): https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html
-- Practice data: docs/practice/practice-daa.md, section daa/analysis/big-o-omega-theta. The "trains" lines are rewritten, because the supplied lines mixed up the bound and the case.
-- The three constants for 3n + 2 were checked by hand: 3n <= 3n + 2 <= 4n for every n >= 2.
--->
 
 ## The question
 
@@ -35,8 +28,6 @@ Think of promises about a car trip. A trip of d km takes 3 minutes per km, plus 
 - A **floor** promise: "never less than 3 minutes per km." The trip stays above that line.
 - A **band** promise: both at once. The trip stays between the floor and the ceiling.
 
-A ceiling can also be true and useless. "The trip takes under a week" is true for every trip in town, and it tells you nothing.
-
 **Where the analogy stops:** One trip has one distance. An algorithm's promise has to hold for every input size above a starting point, all at once. Also, a trip time is measured in minutes. An algorithm's cost here is a count of steps.
 
 ## See it move
@@ -46,7 +37,7 @@ A ceiling can also be true and useless. "The trip takes under a week" is true fo
 **Try this:**
 1. Pick the shape n. Drag the floor and the ceiling constants until the curve 3n + 2 stays between the two lines from n = 2 onwards.
 2. Pick the shape n². Try to place a floor line under the curve for every large n.
-3. Drag the ceiling constant low, for example below 3, and watch the curve climb through it.
+3. Drag the ceiling constant low, for example to 2, and watch the curve sit above the line at every n.
 
 **What you should notice:** With the shape n, a floor and a ceiling can both hold. With the shape n², the ceiling holds and the floor fails, and a ceiling below the curve fails once n is large.
 
@@ -70,7 +61,7 @@ Which one?
 - B. Claim 3, because the curve never gets close to n².
 - C. Claim 2, because n² is much bigger than 3n + 2.
 
-Idea A mixes up the bound with the case. We will pull those apart below. Idea C treats a loose ceiling as a lie, but a ceiling that is too high is still true. Idea B is the answer, and the steps below show why.
+Idea A mixes up the bound with the case. Idea C treats a loose ceiling as a lie, but a ceiling that is too high is still true. Idea B is the answer, and the steps below show why.
 
 ### Build
 
@@ -86,7 +77,7 @@ Try it on 3n + 2.
 - Floor: 3n ≤ 3n + 2 holds for every n ≥ 1. So the constant is 3.
 - Both hold with the shape n, so the code is in the band between 3n and 4n.
 
-Now try the shape n² as a floor. You need a constant c with c × n² ≤ 3n + 2 for every large n. At n = 1,000 that forces c ≤ 0.003. At n = 1,000,000 it forces c below 0.000004. The allowed c keeps shrinking towards zero, so no positive constant works. A floor of shape n² fails.
+Now try the shape n² as a floor. You need a constant c with c × n² ≤ 3n + 2 for every large n. At n = 1,000 that forces c to be about 0.003 or less. At n = 1,000,000 it forces c below 0.000004. The allowed c keeps shrinking towards zero, so no positive constant works. A floor of shape n² fails.
 
 ### Name it
 
@@ -105,7 +96,7 @@ Now the part people mix up. There are two separate questions.
 | Which input do I measure? | best case, worst case, average case | best case: 1 step. Worst case: n steps. |
 | What kind of promise do I make about those steps? | O ceiling, Ω floor, Θ tight | The worst case is Θ(n). The best case is Θ(1). |
 
-"Big O means the worst case" blends the two questions. O is a ceiling and you can put it on any case. The worst case can have a ceiling, a floor and a tight bound. So can the best case. For linear search, all inputs together are O(n) and Ω(1).
+"Big O means the worst case" blends the two questions. O is a ceiling and you can put it on any case. For linear search, all inputs together are O(n) and Ω(1).
 
 ```kotlin
 fun steps(n: Int): Int = 3 * n + 2
@@ -122,7 +113,7 @@ fun main() {
 }
 ```
 
-This prints `true`, then `false`. The first check stays true because 3n ≤ 3n + 2 ≤ 4n for every n from 2 to 1,000. The second check fails once n reaches 31, where 3n + 2 is 95 and n × n / 10 is 96. A test over 999 values is not a proof. The algebra above is the proof. The program only shows the idea.
+This prints `true`, then `false`. The first check stays true because 3n ≤ 3n + 2 ≤ 4n for every n from 2 to 1,000. The second check fails once n reaches 31, where 3n + 2 is 95 and n × n / 10 is 96. The algebra above is the proof.
 
 ## Predict the output
 
@@ -219,7 +210,7 @@ output: |
 
 ## Where this shows up in Android
 
-Android code is full of claims about cost, and they come from three places: library pages, code reviews and comments, including comments an AI tool wrote. For example, the Java SE page for `ArrayList` says that `get` and `size` run in constant time and that all other operations run in linear time, "roughly speaking". That text is from Java SE, not from an Android page. Android apps use a class with the same name (general knowledge). It also says adding n elements takes O(n) time, a claim about many operations together.
+Android code is full of claims about cost, and they come from three places: library pages, code reviews and comments, including comments an AI tool wrote. For example, the Java SE page for `ArrayList` says that `size`, `get` and `set` run in constant time, that `add` takes amortized constant time (adding n elements takes O(n) time), and that all of the other operations run in linear time, "roughly speaking". That text is from Java SE, not from an Android page. Android apps use a class with the same name (general knowledge).
 
 Now picture a comment `// O(n)` above a loop with another loop inside it. This part is my own reasoning. If both loops run over the same list, the code takes about n × n steps, so the comment is a ceiling that is too low. The symptom is a screen that is fine at 20 items and stutters at 5,000. The lesson is to ask three things of any claim: is it a ceiling, a floor or both, which case does it describe, and does the code under it match?
 
@@ -232,7 +223,7 @@ Big O is a ceiling: the cost grows no faster than the shape you name, from some 
 Yes, because a ceiling can be loose, so anything that is O(n) is also O(n²) and O(2ⁿ). People say O(n) because it is short, and they mean the tight answer. When it matters, say Θ(n) or say "linear in the worst case".
 
 **Why is merge sort Θ(n log n) in every case, while insertion sort has no single Θ for all inputs?**
-This answer is general knowledge. Merge sort does about n log n work whatever the order of the input. Insertion sort takes about n steps on a sorted list and about n² steps on a reversed list. So over all inputs it is Ω(n) and O(n²), and no one shape is tight for all of them. Each case on its own does have a Θ: Θ(n) at best and Θ(n²) at worst.
+Merge sort and insertion sort are two ways to sort a list. This answer is general knowledge. Merge sort does about n log n work whatever the order of the input. Insertion sort takes about n steps on a sorted list and about n² steps on a reversed list. So over all inputs it is Ω(n) and O(n²), and no one shape is tight for all of them. Each case on its own does have a Θ: Θ(n) at best and Θ(n²) at worst.
 
 **A code review says "this comment claims O(n) but I see a nested loop." What do you check?**
 I check what each loop runs over. If both run over the same input, the cost is about n × n, so an O(n) ceiling is too low. If the inner loop runs over a fixed-size list, the claim can be right. This is my own reasoning: a complexity comment is a claim, and I read the code to test it.
@@ -251,7 +242,7 @@ I check what each loop runs over. If both run over the same input, the cost is a
 
 ## Practise on these
 
-Each problem lets you state a ceiling, a floor or a tight bound for the steps, and say which case it covers. The list runs from the gentlest to the hardest.
+Say which case each bound covers. The list runs from the gentlest to the hardest.
 
 1. LeetCode 704, Binary Search (Easy). The best case is 1 check and the worst case is about log n checks. Say which case your bound covers. https://leetcode.com/problems/binary-search/
 2. LeetCode 268, Missing Number (Easy). Every number must be looked at, so no method can use fewer than about n steps. Show a method that uses about n. https://leetcode.com/problems/missing-number/
