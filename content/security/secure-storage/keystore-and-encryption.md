@@ -19,11 +19,10 @@ upnext: false
 SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/privacy-and-security/keystore (read 21 Oct 2026): the Keystore lets you store cryptographic keys in a container to make them more difficult to extract; key material never enters the application process; if the app process is compromised the attacker might be able to use the app's keys but cannot extract the key material; key material can be bound to secure hardware (TEE or Secure Element); StrongBox gives stronger isolation than the TEE; a key that supports only biometric credentials is invalidated by default when new biometric enrollments are added; KeyStore.getInstance("AndroidKeyStore") with load(null).
 - https://developer.android.com/privacy-and-security/cryptography (read 21 Oct 2026): AES in CBC or GCM mode with 256-bit keys, such as AES/GCM/NoPadding; with the Android Keystore you must specify a provider; all APIs in the security-crypto Jetpack library were deprecated in version 1.1.0 stable and there will be no more releases.
-- Earlier check recorded in content/security/_roadmap.md (18 Oct 2026): EncryptedSharedPreferences and MasterKey marked deprecated on the reference pages. Not re-read in this run because the reference page text was too long to fetch.
+- https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec.Builder, .../KeyProperties, .../javax/crypto/Cipher (read 21 Oct 2026): constructor (alias, purposes), setBlockModes, setEncryptionPaddings, build, the constants KEY_ALGORITHM_AES, PURPOSE_ENCRYPT, PURPOSE_DECRYPT, BLOCK_MODE_GCM, ENCRYPTION_PADDING_NONE, getIV(); the class intro of KeyGenParameterSpec has the same AES/GCM example.
+- Re-checked 21 Oct 2026 by search of the official reference pages: EncryptedSharedPreferences deprecated since 1.1.0; MasterKey deprecation points to javax.crypto.KeyGenerator with the AndroidKeyStore instance.
 -->
 
-<!-- ⚠️ VERIFY: compile not run for any kotlin block (Kotlin 2.4.21, docs/06 section 5). The first block needs Android and is not meant to run. -->
-<!-- ⚠️ VERIFY: the method and constant names KeyGenParameterSpec.Builder, setBlockModes, setEncryptionPaddings, KeyProperties.BLOCK_MODE_GCM, KeyProperties.ENCRYPTION_PADDING_NONE and Cipher.iv come from general knowledge. The reference pages could not be read in this run. Check them on developer.android.com before go-live. -->
 ## The question
 
 An app saves a sign-in code on the phone. Anyone who gets the saved file could read it, so you scramble the code with a secret number. Now where do you keep that secret number? If it sits inside the app, can't a thief copy it too?
@@ -138,7 +137,7 @@ Idea A means anyone who opens the app file reads the number. Idea B means a thie
 
 The **Android Keystore** is the vault. The Android documentation says it lets you store cryptographic keys in a container to make them more difficult to extract from the device. It says the **key material**, which is the secret itself, never enters the application process. Once keys are in the keystore, you can use them for cryptographic operations while the key material stays non-exportable, which means it cannot be taken out. The documentation also says that if the app's process is compromised, the attacker might be able to use the app's keys but cannot extract their key material.
 
-Key material can be bound to secure hardware. The documentation names the Trusted Execution Environment, or **TEE**, and says that when this is enabled for a key, its key material is never exposed outside of secure hardware. **StrongBox** is a stronger kind of secure hardware, in embedded secure elements, with stronger isolation and tamper resistance than the TEE, according to the documentation. Not every phone has it, and the documentation says to check with `FEATURE_STRONGBOX_KEYSTORE`.
+Key material can be bound to secure hardware. The documentation names the Trusted Execution Environment, or **TEE**, and says that when this is enabled for a key, its key material is never exposed outside of secure hardware. **StrongBox** is a stronger kind of secure hardware, in embedded secure elements, with stronger isolation and tamper resistance than the TEE, according to the documentation. Not every phone has it, and the documentation says to check with `FEATURE_STRONGBOX_KEYSTORE`. A key can also be tied to the user's **biometric** sign-in, such as a fingerprint or a face scan (general knowledge).
 
 The lock method is **AES**. The Android cryptography page recommends AES in CBC or GCM mode with 256-bit keys, for example `AES/GCM/NoPadding`. The small extra number from step 3 is called an **IV** (general knowledge). You need it to unlock, and it is not secret. The same page says that if you use the Android Keystore, you must name the provider. A provider is the part of Java that supplies the locking code (general knowledge), and here it is `"AndroidKeyStore"`.
 
@@ -166,6 +165,7 @@ fun makeVaultKey(alias: String): SecretKey {
     )
         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+        .setKeySize(256)
         .build()
     generator.init(spec)
     return generator.generateKey()
@@ -192,9 +192,9 @@ fun main() {
 }
 ```
 
-One more thing about libraries. Jetpack is Google's set of Android libraries (general knowledge). The Jetpack library `security-crypto`, which holds `EncryptedSharedPreferences` and `MasterKey`, has all its APIs deprecated, according to the Android cryptography page, and there will be no more releases. A tutorial that uses it may be old, so check how recent a tutorial is. My own reasoning: when you must lock data, use a well-reviewed library and do not write your own steps.
+One more thing about libraries. Jetpack is Google's set of Android libraries (general knowledge). The Jetpack library `security-crypto`, which holds `EncryptedSharedPreferences` and `MasterKey`, has all its APIs **deprecated**, which means they are marked as no longer recommended, according to the Android cryptography page, and there will be no more releases. A tutorial that uses it may be old, so check how recent a tutorial is. My own reasoning: when you must lock data, use a well-reviewed library and do not write your own steps.
 
-This page has no program to run. The Keystore needs a real phone.
+The Keystore needs a real phone, so the vault code above cannot run in the editor.
 
 ## Predict the output
 

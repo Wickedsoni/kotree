@@ -21,11 +21,10 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/studio/profile/sample-callstack (read 21 Oct 2026): task "Find CPU Hotspots (Callstack Sample)"; needs a device on Android 8.0 (API level 26) or higher.
 - https://developer.android.com/studio/profile/chart-glossary/flame-chart (read 21 Oct 2026): flame chart aggregates identical call stacks; horizontal axis is not a timeline, it shows relative time; the callees that use the most CPU time appear first.
 - https://developer.android.com/studio/profile/chart-glossary/top-bottom-charts (read 21 Oct 2026): Top Down and Bottom Up; Self, Children, Total; Bottom Up is useful for sorting by CPU time.
-- Kotlin code: compile not run (Kotlin 2.4.21, docs/06 section 5). Outputs traced by hand.
+- Kotlin code: compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh, reviewer, 21 Oct 2026); outputs match.
 - Task names in the profiler change between Android Studio versions. The method-recording task name was not stated on the page, so the lesson does not give it.
 -->
 
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). -->
 ## The question
 
 A screen with a long list stutters when you scroll. You open the code and find one big function with 60 lines. Is that the slow one? Or is a tiny function somewhere doing the damage? How can you tell without guessing?
@@ -68,7 +67,7 @@ actions:
       - when: { var: { exact: "off", fixed: "no" } }
         do:
           - set: { a: 8, b: 20, c: 62, d: 10 }
-          - say: "The recording takes a look at the running function many times a second. lookupTax has the tallest bar, 62 of 100 milliseconds, although it has only three lines of code."
+          - say: "The recording looks at what is running many times a second. lookupTax has the tallest bar, 62 of 100 milliseconds, although it has only three lines of code."
       - when: { var: { exact: "on", fixed: "no" } }
         do:
           - set: { a: 11, b: 27, c: 150, d: 15 }
@@ -107,7 +106,7 @@ try:
     done: [record]
   - text: 'Press "Ask who called the tallest bar".'
     done: [ask-callers]
-  - text: 'Switch on "Record every call" and press "Record the app" again. Compare the bars with the first recording.'
+  - text: 'Switch on "Record every call" and watch the bars grow. Then press "Record the app" again and read what it says.'
     done: ["exact=on", record]
   - text: 'Press "Keep the answer after the first call" and read which bar is the tallest now.'
     done: [remember]
@@ -147,7 +146,7 @@ Idea A is the common guess, and it often points at the wrong function. Idea B is
 
 A **profiler** is a tool that records where your app spends its time. The Android Studio profiler can sample the callstack, or record the Java and Kotlin methods that run. The **hot function** is the function at the top of the bill, the one that uses the most time. (Hot function is a common name, from general knowledge, and not an Android Studio label.)
 
-To **sample** means to look at what is running again and again, many times a second, and count what it finds (general knowledge). The Android documentation says to select the **Find CPU Hotspots (Callstack Sample)** task on a device with Android 8.0 (API level 26) or higher. Sampling costs little. A call that is shorter than the gap between two looks can be missed (general knowledge).
+To **sample** means to look at what is running again and again, many times a second, and count what it finds (general knowledge). The Android documentation says to select the **Find CPU Hotspots (Callstack Sample)** task on a device with Android 8.0 (API level 26) or higher. Sampling costs little, and a call that is shorter than the gap between two looks can be missed (general knowledge).
 
 **Method recording** is the other way. The documentation says the profiler uses runtime instrumentation to put timestamps at the entry and the exit of each method call. Nothing is missed. The documentation recommends recordings of five seconds or less, and says the timing might deviate from production because of the overhead of the recording itself. (Task names change between Android Studio versions.)
 
@@ -179,7 +178,7 @@ It prints `total = 8000, calls = 1000`. Each call is tiny, but there are 1000 of
 ```challenge
 type: predict
 id: five-calls-five-answers
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   var calls = 0
 
@@ -217,7 +216,7 @@ output: |
 ```challenge
 type: predict
 id: ask-once-before-the-loop
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   var calls = 0
 
@@ -261,7 +260,7 @@ output: |
 ```challenge
 type: fix
 id: fix-tax-lookup-in-loop
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   var taxLookups = 0
 

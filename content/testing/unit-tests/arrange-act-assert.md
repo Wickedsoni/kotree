@@ -20,10 +20,9 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/training/testing/local-tests (read 21 Oct 2026): local test sources go in module-name/src/test/; a test method begins with the @Test annotation and contains the code to exercise and verify a single aspect of the component; local tests run on your own workstation's JVM; the page's own example has three comments, "Given", "when" and "then", which is the same three-part shape.
 - https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/check.html (read 21 Oct 2026): check(value) and check(value, lazyMessage) throw IllegalStateException when the value is false; the second form uses the result of lazyMessage as the message.
 - The names "Arrange, Act, Assert" and the habit of one act per test are general knowledge, not an Android or Kotlin rule. The page does not use those words.
-- Kotlin code: compile not run (Kotlin 2.4.21, docs/06 section 5). Outputs traced by hand. Result.exceptionOrNull() and runCatching are Kotlin standard library functions (used the same way in the live leaf run-your-first-unit-test).
+- Kotlin code: compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh, reviewer, 21 Oct 2026); outputs match. Result.exceptionOrNull() and runCatching are Kotlin standard library functions (used the same way in the live leaf run-your-first-unit-test).
 -->
 
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). -->
 ## The question
 
 A test fails, and the report says only "FAIL". You open the test and find 30 lines of mixed work: building things, calling the code, and checking answers, all tangled together. Which line broke it? How should a test be laid out so that anyone can read it and see what went wrong?
@@ -229,7 +228,7 @@ It prints `PASS totalOfTwoItems`. `runCatching` runs the test and catches any er
 ```challenge
 type: predict
 id: which-test-fails-and-says-what
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   class Cart {
       private val prices = mutableListOf<Int>()
@@ -277,7 +276,7 @@ output: |
 ```challenge
 type: predict
 id: a-second-act-hides-the-cause
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   class Cart {
       private val prices = mutableListOf<Int>()
@@ -329,7 +328,7 @@ output: |
 ```challenge
 type: fix
 id: fix-shared-cart-between-tests
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   class Cart {
       private val prices = mutableListOf<Int>()
