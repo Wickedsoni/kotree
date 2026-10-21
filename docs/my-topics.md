@@ -133,8 +133,8 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] How does an object do things with its own data? (easy)
 - [x] Why hide some parts of a class with private? (easy)
 - - How can a property run code when it is read or written? (medium)
-- - Why does changing one variable change another? (hard)
-- - When are two objects equal in Kotlin? (medium)
+- [x] Why does changing one variable change another? (hard)
+- [x] When are two objects equal in Kotlin? (medium)
 - - Can a read-only list still change under me? (medium)
 - - How do I turn a real-world problem into classes and functions? (medium)
 
@@ -147,7 +147,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Special Classes** (5)
 
-- - Why does Kotlin write equals and toString for some classes? (medium)
+- [x] Why does Kotlin write equals and toString for some classes? (medium)
 - - How do I change one field without changing the original object? (medium)
 - - How do I list every allowed choice, like the days of the week? (easy)
 - - How do I model loading, success or error so I never forget a case? (hard)

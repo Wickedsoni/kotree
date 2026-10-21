@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/two-kinds-of-equality
 title: When are two objects equal in Kotlin?
-status: shadow
+status: live
 difficulty: medium
 order: 42
 requires: [kotlin/classes-and-objects/objects-are-references]
 summary: Two objects can look the same and still be two objects. See the two questions Kotlin can ask, and which one a plain class answers.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [twins-or-one-person]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/equality.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/equals.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/hash-code.html ; https://kotlinlang.org/docs/data-classes.html ; https://developer.android.com/develop/ui/compose/performance/stability -->
 ## The question
 
 Two shoppers each hand a cashier a loyalty card with the number 7 on it. Are these the same card, or two cards that look alike? A program that compares two objects meets the same puzzle. When it asks whether two objects are equal, what is it really asking?

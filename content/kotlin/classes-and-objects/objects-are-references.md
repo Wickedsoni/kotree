@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/objects-are-references
 title: Why does changing one variable change another?
-status: shadow
+status: live
 difficulty: hard
 order: 41
 requires: [kotlin/classes-and-objects/constructors]
 summary: Two variables can lead to one object. See why a change through one shows in the other, and how to make a real copy.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [two-keys-one-flat]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (checked 21 Oct 2026): https://kotlinlang.org/docs/functions.html (Parameters: read-only parameters; "the compiler passes a copy of the reference to that object") ; https://kotlinlang.org/docs/equality.html (referential equality: "two references pointing to the same object", "memory addresses") ; https://kotlinlang.org/docs/data-classes.html (copy() makes a shallow copy; references to other objects are shared) ; https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html ; https://developer.android.com/develop/ui/compose/state (caution on mutable objects as state).-->
 
 ## The question
 

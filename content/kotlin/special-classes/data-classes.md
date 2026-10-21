@@ -1,21 +1,20 @@
 ---
 id: kotlin/special-classes/data-classes
 title: Why does Kotlin write equals and toString for some classes?
-status: shadow
+status: live
 difficulty: medium
 order: 49
 requires: [kotlin/classes-and-objects/two-kinds-of-equality]
 summary: A data class compares and prints itself by its main values. See which values count and which do not.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/data-classes.html ; https://kotlinlang.org/docs/equality.html ; https://developer.android.com/training/data-storage/room ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
 
 ## The question
 
