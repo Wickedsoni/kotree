@@ -35,13 +35,117 @@ Think of a meeting held in three nested rooms, with a fire alarm.
 
 ## See it move
 
-<!-- SIM: fire-alarm-rooms -->
-
-**Try this:**
-1. Set the alarm to ring at line 4, inside the desk, and press Step until the end.
-2. Move the alarm to line 2, in the office, and play again.
-3. Set the alarm to "never" and play again.
-4. (Optional reveal) Tick "Check the guest list at the door" and play with the alarm still set.
+```sim
+id: fire-alarm-rooms
+template: stepper
+title: A meeting in three nested rooms
+intro: "Six agenda lines run in three nested rooms: hall, office and desk. The alarm is set to never, so nothing is wrong yet."
+lines:
+  - { id: l1, text: "1. Hall: start of the meeting" }
+  - { id: l2, text: "2. Office: start of its work" }
+  - { id: l3, text: "3. Desk: start of the age check" }
+  - { id: l4, text: "4. Desk: finish the age check" }
+  - { id: l5, text: "5. Office: finish its work" }
+  - { id: l6, text: "6. Hall: finish the meeting" }
+board:
+  - { var: ran, label: Lines that ran }
+log: { columns: [What happens, Room, Result] }
+vars: { pc: 1, alarm: 0, door: "off", ran: 0 }
+toggles: [ { id: door, label: Check the guest list at the door, var: door } ]
+sliders: [ { id: alarm, label: Alarm rings at line (0 means never), var: alarm, min: 0, max: 6, step: 2 } ]
+actions:
+  - id: next
+    label: Run the next line
+    cases:
+      - when: { var: { pc: 1, door: "on" } }
+        unless: { var: { alarm: 0 } }
+        do:
+          - set: { pc: 0 }
+          - light: []
+          - row: [ "The check at the door fails", "hall", "the alarm rings before any line runs" ]
+          - say: "The guest list is checked at the door, before any line runs. The check fails, so no line runs and nothing is left half done."
+      - when: { var: { pc: 2, alarm: 2 } }
+        do:
+          - set: { pc: 0 }
+          - light: [ l2 ]
+          - row: [ "Line 2, the alarm rings", "office", "this line and every later line are skipped" ]
+          - row: [ "Everyone leaves the office", "office", "the rest of the office is skipped" ]
+          - row: [ "Everyone leaves the hall", "hall", "meeting stopped, a note says why" ]
+          - say: "The alarm rings in the office at line 2. Everyone leaves the office, then the hall. The rest of their lines are skipped and the meeting stops."
+      - when: { var: { pc: 4, alarm: 4 } }
+        do:
+          - set: { pc: 0 }
+          - light: [ l4 ]
+          - row: [ "Line 4, the alarm rings", "desk", "this line and every later line are skipped" ]
+          - row: [ "Everyone leaves the desk", "desk", "the rest of the desk is skipped" ]
+          - row: [ "Everyone leaves the office", "office", "the rest of the office is skipped" ]
+          - row: [ "Everyone leaves the hall", "hall", "meeting stopped, a note says why" ]
+          - say: "The alarm rings at the desk at line 4. Everyone leaves the desk, then the office, then the hall. The rest of their lines are skipped and the meeting stops."
+      - when: { var: { pc: 6, alarm: 6 } }
+        do:
+          - set: { pc: 0 }
+          - light: [ l6 ]
+          - row: [ "Line 6, the alarm rings", "hall", "this line is skipped" ]
+          - row: [ "Everyone leaves the hall", "hall", "meeting stopped, a note says why" ]
+          - say: "The alarm rings in the hall at line 6. Everyone leaves the hall, and the meeting stops."
+      - when: { var: { pc: 1 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 2 }
+          - light: [ l1 ]
+          - row: [ "Line 1 runs", "hall", "done" ]
+          - say: "Line 1 runs in the hall."
+      - when: { var: { pc: 2 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 3 }
+          - light: [ l2 ]
+          - row: [ "Line 2 runs", "office", "done" ]
+          - say: "Line 2 runs in the office."
+      - when: { var: { pc: 3 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 4 }
+          - light: [ l3 ]
+          - row: [ "Line 3 runs", "desk", "done" ]
+          - say: "Line 3 runs at the desk."
+      - when: { var: { pc: 4 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 5 }
+          - light: [ l4 ]
+          - row: [ "Line 4 runs", "desk", "done" ]
+          - say: "Line 4 runs at the desk."
+      - when: { var: { pc: 5 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 6 }
+          - light: [ l5 ]
+          - row: [ "Line 5 runs", "office", "done" ]
+          - say: "Line 5 runs in the office."
+      - when: { var: { pc: 6 } }
+        do:
+          - add: { ran: 1 }
+          - set: { pc: 7 }
+          - light: [ l6 ]
+          - row: [ "Line 6 runs", "hall", "done" ]
+          - say: "Line 6 runs in the hall."
+      - when: { var: { pc: 7 } }
+        do:
+          - say: "All six lines ran and nothing went wrong. Move the alarm slider to try again."
+    refuse: "The meeting is over. Move a setting or press Reset to run it again."
+script: [ "alarm=4", next, next, next, next ]
+try:
+  - text: "Move the alarm slider to 4, a line inside the desk. Press Step until the meeting stops. The log shows the desk, then the office, then the hall leaving."
+    done: [ "alarm=4", next, next, next, next ]
+  - text: "Move the alarm slider to 2, a line in the office, and press Step once more. The run replays: only the office and the hall leave, and the desk lines are never reached."
+    done: [ "alarm=2", next ]
+  - text: "Move the alarm slider to 0, which means never, and press Step once more. The alarm does not ring, and every line runs."
+    done: [ "alarm=0", next ]
+  - text: "(Optional) Move the alarm slider back to 4, then switch on \"Check the guest list at the door\". No line runs at all."
+    done: [ "alarm=4", "door=on" ]
+    optional: true
+```
 
 **What you should notice:** An alarm in the desk also crosses out lines that belong to the office and the hall. A check at the door stops the alarm before any line runs.
 

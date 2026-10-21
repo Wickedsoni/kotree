@@ -34,13 +34,69 @@ Think of a hall with a chair under a "reserved" sign.
 
 ## See it move
 
-<!-- SIM: reserved-seat-timeline -->
-
-**Try this:**
-1. Put the "Guest arrives" card before the "Usher points at the chair" card, then press Play.
-2. Drag "Guest arrives" after the usher's card and press Play again.
-3. Remove the "Guest arrives" card and press Play.
-4. (Optional reveal) Tick "Ask if the chair is taken first" and press Play with the usher still first.
+```sim
+id: reserved-seat-timeline
+template: stepper
+title: A hall with one reserved chair
+intro: "The chair has a reserved sign and no guest yet. Two cards are ready to run, in any order you choose."
+lines:
+  - { id: lg, text: "Card: Guest arrives" }
+  - { id: lu, text: "Card: Usher points at the chair" }
+board:
+  - { var: chair, label: The chair }
+log: { columns: [Card run, What happens] }
+vars: { chair: "empty, reserved sign", ask: "off" }
+toggles: [ { id: ask, label: Ask if the chair is taken first, var: ask } ]
+actions:
+  - id: guest
+    label: Guest arrives
+    cases:
+      - when: { var: { chair: "empty, reserved sign" } }
+        do:
+          - set: { chair: "Ana sits here" }
+          - light: [ lg ]
+          - row: [ "Guest arrives", "Ana sits in the chair" ]
+          - say: "The guest, Ana, arrives and sits in the reserved chair."
+    refuse: "The chair is already filled, or the program has stopped. Press Clear the hall to start again."
+  - id: usher
+    label: Usher points at the chair
+    cases:
+      - when: { var: { chair: "Ana sits here" } }
+        do:
+          - light: [ lu ]
+          - row: [ "Usher points", "The chair answers: Ana" ]
+          - say: "The usher points at the chair, and the chair answers: Ana. The promise held."
+      - when: { var: { chair: "empty, reserved sign", ask: "on" } }
+        do:
+          - light: [ lu ]
+          - row: [ "Usher asks first", "Not taken yet, so nothing tips" ]
+          - say: "The usher asks first whether the chair is taken. It is not taken yet, so the usher does not point, and nothing tips over."
+      - when: { var: { chair: "empty, reserved sign" } }
+        do:
+          - set: { chair: "tipped over, program stopped" }
+          - light: [ lu ]
+          - row: [ "Usher points", "The chair tips over" ]
+          - say: "The usher points at an empty chair before any guest arrived. The chair tips over, and the program stops."
+    refuse: "The program has stopped. Press Clear the hall to start again."
+  - id: clear
+    label: Clear the hall
+    do:
+      - set: { chair: "empty, reserved sign" }
+      - light: []
+      - row: [ "Clear the hall", "A new hall, the chair is empty again" ]
+      - say: "A new hall is set up. The chair is empty again, with its reserved sign."
+script: [ guest, usher, clear, usher ]
+try:
+  - text: "Press \"Guest arrives\", then \"Usher points at the chair\". The guest is seated before anyone asks, so the chair answers."
+    done: [ guest, usher ]
+  - text: "Press \"Clear the hall\", then press \"Usher points at the chair\" first and \"Guest arrives\" after it. The chair tips over, and the guest is too late."
+    done: [ clear, usher, guest ]
+  - text: "Press \"Clear the hall\" again, leave out the guest card, and press only \"Usher points at the chair\". With no guest card, the chair tips over too."
+    done: [ clear, usher ]
+  - text: "(Optional) Switch on \"Ask if the chair is taken first\". The usher asks first, so the chair does not tip."
+    done: [ "ask=on" ]
+    optional: true
+```
 
 **What you should notice:** The chair works only when the guest arrives before the usher points, and the check in step 4 lets the usher skip pointing instead of tipping the chair.
 

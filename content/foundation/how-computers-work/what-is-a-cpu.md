@@ -37,12 +37,81 @@ The cook does this over and over. Look at the line under the finger. Do what it 
 
 ## See it move
 
-<!-- SIM: recipe-card-pointer -->
-
-**Try this:**
-1. Press "Step" and watch the finger move down the card one line at a time. Then speed up the bell and slow it down.
-2. Add a line that says "go back to line 1" and run the card for a while.
-3. Set the bell to zero and watch the finger.
+```sim
+id: recipe-card-pointer
+template: stepper
+title: A cook, a recipe card and a bell
+intro: "The card has three lines, plus a fourth that the cook ignores for now. The finger rests on line 1. The bell has not rung."
+lines:
+  - { id: l1, text: "1. Crack an egg" }
+  - { id: l2, text: "2. Stir" }
+  - { id: l3, text: "3. Serve the dish" }
+  - { id: l4, text: "4. Go back to line 1 (used only when the switch is on)" }
+board:
+  - { var: at, label: Finger rests on }
+  - { var: bell, label: Bell rings per second }
+log: { columns: [Ring, Line done, Finger moves to] }
+vars: { at: "line 1", bell: 1, rings: 0, jump: "off" }
+toggles: [ { id: jump, label: Use line 4, var: jump } ]
+sliders: [ { id: bell, label: Bell rings per second, var: bell, min: 0, max: 3, step: 1 } ]
+actions:
+  - id: ring
+    label: Ring the bell
+    cases:
+      - when: { var: { bell: 0 } }
+        do:
+          - row: [ "no ring", "none", "stays on {at}" ]
+          - say: "The bell is set to zero, so it never rings. The cook does nothing and the finger stays on {at}."
+      - when: { var: { at: "line 1" } }
+        do:
+          - add: { rings: 1 }
+          - set: { at: "line 2" }
+          - light: [ l1 ]
+          - row: [ "{rings}", "line 1", "line 2" ]
+          - say: "The bell rings. The cook cracks an egg, and the finger moves down to line 2."
+      - when: { var: { at: "line 2" } }
+        do:
+          - add: { rings: 1 }
+          - set: { at: "line 3" }
+          - light: [ l2 ]
+          - row: [ "{rings}", "line 2", "line 3" ]
+          - say: "The bell rings. The cook stirs, and the finger moves down to line 3."
+      - when: { var: { at: "line 3", jump: "off" } }
+        do:
+          - add: { rings: 1 }
+          - set: { at: "off the card" }
+          - light: [ l3 ]
+          - row: [ "{rings}", "line 3", "off the card" ]
+          - say: "The bell rings. The cook serves the dish. Line 4 is not in use, so the card is finished."
+      - when: { var: { at: "line 3" } }
+        do:
+          - add: { rings: 1 }
+          - set: { at: "line 4" }
+          - light: [ l3 ]
+          - row: [ "{rings}", "line 3", "line 4" ]
+          - say: "The bell rings. The cook serves the dish, and the finger moves down to line 4."
+      - when: { var: { at: "line 4" } }
+        do:
+          - add: { rings: 1 }
+          - set: { at: "line 1" }
+          - light: [ l4 ]
+          - row: [ "{rings}", "line 4", "line 1" ]
+          - say: "The bell rings. Line 4 says go back to line 1, so the finger jumps up. Only a go-back line moves it up."
+      - when: { var: { at: "off the card" } }
+        do:
+          - say: "The card is finished, so there is no line left to do. Press Reset to start again."
+script: [ ring, ring, ring, "jump=on", ring, ring, ring ]
+try:
+  - text: "Press Step three times. Each press is one ring of the bell, and the finger does one line per ring."
+    done: [ ring, ring, ring ]
+  - text: "Switch on \"Use line 4\", then press Step. Line 4 says go back to line 1, so the finger jumps up."
+    done: [ "jump=on", ring ]
+  - text: "Move the bell slider to 0, then press Step. With no ring, nothing is done and the finger stays put."
+    done: [ "bell=0", ring ]
+  - text: "(Optional) Move the bell slider to 3 and press Step. The same line is done, only more rings come each second."
+    done: [ "bell=3", ring ]
+    optional: true
+```
 
 **What you should notice:** The finger moves one line per ring, only a "go back" line sends it up, and with no ring it stays put.
 

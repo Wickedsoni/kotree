@@ -37,12 +37,74 @@ The clerk never serves two people at once. The clerk never serves someone from t
 
 ## See it move
 
-<!-- SIM: line-by-line-stepper -->
-
-**Try this:**
-1. Press Step and watch the bar move down the lines, one line each press. Watch the board fill up.
-2. Drag the last line to the top. Press Step until the bar reaches the end. Compare the board with the first run.
-3. Drag two lines so a greeting reads backwards on the board.
+```sim
+id: line-by-line-stepper
+template: stepper
+title: A queue of three lines and a notice board
+intro: "Three lines stand in a queue. The clerk serves the front one first. The notice board is empty."
+lines:
+  - { id: l1, text: "Line 1 (front of the queue)" }
+  - { id: l2, text: "Line 2" }
+  - { id: l3, text: "Line 3 (back of the queue)" }
+board:
+  - { var: s1, label: Line 1 says }
+  - { var: s2, label: Line 2 says }
+  - { var: s3, label: Line 3 says }
+log: { columns: [Order, Line served, Notice board shows] }
+vars: { pc: 1, served: 0, s1: Ready, s2: Set, s3: Go }
+actions:
+  - id: run
+    label: Serve the next line
+    cases:
+      - when: { var: { pc: 1 } }
+        do:
+          - add: { served: 1 }
+          - set: { pc: 2 }
+          - light: [ l1 ]
+          - row: [ "{served}", "line 1", "{s1}" ]
+          - say: "The clerk serves line 1. The board shows {s1}."
+      - when: { var: { pc: 2 } }
+        do:
+          - add: { served: 1 }
+          - set: { pc: 3 }
+          - light: [ l2 ]
+          - row: [ "{served}", "line 2", "{s2}" ]
+          - say: "The clerk serves line 2. The board adds {s2}."
+      - when: { var: { pc: 3 } }
+        do:
+          - add: { served: 1 }
+          - set: { pc: 4 }
+          - light: [ l3 ]
+          - row: [ "{served}", "line 3", "{s3}" ]
+          - say: "The clerk serves line 3. The board adds {s3}."
+      - when: { var: { pc: 4 } }
+        do:
+          - say: "Nobody is left in the queue. Swap two lines to run it again, or press Reset."
+  - id: swap
+    label: Swap line 1 and line 3
+    cases:
+      - when: { var: { s1: Ready } }
+        do:
+          - set: { s1: Go, s3: Ready, pc: 1 }
+          - light: []
+          - row: [ "-", "swap", "line 1 and line 3 trade places" ]
+          - say: "Line 1 and line 3 trade places. Line 1 now says Go and line 3 says Ready. The queue starts again."
+      - when: { var: { s1: Go } }
+        do:
+          - set: { s1: Ready, s3: Go, pc: 1 }
+          - light: []
+          - row: [ "-", "swap", "line 1 and line 3 trade back" ]
+          - say: "Line 1 and line 3 trade back. Line 1 says Ready and line 3 says Go. The queue starts again."
+script: [ run, run, run, swap, run, run, run ]
+try:
+  - text: "Press Step three times. The bar visits one line each press, and the log fills in the same order."
+    done: [ run, run, run ]
+  - text: "Press \"Swap line 1 and line 3\", then press Step three times. Compare the new rows with the first run."
+    done: [ swap, run, run, run ]
+  - text: "(Optional) Press \"Swap line 1 and line 3\" again and run all three lines. The first order comes back."
+    done: [ swap, run, run, run ]
+    optional: true
+```
 
 **What you should notice:** The bar visits one line at a time from the top, and the board fills in that same order.
 

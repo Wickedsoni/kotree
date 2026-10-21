@@ -34,12 +34,82 @@ Think of a trapeze show with a safety net and a cleaner.
 
 ## See it move
 
-<!-- SIM: net-and-sweeper -->
-
-**Try this:**
-1. Choose "Fall at trick 2", put the net under the small show and press Run.
-2. Drag the net away and press Run again.
-3. Put the net under the big show and press Run, then switch the sweeper off and run once more.
+```sim
+id: net-and-sweeper
+template: stepper
+title: A trapeze act with a net and a sweeper
+intro: "A small show of three tricks sits inside a big show. Nobody falls, there is no net, and the sweeper is on."
+lines:
+  - { id: l1, text: "Small show: trick 1" }
+  - { id: l2, text: "Small show: trick 2" }
+  - { id: l3, text: "Small show: trick 3" }
+  - { id: ln1, text: "Net under the small show" }
+  - { id: ls1, text: "Sweeper after the small show" }
+  - { id: ln2, text: "Net under the big show" }
+  - { id: ls2, text: "Sweeper after the big show" }
+  - { id: la, text: "After the big show: the act carries on" }
+board:
+  - { var: loose, label: A fall is loose }
+log: { columns: [What happens, Result] }
+vars: { at: "t1", fall: 4, net: 0, sweeper: "on", loose: "no" }
+toggles: [ { id: sweeper, label: Sweeper after each show, var: sweeper } ]
+sliders:
+  - { id: fall, label: Fall at trick (4 means nobody falls), var: fall, min: 1, max: 4, step: 1 }
+  - { id: net, label: "Net under (0 none, 1 small show, 2 big show)", var: net, min: 0, max: 2, step: 1 }
+actions:
+  - id: trick
+    label: Run the next trick
+    cases:
+      - when: { var: { at: "t1", fall: 1 } }
+        do: [ set: { at: "net1", loose: "yes" }, light: [ l1 ], row: [ "Trick 1, the artist falls", "rest of the small show skipped" ], say: "The artist falls on trick 1. The rest of the small show is skipped." ]
+      - when: { var: { at: "t1" } }
+        do: [ set: { at: "t2" }, light: [ l1 ], row: [ "Trick 1", "done" ], say: "Trick 1 goes well." ]
+      - when: { var: { at: "t2", fall: 2 } }
+        do: [ set: { at: "net1", loose: "yes" }, light: [ l2 ], row: [ "Trick 2, the artist falls", "rest of the small show skipped" ], say: "The artist falls on trick 2. Trick 3 is skipped." ]
+      - when: { var: { at: "t2" } }
+        do: [ set: { at: "t3" }, light: [ l2 ], row: [ "Trick 2", "done" ], say: "Trick 2 goes well." ]
+      - when: { var: { at: "t3", fall: 3 } }
+        do: [ set: { at: "net1", loose: "yes" }, light: [ l3 ], row: [ "Trick 3, the artist falls", "rest of the small show skipped" ], say: "The artist falls on trick 3. The small show ends there." ]
+      - when: { var: { at: "t3" } }
+        do: [ set: { at: "sw1" }, light: [ l3 ], row: [ "Trick 3", "done, nobody fell" ], say: "Trick 3 goes well. Nobody fell." ]
+    refuse: "The small show is over. Press Run the next step after the tricks."
+  - id: after
+    label: Run the next step after the tricks
+    cases:
+      - when: { var: { at: "net1", net: 1 } }
+        do: [ set: { at: "sw1", loose: "no" }, light: [ ln1 ], row: [ "The net catches the fall", "the act carries on after the small show" ], say: "The net under the small show catches the fall. The act will carry on after the small show." ]
+      - when: { var: { at: "net1" } }
+        do: [ set: { at: "sw1" }, light: [], row: [ "No net under the small show", "the fall leaves the small show" ], say: "There is no net under the small show, so the fall leaves it and moves outwards." ]
+      - when: { var: { at: "sw1", sweeper: "on" } }
+        do: [ set: { at: "big" }, light: [ ls1 ], row: [ "The sweeper tidies the small show", "runs whether or not anyone fell" ], say: "The sweeper tidies up after the small show, whether anyone fell or not." ]
+      - when: { var: { at: "sw1" } }
+        do: [ set: { at: "big" }, light: [], row: [ "The sweeper is switched off", "nothing is swept" ], say: "The sweeper is switched off, so nothing is swept after the small show." ]
+      - when: { var: { at: "big", loose: "yes", net: 2 } }
+        do: [ set: { at: "sw2", loose: "no" }, light: [ ln2 ], row: [ "The net under the big show catches the fall", "the act carries on after the big show" ], say: "The net under the big show catches the fall. The act will carry on after the big show." ]
+      - when: { var: { at: "big", loose: "yes" } }
+        do: [ set: { at: "sw2" }, light: [], row: [ "No net under the big show", "the fall leaves the big show" ], say: "There is no net under the big show, so the fall leaves it too." ]
+      - when: { var: { at: "big" } }
+        do: [ set: { at: "sw2" }, light: [], row: [ "The big show carries on", "nothing to catch" ], say: "Nothing fell loose, so the big show has nothing to catch." ]
+      - when: { var: { at: "sw2", sweeper: "on" } }
+        do: [ set: { at: "after" }, light: [ ls2 ], row: [ "The sweeper tidies the big show", "runs whether or not anyone fell" ], say: "The sweeper tidies up after the big show, whether anyone fell or not." ]
+      - when: { var: { at: "sw2" } }
+        do: [ set: { at: "after" }, light: [], row: [ "The sweeper is switched off", "nothing is swept" ], say: "The sweeper is switched off, so nothing is swept after the big show." ]
+      - when: { var: { at: "after", loose: "yes" } }
+        do: [ set: { at: "end" }, light: [], row: [ "The act stops", "nothing after the shows runs" ], say: "No net caught the fall, so the act stops after the sweeper. The lines after the shows never run." ]
+      - when: { var: { at: "after" } }
+        do: [ set: { at: "end" }, light: [ la ], row: [ "The act carries on", "the curtain call happens" ], say: "The act carries on after the big show." ]
+      - when: { var: { at: "end" } }
+        do: [ say: "The act is over. Move a slider or press Reset to try again." ]
+    refuse: "Run the small show's tricks first."
+script: [ "fall=2", "net=1", trick, trick, after, after, after, after, after ]
+try:
+  - text: "Move the fall slider to 2 and the net slider to 1, a net under the small show. Press Step until the act ends (or use the two Run buttons). The net catches the fall, and the act carries on after the small show."
+    done: [ "fall=2", "net=1", trick, trick, after, after, after, after, after ]
+  - text: "Move the net slider to 0, which means no net, and press \"Run the next step after the tricks\" once more. The run replays: the fall leaves both shows, and the act stops after the sweeper."
+    done: [ "net=0", after ]
+  - text: "Move the net slider to 2, a net under the big show. Then switch the sweeper off. The sweeper step does nothing, and the rest stays the same."
+    done: [ "net=2", "sweeper=off" ]
+```
 
 **What you should notice:** A net stops the fall, and play carries on after the show it sits under. The sweeper runs whether anyone fell or not. With no net, the act stops after the sweeper.
 

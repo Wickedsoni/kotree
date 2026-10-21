@@ -34,13 +34,85 @@ Think of a signal post with exactly three lamps and a driver with a plan card.
 
 ## See it move
 
-<!-- SIM: three-lamp-signal -->
-
-**Try this:**
-1. Press "Send a car". Watch the driver follow the plan line for each lamp in turn.
-2. Remove the plan line for the "problem" lamp and press "Check the plan". Read the build light.
-3. Press "Fit a fourth lamp" and check the plan again.
-4. (Optional reveal) Tick "Add a catch-all line", fit the fourth lamp again, and watch which line the driver follows.
+```sim
+id: three-lamp-signal
+template: states
+title: A signal post with three lamps and a plan card
+intro: "The signal post has three lamps: wait, got news and problem. The plan card has one line for each lamp, and the build light is green."
+nodes:
+  - { id: wait, label: Wait lamp }
+  - { id: news, label: Got news lamp }
+  - { id: problem, label: Problem lamp }
+  - { id: retry, label: "Fourth lamp: retrying (not fitted yet)" }
+edges:
+  - { from: wait, to: news, label: news arrives }
+  - { from: wait, to: problem, label: network fails }
+start: wait
+layout: ring
+vars: { lamp: 0, problemline: "kept", fourth: "not fitted", catchall: "off", build: "green" }
+show:
+  - { var: problemline, label: Plan line for the problem lamp }
+  - { var: fourth, label: Fourth lamp }
+  - { var: catchall, label: Catch-all line }
+  - { var: build, label: Build light }
+toggles: [ { id: catchall, label: Add a catch-all line, var: catchall } ]
+actions:
+  - id: send
+    label: Send a car
+    cases:
+      - when: { var: { problemline: "removed" } }
+        do: [ say: "The plan card has no line for the problem lamp, so the build is refused and no car moves. Press Check the plan to see the build light." ]
+      - when: { var: { fourth: "fitted", catchall: "off" } }
+        do: [ say: "The plan card has no line for the fourth lamp, so the build is refused and no car moves. Press Check the plan to see the build light." ]
+      - when: { var: { lamp: 0 } }
+        do: [ spawn: { id: car, label: Car, at: wait }, set: { lamp: 1 }, say: "A car arrives and the wait lamp lights. The driver follows the plan line for it: stay put." ]
+      - when: { var: { lamp: 1 } }
+        do: [ move: { car: news }, set: { lamp: 2 }, say: "The got news lamp lights and shows a headline. The driver follows the plan line for it: read the headline." ]
+      - when: { var: { lamp: 2 } }
+        do: [ move: { car: problem }, set: { lamp: 3 }, say: "The problem lamp lights and shows a reason. The driver follows the plan line for it: show the reason." ]
+      - when: { var: { lamp: 3, fourth: "fitted" } }
+        do: [ move: { car: retry }, set: { lamp: 4 }, say: "The fourth lamp, retrying, lights. No plan line names it, so the driver follows the catch-all line: stop. Nobody chose that." ]
+      - do: [ say: "The car has been through every lamp. Press Reset to send another." ]
+  - id: check
+    label: Check the plan
+    cases:
+      - when: { var: { problemline: "removed" } }
+        do: [ set: { build: "red" }, say: "The build light turns red. The plan card has no line for the problem lamp, so Kotlin refuses it before any car moves." ]
+      - when: { var: { fourth: "fitted", catchall: "off" } }
+        do: [ set: { build: "red" }, say: "The build light turns red. The plan card has no line for the fourth lamp, so Kotlin refuses it before any car moves." ]
+      - when: { var: { fourth: "fitted", catchall: "on" } }
+        do: [ set: { build: "green" }, say: "The build light stays green. The catch-all line covers the fourth lamp, but nobody chose how that lamp is handled." ]
+      - do: [ set: { build: "green" }, say: "Every lamp has a plan line, so the build light is green." ]
+  - id: removeline
+    label: Remove the plan line for the problem lamp
+    cases:
+      - when: { var: { problemline: "kept" } }
+        do: [ set: { problemline: "removed" }, say: "The plan line for the problem lamp is crossed off the card." ]
+    refuse: "That plan line is already removed."
+  - id: restore
+    label: Put the problem line back
+    cases:
+      - when: { var: { problemline: "removed" } }
+        do: [ set: { problemline: "kept" }, say: "The plan line for the problem lamp is back on the card." ]
+    refuse: "That plan line is already on the card."
+  - id: fit
+    label: Fit a fourth lamp
+    cases:
+      - when: { var: { fourth: "not fitted" } }
+        do: [ set: { fourth: "fitted" }, say: "The city fits a fourth lamp, retrying. The plan card has no line that names it." ]
+    refuse: "The fourth lamp is already fitted."
+script: [ send, send, send, removeline, check, restore, fit, check ]
+try:
+  - text: "Press \"Send a car\" three times. At each lamp, the driver follows the matching plan line."
+    done: [ send, send, send ]
+  - text: "Press \"Remove the plan line for the problem lamp\", then \"Check the plan\". The build light turns red before any car moves."
+    done: [ removeline, check ]
+  - text: "Press \"Put the problem line back\", then \"Fit a fourth lamp\", then \"Check the plan\". The light turns red again, because the new lamp has no plan line."
+    done: [ restore, fit, check ]
+  - text: "(Optional) Switch on \"Add a catch-all line\", press \"Check the plan\", then \"Send a car\". The light is green, and the car follows the catch-all line at the fourth lamp."
+    done: [ "catchall=on", check, send ]
+    optional: true
+```
 
 **What you should notice:** A plan card with a missing line turns the build light red before any car moves. A catch-all line keeps the light green, even though a new lamp is handled in a way nobody chose.
 

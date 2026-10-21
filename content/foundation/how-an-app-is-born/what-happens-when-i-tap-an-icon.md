@@ -36,12 +36,114 @@ When you ring, the manager checks whether the app already has a room open. If it
 
 ## See it move
 
-<!-- SIM: hotel-bell-startup -->
-
-**Try this:**
-1. Ring the bell and watch each step light up in order.
-2. Drag the slider to slow every step down.
-3. (Optional reveal) Tick "Room already open" and ring again.
+```sim
+id: hotel-bell-startup
+template: stepper
+title: A hotel front desk and the bell
+intro: "The guest stands at the front desk. No room is open for the app yet, and the bell has not been rung."
+lines:
+  - { id: l1, text: "You ring the bell (the tap)" }
+  - { id: l2, text: "The manager checks for an open room" }
+  - { id: l3, text: "A room is made ready (the app's process starts)" }
+  - { id: l4, text: "A blank welcome card goes up in the doorway" }
+  - { id: l5, text: "Job 1: set up the desk book (create the app object)" }
+  - { id: l6, text: "Job 2: call the waiter (launch the main thread)" }
+  - { id: l7, text: "Job 3: open the lounge (create the main activity)" }
+  - { id: l8, text: "Job 4: set out the furniture (initialize the UI)" }
+  - { id: l9, text: "Job 5: switch on the lights (draw the UI)" }
+  - { id: l10, text: "The card comes down and the lounge shows" }
+board:
+  - { var: room, label: The room }
+  - { var: card, label: The welcome card }
+log: { columns: [Hotel, Android] }
+vars: { pc: 0, room: "none", card: "none", open: "off" }
+toggles: [ { id: open, label: Room already open, var: open } ]
+actions:
+  - id: ring
+    label: Ring the bell
+    cases:
+      - when: { var: { pc: 0 } }
+        do:
+          - set: { pc: 1 }
+          - light: [ l1 ]
+          - row: [ "The guest rings the bell", "You tap the icon" ]
+          - say: "The guest rings the bell at the front desk. This is the tap."
+    refuse: "The bell has already rung. Press Do the next job."
+  - id: next
+    label: Do the next job
+    cases:
+      - when: { var: { pc: 1 } }
+        do:
+          - set: { pc: 2 }
+          - light: [ l2 ]
+          - row: [ "The manager checks for an open room", "The system checks for a running process" ]
+          - say: "The manager checks whether the app already has a room open."
+      - when: { var: { pc: 2, open: "on" } }
+        do:
+          - set: { pc: 99, room: "open", card: "none" }
+          - light: [ l10 ]
+          - row: [ "The manager takes you to the open room, and fewer jobs are needed", "The app's process already exists" ]
+          - say: "A room is already open, so the manager takes you straight to it. Fewer jobs are needed, and the lounge shows sooner."
+      - when: { var: { pc: 2 } }
+        do:
+          - set: { pc: 3, room: "being made ready" }
+          - light: [ l3 ]
+          - row: [ "No room is open, so a room is made ready", "The system starts the app's process" ]
+          - say: "No room is open, so the manager starts getting a new one ready."
+      - when: { var: { pc: 3 } }
+        do:
+          - set: { pc: 4, card: "up" }
+          - light: [ l4 ]
+          - row: [ "A blank welcome card goes up in the doorway", "The blank starting window shows" ]
+          - say: "The manager hangs a blank welcome card in the doorway."
+      - when: { var: { pc: 4 } }
+        do:
+          - set: { pc: 5 }
+          - light: [ l5 ]
+          - row: [ "Set up the desk book", "Create the app object" ]
+          - say: "In the room, the first job is to set up the desk book."
+      - when: { var: { pc: 5 } }
+        do:
+          - set: { pc: 6 }
+          - light: [ l6 ]
+          - row: [ "Call the waiter", "Launch the main thread" ]
+          - say: "The second job is to call the waiter, who handles everything the guest sees and touches."
+      - when: { var: { pc: 6 } }
+        do:
+          - set: { pc: 7 }
+          - light: [ l7 ]
+          - row: [ "Open the lounge", "Create the main activity" ]
+          - say: "The third job is to open the lounge, the first screen of the app."
+      - when: { var: { pc: 7 } }
+        do:
+          - set: { pc: 8 }
+          - light: [ l8 ]
+          - row: [ "Set out the furniture", "Initialize the UI" ]
+          - say: "The fourth job is to set out the furniture in the lounge."
+      - when: { var: { pc: 8 } }
+        do:
+          - set: { pc: 9 }
+          - light: [ l9 ]
+          - row: [ "Switch on the lights", "Draw the UI" ]
+          - say: "The fifth job is to switch on the lights. This is the first draw."
+      - when: { var: { pc: 9 } }
+        do:
+          - set: { pc: 99, room: "open", card: "down" }
+          - light: [ l10 ]
+          - row: [ "The card comes down and you see the lounge", "The system swaps the blank window for the main activity" ]
+          - say: "The manager takes down the welcome card, and you see the lounge."
+      - when: { var: { pc: 99 } }
+        do:
+          - say: "The app is showing. Press Reset to ring the bell again."
+    refuse: "Ring the bell first."
+script: [ ring, next, next, next, next, next, next, next, next, next ]
+try:
+  - text: "Press \"Ring the bell\", then press \"Do the next job\" until the lounge shows. Each step lights up in order. (Or press Play, and use Speed to slow it down.)"
+    done: [ ring, next, next, next, next, next, next, next, next, next ]
+  - text: "(Optional) Switch on \"Room already open\". The same ring now replays with fewer steps."
+    done: [ "open=on" ]
+    optional: true
+```
 
 **What you should notice:** With no room open, the manager gets one ready and the staff do five jobs before the lounge lights up. With a room open, fewer steps run.
 

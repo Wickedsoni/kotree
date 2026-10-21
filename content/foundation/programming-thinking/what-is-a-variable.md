@@ -37,12 +37,76 @@ Think of a labelled jar on a shelf.
 
 ## See it move
 
-<!-- SIM: labelled-jars -->
-
-**Try this:**
-1. Press Step and watch each line drop a new ball into a jar. Look at the "score" jar before and after.
-2. Find the line that builds a new number from the old one. Watch the old ball get read first, and then the new ball drop in.
-3. Add a copy jar that starts with the same number as "score". Change "score" and look at the copy.
+```sim
+id: labelled-jars
+template: stepper
+title: Labelled jars on a shelf
+intro: "The shelf is empty. The program below will put a ball with a number into each jar, one line at a time."
+lines:
+  - { id: l1, text: "var score = 0" }
+  - { id: l2, text: "score = 5" }
+  - { id: l3, text: "var halfTime = score" }
+  - { id: l4, text: "score = score + 1" }
+  - { id: l5, text: "println(score)" }
+  - { id: l6, text: "println(halfTime)" }
+code: true
+board:
+  - { var: score, label: "Jar: score" }
+  - { var: halfTime, label: "Jar: halfTime" }
+log: { columns: [Line, Jar, Ball before, Ball after] }
+vars: { pc: 1, score: "no jar yet", halfTime: "no jar yet" }
+actions:
+  - id: step
+    label: Run the next line
+    cases:
+      - when: { var: { pc: 1 } }
+        do:
+          - set: { score: 0, pc: 2 }
+          - light: [ l1 ]
+          - row: [ "1", "score", "no jar yet", "0" ]
+          - say: "A jar labelled score appears and gets a first ball with 0 on it."
+      - when: { var: { pc: 2 } }
+        do:
+          - set: { score: 5, pc: 3 }
+          - light: [ l2 ]
+          - row: [ "2", "score", "0", "5" ]
+          - say: "A new ball with 5 drops into the score jar. The old ball with 0 falls out and is gone."
+      - when: { var: { pc: 3 } }
+        do:
+          - set: { halfTime: 5, pc: 4 }
+          - light: [ l3 ]
+          - row: [ "3", "halfTime", "no jar yet", "5" ]
+          - say: "A second jar, halfTime, gets a fresh ball with 5 on it, copied from score. The two jars are separate."
+      - when: { var: { pc: 4 } }
+        do:
+          - set: { score: 6, pc: 5 }
+          - light: [ l4 ]
+          - row: [ "4", "score", "5 (read first)", "6" ]
+          - say: "Kotlin reads the old ball, 5, and works out 6. Then the new ball drops in and the 5 ball falls out. The halfTime jar still holds 5."
+      - when: { var: { pc: 5 } }
+        do:
+          - set: { pc: 6 }
+          - light: [ l5 ]
+          - row: [ "5", "score (read)", "6", "6 (unchanged)" ]
+          - say: "println reads the score jar and prints 6. Reading does not change the jar."
+      - when: { var: { pc: 6 } }
+        do:
+          - set: { pc: 7 }
+          - light: [ l6 ]
+          - row: [ "6", "halfTime (read)", "5", "5 (unchanged)" ]
+          - say: "println prints 5. The halfTime jar kept its own ball when score changed."
+      - when: { var: { pc: 7 } }
+        do:
+          - say: "The program has finished. Press Reset to run it again."
+script: [ step, step, step, step, step, step ]
+try:
+  - text: "Press Step twice. Line 1 makes the score jar. Line 2 drops in a new ball, and the old ball falls out."
+    done: [ step, step ]
+  - text: "Press Step twice more. Line 3 copies score into a second jar. Line 4 builds a new number from the old one: the old ball is read first, then the new ball drops in."
+    done: [ step, step ]
+  - text: "Press Step twice more to print both jars. The halfTime jar kept its own ball."
+    done: [ step, step ]
+```
 
 **What you should notice:** A new ball replaces the old one, and a copy keeps its own ball.
 

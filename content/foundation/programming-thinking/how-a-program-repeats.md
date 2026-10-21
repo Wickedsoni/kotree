@@ -37,12 +37,56 @@ The cook checks, stirs, checks again, stirs again. When the answer to the questi
 
 ## See it move
 
-<!-- SIM: loop-track-gate -->
-
-**Try this:**
-1. Press Step and watch the spoon go round once. Before the stir, the thermometer is checked, and the stove adds one mark.
-2. Change the boiling mark from 3 to 5 and press Run.
-3. Switch the stove off and press Run.
+```sim
+id: loop-track-gate
+template: states
+title: A spoon going round a pot, with a gate
+intro: "The spoon waits at the gate. The thermometer reads 0, the soup boils at 3 marks, and the stove is on."
+nodes:
+  - { id: check, label: "Gate: still short of boiling?" }
+  - { id: stir, label: Stir once }
+  - { id: done, label: Spoon down }
+edges:
+  - { from: check, to: stir, label: "yes" }
+  - { from: stir, to: check, label: next lap }
+  - { from: check, to: done, label: "no" }
+start: check
+layout: ring
+items:
+  - { id: spoon, label: Spoon, at: check }
+vars: { heat: 0, boil: 3, stove: "on" }
+show:
+  - { var: heat, label: Thermometer marks }
+  - { var: boil, label: Soup boils at }
+toggles: [ { id: stove, label: Stove, var: stove } ]
+sliders: [ { id: boil, label: Boiling mark, var: boil, min: 3, max: 5, step: 1 } ]
+actions:
+  - id: go
+    label: Step the spoon
+    cases:
+      - when: { at: { spoon: check }, var: { heat: 3, boil: 3 } }
+        do: [ move: { spoon: done }, light: [ "check>done" ], say: "The thermometer reads {heat}, the boiling mark. The answer is no, so the cook puts the spoon down." ]
+      - when: { at: { spoon: check }, var: { heat: 4, boil: 4 } }
+        do: [ move: { spoon: done }, light: [ "check>done" ], say: "The thermometer reads {heat}, the boiling mark. The answer is no, so the cook puts the spoon down." ]
+      - when: { at: { spoon: check }, var: { heat: 5, boil: 5 } }
+        do: [ move: { spoon: done }, light: [ "check>done" ], say: "The thermometer reads {heat}, the boiling mark. The answer is no, so the cook puts the spoon down." ]
+      - when: { at: { spoon: check } }
+        do: [ move: { spoon: stir }, light: [ "check>stir" ], say: "The thermometer reads {heat}, still short of {boil}. The answer is yes, so the spoon goes to stir." ]
+      - when: { at: { spoon: stir }, var: { stove: "on" } }
+        do: [ add: { heat: 1 }, move: { spoon: check }, light: [ "stir>check" ], say: "The cook stirs once, and the stove adds one mark. The thermometer now reads {heat}. The spoon goes back to the gate." ]
+      - when: { at: { spoon: stir } }
+        do: [ move: { spoon: check }, light: [ "stir>check" ], say: "The cook stirs once, but the stove is off, so the thermometer still reads {heat}. The spoon goes back to the gate, and the answer will be yes again." ]
+      - when: { at: { spoon: done } }
+        do: [ say: "The spoon is down, so the loop is over. Press Reset to run it again." ]
+script: [ go, go, go, go, go, go, go ]
+try:
+  - text: "Press Step twice. The spoon goes to the gate, then to stir. Before the stir the gate reads the thermometer, and the stove adds one mark."
+    done: [ go, go ]
+  - text: "Move the boiling mark slider to 5, then press Step until the spoon is put down. It takes more laps."
+    done: [ "boil=5", go ]
+  - text: "Switch the stove off, then press Step. The thermometer never changes, so the spoon keeps circling."
+    done: [ "stove=off", go ]
+```
 
 **What you should notice:** The spoon stops only because the thermometer changes, and with the stove off it circles for ever.
 

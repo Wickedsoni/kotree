@@ -36,12 +36,76 @@ Think of walking a treasure map with a pencil.
 
 ## See it move
 
-<!-- SIM: trace-table-stepper -->
-
-**Try this:**
-1. Before each press of Step, write in your logbook what you think the next row will be. Then press Step and compare.
-2. When the cross reaches the detour, press Step and watch which purse gets the number carried back.
-3. Change the number in the first purse and trace the program again.
+```sim
+id: trace-table-stepper
+template: stepper
+title: A treasure map and its logbook
+intro: "The map is a short program with a detour called triple. The logbook table is empty, and the cross waits on line 6."
+lines:
+  - { id: l1, text: "1  fun triple(n: Int): Int {" }
+  - { id: l2, text: "2      return n * 3" }
+  - { id: l3, text: "3  }" }
+  - { id: l4, text: "4  (blank line)" }
+  - { id: l5, text: "5  fun main() {" }
+  - { id: l6, text: "6      var coins = 1   (the slider changes this 1)" }
+  - { id: l7, text: "7      coins = coins + triple(2)" }
+  - { id: l8, text: "8      println(coins)" }
+  - { id: l9, text: "9  }" }
+code: true
+log: { columns: [Step, Line, n, coins, Printed] }
+vars: { pc: 1, k: 0, coins: 1 }
+sliders: [ { id: coins, label: Coins in the first purse, var: coins, min: 0, max: 5, step: 1 } ]
+actions:
+  - id: step
+    label: Walk one line
+    cases:
+      - when: { var: { pc: 1 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 2 }
+          - light: [ l6 ]
+          - row: [ "{k}", "6", "-", "{coins}", "-" ]
+          - say: "The cross is on line 6. The purse coins holds {coins}."
+      - when: { var: { pc: 2 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 3 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, starts the call triple(2)", "-", "{coins}", "-" ]
+          - say: "Line 7 starts a detour to triple and carries the number 2. The purse coins still holds {coins}."
+      - when: { var: { pc: 3 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 4 }
+          - light: [ l2 ]
+          - row: [ "{k}", "2, inside triple", "2", "{coins}", "-" ]
+          - say: "Inside triple, the purse n holds 2. The line works out 2 times 3, which is 6, and hands it back."
+      - when: { var: { pc: 4 } }
+        do:
+          - add: { k: 1, coins: 6 }
+          - set: { pc: 5 }
+          - light: [ l7 ]
+          - row: [ "{k}", "7, adds the 6 that came back", "-", "{coins}", "-" ]
+          - say: "Back on line 7, the 6 is added to coins. The purse coins now holds {coins}."
+      - when: { var: { pc: 5 } }
+        do:
+          - add: { k: 1 }
+          - set: { pc: 6 }
+          - light: [ l8 ]
+          - row: [ "{k}", "8", "-", "{coins}", "{coins}" ]
+          - say: "Line 8 says the number aloud: {coins}. That is the output."
+      - when: { var: { pc: 6 } }
+        do:
+          - say: "The cross has passed the last line. The Printed column holds the output. Press Reset to trace again."
+script: [ step, step, step, step, step ]
+try:
+  - text: "Before each press, say aloud what you think the next row of the table will be. Then press Step and compare. Do this for the first two rows."
+    done: [ step, step ]
+  - text: "Press Step twice more. The cross walks into triple, then returns to line 7 with the 6 that came back."
+    done: [ step, step ]
+  - text: "Move the slider to 3, then press Step once more. Every coins cell in the table changes, because the first purse started with a different number."
+    done: [ "coins=3", step ]
+```
 
 **What you should notice:** Most rows change one purse and copy the rest, and the last row holds what the program says aloud.
 

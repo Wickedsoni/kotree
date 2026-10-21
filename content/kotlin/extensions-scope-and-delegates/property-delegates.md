@@ -35,13 +35,62 @@ Think of that coffee machine in a shop.
 
 ## See it move
 
-<!-- SIM: lazy-coffee-machine -->
-
-**Try this:**
-1. Drag the first "Press the button" card to slot 3 and press Play.
-2. Add two more cards after it and press Play again.
-3. Remove every card and press Play.
-4. (Optional reveal) Tick "Brew when the shop opens" and press Play with the cards at slot 3.
+```sim
+id: lazy-coffee-machine
+template: stepper
+title: A coffee machine that brews on the first press
+intro: "The shop is closed and the machine is dormant. It has brewed nothing, and Brews shows 0."
+lines:
+  - { id: lo, text: "The shop opens" }
+  - { id: lp, text: "A customer presses the button" }
+board:
+  - { var: brews, label: Brews }
+  - { var: pot, label: The pot }
+log: { columns: [Event, Brews, Pot] }
+vars: { brews: 0, cups: 0, pot: "none", eager: "off" }
+toggles: [ { id: eager, label: Brew when the shop opens, var: eager } ]
+actions:
+  - id: open
+    label: Open the shop
+    cases:
+      - when: { var: { eager: "on" } }
+        do:
+          - set: { brews: 1, cups: 0, pot: "warm pot" }
+          - light: [ lo ]
+          - row: [ "Shop opens, the machine brews at once", "{brews}", "{pot}" ]
+          - say: "The shop opens and the machine brews straight away, even though nobody has pressed the button."
+      - do:
+          - set: { brews: 0, cups: 0, pot: "none" }
+          - light: [ lo ]
+          - row: [ "Shop opens, the machine stays dormant", "{brews}", "{pot}" ]
+          - say: "A new day starts. The machine has not brewed, and it will not until someone presses the button."
+  - id: press
+    label: Press the button
+    cases:
+      - when: { var: { brews: 0 } }
+        do:
+          - add: { cups: 1, brews: 1 }
+          - set: { pot: "warm pot" }
+          - light: [ lp ]
+          - row: [ "Press {cups}, the recipe runs and one pot is brewed", "{brews}", "{pot}" ]
+          - say: "The first press runs the recipe. One pot is brewed and kept warm."
+      - do:
+          - add: { cups: 1 }
+          - light: [ lp ]
+          - row: [ "Press {cups}, pours from the warm pot", "{brews}", "{pot}" ]
+          - say: "The machine pours from the warm pot. The recipe does not run again, so Brews stays at {brews}."
+script: [ open, press, press, press, open ]
+try:
+  - text: "Press \"Open the shop\", then press \"Press the button\" once. The first press brews one pot, and Brews shows 1."
+    done: [ open, press ]
+  - text: "Press \"Press the button\" twice more. Both cups pour from the warm pot, and Brews stays at 1."
+    done: [ press, press ]
+  - text: "Press \"Open the shop\" for a new, quiet day, and press nothing. Brews stays at 0."
+    done: [ open ]
+  - text: "(Optional) Switch on \"Brew when the shop opens\". The quiet day now brews at opening, with no button press."
+    done: [ "eager=on" ]
+    optional: true
+```
 
 **What you should notice:** One brew happens at the first press, and the count stays at 1 after that. No brew happens with no press. The tick-box moves the brew to slot 1 whether or not anyone presses.
 
