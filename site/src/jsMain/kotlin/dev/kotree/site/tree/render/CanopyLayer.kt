@@ -54,7 +54,7 @@ class CanopyLayer(geometry: TreeGeometry, seed: Long = Tokens.World.seed) {
     private val canvas = document.createElement("canvas") as HTMLCanvasElement
     private var valid = false
 
-    /** Fraction done per branch (index = [CanopyDots.branchIds]); all 0 until progress exists. */
+    /** Fraction done per branch (index = [CanopyDots.branchIds]). */
     private val fraction = DoubleArray(dots.branchIds.size)
 
     private val greenCss = arrayOf(Tokens.Canopy.light, Tokens.Canopy.mid, Tokens.Canopy.deep)
@@ -65,6 +65,12 @@ class CanopyLayer(geometry: TreeGeometry, seed: Long = Tokens.World.seed) {
     }
 
     fun invalidate() {
+        valid = false
+    }
+
+    /** Sets the fraction done of each branch (by id; missing = 0) and rebuilds the texture on the next frame that needs it. */
+    fun setFractions(byBranchId: Map<String, Double>) {
+        for (j in dots.branchIds.indices) fraction[j] = byBranchId[dots.branchIds[j]] ?: 0.0
         valid = false
     }
 

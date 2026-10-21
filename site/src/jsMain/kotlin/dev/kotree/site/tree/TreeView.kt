@@ -12,6 +12,10 @@ import dev.kotree.site.Tokens
 import dev.kotree.site.colorSurfaceVar
 import dev.kotree.site.space4Var
 import dev.kotree.site.space6Var
+import dev.kotree.site.progress.DONE_KEY
+import dev.kotree.site.progress.DoneStore
+import dev.kotree.site.progress.LocalStorageKv
+import dev.kotree.site.progress.leafDoneId
 import dev.kotree.site.tree.camera.Camera
 import dev.kotree.site.tree.camera.FlyTarget
 import dev.kotree.site.tree.camera.Fly
@@ -35,6 +39,7 @@ import dev.kotree.site.tree.render.VectorRenderer
 import dev.kotree.site.ui.layout.BranchNodeCard
 import dev.kotree.site.ui.layout.LeafNodeCard
 import dev.kotree.site.ui.layout.NavItem
+import dev.kotree.site.ui.layout.ProgressLegend
 import dev.kotree.site.ui.layout.SiteHeader
 import dev.kotree.site.ui.layout.StemNodeCard
 import dev.kotree.site.ui.layout.ZoomControls
@@ -43,9 +48,9 @@ import kotlinx.browser.window
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Text
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.Event
 import kotlin.math.roundToInt
 
 private const val REPORT_WIDTH_PX = 1280
@@ -105,6 +110,19 @@ fun TreeView(data: TreeData) {
     val card = remember(data) { mutableStateOf<CardRequest?>(null) }
     val upNext = remember(data) { upNextIds(data) }
     val holder = remember { ElementHolder() }
+    val liveLeaves = remember(data) {
+        data.boughs.flatMap { it.branches }.flatMap { it.stems }.flatMap { it.leaves }.mapNotNull { leafDoneId(it) }.toSet()
+    }
+    val store = remember(data) { DoneStore(LocalStorageKv(), liveLeaves) }
+    val progressVersion = remember(data) { mutableStateOf(0) }
+
+    fun toggleDone(id: String) {
+        if (store.setDone(id, !store.isDone(id))) {
+            renderer.onProgress(store.doneIds())
+            progressVersion.value += 1
+            loop.requestFrame()
+        }
+    }
 
     fun flyOrSet(t: FlyTarget, instant: Boolean) {
         if (instant) camera.set(t.z, t.centre.x, t.centre.y) else fly.to(t)
@@ -176,9 +194,9 @@ fun TreeView(data: TreeData) {
 
     fun onFocusNode(node: Node?) {
         // The ring is for keyboard focus only, not for a button focused after a mouse click.
-        val visible = node != null && (document.activeElement as? Element)?.matches(":focus-visible") == true
+        val visible = node != null && document.activeElement?.matches(":focus-visible") == true
         renderer.focus = if (visible) node else null
-        if (visible && node != null) {
+        if (visible) {
             val s = camera.scale
             val vw = camera.viewport.widthPx.toDouble()
             val vh = camera.viewport.heightPx.toDouble()
@@ -249,11 +267,25 @@ fun TreeView(data: TreeData) {
                     fonts.load(LabelFonts.title).then(refresh, refresh)
                 }
                 PerfProbe.install { renderer.labelRects() }
+
+                // Marks made in another tab (or a cleared store) arrive as a storage event.
+                renderer.onProgress(store.doneIds())
+                val onStorage: (Event) -> Unit = { e ->
+                    val key = e.asDynamic().key
+                    if (key == null || key == DONE_KEY) {
+                        store.reload()
+                        renderer.onProgress(store.doneIds())
+                        progressVersion.value += 1
+                        loop.requestFrame()
+                    }
+                }
+                window.addEventListener("storage", onStorage)
                 loop.requestFrame()
 
                 onDispose {
                     removeInput()
                     removeHash()
+                    window.removeEventListener("storage", onStorage)
                     observer.disconnect()
                     loop.dispose()
                     canvas.remove()
@@ -288,6 +320,8 @@ fun TreeView(data: TreeData) {
             view = viewState,
             onActivate = { activate(resolve(it), goto = false, instant = false) },
             onFocusNode = { onFocusNode(it) },
+            isDone = { store.isDone(it) },
+            progressVersion = progressVersion,
             onListChanged = {
                 // The focused button was removed on a level switch: keep focus inside the view.
                 val active = document.activeElement
@@ -303,7 +337,11 @@ fun TreeView(data: TreeData) {
             camera = camera,
             onClose = { closeCard() },
             onStem = { id -> nodes.byId[id]?.let { activate(it, goto = true, instant = false) } },
+            store = store,
+            progressVersion = progressVersion,
+            onToggleDone = { toggleDone(it) },
         )
+        LegendHost(store, progressVersion, liveLeaves.size)
         ZoomControls(
             onZoomIn = { fly.cancel(); camera.zoomAtCentre(Tokens.Camera.keyZoomFactor) },
             onZoomOut = { fly.cancel(); camera.zoomAtCentre(1.0 / Tokens.Camera.keyZoomFactor) },
@@ -324,7 +362,15 @@ fun TreeView(data: TreeData) {
  * recomposes when a card opens or closes.
  */
 @Composable
-private fun CardHost(card: State<CardRequest?>, camera: Camera, onClose: () -> Unit, onStem: (String) -> Unit) {
+private fun CardHost(
+    card: State<CardRequest?>,
+    camera: Camera,
+    onClose: () -> Unit,
+    onStem: (String) -> Unit,
+    store: DoneStore,
+    progressVersion: State<Int>,
+    onToggleDone: (String) -> Unit,
+) {
     val request = card.value ?: return
     val node = request.node
     key(node.id) {
@@ -360,12 +406,31 @@ private fun CardHost(card: State<CardRequest?>, camera: Camera, onClose: () -> U
             val stem = node.stem
             val branch = node.branch
             when {
-                node.kind == Kind.LEAF && leaf != null && stem != null && branch != null -> LeafNodeCard(leaf, branch, stem, onClose, cardStyle)
+                node.kind == Kind.LEAF && leaf != null && stem != null && branch != null -> {
+                    val id = leafDoneId(leaf)
+                    val done = progressVersion.value >= 0 && id != null && store.isDone(id)
+                    LeafNodeCard(leaf, branch, stem, onClose, cardStyle, done, if (id == null) null else ({ onToggleDone(id) }))
+                }
                 node.kind == Kind.STEM && stem != null && branch != null -> StemNodeCard(stem, branch, onClose, cardStyle)
                 node.kind == Kind.BRANCH && branch != null -> BranchNodeCard(branch, { onStem(it.id) }, onClose, cardStyle)
             }
         }
     }
+}
+
+/** The progress legend, bottom-left. Reads the progress version here, so only this composable recomposes on a mark. */
+@Composable
+private fun LegendHost(store: DoneStore, progressVersion: State<Int>, live: Int) {
+    val done = progressVersion.value.let { store.count }
+    ProgressLegend(
+        done = done,
+        live = live,
+        modifier = Modifier.styleModifier {
+            property("position", "absolute")
+            property("left", space4Var.value())
+            property("bottom", space4Var.value())
+        },
+    )
 }
 
 /** Branch id to the full id of its up-next leaf (absent when every leaf is live). */

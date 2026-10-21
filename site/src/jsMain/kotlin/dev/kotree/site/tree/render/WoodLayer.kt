@@ -42,13 +42,17 @@ class WoodLayer(private val painter: WoodPainter) {
     private var keyLevel = -1
     private var keyBranch = -2
     private var keyLeaf = -1
+    private var keyProgress = -1
 
     fun invalidate() {
         valid = false
     }
 
-    /** Draws the wood into [g], whose transform is the device pixel ratio scale (CSS px coordinates). */
-    fun draw(g: dynamic, cam: Camera, s: Double, dpr: Double, step: Int, level: Int, branch: Int, leafBucket: Int, crisp: Boolean) {
+    /**
+     * Draws the wood into [g], whose transform is the device pixel ratio scale (CSS px coordinates). [progress] is the
+     * progress version: the layer is rendered again when it changes (a leaf was marked done or undone).
+     */
+    fun draw(g: dynamic, cam: Camera, s: Double, dpr: Double, step: Int, level: Int, branch: Int, leafBucket: Int, progress: Int, crisp: Boolean) {
         val vw = cam.viewport.widthPx.toDouble()
         val vh = cam.viewport.heightPx.toDouble()
         val worldW = vw / s
@@ -59,18 +63,18 @@ class WoodLayer(private val painter: WoodPainter) {
             painter.paintWood(g, s, dpr, left, top, worldW, worldH, step, level, branch, leafBucket)
             return
         }
-        var reuse = valid && step == keyStep && level == keyLevel && branch == keyBranch && leafBucket == keyLeaf &&
+        var reuse = valid && step == keyStep && level == keyLevel && branch == keyBranch && leafBucket == keyLeaf && progress == keyProgress &&
             abs(s / s0 - 1.0) <= Tokens.Tree.layerRescale &&
             left >= x0 && top >= y0 && left + worldW <= x0 + ww && top + worldH <= y0 + wh
         // After motion stops the layer is made exact: same scale and centre as the view.
         if (reuse && crisp && !(s == s0 && cam.cx == rcx && cam.cy == rcy)) reuse = false
-        if (!reuse) render(cam, s, dpr, step, level, branch, leafBucket, vw, vh)
+        if (!reuse) render(cam, s, dpr, step, level, branch, leafBucket, progress, vw, vh)
         val dx = (x0 - cam.cx) * s + vw / 2.0
         val dy = (y0 - cam.cy) * s + vh / 2.0
         g.drawImage(canvas, 0.0, 0.0, canvas.width.toDouble(), canvas.height.toDouble(), dx, dy, ww * s, wh * s)
     }
 
-    private fun render(cam: Camera, s: Double, dpr: Double, step: Int, level: Int, branch: Int, leafBucket: Int, vw: Double, vh: Double) {
+    private fun render(cam: Camera, s: Double, dpr: Double, step: Int, level: Int, branch: Int, leafBucket: Int, progress: Int, vw: Double, vh: Double) {
         val margin = Tokens.Tree.layerMargin
         // Keep the layer under a pixel budget on very large screens by lowering its resolution.
         val areaCss = vw * (1.0 + 2.0 * margin) * vh * (1.0 + 2.0 * margin)
@@ -94,6 +98,7 @@ class WoodLayer(private val painter: WoodPainter) {
         keyLevel = level
         keyBranch = branch
         keyLeaf = leafBucket
+        keyProgress = progress
         valid = true
         painter.paintWood(lg, s, k, x0, y0, ww, wh, step, level, branch, leafBucket)
     }

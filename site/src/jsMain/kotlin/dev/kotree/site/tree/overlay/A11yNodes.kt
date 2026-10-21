@@ -9,6 +9,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import dev.kotree.site.Tokens
+import dev.kotree.site.progress.leafDoneId
 import dev.kotree.site.tree.camera.ViewState
 import dev.kotree.site.tree.camera.ZoomLevel
 import dev.kotree.site.tree.hit.Kind
@@ -35,9 +36,12 @@ fun A11yNodes(
     onActivate: (Node) -> Unit,
     onFocusNode: (Node?) -> Unit,
     onListChanged: () -> Unit,
+    isDone: (String) -> Boolean,
+    progressVersion: State<Int>,
 ) {
     val v = view.value
-    val list = remember(v) { nodesFor(nodes, v) }
+    val version = progressVersion.value
+    val list = remember(v, version) { nodesFor(nodes, v) }
     LaunchedEffect(list) { onListChanged() }
     Div(
         Modifier.styleModifier {
@@ -56,7 +60,7 @@ fun A11yNodes(
             Button(
                 Modifier.toAttrs {
                     attr("type", "button")
-                    attr("aria-label", labelOf(n))
+                    attr("aria-label", labelOf(n, isDone))
                     attr(NODE_ATTRIBUTE, n.id)
                     onClick { onActivate(n) }
                     onFocus { onFocusNode(n) }
@@ -67,18 +71,22 @@ fun A11yNodes(
     }
 }
 
-private fun labelOf(n: Node): String {
+private fun labelOf(n: Node, isDone: (String) -> Boolean): String {
     val leaf = n.leaf
     if (leaf != null) {
         return when (leaf.status) {
-            LeafStatus.LIVE -> "${n.title}, live"
+            LeafStatus.LIVE -> if (leafDoneId(leaf)?.let(isDone) == true) "${n.title}, live, done" else "${n.title}, live"
             LeafStatus.UPNEXT -> "${n.title}, up next"
             LeafStatus.SHADOW -> "${n.title}, coming soon"
         }
     }
     val counts = n.stem?.counts ?: n.branch?.counts
     if (counts != null && n.kind != Kind.BOUGH) {
-        return if (counts.live == 0) "${n.title}, coming soon" else "${n.title}, ${counts.live} of ${counts.total} live"
+        if (counts.live == 0) return "${n.title}, coming soon"
+        val leaves = n.stem?.leaves ?: n.branch?.stems?.flatMap { it.leaves }.orEmpty()
+        val doneCount = leaves.count { leafDoneId(it)?.let(isDone) == true }
+        val doneText = if (doneCount > 0) ", $doneCount done" else ""
+        return "${n.title}, ${counts.live} of ${counts.total} live$doneText"
     }
     return n.title
 }

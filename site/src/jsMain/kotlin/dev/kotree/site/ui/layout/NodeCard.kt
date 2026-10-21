@@ -10,6 +10,8 @@ import dev.kotree.site.branchInk
 import dev.kotree.site.branchTint
 import dev.kotree.site.colorOnSurfaceMutedVar
 import dev.kotree.site.colorOnSurfaceVar
+import dev.kotree.site.colorStatusLiveContainerVar
+import dev.kotree.site.colorStatusLiveVar
 import dev.kotree.site.colorStatusUpnextContainerVar
 import dev.kotree.site.colorSurfaceVar
 import dev.kotree.site.elevation1Var
@@ -21,6 +23,7 @@ import dev.kotree.site.layoutHeaderHeightVar
 import dev.kotree.site.motion.Spring
 import dev.kotree.site.shapeMdVar
 import dev.kotree.site.shapeXlIncreasedVar
+import dev.kotree.site.shapeXsVar
 import dev.kotree.site.space1Var
 import dev.kotree.site.space2Var
 import dev.kotree.site.space3Var
@@ -345,9 +348,43 @@ private fun LeafRow(leaf: Leaf, branch: String) {
     }
 }
 
+/** "✓ Done" chip of a done leaf. The text carries the meaning; the check glyph is decoration. */
+@Composable
+private fun DoneChip() {
+    Div(
+        Modifier.styleModifier {
+            property("display", "inline-flex")
+            property("align-items", "center")
+            property("gap", space1Var.value())
+            property("box-sizing", "border-box")
+            property("height", Tokens.Size.chipCompactPx.px)
+            property("padding", "0 ${space2Var.value()}")
+            property("border-radius", shapeXsVar.value())
+            property("color", colorStatusLiveVar.value())
+            property("background-color", colorStatusLiveContainerVar.value())
+            property("font-family", fontUiVar.value())
+            property("font-size", typeLabelSizeVar.value())
+            property("line-height", typeLabelLineVar.value())
+            property("font-weight", typeLabelWeightVar.value())
+            property("white-space", "nowrap")
+        }.toAttrs()
+    ) {
+        Span(Modifier.attrsModifier { attr("aria-hidden", "true") }.toAttrs()) { Text("✓") }
+        Text("Done")
+    }
+}
+
 /** Card of a leaf. Live: summary and **Open lesson**. Up next or coming soon: the not-published text, why, live neighbours, topics link. */
 @Composable
-fun LeafNodeCard(leaf: Leaf, branch: Branch, stem: Stem, onClose: () -> Unit, modifier: Modifier = Modifier) {
+fun LeafNodeCard(
+    leaf: Leaf,
+    branch: Branch,
+    stem: Stem,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+    done: Boolean = false,
+    onToggleDone: (() -> Unit)? = null,
+) {
     val live = leaf.status == ModelStatus.LIVE
     val path = leaf.path
     NodeCard(
@@ -364,9 +401,19 @@ fun LeafNodeCard(leaf: Leaf, branch: Branch, stem: Stem, onClose: () -> Unit, mo
             StatusChip(leaf.status.toUi(), compact = true)
             val difficulty = leaf.difficulty.toUi()
             Chip(difficulty.label, difficulty.swatch, compact = true, fill = colorSurfaceVar.value().toString())
+            if (live && done) DoneChip()
         },
         actions = {
             if (live && path != null) {
+                if (onToggleDone != null) {
+                    Button(
+                        if (done) "Undo" else "Mark as done",
+                        onToggleDone,
+                        Modifier.attrsModifier { attr("aria-pressed", done.toString()) },
+                        kind = ButtonKind.Tonal,
+                        branch = branch.id,
+                    )
+                }
                 LinkButton("Open lesson", path, kind = ButtonKind.Filled, branch = branch.id)
             } else {
                 LinkButton("See all topics", "/topics#${stem.id}", kind = ButtonKind.Tonal, branch = branch.id)

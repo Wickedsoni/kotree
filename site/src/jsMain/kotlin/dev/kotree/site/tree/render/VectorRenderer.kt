@@ -1,6 +1,7 @@
 package dev.kotree.site.tree.render
 
 import dev.kotree.site.Tokens
+import dev.kotree.site.progress.leafDoneId
 import dev.kotree.site.tree.PerfProbe
 import dev.kotree.site.tree.Polyline
 import dev.kotree.site.tree.TreeGeometry
@@ -29,9 +30,14 @@ private const val TANGENT_EPS = 1e-9
 private const val LENS_CTRL = 0.56
 /** The vein of a hard leaf spans this share of the leaf length. */
 private const val VEIN_HALF = 0.32
+/** Dry veins of a done leaf (unit leaf): the midrib spans this share of the length; two side veins reach this far out and along. */
+private const val DRY_RIB_HALF = 0.36
+private const val DRY_SIDE_START = -0.06
+private const val DRY_SIDE_END_X = 0.14
+private const val DRY_SIDE_END_Y = 0.13
 
-/** A filled shape and its colour. */
-private class Piece(val path: dynamic, val color: String)
+/** A filled shape and its colour. [branch] is the branch index whose progress tints it (-1: none); [base] its untinted ink. */
+private class Piece(val path: dynamic, val base: Int, val branch: Int, var color: String)
 
 private fun newPath(): dynamic = js("new Path2D()")
 
@@ -97,6 +103,18 @@ private fun buildVein(): dynamic {
     return p
 }
 
+/** Dry veins of a done leaf: the midrib and two side veins. */
+private fun buildDryVeins(): dynamic {
+    val p = newPath()
+    p.moveTo(-DRY_RIB_HALF, 0.0)
+    p.lineTo(DRY_RIB_HALF, 0.0)
+    p.moveTo(DRY_SIDE_START, 0.0)
+    p.lineTo(DRY_SIDE_END_X, -DRY_SIDE_END_Y)
+    p.moveTo(DRY_SIDE_START, 0.0)
+    p.lineTo(DRY_SIDE_END_X, DRY_SIDE_END_Y)
+    return p
+}
+
 private fun smoothstep(x: Double): Double {
     val t = x.coerceIn(0.0, 1.0)
     return t * t * (3.0 - 2.0 * t)
@@ -155,11 +173,28 @@ class VectorRenderer(
 
     private val lens: dynamic = buildLens()
     private val vein: dynamic = buildVein()
+    private val dryVeins: dynamic = buildDryVeins()
 
-    private val rootPieces: Array<Piece> = Array(geometry.roots.size) { pieceOf(geometry.roots[it]) }
+    // Progress (ADR 008 §Progress, §Autumn). Everything here is rebuilt by [onProgress]; nothing is allocated per frame.
+    private val seed = Tokens.World.seed
+    private val lut = AutumnColor.buildLut()
+    private val branchCount = nodes.branchNodes.size
+    private val foundationIdx = nodes.branchIndex["foundation"] ?: -1
+    private val leafDoneIds: Array<String?> = Array(nodes.leafCount) { leafDoneId(nodes.leafNodes[it].leaf) }
+    private val leafRest = DoubleArray(nodes.leafCount) { AutumnColor.rest(seed, nodes.leafNodes[it].id) }
+    private val leafDone = BooleanArray(nodes.leafCount)
+    private val branchDone = IntArray(branchCount)
+    private val branchLive = IntArray(branchCount).also { live ->
+        for (i in 0 until nodes.leafCount) if (leafDoneIds[i] != null) live[nodes.leafBranchIdx[i]]++
+    }
+    private val branchFraction = DoubleArray(branchCount)
+    private var progressVersion = 0
+
+    private val rootPieces: Array<Piece> = Array(geometry.roots.size) { pieceOf(geometry.roots[it], foundationIdx) }
     private val trunkPiece: Piece = pieceOf(geometry.trunk)
     private val boughPieces: Array<Array<Array<Piece>?>> =
         Array(geometry.boughs.size) { arrayOfNulls<Array<Piece>>(Tokens.Zoom.splitSteps + 1) }
+    private val twigCss = Array(branchCount) { stemCss }
     private val twigPaths: Array<Any?> = Array<Any?>(nodes.branchNodes.size) { i ->
         val stems = nodes.branchNodes[i].branchGeo?.stems.orEmpty()
         if (stems.isEmpty()) {
@@ -194,10 +229,14 @@ class VectorRenderer(
     private var tipW = 0.0
     private var tipH = 0.0
 
-    private fun pieceOf(line: Polyline): Piece {
+    private fun tintedLimb(base: Int, branch: Int): String =
+        if (branch < 0) cssColor(base) else cssColor(AutumnColor.mix(base, Tokens.Autumn.limb, branchFraction[branch] * Tokens.Autumn.limbMax))
+
+    private fun pieceOf(line: Polyline, branch: Int = -1): Piece {
         val p = newPath()
         addLimb(p, line)
-        return Piece(p, cssColor(Tokens.Color.inkRgb(line.ink)))
+        val base = Tokens.Color.inkRgb(line.ink)
+        return Piece(p, base, branch, tintedLimb(base, branch))
     }
 
     private fun piecesOf(bi: Int, step: Int): Array<Piece> {
@@ -205,8 +244,12 @@ class VectorRenderer(
         if (cached != null) return cached
         val bough = geometry.boughs[bi]
         // Limbs first, the bough on top: at step 0 the limbs hide inside the bough.
-        val lines = geometry.limbsAt(bough.id, step) + bough.centre
-        val built = Array(lines.size) { pieceOf(lines[it]) }
+        val limbs = geometry.limbsAt(bough.id, step)
+        val lines = limbs + bough.centre
+        val built = Array(lines.size) { j ->
+            val branch = if (j < limbs.size) bough.branches.getOrNull(j)?.let { nodes.branchIndex[it.id] } ?: -1 else -1
+            pieceOf(lines[j], branch)
+        }
         boughPieces[bi][step] = built
         return built
     }
@@ -218,6 +261,35 @@ class VectorRenderer(
 
     fun invalidateWood() {
         wood.invalidate()
+    }
+
+    /**
+     * The visitor's done marks changed ([doneIds] = ids of done live leaves). Recounts every branch, retints limbs, twigs
+     * and canopy dots by fraction done, and makes the wood layer render again. Static: no animation yet (ADR 008 WP6).
+     */
+    fun onProgress(doneIds: Set<String>) {
+        branchDone.fill(0)
+        for (i in 0 until nodes.leafCount) {
+            val id = leafDoneIds[i]
+            leafDone[i] = id != null && id in doneIds
+            if (leafDone[i]) branchDone[nodes.leafBranchIdx[i]]++
+        }
+        val byId = HashMap<String, Double>()
+        for (b in 0 until branchCount) {
+            val f = AutumnColor.fraction(branchDone[b], branchLive[b])
+            branchFraction[b] = f
+            byId[nodes.branchNodes[b].id] = f
+            twigCss[b] = cssColor(AutumnColor.mix(Tokens.Status.treeStem, Tokens.Autumn.limb, f * Tokens.Autumn.limbMax))
+        }
+        for (p in rootPieces) retint(p)
+        for (steps in boughPieces) for (built in steps) if (built != null) for (p in built) retint(p)
+        canopy.setFractions(byId)
+        progressVersion++
+        wood.invalidate()
+    }
+
+    private fun retint(p: Piece) {
+        if (p.branch >= 0) p.color = tintedLimb(p.base, p.branch)
     }
 
     override fun paintWood(g: dynamic, s: Double, k: Double, ox: Double, oy: Double, ww: Double, wh: Double, step: Int, level: Int, branch: Int, leafBucket: Int) {
@@ -234,7 +306,11 @@ class VectorRenderer(
             g.lineCap = "round"
             g.lineJoin = "round"
             g.lineWidth = (Tokens.Gen.STEM_WIDTH * s).coerceIn(Tokens.Tree.stemLineMinPx, Tokens.Tree.stemLineMaxPx) / s
-            for (t in twigPaths) if (t != null) g.stroke(t)
+            for (b in twigPaths.indices) {
+                val t = twigPaths[b] ?: continue
+                g.strokeStyle = twigCss[b]
+                g.stroke(t)
+            }
         }
         if (level >= LEVEL_BRANCH) paintLeaves(g, s, k, ox, oy, ww, wh, level, branch, leafBucket)
     }
@@ -272,6 +348,14 @@ class VectorRenderer(
                 g.strokeStyle = upNextCss
                 g.lineWidth = lineLocal
                 g.stroke(lens)
+            } else if (leafDone[i]) {
+                val idx = AutumnColor.index(leafRest[i])
+                g.fillStyle = lut.fill[nodes.leafDifficulty[i]][idx]
+                g.fill(lens)
+                g.strokeStyle = lut.stroke[idx]
+                g.lineWidth = lineLocal
+                g.stroke(lens)
+                if (leafRest[i] >= Tokens.Autumn.dryAt) g.stroke(dryVeins)
             } else {
                 val diff = nodes.leafDifficulty[i]
                 g.fillStyle = leafFillCss[diff]
@@ -329,7 +413,7 @@ class VectorRenderer(
         backdrop.draw(g, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
         val step = (splitProgress(cam.z) * Tokens.Zoom.splitSteps).roundToInt()
         canopy.draw(g, cam.z, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
-        wood.draw(g, cam, s, dpr, step, level, branchIdx, leafAlphaBucket(cam.z), crisp)
+        wood.draw(g, cam, s, dpr, step, level, branchIdx, leafAlphaBucket(cam.z), progressVersion, crisp)
         g.setTransform(dpr, 0.0, 0.0, dpr, 0.0, 0.0)
 
         val hovered = hover
