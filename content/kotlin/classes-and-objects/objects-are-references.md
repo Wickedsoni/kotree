@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (checked 21 Oct 2026): https://kotlinlang.org/docs/functions.html (Parameters: read-only parameters; "the compiler passes a copy of the reference to that object") ; https://kotlinlang.org/docs/equality.html (referential equality: "two references pointing to the same object", "memory addresses") ; https://kotlinlang.org/docs/data-classes.html (copy() makes a shallow copy; references to other objects are shared) ; https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html ; https://developer.android.com/develop/ui/compose/state (caution on mutable objects as state). Code was hand-traced twice, not compiled (no shell). -->
+<!-- SOURCES (checked 21 Oct 2026): https://kotlinlang.org/docs/functions.html (Parameters: read-only parameters; "the compiler passes a copy of the reference to that object") ; https://kotlinlang.org/docs/equality.html (referential equality: "two references pointing to the same object", "memory addresses") ; https://kotlinlang.org/docs/data-classes.html (copy() makes a shallow copy; references to other objects are shared) ; https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html ; https://developer.android.com/develop/ui/compose/state (caution on mutable objects as state).-->
 
 ## The question
 
@@ -25,13 +25,13 @@ A settings screen has a Cancel button. Before the user edits anything, the progr
 
 Think of flats and keys.
 
-- A flat is one object. It exists once, at one street address.
-- The sofa inside is one of its properties. It can be repainted.
-- A key is a variable. It is not the flat. It only lets you reach one flat.
+- A flat is one **object**, a thing the program makes once in memory. It exists once, at one street address.
+- The sofa inside is one of its **properties**, a named value stored inside the object. It can be repainted.
+- A key is a **variable**, a name that holds a reference. It is not the flat. It only lets you reach one flat.
 - Cutting a spare key is assigning one variable to another. The flat does not get copied.
-- Asking a builder for a new flat is calling a constructor. Now there are two flats.
+- Asking a builder for a new flat is calling a **constructor**, the code that makes a new object. Now there are two flats.
 - Handing your key to a friend who does a job for you is passing an object to a function. The friend gets a spare key of their own.
-- A key marked "fixed" can never be swapped for a key to another flat. That is a read-only variable.
+- A key marked "fixed" can never be swapped for a key to another flat. That is a read-only variable, declared with `val`.
 
 **Where the analogy stops:** A real key is a thing you can see, and it costs time and money to cut. In code, a key costs nothing to copy, and you never see the street address. Also, nothing in code stops you from holding a hundred spare keys by accident.
 
@@ -59,11 +59,11 @@ Later, Ben throws his spare key away and gets a key to a different flat. He pain
 
 Ben has a spare copy of Ana's key and repaints the sofa blue. What does Ana find when she opens her door? Here are three ideas.
 
-- A. A red sofa, because Ben's key opens his own copy of the flat.
-- B. A blue sofa, because there is one flat and two keys.
+- A. A blue sofa, because there is one flat and two keys.
+- B. A red sofa, because Ben's key opens his own copy of the flat.
 - C. A locked door, because two keys cannot work at once.
 
-Idea A feels right if you picture photocopying a paper. A key is not a paper copy of the flat. It is a way to get in. Idea C has no source: keys do not block each other. Idea B is the answer.
+Idea B feels right if you picture photocopying a paper. A key is not a paper copy of the flat. It is a way to get in. Idea C has no source: keys do not block each other. Idea A is the answer.
 
 Now Ben swaps his key for a key to a different flat and repaints that sofa. Does Ana's sofa change?
 
@@ -85,7 +85,7 @@ Idea A feels natural because the key came from Ana. But Ben's old key is gone. I
 
 ### Name it
 
-A variable that holds an object really holds a **reference**, which is a way to reach the object and not the object itself. The Kotlin documentation talks about "two references pointing to the same object". Writing `val b = a` copies the reference, so `a` and `b` reach the same object.
+A variable that holds an object really holds a **reference**, which is a way to reach the object and not the object itself. A variable declared with `var` can be pointed at another object later. One declared with `val` cannot. The Kotlin documentation talks about "two references pointing to the same object". Writing `val b = a` copies the reference, so `a` and `b` reach the same object.
 
 Here is the spare-key case.
 
@@ -162,7 +162,7 @@ It prints `red`, then `red`, then `blue`. At first `b` is a spare key to the fla
 type: predict
 run: false
 id: spare-key-and-second-flat
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Flat(var sofa: String)
 
@@ -192,7 +192,7 @@ output: |
 type: predict
 run: false
 id: swap-the-key-then-repaint
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Flat(var sofa: String)
 
@@ -223,7 +223,7 @@ output: |
 type: predict
 run: false
 id: backup-is-the-same-flat
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Settings(var theme: String)
 
@@ -264,13 +264,13 @@ output: |
 - **Treating `val b = a` as a copy.** It reads like "make b from a". It cuts a spare key and builds no flat. If you need an independent object, call the constructor and pass in the values.
 - **Thinking `val` freezes the object.** The word sounds like "locked". It only fixes which flat the variable reaches. The properties behind it can still change if they are `var`.
 - **Expecting a function to swap your variable.** Your friend holds a spare of your key, so it feels like they hold the real one. The documentation says parameters are read-only, so Kotlin refuses. My own reasoning: return the new object and store it in your own variable.
-- **Thinking a hand-made copy copies everything.** If the flat holds keys to other objects, the new flat gets spares of those keys, so those objects are still shared. The documentation says the same of a data class `copy()`: it makes a shallow copy and references to other objects are shared. A data class is a class made for holding data (general knowledge).
+- **Thinking a hand-made copy copies everything.** It feels right because the new flat looks complete. But if the flat holds keys to other objects, the new flat gets spares of those keys, so those objects are still shared. The documentation says the same of a data class `copy()`: it makes a shallow copy (a copy of the outer object only, which still shares what it points to), and references to other objects are shared. A data class is a class made for holding data (general knowledge). What to do instead: copy the inner objects too, or build them fresh.
 
 ## Where this shows up in Android
 
-Picture a screen that shows a list of items. The code keeps the list in Compose state, and then adds an item to that same list. The screen does not change, or it shows old items. This lesson explains why: the flat was repainted, but no one told the screen.
+Picture a screen that shows a list of items. The code keeps the list in Compose **state** (the values the screen shows and reacts to), and then adds an item to that same list. The screen does not change, or it shows old items. This lesson explains why: the flat was repainted, but no one told the screen.
 
-**Jetpack Compose** is the Android toolkit for describing screens in Kotlin code (general knowledge). The Android Compose state page has a caution. It says that using mutable objects such as `ArrayList<T>` or `mutableListOf()` as state in Compose causes users to see incorrect or stale data. It says Compose does not observe those objects, so a change to them does not trigger a redraw of the screen. It recommends an observable data holder such as `State<List<T>>` with an immutable `listOf()`.
+**Jetpack Compose** is the Android toolkit for describing screens in Kotlin code (general knowledge). The Android Compose state page has a caution. It says that using **mutable** objects (objects that can be changed in place), such as `ArrayList<T>` or `mutableListOf()`, as state in Compose causes users to see incorrect or stale data. It says Compose does not observe those objects, so a change to them does not trigger a **redraw** (drawing the screen again). It recommends an **observable data holder** (a container that Compose watches for changes) such as `State<List<T>>` with an **immutable** (cannot be changed) `listOf()`.
 
 The link to this lesson is my own reasoning: when the list is changed in place, every key still reaches the same list, so nothing visible about the key has changed.
 
@@ -282,11 +282,11 @@ It copies the reference, not the object. Both variables now reach the same objec
 **If you pass an object to a function and the function changes one of its properties, does the caller see it?**
 Yes. The Kotlin functions page says the compiler passes a copy of the reference, and the copy points to the same object. So the function can change the object's state. The page also says parameters are read-only, so the function cannot point the caller's variable at a different object.
 
-**Why can two variables point at the same instance, and how do you get an independent copy?**
-Handing out a reference is cheap, and it lets two parts of a program share one thing (my own reasoning). The cost is that a change made by one part is seen by the other. For an independent copy, build a new object, for example with the constructor. For a data class, `copy()` does it, but the documentation says the copy is shallow: references to other objects inside are shared.
+**Why can two variables point at the same object, and how do you get an independent copy?**
+Handing out a reference is cheap, and it lets two parts of a program share one thing (my own reasoning). The cost is that a change made by one part is seen by the other. For an independent copy, build a new object, for example with the constructor. For a data class, `copy()` does it, but the documentation says the copy is shallow (a copy of the outer object only): references to other objects inside are shared.
 
 **What can go wrong when several coroutines share one mutable object?**
-A coroutine is a task that can run alongside other tasks (general knowledge). The Kotlin documentation says coroutines can run in parallel and that the main problem is synchronising access to shared mutable state. It lists thread-safe data structures, keeping all access on one thread, and a mutex. My own reasoning: another way out is to give each task its own copy, or to share an object that nobody changes, so there is nothing to fight over.
+A **coroutine** is a task that can run alongside other tasks (general knowledge). The Kotlin documentation says coroutines can run in parallel and that the main problem is synchronising access to **shared mutable state** (one changeable object that several tasks use). It lists **thread-safe** data structures (safe when several threads use them at once), keeping all access on one thread, and a **mutex** (a lock so only one task at a time can change the data). My own reasoning: another way out is to give each task its own copy, or to share an object that nobody changes, so there is nothing to fight over.
 
 ## Recap
 

@@ -80,3 +80,11 @@ FIX list (re-check):
 1. two-kinds-of-equality.md, line 81. `Any` and "inherits" are used without a definition (original FIX 3). Mechanical (`fixer`).
 
 VERDICT (re-check, final): FIX (one mechanical item above)
+
+## Fixes applied
+
+- Re-check FIX 1: `Any` and "inherits" defined inline in two-kinds-of-equality.md (line 81).
+- Roadmap sim mismatch for `two-kinds-of-equality` (`twins-or-one-person`) logged in docs/NEEDS-ME.md item 3 for curriculum-designer.
+- Check: `./gradlew :site:validateContent` ok.
+
+VERDICT (re-check, final): PASS for all 2 leaves (two-kinds-of-equality, data-classes). validateContent ok.

@@ -49,3 +49,16 @@ Passes: frontmatter keys and order match `docs/00` 8.2 and the roadmap row (titl
 VERDICT: FIX
 
 VERDICT (re-check, final): FIX (items 1 to 7 above; 1 to 5 are mechanical, 6 and 7 need the owner/orchestrator)
+
+## Fixes applied
+
+- FIX 1: three challenge blocks set to `verified: kotlin-2.4.21`.
+- FIX 2: deleted the "hand-traced twice, not compiled" sentence from the SOURCES comment.
+- FIX 3: bold plain definitions added for object, property, variable, constructor, val/var, reference, shallow copy, Compose state, mutable, immutable, observable data holder, redraw, coroutine, shared mutable state, thread-safe, mutex. "instance" reworded to "object".
+- FIX 4: Common mistakes 4 now has "why it feels right" and "what to do instead".
+- FIX 5: Guess question 1 options reordered (correct answer is now A); matching sentence updated.
+- FIX 6: not applied (roadmap). Logged in docs/NEEDS-ME.md item 3.
+- FIX 7: not applied (sim not built; scheduling).
+- Check: `./gradlew :site:validateContent` ok.
+
+VERDICT (re-check, final): PASS for objects-are-references. validateContent ok; sim specs deferred.

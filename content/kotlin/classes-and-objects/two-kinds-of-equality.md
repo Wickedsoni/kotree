@@ -78,7 +78,7 @@ The "same person?" question is **referential equality**, written `===`. It is tr
 
 The "alike?" question is **structural equality**, written `==`. Its opposite is `!=`. The documentation says `a == b` is translated to `a?.equals(b) ?: (b === null)`. In words, that is step 6: if `a` is not null, ask `a`'s **equals** function, which is the clerk. If `a` is null, check that `b` is null too.
 
-The documentation says every class inherits `equals` from `Any`, and by default it implements referential equality. It also says a class that is not a data class does not change this unless its author writes a rule. Two special kinds of class, which the page calls data classes and value classes, get a rule written for them automatically. How you write your own rule is not covered here, because it needs the word `override`.
+The documentation says every class inherits (gets automatically from a parent) `equals` from `Any` (the built-in top class that all Kotlin classes extend), and by default it implements referential equality. It also says a class that is not a data class does not change this unless its author writes a rule. Two special kinds of class, which the page calls data classes and value classes, get a rule written for them automatically. How you write your own rule is not covered here, because it needs the word `override`.
 
 This program uses a plain class with no rule.
 
