@@ -98,7 +98,7 @@ try:
     done: [ pour-plain, pour-slip ]
   - text: Press "Fill small cup to its mark", then "Add one drop to the small cup".
     done: [ fill, drop-small ]
-  - text: Fill the small cup again and pour it into the jug with an order slip. Then add one drop to the jug and read how much room is left.
+  - text: Fill the small cup again and pour it into the jug with an order slip. Then add one drop to the jug and read what the jug holds now and where its top mark is.
     done: [ fill, pour-slip, drop-jug ]
 ```
 

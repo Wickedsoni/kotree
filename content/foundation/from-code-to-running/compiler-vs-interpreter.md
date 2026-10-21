@@ -27,7 +27,7 @@ Think of a book in a language you cannot read, and two ways to hear it in your o
 - The print-shop translator reads the whole book first and prints a full copy in your language. After that you can read the copy as often as you like, and the translator is not needed.
 - The live speaker sits beside you. The speaker reads one sentence from the book and says it in your language at once, then reads the next. The speaker has to be there every time you want to hear the book.
 - You are the one who does what each sentence says.
-- A typo on page 3 is a sentence that breaks the rules of the language.
+- A typo in sentence 3 is a sentence that breaks the rules of the language.
 
 **Where the analogy stops:** Real tools are not always one or the other. Many programs are translated in two stages: a print shop makes a copy, and then a live speaker reads that copy. Also, a live speaker in real life is slow, but a real interpreter is a program and can be fast, so do not read "live" as "slow".
 

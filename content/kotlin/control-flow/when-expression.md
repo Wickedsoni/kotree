@@ -142,9 +142,9 @@ try:
 
 ### Notice
 
-The office has these chutes from the top: "1", "2", "3 or 4", "5 to 9", and the bin "everything else".
+The office has these chutes from the top: "1", "3 or 4", "5 to 9", "7 to 12", and the bin "everything else".
 
-- Letter 4 passes "1", then "2", then lands in "3 or 4". It never meets the chutes below.
+- Letter 4 passes "1", then lands in "3 or 4". It never meets the chutes below.
 - Letter 20 passes every label and lands in the bin.
 
 Each letter ends in exactly one place.

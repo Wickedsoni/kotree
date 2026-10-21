@@ -89,7 +89,7 @@ try:
     done: [ quiet-hour, cook-ahead ]
 ```
 
-**What you should notice:** The phone's own cooks carry out the compact cards, and the toggle only changes when the quick-prep sheets are made.
+**What you should notice:** The phone's own cooks carry out the compact cards, and the choice of side only changes when the quick-prep sheets are made.
 
 ## Build the logic
 

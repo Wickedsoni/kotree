@@ -55,7 +55,7 @@ actions:
     label: Select the busy window
     do:
       - set: { c1: 50, c2: 240, c3: 90, c4: 20, window: 1.8 s to 2.2 s }
-      - say: The window 1.8 s to 2.2 s is selected, where the CPU usage row spikes. The table shows decodeImage using 240 of the 400 ms.
+      - say: The window 1.8 s to 2.2 s is selected, where a CPU usage row would spike. The bars show decodeImage using 240 of the 400 ms.
   - id: quiet
     label: Select the quiet window
     do:
@@ -86,7 +86,7 @@ try:
     optional: true
 ```
 
-**What you should notice:** Every row lines up on one clock, and each row or chart answers a different question.
+**What you should notice:** The busy window and the quiet window split the same 400 ms very differently, and each question is answered by a different row or chart.
 
 ## Build the logic
 

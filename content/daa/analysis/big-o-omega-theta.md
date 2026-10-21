@@ -36,7 +36,7 @@ Think of promises about a car trip. A trip of d km takes 3 minutes per km, plus 
 id: ceiling-and-floor-band
 template: chart
 title: A ceiling line and a floor line around 3n + 2
-intro: The code takes 3n + 2 steps. A ceiling line 4n and a floor line 3n of the same shape n are drawn, and so are a ceiling band and a floor band you can test from a starting point n0.
+intro: The code takes 3n + 2 steps. The plot shows the code, a floor line 3n, a ceiling line 4n and a floor line 0.1 times n squared. You can test the ceiling and the n squared floor from a starting point n0.
 axes: { x: n (the size of the input), y: Steps }
 curves:
   - { id: code, label: The code (3n + 2 steps), f: { poly: [2, 3, 0] } }
@@ -64,7 +64,7 @@ try:
     done: [ n=40 ]
 ```
 
-**What you should notice:** With the shape n, a floor and a ceiling can both hold. With the shape n², the ceiling holds and the floor fails, and a ceiling below the curve fails once n is large.
+**What you should notice:** With the shape n, the floor 3n and the ceiling 4n both hold, and the ceiling 4n holds only from n0 = 2, because it fails at n = 1. With the shape n², the floor 0.1 times n squared fails once n reaches 31.
 
 ## Build the logic
 

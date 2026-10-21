@@ -42,7 +42,7 @@ The ball does not look at both paths. It reads the sign, the gate swings, and th
 id: fork-and-gate
 template: flow
 title: A ball, a fork and a gate
-intro: The ball waits at the fork. The temperature is {temp}. Only one sign is on the fork, and it asks "above 25?".
+intro: The ball waits at the fork. The temperature starts at 20. Only one sign is on the fork, and it asks "above 25?".
 stations:
   - { id: fork, label: "Fork: the sign reads the temperature" }
   - { id: hot, label: "Hot path: prints Hot" }

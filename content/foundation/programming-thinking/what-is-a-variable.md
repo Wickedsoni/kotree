@@ -166,7 +166,7 @@ fun main() {
 }
 ```
 
-Trace it like the sim. The first `println` prints `0`. After `score = 5`, the old ball is gone and the next `println` prints `5`. In `score = score + 1`, Kotlin reads the 5, works out 6, and stores it. The last `println` prints `6`.
+Trace it the same way as the sim, one line at a time. This program is a different one from the sim's. The first `println` prints `0`. After `score = 5`, the old ball is gone and the next `println` prints `5`. In `score = score + 1`, Kotlin reads the 5, works out 6, and stores it. The last `println` prints `6`.
 
 The keyword `val` makes a jar that accepts one ball only. The Kotlin documentation says a `val` is assigned a value only once and cannot be reassigned. Kotlin refuses to run this program.
 

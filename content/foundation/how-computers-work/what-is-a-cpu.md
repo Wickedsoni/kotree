@@ -113,7 +113,7 @@ try:
     optional: true
 ```
 
-**What you should notice:** The finger moves one line per ring, only a "go back" line sends it up, and with no ring it stays put.
+**What you should notice:** The finger moves one line per ring, only a "go back" line sends it up, and with no ring it stays put. In the animation the go-back line is line 4. The cards in the questions below put it on line 3, and the idea is the same.
 
 ## Build the logic
 

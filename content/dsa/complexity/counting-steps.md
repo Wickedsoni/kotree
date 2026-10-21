@@ -62,7 +62,7 @@ try:
     done: [ houses=500, count, houses=1000, count ]
 ```
 
-**What you should notice:** The bar for a single walk grows in step with the houses, and the bar for a walk inside a walk grows much faster.
+**What you should notice:** The line for a single walk grows in step with the houses, and the line for a walk inside a walk grows much faster.
 
 ## Build the logic
 

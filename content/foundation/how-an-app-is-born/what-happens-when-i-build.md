@@ -112,8 +112,8 @@ try:
     done: [ next, next, next, next, next ]
   - text: "Switch off \"Stamp station\". The sim replays the line without it, and the box reaches the phone with no stamp."
     done: [ "stamper=off" ]
-  - text: "Switch the stamp station back on, switch off \"Mixing station\" and press \"Move the box on\". Later stations have nothing to work on."
-    done: [ "stamper=on", "mixer=off", next ]
+  - text: "Now also switch off \"Mixing station\" and press \"Move the box on\". Later stations have nothing to work on."
+    done: [ "mixer=off", next ]
 ```
 
 **What you should notice:** Without the stamp, the box reaches the phone unstamped. Without the mixing station, the later stations have nothing to work on.

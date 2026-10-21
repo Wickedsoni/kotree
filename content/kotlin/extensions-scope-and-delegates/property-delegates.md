@@ -92,7 +92,7 @@ try:
     optional: true
 ```
 
-**What you should notice:** One brew happens at the first press, and the count stays at 1 after that. No brew happens with no press. The tick-box moves the brew to slot 1 whether or not anyone presses.
+**What you should notice:** One brew happens at the first press, and the count stays at 1 after that. No brew happens with no press. The switch moves the brew to opening time, whether or not anyone presses.
 
 ## Build the logic
 
