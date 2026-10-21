@@ -25,21 +25,21 @@ class GeometryTest {
 
     @Test
     fun limbHashIsPinned() {
-        assertEquals("cecb906380417dd8", limbHash(generate(treeData, seed)))
+        assertEquals("69892f0589a95532", limbHash(generate(treeData, seed)))
     }
 
     @Test
     fun fullHashIsPinned() {
-        assertEquals("c9399b38f0f393cf", fullHash(generate(treeData, seed)))
+        assertEquals("e855f6794973cef2", fullHash(generate(treeData, seed)))
     }
 
     // Baseline measured on 21 Oct 2026 (JVM run of the same pure code): the report does NOT pass today.
     // WP0 pins it as a ratchet (failures must not grow; slack covers float noise on JS). WP2 must reach strict PASS.
     @Test
-    fun layoutReportDoesNotRegressAt1280x800() = assertNoWorse(1280, 800, baseline = 31)
+    fun layoutReportDoesNotRegressAt1280x800() = assertNoWorse(1280, 800, baseline = 12)
 
     @Test
-    fun layoutReportDoesNotRegressAt1440x900() = assertNoWorse(1440, 900, baseline = 28)
+    fun layoutReportDoesNotRegressAt1440x900() = assertNoWorse(1440, 900, baseline = 11)
 
     private fun assertNoWorse(w: Int, h: Int, baseline: Int) {
         val g = generate(treeData, seed)
@@ -53,6 +53,6 @@ class GeometryTest {
     }
 
     private companion object {
-        const val SLACK = 3
+        const val SLACK = 0 // WP2 tuned: 12/11 failures remain, see NEXT-STEPS
     }
 }

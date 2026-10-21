@@ -88,7 +88,7 @@ object Tokens {
         const val stemFitMargin = 0.12
         const val stemFitMinZ = 8.0
         /** Branches whose stem labels need more than the default landing z of 4 to clear each other (docs/14 §5). */
-        val branchLandingZ: Map<String, Double> = mapOf("ui" to 6.0)
+        val branchLandingZ: Map<String, Double> = mapOf("ui" to 6.0, "concurrency" to 5.0, "dsa" to 5.0, "networking" to 5.0, "native-ndk" to 5.0)
     }
 
     /** layoutReport estimates (docs/14 §5, docs/03 §2.6). */
@@ -116,12 +116,12 @@ object Tokens {
         const val BOUGH_TIP_WIDTH = 8
         const val BRANCH_WIDTH = 8
         const val BRANCH_TIP_WIDTH = 4
-        const val BOUGH_LEN = 420.000
+        const val BOUGH_LEN = 420.0
         const val BOUGH_LEN_JITTER = 30.0
-        const val BOUGH_SPREAD_DEG = 64.000
+        const val BOUGH_SPREAD_DEG = 66.0
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 440.000
+        const val BRANCH_SPREAD = 460.0
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0
@@ -148,7 +148,7 @@ object Tokens {
         const val STEM_LEN = 104.000
         const val STEM_LEN_JITTER = 6.0
         /** Extra twig length for every second same-side stem, so neighbouring labels stack. */
-        const val STEM_LEN_STAGGER = 40.000
+        const val STEM_LEN_STAGGER = 52.0
         /** Twig angle off the limb tangent, degrees, plus jitter. */
         const val STEM_ANGLE_DEG = 55.0
         const val STEM_ANGLE_JITTER_DEG = 8.0
