@@ -1,21 +1,20 @@
 ---
 id: kotlin/interfaces-and-inheritance/what-is-an-interface
 title: How can different classes promise the same ability?
-status: shadow
+status: live
 difficulty: medium
 order: 45
 requires: [kotlin/classes-and-objects/member-functions]
 summary: An interface is a list of promises. Any class that keeps them all can be used wherever that list is asked for.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/interfaces.html ; https://developer.android.com/reference/android/view/View.OnClickListener ; https://developer.android.com/develop/ui/views/touch-and-input/input-events -->
 ## The question
 
 A phone charger fits the wall socket in your room, and so does a lamp, a fan and a laptop. The people who made them never met. How can one socket work with all of them? And how could a program ask for "anything that can do this job" without caring who made it?

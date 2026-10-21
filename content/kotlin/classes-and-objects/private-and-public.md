@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/private-and-public
 title: Why hide some parts of a class with private?
-status: shadow
+status: live
 difficulty: easy
 order: 39
 requires: [kotlin/classes-and-objects/member-functions]
 summary: Private keeps a property or function usable only inside its own class. See how that stops outside code breaking the class's rules.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/visibility-modifiers.html ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
 ## The question
 
 A shop keeps its cash in a drawer behind the counter. Customers can ask for change or pay a bill, but they cannot open the drawer and take notes out. Why does the shop do it that way? And how could a program give its data the same protection?

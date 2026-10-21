@@ -1,21 +1,20 @@
 ---
 id: kotlin/classes-and-objects/member-functions
 title: How does an object do things with its own data?
-status: shadow
+status: live
 difficulty: easy
 order: 38
 requires: [kotlin/classes-and-objects/constructors]
 summary: A function written inside a class works on the one object you call it on. See why two objects never mix up their data.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/functions.html#member-functions ; https://kotlinlang.org/docs/classes.html ; https://kotlinlang.org/docs/this-expressions.html ; https://developer.android.com/guide/components/activities/activity-lifecycle -->
 ## The question
 
 A bank keeps two passbooks, one for Ada and one for Ben. A customer says, "Add 50 to Ada's book." Only Ada's total should grow, and Ben's must stay the same. The steps for adding money are written once. How does one set of steps know which book to change?

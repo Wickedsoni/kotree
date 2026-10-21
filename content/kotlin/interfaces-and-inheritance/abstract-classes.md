@@ -1,21 +1,21 @@
 ---
 id: kotlin/interfaces-and-inheritance/abstract-classes
 title: When should I use an abstract class instead of an interface?
-status: shadow
+status: live
 difficulty: medium
 order: 47
 requires: [kotlin/interfaces-and-inheritance/open-and-override]
 summary: An abstract class is a half-finished class that cannot be made on its own. Learn when it fits better than an interface.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/classes.html#abstract-classes ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/inheritance.html ; https://developer.android.com/reference/androidx/lifecycle/ViewModel ; https://developer.android.com/topic/architecture/ui-layer/state-production -->## The question
+## The question
 
 You are building ten different houses. All ten need the same walls, the same wiring and the same front door. Only the rooms inside differ. Would you draw the walls ten times? And what if the town also has a rule book that lists what every house must have, but builds nothing?
 

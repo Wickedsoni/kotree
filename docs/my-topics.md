@@ -130,8 +130,8 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 - [x] How do I bundle data and the actions on it into one thing? (easy)
 - [x] How does a new object get its starting values? (easy)
-- - How does an object do things with its own data? (easy)
-- - Why hide some parts of a class with private? (easy)
+- [x] How does an object do things with its own data? (easy)
+- [x] Why hide some parts of a class with private? (easy)
 - - How can a property run code when it is read or written? (medium)
 - - Why does changing one variable change another? (hard)
 - - When are two objects equal in Kotlin? (medium)
@@ -140,9 +140,9 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Interfaces and Inheritance** (4)
 
-- - How can different classes promise the same ability? (medium)
-- - How does one class build on another class? (medium)
-- - When should I use an abstract class instead of an interface? (medium)
+- [x] How can different classes promise the same ability? (medium)
+- [x] How does one class build on another class? (medium)
+- [x] When should I use an abstract class instead of an interface? (medium)
 - - How can one variable safely hold many kinds of objects? (hard)
 
 **Special Classes** (5)

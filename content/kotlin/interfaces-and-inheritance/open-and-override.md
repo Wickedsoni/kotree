@@ -1,21 +1,20 @@
 ---
 id: kotlin/interfaces-and-inheritance/open-and-override
 title: How does one class build on another class?
-status: shadow
+status: live
 difficulty: medium
 order: 46
 requires: [kotlin/interfaces-and-inheritance/what-is-an-interface]
 summary: A class must be marked open before another class can build on it. See how override changes a step and super keeps the original.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/inheritance.html ; https://developer.android.com/guide/components/activities/activity-lifecycle -->
 ## The question
 
 Your gran has a family soup recipe. Your cousin wants the same soup with pepper added. Can he start from gran's recipe and change one step, or must he write the whole recipe again? And what if gran's book is locked so that nobody may change it?
