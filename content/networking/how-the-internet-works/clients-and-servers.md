@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 1
 requires: []
-summary: In an app, one computer asks for data and another answers. Your phone asks, a server answers, and the server never starts the talk.
+summary: When an app loads data, the app asks and a server answers. See who does what, and what you see when nobody answers.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,43 +15,43 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: Assumes foundation/how-computers-work/what-does-a-computer-do (draft exists, not live). Checked 21 Oct 2026: developer.android.com/training/basics/network-ops/connecting says INTERNET and ACCESS_NETWORK_STATE are normal permissions, granted at install time, not requested at runtime; and that Android throws NetworkOnMainThreadException if you do network work on the main thread. Left out on purpose: how chat messages and push alerts "arrive by themselves" (needs the push-notification docs and a later leaf). The roadmap P item with four situations was cut to three clear ones for the same reason. The claim that an app that never decides to stop waiting keeps its spinner is general logic, not from an official page. Roadmap row says no sim: one still diagram of two boxes and an arrow; that diagram asset does not exist yet. Predict items traced by hand only. The roadmap F item (server function calls client first) was not written because this leaf is playground: false. -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/basics/network-ops/connecting (INTERNET and ACCESS_NETWORK_STATE are normal permissions, granted at install time; network work on the main thread throws NetworkOnMainThreadException; HttpsURLConnection supports configurable timeouts). Interview data: docs/practice/interview-networking.md (its Volley link does not match the topic, so it is not used). General knowledge, not from an Android page: what a client and a server are, and the cloud. No sim: the roadmap row says one diagram of two boxes and an arrow. The roadmap's chat-message and news-alert situations are left out because how an app receives them is a different topic. Predict items are traced by hand. -->
+
 ## The question
 
-You open a weather app. A spinner turns for a second, then today's forecast appears. The forecast was not stored in your phone. It came from somewhere else.
-
-Which computer asked for it, and which computer answered? And what happens to the spinner when nobody answers?
+You open a weather app. A little circle turns for a second, and then today's forecast appears. The forecast was not stored on your phone. Which computer asked for it, and which computer answered? And what happens to the little circle when nobody answers?
 
 ## Mental model
 
 Think of a restaurant.
 
 - You, sitting at the table, are the customer. In the app world, that is your app.
-- The waiter carries your order to the kitchen and brings the food back. That is the network.
-- The kitchen cooks the order and sends the dish out. That is the server.
-- The order is the question you ask. The dish is the answer.
+- The order is the question you ask: "one soup, please".
+- The waiter carries the order to the kitchen and brings the food back. That is the network, the wires and radio links that carry messages between computers.
+- The kitchen cooks and sends the food out. That is the computer that holds the data.
+- The dish is the answer.
 
-You decide to order. The waiter carries it. The kitchen answers. The kitchen never walks to your table on its own and puts food in front of you.
+You decide to order. The waiter carries it. The kitchen answers. The kitchen does not walk to your table on its own and put food in front of you.
 
-**Where the analogy stops:** A restaurant has one kitchen and a handful of tables. A real server answers thousands of customers at the same time, and it may be a computer in a building you will never see. Also, a kitchen can be one room, but "customer" and "kitchen" are jobs, not kinds of machine. One computer can be both, depending on the moment.
+**Where the analogy stops:** A restaurant has one kitchen and a few tables. A real data computer answers thousands of customers at the same moment, and it may sit in a building you will never see. Also, "customer" and "kitchen" are jobs, not kinds of machine. One computer can be the customer in one moment and the kitchen in the next.
 
 ## Build the logic
 
 ### Notice
 
-You pull down on the weather app. The phone sends the words "give me the forecast for my city". A short time later, text and numbers come back. You see them as the forecast.
+You pull down on the weather app. The phone sends the words "give me the forecast for my city". A moment later, text and numbers come back, and you see them as the forecast.
 
-Now stop the kitchen. Pull down again. The phone sends the same words, and nothing comes back. The spinner keeps turning. The customer is still waiting.
+Now close the kitchen. Pull down again. The phone sends the same words, and nothing comes back. The little circle keeps turning. The customer is still waiting.
 
 ### Guess
 
 Who started the conversation?
 
-- A. The server, because it holds the data.
-- B. The phone, because the user wanted something.
-- C. Both at the same time, because the data lives in the cloud.
+- A. The phone, because you wanted something.
+- B. The computer that holds the data, because it has what you want.
+- C. Both at the same time, because the data sits in "the cloud".
 
-Idea A feels right because the server has what you want. But a kitchen with food and no order cooks nothing. Idea C treats "the cloud" as one big space that holds everything. It is not. It is other computers, with an address, that answer when asked. Idea B matches the restaurant.
+Idea B feels right because that computer has the data. But a kitchen with food and no order cooks nothing. Idea C treats "the cloud" as one big space that holds everything. The word is a loose name for computers owned by someone else, and they answer when asked (general knowledge). Idea A matches the restaurant.
 
 ### Build
 
@@ -59,9 +59,9 @@ Idea A feels right because the server has what you want. But a kitchen with food
 2. The network carries the question to a computer that holds the data.
 3. That computer reads the question, finds the answer and writes it down.
 4. The network carries the answer back.
-5. Your app shows it, and the spinner stops.
+5. Your app shows the answer, and the little circle stops.
 
-If step 3 never happens, the app is stuck at step 2 waiting. An app has to decide how long it will wait.
+If step 3 never happens, the app is stuck waiting after step 2. This next part is my own reasoning: so the app needs a rule for how long it will wait before it gives up.
 
 ### Name it
 
@@ -77,7 +77,7 @@ If step 3 never happens, the app is stuck at step 2 waiting. An app has to decid
 | The kitchen | Server | A computer run by the weather company |
 | The dish | Response | The forecast numbers |
 
-One rule to keep: the client starts, the server answers. The kitchen never walks to your table.
+One rule to keep when an app loads data: the client asks first, and the server answers. There is no program to run on this page. It is a picture of who does what.
 
 ## Predict the output
 
@@ -87,23 +87,23 @@ run: false
 id: who-asks-first
 verified: not-run
 code: |
-  Three situations. In each, which side sends the first message?
+  Three situations. In each one, which side sends the first message?
     1. You open a web page in your browser.
     2. You press Upload on a photo.
     3. You pull down to refresh the weather.
-  Pick the answer.
 options:
   - id: a
-    text: "The server sends first in all three"
-    why: "You may have thought the side with the data goes first. A kitchen with no order has nothing to cook. The server waits."
-  - id: b
     text: "The client sends first in all three"
     correct: true
-    why: "In each case you did something and the app wrote an order. The waiter carries it to the kitchen. The kitchen only answers."
+    why: "In each case you did something, and your device wrote an order. The waiter carries it to the kitchen, and the kitchen answers."
+  - id: b
+    text: "The server sends first in all three"
+    why: "You may have thought the side with the data goes first. A kitchen with no order has nothing to cook, so it waits."
   - id: c
     text: "The client in 1 and 3, the server in 2"
-    why: "You may have thought that uploading means the server takes the photo. The server cannot take what nobody sent. Your phone starts by sending the photo."
-output: "The client sends first in all three"
+    why: "You may have thought an upload means the server fetches the photo. The server cannot take what nobody sent. Your phone starts by sending the photo."
+output: |
+  The client sends first in all three
 ```
 
 ```challenge
@@ -119,44 +119,59 @@ code: |
 options:
   - id: a
     text: "The old forecast turns into an error message by itself"
-    why: "You may have expected the phone to know. The phone only knows the kitchen is closed once it hears nothing back, and nothing tells it that. It keeps waiting."
+    why: "You may have expected the phone to know. Nothing arrives to tell it, so from the app's side the answer is only late."
   - id: b
-    text: "The spinner keeps turning until the app gives up waiting"
+    text: "The forecast appears anyway, from a cloud near the phone"
+    why: "You may have pictured the data living close by. It lives on other computers. If they are off, nothing arrives."
+  - id: c
+    text: "The little circle keeps turning until the app gives up waiting"
     correct: true
     why: "The order was sent, but the kitchen is closed. Nobody answers, so the customer keeps waiting until the app decides to stop."
-  - id: c
-    text: "The forecast appears anyway, from the phone's own cloud"
-    why: "You may have pictured data living in a cloud near the phone. It lives on other computers. If they are off, nothing arrives."
-output: "The spinner keeps turning until the app gives up waiting"
+output: |
+  The little circle keeps turning until the app gives up waiting
 ```
 
 ## Tricks to remember
 
-- Client asks. Server answers. In that order, every time.
-- The kitchen never walks to your table.
-- "The cloud" is somebody else's computer that answers when asked.
-- A spinner that never ends means an order was sent and nothing came back.
+- Client asks, server answers, in that order, when an app loads data.
+- The kitchen does not walk to your table.
+- "The cloud" means other people's computers that answer when asked.
+- A circle that never stops turning means an order went out and no dish came back.
 
 ## Common mistakes
 
 - **Thinking the phone is wired straight to the data.** It feels that way because the forecast appears fast. Between your phone and the data there is a network and a server. Ask which of the three, app, network or server, is slow.
 - **Thinking "client" means a phone and "server" means a big machine.** Most examples use a phone and a big computer, so the words stick to them. They are jobs. A laptop can be a client, and a phone could answer requests too.
-- **Thinking messages that arrive by themselves prove the server starts the talk.** A chat message can pop up without you doing anything, so it looks like the kitchen walked to your table. How that works takes a later lesson. For now, keep the rule for loading data: the app asks first.
+- **Thinking a message that pops up by itself proves the server starts every conversation.** A chat message can appear without you touching anything, so it looks like the kitchen walked to your table. This page is about loading data, where your app asks first. Keep that rule for loading data only.
 
 ## Where this shows up in Android
 
-The spinner that never ends is the symptom to look for. An app on Android is a client. It sends a request over the network and waits for a response. If the server is down or the network is cut, the response never comes. An app that does not decide when to stop waiting will leave the spinner on the screen.
+The symptom is the spinner (the little turning circle) that never stops. An Android app is a client. It sends a request over the network and waits for a response. If the server is down or the network is cut, no response comes, and an app that never stops waiting leaves the spinner on the screen. The Android documentation lists configurable timeouts, which are limits on how long the app waits, as a feature of its `HttpsURLConnection` client.
 
-Two facts from the Android documentation fit this picture. First, an app has to declare the INTERNET permission to reach the network. The page calls it a normal permission, which means it is granted when the app is installed and the user is not asked while the app runs. Second, Android does not allow network work on the main thread. It throws a NetworkOnMainThreadException if you try. Both rules come from the same idea: the order has to go out to another computer, and you have to wait for it without freezing the screen.
+Two more facts from the same Android page fit the picture. First, the app lists the `INTERNET` permission in its manifest, the file where an app declares what it needs. The page calls it a normal permission, which means it is granted when the app is installed and the app does not ask the user while it runs. Second, the page says that if you do network work on the main thread, Android throws a `NetworkOnMainThreadException`. The main thread is the part of the app that draws the screen and reacts to taps (general knowledge), so a wait there would freeze the screen. The order has to go out to another computer, and the app must wait for it without freezing.
+
+## Say it in an interview
+
+**When your mobile app requests data, which computer is the client and which is the server?**
+The app on the phone is the client, because it starts the request. The computer that holds the data and answers is the server. Client and server are jobs, not kinds of machine.
+
+**What is the request and response cycle?**
+The client sends a request, which is a question. The server reads it and sends back a response, which is the answer. The network carries both. If no response comes, the client is left waiting, so it needs a limit on how long it waits.
+
+**Why does an app fetch data from a server instead of keeping everything on the phone?**
+This answer is general knowledge and my own reasoning. Data that many users share, such as a forecast, lives in one place so everyone sees the same answer. The phone also has little room. The trade-off is that the app now depends on the network and the server being there.
+
+**What goes wrong if an app assumes the server is always available?**
+The request goes out and no answer returns, so the screen shows a spinner that never ends. The Android documentation says its client supports configurable timeouts, so the app can stop waiting. A saved copy of the last answer on the phone, called a cache, can fill the screen meanwhile (general knowledge). A good answer also says what the user sees while the app waits.
 
 ## Recap
 
-1. A client asks, a server answers, and the server never starts the conversation.
+1. When an app loads data, the client asks and the server answers.
 2. A request goes out, a response comes back, and the network carries both.
 3. A spinner that never stops means a request went out and no response came back.
 
 ## You can now
 
-- Explain client, server, request and response using the restaurant.
-- Say which side starts the conversation in a simple situation, like opening a page or uploading a photo.
+- Say which side sends the first message in a simple situation, such as opening a page or uploading a photo.
 - Predict what the app shows when the server stops answering.
+- Explain why a circle that never stops turning means no response came back.

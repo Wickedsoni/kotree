@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 1
 requires: []
-summary: The operating system shares the phone between apps and keeps them apart. Your code asks it for the screen, the storage and CPU time.
+summary: The operating system shares the phone between apps and keeps them apart. Your code asks it for the screen, storage and CPU time.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,12 +15,11 @@ fruit: false
 upnext: false
 ---
 
-<!-- ⚠️ VERIFY: Foundation leaves foundation/how-computers-work/what-is-an-os and what-is-a-cpu are assumed by the roadmap row but are not drafted yet. Facts checked 21 Oct 2026: source.android.com/docs/security/app-sandbox (each app gets a unique user ID and runs in its own process; the kernel enforces the sandbox), developer.android.com/guide/platform (the foundation of the Android platform is the Linux kernel), developer.android.com/media/optimize/audio-focus (only one app holds audio focus; from Android 12 the system fades out the first app when another requests focus). NOT checked against an official page: "the OS gives each app a turn on the CPU" (general OS theory, no Android page read). No sim: the roadmap row says one still diagram of three bands, motion comes in the next leaf. The diagram asset does not exist yet. Predict items were traced by hand only. -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/guide/platform ("The foundation of the Android platform is the Linux kernel"; from Android 5.0 each app runs in its own process with its own instance of ART). https://developer.android.com/media/optimize/audio-focus (only one app can hold audio focus at a time; from Android 12 the system forces the playing app to fade out when another app requests focus; before Android 12 the system cannot stop an app that keeps playing loudly). The unique user ID per app comes from https://source.android.com/docs/security/app-sandbox, which could not be opened from here; the sentence was read in a search excerpt of that page. General knowledge, not from an Android page: what a process is, CPU time shared in turns, the four resources an OS shares. Interview data: docs/practice/practice-os.md. It says problems: none for this leaf, so there is no Practise on these list. No sim: the roadmap row says one picture of three bands. Predict items are traced by hand. -->
+
 ## The question
 
-You are listening to music. You open a video app and press play. The music fades out and the video takes over the sound. Nobody asked you to pick one.
-
-Your app's code never said "stop the other app". Something else made that call. What is it, and what does it do for every app on the phone?
+You are listening to music. You open a video app and press play. On a recent Android phone, the music fades out and the video takes over the sound. Nobody asked you to pick one, and your app's code never said "stop the other app". So what made that call, and what does it do for every app on the phone?
 
 ## Mental model
 
@@ -29,13 +28,13 @@ Think of an apartment building with a building manager.
 - The building is the phone.
 - The tenants are the apps.
 - The rooms are memory, the places where a tenant keeps things while working.
-- The keys are the right to use the screen, the camera, the speaker or the storage.
-- The electricity is CPU time, the power that lets a tenant do any work at all.
+- The keys are the right to use the screen, the speaker, the camera or the storage.
+- The electricity is CPU time, the power that lets a tenant do any work at all. The CPU is the part of the phone that carries out instructions.
 - The manager is the operating system.
 
 A tenant cannot walk into the electrical room and flip switches. A tenant asks the manager. The manager hands out rooms, keys and electricity so tenants do not fight over them. The manager also makes sure one tenant cannot open another tenant's door.
 
-**Where the analogy stops:** A real manager is a person who walks around and can bend a rule. The operating system is also code. It does not decide by mood, it follows fixed rules. And it does not live in a separate office. Every tenant's request goes through it, thousands of times a second, and you never see it happen.
+**Where the analogy stops:** A real manager is a person who can bend a rule. The operating system is code, and it follows fixed rules. It also does not sit in a separate office. Every tenant's request passes through it, thousands of times a second, and you never see it happen.
 
 ## Build the logic
 
@@ -43,45 +42,45 @@ A tenant cannot walk into the electrical room and flip switches. A tenant asks t
 
 Picture three bands, one on top of the other.
 
-- The top band holds the apps: your app, a music app, a camera app.
-- The middle band holds the operating system.
-- The bottom band holds the hardware: the screen, the speaker, the storage chip and the processor.
+- The top band holds the tenants: your app, a music app, a camera app.
+- The middle band holds the manager.
+- The bottom band holds the building's equipment: the screen, the speaker, the storage chip and the processor.
 
-No app touches the bottom band directly. Everything passes through the middle band.
+No tenant touches the bottom band directly. Everything passes through the middle band.
 
 ### Guess
 
-Your app wants to save a photo and the music app is also saving a file at the same moment. Who should decide who goes first?
+Your app wants to save a photo, and the music app is saving a file at the same moment. Who should decide who goes first?
 
-- A. Each app, by checking whether the other app is busy.
-- B. Whoever started first keeps the storage until it is done.
-- C. One shared helper that every app must ask, so nobody collides.
+- A. Whoever started first keeps the storage until it is done.
+- B. One shared helper that every app must ask, so nobody collides.
+- C. Each app, by checking whether the other app is busy.
 
-Idea A cannot work. Each app is written by a different person who has never met the others. Idea B makes a slow app block everyone. Idea C is the building manager, and it is what phones do.
+Idea C cannot work. Each app is written by a different person who has never met the others. Idea A lets one slow app block everyone. Idea B is the building manager, and it is what phones do.
 
 ### Build
 
-1. Give every app its own private room, so one app cannot read another app's memory.
-2. Put one manager between the apps and the hardware.
-3. Make apps ask the manager for everything shared: the screen, the speaker, the storage.
-4. Let the manager hand out electricity in small turns, so every app gets some CPU time.
+1. Give every tenant its own private room, so one tenant cannot read another tenant's room.
+2. Put one manager between the tenants and the equipment.
+3. Make tenants ask the manager for everything shared: the screen, the speaker, the storage.
+4. Let the manager hand out electricity in small turns, so every tenant gets some.
 
-An app that follows this does less work by itself. It does not need to know what other apps exist.
+A tenant that follows this does less work by itself. It does not need to know which other tenants exist.
 
 ### Name it
 
-- The **operating system**, or **OS**, is the program that shares the hardware between apps and keeps the apps apart.
-- A **process** is one running program with its own private memory. In the building, it is a tenant in their own flat.
-- **CPU time** is the share of the processor an app gets to run on. The OS hands it out in small turns.
+- The **operating system**, or **OS**, is the program that shares the hardware between apps and keeps the apps apart. Hardware means the physical parts of the phone.
+- A **process** is one running program with its own private memory (general knowledge). In the building, it is a tenant in their own room.
+- **CPU time** is the share of the processor an app gets to run on. The OS hands it out in small turns (general knowledge).
 
 | Building | Official name | Phone example |
 |---|---|---|
 | The manager | Operating system | Android |
-| A tenant in their own flat | A process | Your app, running |
+| A tenant in their own room | Process | Your app, running |
 | Electricity | CPU time | Your app gets a turn to run |
 | A key | Permission to use a device | The speaker, the camera |
 
-There is no program to run on this page. This lesson is a picture of who does what.
+There is no program to run on this page. It is a picture of who does what.
 
 ## Predict the output
 
@@ -93,22 +92,23 @@ verified: not-run
 code: |
   Four jobs. Who does each one, the OS or your code?
     1. Decide which app gets the next turn on the CPU.
-    2. Turn a photo into a list of pixels to show.
-    3. Stop your app from reading another app's memory.
-    4. Run the lambda you wrote inside your app.
-  Which list is correct for jobs 1, 3 and 4?
+    2. Stop your app from reading another app's memory.
+    3. Run the lambda (a small block of code) that you wrote inside your app.
+    4. Decide what text your own screen should show.
+  Which list is correct?
 options:
   - id: a
-    text: "1 is the OS, 3 is the OS, 4 is your code"
-    correct: true
-    why: "The manager hands out electricity and keeps flats apart. The work a tenant does inside their own flat, like running your lambda, belongs to the tenant."
+    text: "1 is your code, 2 is the OS, 3 is your code, 4 is your code"
+    why: "You may have thought each app picks its own turn. If apps picked their own turns, any app could keep the electricity for ever. The manager picks."
   - id: b
-    text: "1 is your code, 3 is the OS, 4 is your code"
-    why: "You may have thought each app picks its own turn. If apps picked their own turns, any app could keep the electricity forever. The manager picks."
+    text: "1 is the OS, 2 is the OS, 3 is your code, 4 is your code"
+    correct: true
+    why: "The manager hands out electricity and keeps rooms apart. The work a tenant does inside their own room, like running your lambda or choosing your text, belongs to the tenant."
   - id: c
-    text: "1 is the OS, 3 is your code, 4 is the OS"
-    why: "You may have thought apps guard their own memory. A tenant cannot lock a door that the manager controls. The OS keeps the flats apart."
-output: "1 is the OS, 3 is the OS, 4 is your code"
+    text: "1 is the OS, 2 is your code, 3 is the OS, 4 is your code"
+    why: "You may have thought apps guard their own memory. A tenant cannot lock a door that the manager controls. The OS keeps the rooms apart."
+output: |
+  1 is the OS, 2 is the OS, 3 is your code, 4 is your code
 ```
 
 ```challenge
@@ -122,46 +122,61 @@ code: |
   What happens?
 options:
   - id: a
-    text: "Nothing changes, each app waits politely"
-    why: "You may have trusted every app to wait. Apps are written by strangers, so nothing makes them wait. Without a manager, nobody sits between them."
-  - id: b
-    text: "Both write to the speaker at once and nobody controls the mix"
+    text: "Both send sound to the speaker at once, and nothing decides how they mix"
     correct: true
     why: "Without the manager nobody hands out the key. Two tenants use the same room at the same time and get in each other's way."
+  - id: b
+    text: "Each app waits its turn politely"
+    why: "You may have trusted every app to wait. Apps are written by strangers, so nothing makes them wait when no manager sits between them."
   - id: c
     text: "The phone refuses to start"
-    why: "You may have expected a clean stop. The hardware has no rules of its own about sharing. Missing rules usually show up as a mess, not as a refusal."
-output: "Both write to the speaker at once and nobody controls the mix"
+    why: "You may have expected a clean stop. Missing sharing rules usually show up as a mess, not as a refusal."
+output: |
+  Both send sound to the speaker at once, and nothing decides how they mix
 ```
 
 ## Tricks to remember
 
-- Apps ask. The OS decides. The hardware obeys.
-- Three bands, top to bottom: apps, OS, hardware. Nothing skips the middle band.
+- Apps ask, the OS decides, the hardware obeys.
+- Three bands from top to bottom: apps, OS, hardware. Nothing skips the middle band.
 - Rooms, keys, electricity: memory, permission, CPU time.
 
 ## Common mistakes
 
-- **Thinking the app talks to the screen or the camera by itself.** It feels true because your code looks like it draws a button. Your code asks, and the OS does the drawing work with the hardware.
-- **Thinking the OS is the same thing as the hardware.** The phone feels like one object. The OS is a program that runs on the hardware, like your app, which is a program that runs on the OS.
-- **Thinking the OS is always strict.** Some sharing rules rely on apps behaving. Audio focus on older Android versions is one example, and the next section says how it changed.
+- **Thinking the app talks to the screen or the camera by itself.** It feels true because your code looks like it draws a button. Your code asks, and the OS works with the hardware.
+- **Thinking the OS is the same thing as the hardware.** The phone feels like one object. The OS is a program that runs on the hardware, as your app is a program that runs on the OS.
+- **Thinking the OS always forces apps to behave.** Some sharing depends on apps cooperating. Audio on older Android versions is one case, and the Android section below says how it changed.
 
 ## Where this shows up in Android
 
-Go back to the music and the video app. Android uses the Linux kernel as the foundation of the platform, and the kernel is the part of the OS that sits right on top of the hardware. Android also gives each app its own user ID and its own process, so one app cannot reach into another app's memory. That is the private flat.
+Go back to the music and the video app. The Android documentation says the foundation of the platform is the Linux kernel, which is the core part of the OS that sits right on top of the hardware. It also says that from Android 5.0 each app runs in its own process. The Android security documentation adds that every app gets its own user ID, which is a number the system uses to tell apps apart. That is the private room.
 
-For sound, Android has a rule called audio focus. The Android documentation says only one app can hold audio focus at a time. On Android 11 and lower, the system could not force an app to stop. It depended on the app obeying. From Android 12, the documentation says the system forces the first app's audio to fade out when another app asks for focus.
+For sound, Android has a rule called audio focus. The documentation says only one app can hold audio focus at a time. It also says that before Android 12, the system could not stop an app that kept playing loudly after losing focus. From Android 12, it says the system forces the playing app to fade out when another app requests focus.
 
-So when your music fades out, the manager made it happen. That is a symptom you can now read: if two apps clash, ask what the OS hands out and who is allowed to ask.
+So when your music fades out, the manager made it happen. If two apps clash, ask what the OS hands out and who is allowed to ask.
+
+## Say it in an interview
+
+**What would happen if two apps wrote to the screen or the speaker directly, with no operating system?**
+Nothing would decide who goes first, so the apps would get in each other's way. The OS sits between the apps and the hardware, takes the requests and shares the device. The trade-off is that apps must ask instead of grabbing.
+
+**Which resources does the operating system share between programs?**
+This answer is general knowledge. It shares CPU time, memory, files on storage and devices such as the screen and speaker. In each case many programs want one thing, and the OS keeps them from colliding.
+
+**How does Android keep one app out of another app's memory?**
+Each app runs in its own process, and the system gives it its own user ID. The Android documentation says that from Android 5.0 each app runs in its own process. The user ID is how the system tells the apps apart. This is how the private room works.
+
+**Why can the sound of one app fade out when you start another?**
+Android has audio focus, and only one app can hold it at a time. From Android 12 the system itself forces the playing app to fade out when another app requests focus. Before that, the system could not stop an app that kept playing, so it depended on apps being polite. That shows the difference between a rule the OS enforces and a rule apps agree to follow.
 
 ## Recap
 
-1. The operating system sits between apps and hardware and shares the hardware.
-2. Each app gets its own private process, so apps stay apart.
-3. Apps ask the OS for the screen, storage and CPU time.
+1. The operating system sits between apps and hardware and shares the hardware between them.
+2. Each Android app runs in its own process, so apps stay apart.
+3. Apps ask the OS for the screen, storage and CPU time instead of taking them.
 
 ## You can now
 
-- Explain what an operating system does for an app, using the building manager.
 - Sort jobs such as sharing the CPU or running your lambda into "OS does it" or "my code does it".
 - Predict what goes wrong when two apps use the speaker with no manager in between.
+- Explain what the operating system does for an app, using the building manager.
