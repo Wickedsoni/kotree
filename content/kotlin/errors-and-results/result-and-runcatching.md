@@ -73,9 +73,9 @@ Idea A mixes a real answer and a failure in one number, and a caller who forgets
 
 ### Name it
 
-**`Result<T>`** is the parcel. The Kotlin documentation says it encapsulates a successful outcome with a value of type `T`, or a failure with an arbitrary `Throwable` exception. A **`runCatching`** call is the packer. The documentation says it calls the block, catches any `Throwable` thrown from it, and wraps it as a failure.
+**`Result<T>`** is the parcel, where `T` stands for the type of the item inside. The Kotlin documentation says it encapsulates a successful outcome with a value of type `T`, or a failure with an arbitrary **`Throwable`** exception. `Throwable` is the class for anything that can be thrown. A **`runCatching`** call is the packer. The documentation says it calls the block, catches any `Throwable` thrown from it, and wraps it as a failure.
 
-The curly brackets after `runCatching` hold a small block of code that the function runs for you. That kind of block is called a lambda (general knowledge). `getOrElse`, `mapCatching` and `fold` take blocks like that too.
+The curly brackets after `runCatching` hold a small block of code that the function runs for you. That kind of block is called a **lambda**: a small block of code that you hand to a function to run later (general knowledge). `getOrElse`, `mapCatching` and `fold` take blocks like that too.
 
 `"x".toInt()` turns text into a whole number. The documentation says it throws a `NumberFormatException` when the text is not a valid number. The calls below open the parcel in different ways.
 
@@ -227,7 +227,7 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a login screen that shows a blank page when the network is down, instead of an error message. The Android coroutines guide builds a login call that hands back a sealed `Result` with `Success` and `Error`. The page says "we have our own Result class", so this is Android's sample class and not the one in this lesson. The idea is the same: a parcel. The caller checks it with `when`, and the `else` branch is where the page says to show the error in the UI. If that branch is left empty, the note is never read, which is the unopened parcel.
+Picture a login screen that shows a blank page when the network is down, instead of an error message. The Android guide on **coroutines** (a way to run work in the background, general knowledge) builds a login call. It hands back a **sealed** `Result`, a class with a fixed list of cases, here `Success` and `Error`. The page says "we have our own Result class", so this is Android's sample class and not the one in this lesson. The idea is the same: a parcel. The caller checks it with `when`, and the `else` branch is where the page says to show the error in the UI. If that branch is left empty, the note is never read, which is the unopened parcel.
 
 ## Say it in an interview
 

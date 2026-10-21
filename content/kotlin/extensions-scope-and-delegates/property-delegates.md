@@ -32,7 +32,7 @@ A coffee shop has a big machine that takes five minutes to brew a pot and uses a
 
 Think of that coffee machine in a shop.
 
-- The shop is the object. It has a property called "coffee".
+- The shop is the **object**: a thing in the program that holds values and actions. It has a **property** called "coffee": a named value that the object holds.
 - Asking for coffee is reading the property.
 - The machine is a helper. The shop does not brew by itself. It hands the job of answering "coffee" to the machine.
 - The machine has a recipe: the steps to brew.
@@ -89,9 +89,9 @@ Idea A repeats the same steps for every property that works this way. Idea C is 
 
 ### Name it
 
-A **property delegate** is a helper that takes over the reading, and sometimes the writing, of a property. You give the property to the helper with the word `by`. The Kotlin documentation gives the syntax as `val/var <property name>: <Type> by <expression>`. When you read a delegated property, the helper's `getValue()` function is called.
+A **property delegate** is a helper that takes over the reading, and sometimes the writing, of a property. You give the property to the helper with the word `by`. The Kotlin documentation gives the syntax as `val/var <property name>: <Type> by <expression>`. When you read a delegated property, the helper's `getValue()` **function** is called. A function is a named piece of code that runs when you call it.
 
-The helper in this lesson is **`lazy`**. The documentation says `lazy()` is a function that takes a lambda and returns a `Lazy<T>` object that can serve as a delegate. The first call to read the property runs the lambda and remembers the result, and later calls return the remembered result.
+The helper in this lesson is **`lazy`**. The documentation says `lazy()` is a function that takes a **lambda** and returns a `Lazy<T>` object that can serve as a delegate. A lambda is a small block of code, in curly brackets, that you hand to a function to run later. The first call to read the property runs the lambda and remembers the result. Later calls return the remembered result.
 
 ```kotlin
 val coffee: String by lazy {
@@ -108,7 +108,7 @@ fun main() {
 
 It prints `shop open`, `brewing`, `espresso` and `espresso`. The block did not run when the program started. It ran on the first `println(coffee)`, and its last line, the text `espresso`, was kept. The second read printed the kept text and did not print `brewing` again.
 
-A **thread** is one line of work that runs at the same time as other lines of work (general knowledge). The documentation says `lazy` is synchronized by default. If two threads read at once, the value is computed in only one of them, and all of them see the same value. It also names `LazyThreadSafetyMode.NONE`, which drops that protection.
+A **thread** is one line of work that runs at the same time as other lines of work (general knowledge). The documentation says `lazy` is **synchronized** by default. That means the value is computed in only one thread, and all threads see the same value. It also names `LazyThreadSafetyMode.NONE`, which drops that protection.
 
 ## Predict the output
 

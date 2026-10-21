@@ -111,7 +111,7 @@ fun main() {
 
 It prints `trick 1`, `net caught it`, `sweeper` and `after the show`. The call to `divide` failed, so `trick 3` was skipped. The net caught an `ArithmeticException`, the cleaner ran, and the program went on.
 
-The documentation also says `try` is an expression. Its value is the last expression of the `try` block, or of the `catch` block if one ran. It adds that `finally` does not change this result.
+The documentation also says `try` is an **expression**. An expression is code that works out to a value. Its value is the last expression of the `try` block, or of the `catch` block if one ran. It adds that `finally` does not change this result.
 
 ```kotlin
 fun divide(a: Int, b: Int): Int {
@@ -244,7 +244,7 @@ output: |
 
 ## Common mistakes
 
-- **Catching `Exception` everywhere to be safe.** It feels like one net for every fall. It also catches falls you never expected, and the program carries on in a bad state. The Android coroutines page says to prefer catching specific types like `IOException` over `Exception` or `Throwable`. Catch only what you can deal with.
+- **Catching `Exception` everywhere to be safe.** It feels like one net for every fall. It also catches falls you never expected, and the program carries on in a bad state. The Android page on **coroutines** (a way to run work in the background, general knowledge) says to prefer specific types like `IOException` over `Exception` or `Throwable`. `Throwable` is the class for anything that can be thrown. Catch only what you can deal with.
 - **Writing an empty catch.** The crash goes away, so it feels fixed. The failure is hidden, and the program carries on with a wrong result and no clue why. At least print the problem or hand back a clear value like -1.
 - **Putting the net under the wrong show.** The risky line is in one show and the net is under another, so a fall slips past. Put the net under the show that holds the line that can fall.
 - **Thinking `try` cannot give a value, and using a `var` set in two places.** Many languages treat it as a statement only (general knowledge). The documentation says `try` is an expression, so `val prize = try { ... } catch (e: SomeException) { -1 }` gives the value straight to a `val`. Clean-up still belongs in `finally`, which runs every time.

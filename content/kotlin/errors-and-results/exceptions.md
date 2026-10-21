@@ -80,7 +80,7 @@ Idea A hides a broken state: the office would carry on with an age that was neve
 
 ### Name it
 
-An **exception** is the alarm: a value that describes what went wrong, which stops the normal flow of the program. You ring it with **`throw`**, as in `throw IllegalArgumentException("age cannot be below 0")`. The Kotlin documentation says exceptions are subclasses of `Exception`, which is a subclass of `Throwable`, and that `Throwable` also has `Error` as a direct subclass.
+An **exception** is the alarm: a value that describes what went wrong, which stops the normal flow of the program. You ring it with **`throw`**, as in `throw IllegalArgumentException("age cannot be below 0")`. A **subclass** is a class built on top of another class, and it takes that class's features. The Kotlin documentation says exceptions are subclasses of `Exception`. It says `Exception` is a subclass of **`Throwable`**, the class for anything that can be thrown, and that `Throwable` also has `Error` as a direct subclass.
 
 ```kotlin
 fun desk(age: Int) {
@@ -123,7 +123,7 @@ fun main() {
 
 It prints `30`. Then the second call rings the alarm, and `done` is never printed.
 
-The curly brackets after `require(age >= 0)` hold a small block of code that makes the message. That kind of block is called a lambda (general knowledge). Kotlin runs it only if the check fails (general knowledge).
+The curly brackets after `require(age >= 0)` hold a small block of code that makes the message. That kind of block is called a **lambda**: a small block of code that you hand to a function to run later (general knowledge). Kotlin runs it only if the check fails (general knowledge).
 
 ## Predict the output
 
@@ -238,7 +238,7 @@ output: |
 - **Thinking an exception only stops the line that failed.** The next line sits in the same room, so it can feel as if only the failed line is lost. The alarm leaves every room until something stops it. Look for the first throw to find where the output stops.
 - **Letting bad input travel on.** A small helper can do some work with -5 without a failure, so it feels fine to wait and see. The bad value reaches lines far from the cause. Add `require` at the door of the function.
 - **Using `require` for a bad state, or `check` for bad input.** Both throw, so they look the same. The documentation says `require` is for input and `check` is for the state of an object. The names then tell the reader what went wrong.
-- **Expecting Kotlin to force you to declare exceptions.** Some languages make you list them. The documentation says Kotlin treats all exceptions as unchecked, so you do not have to declare or handle them. This means a missing check will not be flagged for you.
+- **Expecting Kotlin to force you to declare exceptions.** Some languages make you list them. The documentation says Kotlin treats all exceptions as **unchecked**: the compiler does not force you to declare or handle them. This means a missing check will not be flagged for you.
 
 ## Where this shows up in Android
 
@@ -253,7 +253,7 @@ It is an object that describes what went wrong, thrown with the `throw` keyword.
 No. The documentation says Kotlin treats all exceptions as unchecked, so you can catch them but you do not have to declare or handle them. My own reasoning: a missing handler will not be pointed out by the compiler, so you must think about failures yourself.
 
 **Why did Kotlin leave out checked exceptions?**
-The Kotlin page I read does not give the reason. General knowledge: the usual argument is that forced handling leads to boilerplate and to empty handlers that hide errors. My own reasoning: that is a trade-off, because the compiler no longer reminds you what a function can throw.
+The Kotlin page I read does not give the reason. General knowledge: the usual argument is that forced handling leads to **boilerplate** (repeated code that adds no new idea) and to empty handlers that hide errors. My own reasoning: that is a trade-off, because the compiler no longer reminds you what a function can throw.
 
 **What are the differences between `require`, `check` and `error`?**
 The documentation lists them. `require` checks input and throws `IllegalArgumentException`. `check` checks the state of an object and throws `IllegalStateException`. `error` is for an illegal state or condition and also throws `IllegalStateException`. Use `require` at the top of a function to refuse bad input early.
