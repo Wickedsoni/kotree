@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/guide/components/processes-and-threads ("By default, all components of the same application run in the same process and thread, called the main thread"; the thread "is in charge of dispatching events to the appropriate user interface widgets, including drawing events"; "The system does not create a separate thread for each instance of a component"; "When the thread is blocked, no events can be dispatched, including drawing events"; ANR dialog if blocked "for more than a few seconds"; the two rules of the single-thread model). The picture of jobs waiting in one line is a simplified model and is labelled "my own reasoning" in the text. No Looper or MessageQueue detail is claimed, because the Looper reference page could not be read in this session. The sim main-thread-queue is a code-to-screen sim, so it needs the caption "A picture of what Android does. Not a real phone." The code is a plain Kotlin model, not real Android. It ran on Kotlin 2.4.20 only, and the outputs were traced by hand for this rewrite. -->
-
 ## The question
 
 You tap a Like button and a heart turns red. A second later you tap a different button, and the screen gives a little jump. Your code runs when you tap, and something draws the heart. Is the same worker doing both jobs? Does each button get its own worker, so taps never wait for each other?
@@ -70,7 +68,7 @@ Idea A feels right because a short job sounds fast. But one cashier means one li
 
 ### Name it
 
-A **thread** is one worker following a line of steps. The Android documentation says that by default all components of the same app run in the same thread, called the **main thread**. It is also called the **UI thread**. The documentation says this thread is in charge of dispatching events to the user interface widgets, including drawing events.
+A **thread** is one worker following a line of steps. The Android documentation says that by default all **components** of the same app run in the same thread, called the **main thread**. Components are the building blocks of an app, such as its screens. The main thread is also called the **UI thread**. The documentation says this thread is in charge of dispatching **events** to the user interface **widgets**, including drawing events. An event is something that happens, such as a tap. Widgets are things on the screen, such as buttons.
 
 That is why one thread does both jobs in the opening question. Drawing is one kind of job. Handling your tap is another. The documentation also says the system does not create a separate thread for each instance of a component, and that system calls to each component are dispatched from the main thread.
 
@@ -96,7 +94,7 @@ It prints `Counter does: run tap code`, then `Counter does: draw screen`, then `
 ```challenge
 type: predict
 id: order-in-the-line
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun main() {
@@ -128,7 +126,7 @@ output: |
 ```challenge
 type: predict
 id: when-does-the-second-draw-finish
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun main() {
@@ -168,7 +166,7 @@ output: |
 ```challenge
 type: fix
 id: fix-slow-job-in-front
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun main() {
@@ -234,7 +232,7 @@ This code has no null values in play. Spend your time on question 2, and on one 
 
 You tap a button and the screen freezes for a moment: the heart does not turn red, the animation stutters. Your tap code was a long job at the front of the line, and the draw job waited behind it.
 
-The documentation says that when the main thread is blocked, no events can be dispatched, including drawing events. It adds that if the thread is blocked for more than a few seconds, the user gets the "application not responding" dialog. Its two rules for Android's single-thread model are: do not block the UI thread, and do not touch the UI toolkit from outside it.
+The documentation says that when the main thread is blocked, no events can be dispatched, including drawing events. It adds that if the thread is blocked for more than a few seconds, the user gets the "application not responding" dialog. Its two rules for Android's single-thread model are: do not block the UI thread, and do not touch the UI toolkit from outside it. The UI toolkit is the set of tools that draw the widgets.
 
 ## Say it in an interview
 
@@ -242,13 +240,13 @@ The documentation says that when the main thread is blocked, no events can be di
 The main thread, also called the UI thread. The documentation says it dispatches events to the user interface widgets, including drawing events. Your tap code runs on it too, which is why slow tap code delays the next draw.
 
 **Does each Activity or button get its own thread?**
-No. The documentation says all components in a process are created on the main thread and the system does not create a separate thread for each one. Two taps cannot run at the same moment on it. One waits for the other.
+No. The documentation says all components in a process (the running copy of your app) are created on the main thread and the system does not create a separate thread for each one. Two taps cannot run at the same moment on it. One waits for the other.
 
 **What happens if you run a slow job on the main thread?**
 While it is blocked, no events can be dispatched, including drawing. The screen freezes. If it stays blocked for more than a few seconds, the system shows the application-not-responding dialog.
 
 **Why does Android keep screen work on one thread?**
-The documentation gives the rule but not the reason. My own reasoning (general knowledge): if many workers changed the same screen at once, they could change the same widget in conflicting ways. One thread removes that risk. The cost is that slow work must go somewhere else.
+The documentation says: "the Android UI toolkit is not thread-safe. So, don't manipulate your UI from a worker thread." Not thread-safe means it is not built to be used from several threads at once, and a worker thread is any thread other than the main one. My own reasoning (general knowledge): if many workers changed the same widget at once, they could make conflicting changes. One thread removes that risk. The cost is that slow work must go somewhere else.
 
 ## Recap
 

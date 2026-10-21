@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/topic/architecture (separation of concerns is "the most important principle"; "It's a common mistake to write all your code in an Activity"; the Android OS "frequently" destroys and recreates activities, for example on screen rotation; mixing the network-fetch and database logic in one place makes testing "much more difficult, if not impossible"). The roadmap row has an F(ai) task, but the stem's Flags line shows only phase=4, so Fix the bug carries generated: true by the row, not by the flag. No sim: the roadmap row says a before-and-after layout is enough. The code is a plain Kotlin model, not real Android. It ran on Kotlin 2.4.20 only, and the outputs were traced by hand for this rewrite. -->
-
 ## The question
 
 A small shop app shows a cart total. The owner says: "Take 5 off when the total is over 80, not over 50." You open the cart screen's file to change one number. You find the code that gets the prices, the code that adds them up and the code that writes the text all mixed together. Where do you cut, and what else might you break?
@@ -25,9 +23,9 @@ A small shop app shows a cart total. The owner says: "Take 5 off when the total 
 
 Think of a kitchen where the cook, the waiter and the cashier are the same tired person.
 
-- The cook makes the food.
-- The waiter carries it to the table.
-- The cashier works out the bill.
+- The cook gets the food ready. In the cart, the cook is the job of getting the prices.
+- The cashier works out the bill. In the cart, the cashier is the job of working out the total and the discount.
+- The waiter carries it to the table. In the cart, the waiter is the job of showing the total.
 - A plate is the answer one job hands to the next.
 - The one person who does all three is the screen's file with everything inside.
 
@@ -61,7 +59,7 @@ In a small function you can guess A and be right. Idea C is the honest answer wh
 
 1. Give each job its own named place: one for getting the prices, one for working out the total, one for showing it.
 2. Let each place do its own job and nothing else.
-3. Pass the answer from one place to the next, like plates going from the cook to the waiter to the cashier.
+3. Pass the answer from one place to the next, like plates going from the cook to the cashier to the waiter.
 4. When the owner changes the discount, go to the place that works out the total, and no other.
 5. When the wording of the line changes, go to the showing place. The rule is never touched.
 
@@ -102,7 +100,7 @@ It prints `Total: 70`, the same as the mixed version. The behaviour did not chan
 ```challenge
 type: predict
 id: mixed-cart-total
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun showCartScreen() {
@@ -134,7 +132,7 @@ output: |
 ```challenge
 type: predict
 id: change-the-rule
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun showCartScreen() {
@@ -176,7 +174,7 @@ output: |
 type: fix
 id: fix-all-in-one-profile
 generated: true
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun showProfileScreen() {
@@ -237,7 +235,7 @@ The code looks tidy and confident, so question 5 matters. Ask which job made the
 ## Tricks to remember
 
 - One person, three jobs: change one, risk all.
-- Plates go cook, waiter, cashier. Each place hands over an answer and keeps its own job.
+- Plates go cook, cashier, waiter: get, work out, show. Each place hands over an answer and keeps its own job.
 - Before you edit, ask: which job is this change about?
 
 ## Common mistakes
@@ -249,7 +247,7 @@ The code looks tidy and confident, so question 5 matters. Ask which job made the
 
 ## Where this shows up in Android
 
-Picture a profile screen where the user rotates the phone and the data vanishes, or where a small change to a price rule breaks the layout. Both symptoms come from one place doing several jobs.
+Picture a profile screen where the user rotates the phone and the data vanishes, or where a small change to a price rule breaks the layout. My own reasoning: both symptoms come from one place doing several jobs.
 
 The Android architecture guide says the primary role of an activity is to host the app's user interface, and that the system controls its lifecycle and frequently destroys and recreates it on actions like screen rotation. Data that lives in the activity goes with it. The rule change that touched the layout is the tired person from this lesson. When the rule lives in its own place, the screen never has to change.
 
@@ -276,5 +274,5 @@ This is my own reasoning, because the guide gives no rule. Extra layers add file
 ## You can now
 
 - Predict the output of a mixed function after a rule change.
-- Say which place a rule change belongs in, using the cook, the waiter and the cashier.
+- Say which place a rule change belongs in, using the cook, the cashier and the waiter.
 - Fix a generated one-function screen by splitting getting, reading and showing into separate functions.

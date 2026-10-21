@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/ndk/guides ("The Native Development Kit (NDK) is a set of tools that allows you to use C and C++ code with Android"; use it to "achieve low latency or run computationally intensive applications, such as games or physics simulations" and to "reuse your own or other developers' C or C++ libraries"; "may not be appropriate for most novice Android programmers"; "Gradle uses the build script to import source code into your Android Studio project and package your native library (the SO file) into the APK"). https://developer.android.com/ndk/guides/abis (each combination of CPU and instruction set has its own ABI; supported ABIs armeabi-v7a, arm64-v8a, x86, x86_64; libraries live at /lib/<abi>/lib<name>.so; "the package manager unpacks only the most appropriate machine code for the target device"; "If there is no shared-object file at all, the application builds and installs, but crashes at runtime"). The page https://source.android.com/docs/core/runtime could not be opened in this session, so the lesson makes no claim about DEX or ART. Rust is named once and not taught. The five-file package in Predict is an invented example, not a real app. Assumes foundation/how-computers-work/what-is-a-cpu, foundation/from-code-to-running/what-is-a-compiler and foundation/from-code-to-running/what-is-the-jvm. The Predict items were traced by hand. -->
-
 ## The question
 
 You open an Android project and find a folder named `cpp`, or a file that ends in `.so`. Your Kotlin files are all in another folder. Nobody told you what this other thing is. What is the code in that file, and how is it different from the Kotlin code you write?

@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://kotlinlang.org/docs/multiplatform/kmp-overview.html ("an open-source technology from JetBrains that enables sharing code across Android, iOS, desktop, web, and server while retaining the advantages of native development"; "share isolated modules, such as networking or storage, and progressively expand shared code over time"; "share all of your business logic while keeping the UI native, or gradually migrate the UI using Compose Multiplatform"; "With Compose Multiplatform, you can also share UI code"). https://kotlinlang.org/docs/multiplatform/multiplatform-expect-actual.html ("Expected and actual declarations allow you to access platform-specific APIs from Kotlin Multiplatform modules"; "rely on standard language constructs wherever possible instead of using expected and actual declarations"). Platform stability statuses are deliberately not stated, because the roadmap says to copy them with their date at publish time. This is a concept leaf, so no Mac evidence labels are used. The six features and the bins are the author's roadmap list. The Predict items were traced by hand. -->
-
 ## The question
 
 A small team has one shop app on Android and wants the same app on iPhone. Their manager says: "Write it once, and it works on both." The team lead says: "Not everything." So which parts of the app can really be written once, and which parts must still be written for each phone?
@@ -80,11 +78,11 @@ Idea A is what the slogan sounds like. Idea C is what people say after they trie
 
 ### Name it
 
-**Kotlin Multiplatform**, called **KMP**, is an open-source technology from JetBrains. The Kotlin documentation says it enables sharing code across Android, iOS, desktop, web and server while retaining the advantages of native development. Native here means built with each phone's own tools, so the app feels at home on that phone (general knowledge). The documentation also says you can share code on your terms. You can share a **module**, a self-contained part of a project, such as networking or storage, and expand the shared code over time. Or you can share all of your business logic, the rules of the app, while keeping the UI native.
+**Kotlin Multiplatform**, called **KMP**, is an open-source technology from JetBrains. The Kotlin documentation says it enables sharing code across Android, iOS, desktop, web and server while retaining the advantages of native development. Native here means built with each phone's own tools, so the app feels at home on that phone (general knowledge). The documentation also says you can share code on your terms. You can share a **module**, a self-contained part of a project, such as networking or storage, and expand the shared code over time. Or you can share all of your business logic, the rules of the app, while keeping the UI native. The UI, short for user interface, is the screens the user sees and touches.
 
-The **shared code** is the part written once. The **platform-specific code** is the part each phone gets on its own. The documentation says **expect/actual** declarations let you access platform-specific APIs from Kotlin Multiplatform modules. Shared code declares what it expects, and each platform supplies the actual version. The same page says to rely on standard language constructs wherever possible instead of expect and actual, so an interface is the first thing to try.
+The **shared code** is the part written once. The **platform-specific code** is the part each phone gets on its own. The documentation says **expect/actual** declarations let you access platform-specific APIs from Kotlin Multiplatform modules. An API is a set of ready-made calls that a phone offers. Shared code declares what it expects, and each platform supplies the actual version. The same page says to rely on standard language constructs wherever possible instead of expect and actual, so an interface is the first thing to try (my own reading of that sentence). An interface is a list of what something must do, with no code behind it.
 
-For the screen, the documentation names three options: keep the UI native on each platform, share it with **Compose Multiplatform**, or move to it gradually. Sharing the screen is a choice, not a requirement.
+For the screen, the documentation names three options: keep the UI native on each platform, share it with **Compose Multiplatform**, which is JetBrains' way to share screen code across platforms, or move to it gradually. Sharing the screen is a choice, not a requirement.
 
 | Feature | Where it can live | Why |
 |---|---|---|

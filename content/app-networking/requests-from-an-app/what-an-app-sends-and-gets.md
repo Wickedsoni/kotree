@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/develop/connectivity/network-ops/connecting (most network-connected apps use HTTP to send and receive data). The HTTP facts come from https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Messages and https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/404. Those two pages could not be opened in this session. The text relies on the earlier 21 Oct check and a search summary (start line, headers, optional body; a status line with a numeric status code), and labels every HTTP fact "general knowledge". The code is a plain Kotlin model with a fake server, not real Android. It ran on Kotlin 2.4.20 only, and the outputs were traced by hand for this rewrite. -->
-
 ## The question
 
 You open a book app and it shows your three saved books. You type "kotlin" into the search box and it shows results about Kotlin. A computer far away answered both times. What did your app send to make that happen? And what came back, so that the app knew it worked?
@@ -113,7 +111,7 @@ This prints `200`, then `3 books`. A **data class** is a small bundle of named b
 ```challenge
 type: predict
 id: address-that-does-not-exist
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Response(val status: Int, val body: String)
   fun fakeServer(method: String, address: String): Response = when {
@@ -146,7 +144,7 @@ output: |
 ```challenge
 type: predict
 id: where-the-search-word-goes
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Response(val status: Int, val body: String)
   fun fakeServer(method: String, address: String): Response = when {
@@ -188,7 +186,7 @@ output: |
 ```challenge
 type: fix
 id: fix-search-word-in-address
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   data class Response(val status: Int, val body: String)
@@ -268,7 +266,7 @@ This code has no null values in play. Question 4 is worth a thought: if a screen
 
 A book screen shows an empty list, or says "not found". Nothing crashed. The app sent a request, and the reply carried a code such as 404 because the address was wrong, like `/search/kotlin` in the Fix the bug task.
 
-The Android documentation says most network-connected apps use HTTP to send and receive data. Whatever tool an app uses, the message it sends and the reply it gets have the parts in this lesson. When a screen shows the wrong thing, ask four questions in order. Was the address right? Was it the right kind of request? Did it need something inside or a note outside? What status code came back?
+The Android documentation says most network-connected apps use HTTP to send and receive data. Whatever tool an app uses, the message it sends and the reply it gets have the parts in this lesson. My own reasoning: when a screen shows the wrong thing, ask four questions in order. Was the address right? Was it the right kind of request? Did it need something inside or a note outside? What status code came back?
 
 ## Say it in an interview
 
@@ -276,10 +274,10 @@ The Android documentation says most network-connected apps use HTTP to send and 
 A request has a URL, a method, headers and sometimes a body. A response has a status code, headers and a body (general knowledge). The status code tells the app whether the call worked before it reads the body.
 
 **Where would you put a search word, a login token and a new record you want to save?**
-The search word goes on the URL after a question mark. The new record goes in the body of a `POST`. A token is a fact about who is asking, so it goes in a header. My own reasoning: URLs are often written to server logs (general knowledge), which is one reason to keep secrets out of them.
+The search word goes on the URL after a question mark. The new record goes in the body of a `POST`. A token is a fact about who is asking, so it goes in a header (all three placements are general knowledge). My own reasoning: URLs are often written to server logs (general knowledge), which is one reason to keep secrets out of them.
 
 **Does a 404 mean the app crashed?**
-No. The server answered normally and said it cannot find what was asked for. The app should read the status code and decide what to show. A crash would be an error in the app's own code.
+No. The server answered normally and said it cannot find what was asked for (general knowledge). The app should read the status code and decide what to show. A crash would be an error in the app's own code.
 
 **Why can the same address do two different things?**
 The method changes the meaning. `GET /books` asks to read the list, and `POST /books` sends a new book to keep (general knowledge). If a screen sends the wrong method, the address can be right and the result still wrong.

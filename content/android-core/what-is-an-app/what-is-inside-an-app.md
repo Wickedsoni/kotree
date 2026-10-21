@@ -15,8 +15,6 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/guide/components/fundamentals (four component types and their definitions; "entry point"; "there's no main() function"; the manifest declaration rule; a service may play music in the background; a content provider lets other apps query or modify data "if the content provider permits it"). The Predict items were traced by hand. The situations in them are invented teaching examples. No sim: the roadmap row says a table is enough. -->
-
 ## The question
 
 You open a music app, press play, and go back to your home screen. The screen is gone, but the music keeps playing. Then the phone says the battery is low, and the app hears it too. If an app is one program, how can a part of it work with no screen? What is actually inside an Android app?
@@ -181,7 +179,7 @@ output: |
 
 Go back to the opening picture. You pressed play and left the screen, yet the music continued. The documentation gives this exact job to a service: playing music in the background while the user is in a different app. The screen was the dining room, and it closed. The kitchen kept cooking.
 
-The low-battery message is an example of a system-wide announcement, which is the job the documentation gives a broadcast receiver (my own example). So when you see "something keeps happening after I leave the screen" or "my app reacted with no screen showing", look first at a service or a broadcast receiver, not an activity.
+The low-battery message is an example of a system-wide announcement, which is the job the documentation gives a broadcast receiver. The documentation lists a low battery as one such system announcement. My own reasoning: when you see "something keeps happening after I leave the screen" or "my app reacted with no screen showing", look first at a service or a broadcast receiver, not an activity.
 
 ## Say it in an interview
 
