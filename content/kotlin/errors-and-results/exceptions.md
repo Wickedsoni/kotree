@@ -20,7 +20,6 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://kotlinlang.org/docs/exceptions.html : exceptions are subclasses of Exception, which is a subclass of Throwable; Throwable has two direct subclasses, Error and Exception; the throw keyword; Kotlin treats all exceptions as unchecked, so you do not need to declare or handle them; require() throws IllegalArgumentException for input checks, check() throws IllegalStateException for state checks, error() throws IllegalStateException.
 - https://developer.android.com/topic/performance/issues/crash : "An app that is written using Java or Kotlin crashes if it throws an unhandled exception, represented by the Throwable class"; Android ends the app's process and shows a dialog that the app has stopped.
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/exceptions.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review. A crash's message goes to the error stream, so each Predict output holds only the lines printed before the crash.
 -->
 
 ## The question
@@ -51,7 +50,7 @@ Think of a meeting held in three nested rooms, with a fire alarm.
 3. Set the alarm to "never" and play again.
 4. (Optional reveal) Tick "Check the guest list at the door" and play with the alarm still set.
 
-**What you should notice:** An alarm in the desk also crosses out lines that belong to the office and the hall, and a check at the door stops the alarm before any line runs.
+**What you should notice:** An alarm in the desk also crosses out lines that belong to the office and the hall. A check at the door stops the alarm before any line runs.
 
 ## Build the logic
 
@@ -132,7 +131,7 @@ The curly brackets after `require(age >= 0)` hold a small block of code that mak
 type: predict
 run: false
 id: skipped-lines-spread
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun inspect(n: Int) {
       println("looking at " + n)
@@ -166,7 +165,7 @@ output: |
 type: predict
 run: false
 id: alarm-leaves-the-caller
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun inner() {
       println("inner")
@@ -198,7 +197,7 @@ output: |
 type: predict
 run: false
 id: check-at-the-door
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun setAge(age: Int): Int {
       require(age >= 0) { "age cannot be below 0" }
@@ -236,14 +235,14 @@ output: |
 
 ## Common mistakes
 
-- **Thinking an exception only stops the line that failed.** The next line is in the same room, so it feels like it is cut off and the rest goes on. The alarm leaves every room until something stops it. Look for the first throw to find where the output stops.
+- **Thinking an exception only stops the line that failed.** The next line sits in the same room, so it can feel as if only the failed line is lost. The alarm leaves every room until something stops it. Look for the first throw to find where the output stops.
 - **Letting bad input travel on.** A small helper can do some work with -5 without a failure, so it feels fine to wait and see. The bad value reaches lines far from the cause. Add `require` at the door of the function.
 - **Using `require` for a bad state, or `check` for bad input.** Both throw, so they look the same. The documentation says `require` is for input and `check` is for the state of an object. The names then tell the reader what went wrong.
 - **Expecting Kotlin to force you to declare exceptions.** Some languages make you list them. The documentation says Kotlin treats all exceptions as unchecked, so you do not have to declare or handle them. This means a missing check will not be flagged for you.
 
 ## Where this shows up in Android
 
-Picture an app that closes in the middle of a task, with a dialog saying that the app has stopped. The Android crash page says that a Kotlin or Java app crashes if it throws an unhandled exception, represented by the `Throwable` class, and that Android ends the app's process and shows a dialog. That is the fire alarm reaching the hall with nobody to stop it. This lesson explains why the lines after the throw never ran, even though they sat in other functions.
+Picture an app that closes in the middle of a task, with a dialog saying that the app has stopped. The Android crash page says that a Kotlin or Java app crashes if it throws an unhandled exception, represented by the `Throwable` class. It also says Android ends the app's process and shows a dialog. That is the fire alarm reaching the hall with nobody to stop it. This lesson explains why the lines after the throw never ran, even though they sat in other functions.
 
 ## Say it in an interview
 

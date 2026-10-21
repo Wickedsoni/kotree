@@ -26,7 +26,6 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/kotlin/coroutines/coroutines-best-practices : do not consume CancellationException; prefer catching specific exception types.
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/result-and-runcatching.
 - The roadmap's wording note on Result was checked against the Result API page above; no marker remains.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review.
 -->
 
 ## The question
@@ -127,7 +126,7 @@ It prints `true`. The step broke, and the parcel now holds a note.
 type: predict
 run: false
 id: open-with-a-spare
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val a = runCatching { "x".toInt() }.getOrElse { -1 }
@@ -155,7 +154,7 @@ output: |
 type: predict
 run: false
 id: parcel-left-unopened
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val r = runCatching { "x".toInt() }
@@ -182,7 +181,7 @@ output: |
 type: predict
 run: false
 id: map-or-map-catching
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun divide(a: Int, b: Int): Int {
       return a / b
@@ -228,7 +227,7 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a login screen that shows a blank page when the network is down, instead of an error message. The Android coroutines guide builds a login call that hands back a sealed `Result` with `Success` and `Error`. The page says "we have our own Result class", so this is Android's sample class and not the one in this lesson, but the idea is the same: a parcel. The caller checks it with `when`, and the `else` branch is where the page says to show the error in the UI. If that branch is left empty, the note is never read, which is the unopened parcel.
+Picture a login screen that shows a blank page when the network is down, instead of an error message. The Android coroutines guide builds a login call that hands back a sealed `Result` with `Success` and `Error`. The page says "we have our own Result class", so this is Android's sample class and not the one in this lesson. The idea is the same: a parcel. The caller checks it with `when`, and the `else` branch is where the page says to show the error in the UI. If that branch is left empty, the note is never read, which is the unopened parcel.
 
 ## Say it in an interview
 

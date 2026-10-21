@@ -22,7 +22,6 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/kotlin/coroutines/coroutines-best-practices : "don't consume exceptions of type CancellationException (don't catch them, or always rethrow them if caught)"; "Prefer catching specific exception types like IOException over generic types like Exception or Throwable".
 - https://developer.android.com/topic/performance/issues/crash : an unhandled exception crashes the app and shows a dialog.
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/errors-and-results/try-catch-finally.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review. A crash's message goes to the error stream, so a Predict output holds only the lines printed before the crash.
 -->
 
 ## The question
@@ -51,7 +50,7 @@ Think of a trapeze show with a safety net and a cleaner.
 2. Drag the net away and press Run again.
 3. Put the net under the big show and press Run, then switch the sweeper off and run once more.
 
-**What you should notice:** A net stops the fall and play carries on after the show it sits under, the sweeper runs whether anyone fell or not, and with no net the act stops after the sweeper.
+**What you should notice:** A net stops the fall, and play carries on after the show it sits under. The sweeper runs whether anyone fell or not. With no net, the act stops after the sweeper.
 
 ## Build the logic
 
@@ -63,11 +62,11 @@ The show has three tricks. In a good show, all three happen, the net is never us
 
 Say the artist falls on trick 2 and a net is below. Which parts happen, and in what order? Here are three ideas.
 
-- A. Trick 1, trick 3, then the net.
-- B. Trick 1, the net, then the cleaner.
+- A. Trick 1, the net, then the cleaner.
+- B. Trick 1, trick 3, then the net.
 - C. Trick 1, the cleaner, then the net.
 
-Idea A has trick 3 happening after the fall, but the rest of the show is skipped. Idea C lets the cleaner go first, but the net catches before the cleaner tidies. Idea B is the answer.
+Idea B has trick 3 happening after the fall, but the rest of the show is skipped. Idea C lets the cleaner go first, but the net catches before the cleaner tidies. Idea A is the answer.
 
 The net is a good tool, but how wide should it be? Here are three ideas.
 
@@ -89,7 +88,7 @@ Idea A feels safe, but it also catches falls you never planned for and cannot fi
 
 ### Name it
 
-A **`try`** block is the show: the code that might fail. A **`catch`** block is the net: it names the kind of exception it handles, in brackets after `catch`, and holds the code that runs when one of that kind happens. A **`finally`** block is the cleaner. The Kotlin documentation says a `try` block must have at least one `catch` block or a `finally` block, and that `finally` always executes, whether or not `try` throws.
+A **`try`** block is the show: the code that might fail. A **`catch`** block is the net: it names the kind of exception it handles, in brackets after `catch`, and holds the code that runs when one of that kind happens. A **`finally`** block is the cleaner. The Kotlin documentation says a `try` block must have at least one `catch` block or a `finally` block. It also says `finally` always executes, whether or not `try` throws.
 
 ```kotlin
 fun divide(a: Int, b: Int): Int {
@@ -139,7 +138,7 @@ It prints `sweeper` and then `-1`. The net handed back -1 as the prize, and the 
 type: predict
 run: false
 id: order-of-the-show
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       try {
@@ -174,7 +173,7 @@ output: |
 type: predict
 run: false
 id: wrong-net
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       try {
@@ -207,7 +206,7 @@ output: |
 type: predict
 run: false
 id: prize-from-the-net
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val zero = 0

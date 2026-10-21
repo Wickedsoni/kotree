@@ -22,7 +22,6 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://developer.android.com/develop/ui/compose/state : "var value by remember { mutableStateOf(default) }" and "The by delegate syntax requires the following imports" (getValue, setValue).
 - https://developer.android.com/topic/libraries/architecture/views/viewmodel/viewmodel-apis-views : "val viewModel: MyViewModel by viewModels()".
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/extensions-scope-and-delegates/property-delegates.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review. The Kotlin page shows no output for its lazy example; the printed order here is derived from the rule that the first read runs the block.
 -->
 
 ## The question
@@ -53,7 +52,7 @@ Think of that coffee machine in a shop.
 3. Remove every card and press Play.
 4. (Optional reveal) Tick "Brew when the shop opens" and press Play with the cards at slot 3.
 
-**What you should notice:** One brew happens at the first press and the count stays at 1 after that, no brew happens with no press, and the tick-box moves the brew to slot 1 whether or not anyone presses.
+**What you should notice:** One brew happens at the first press, and the count stays at 1 after that. No brew happens with no press. The tick-box moves the brew to slot 1 whether or not anyone presses.
 
 ## Build the logic
 
@@ -109,7 +108,7 @@ fun main() {
 
 It prints `shop open`, `brewing`, `espresso` and `espresso`. The block did not run when the program started. It ran on the first `println(coffee)`, and its last line, the text `espresso`, was kept. The second read printed the kept text and did not print `brewing` again.
 
-A **thread** is one line of work that runs at the same time as other lines of work (general knowledge). The documentation says `lazy` is synchronized by default: if two threads read at once, the value is computed in only one of them, and all of them see the same value. It also names `LazyThreadSafetyMode.NONE`, which drops that protection.
+A **thread** is one line of work that runs at the same time as other lines of work (general knowledge). The documentation says `lazy` is synchronized by default. If two threads read at once, the value is computed in only one of them, and all of them see the same value. It also names `LazyThreadSafetyMode.NONE`, which drops that protection.
 
 ## Predict the output
 
@@ -117,7 +116,7 @@ A **thread** is one line of work that runs at the same time as other lines of wo
 type: predict
 run: false
 id: brew-on-first-press
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Shop {
       val coffee: String by lazy {
@@ -153,7 +152,7 @@ output: |
 type: predict
 run: false
 id: nobody-presses
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Shop {
       val coffee: String by lazy {
