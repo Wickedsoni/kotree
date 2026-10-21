@@ -1,21 +1,21 @@
 ---
 id: kotlin/functions/unit-and-nothing
 title: What does a function return when it has nothing to give back?
-status: shadow
+status: live
 difficulty: easy
 order: 15
 requires: [kotlin/functions/declaring-functions]
 summary: A function that only prints still gives something back, a value called Unit. Nothing is a different type for code that never finishes.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/functions.html (block body without return type is Unit; "Unlike void in other programming languages, Unit is an actual type, and you can use its value"; Unit need not be written; must be written in a function type such as () -> Unit); kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/ ("The type with only one value: the Unit object. This type corresponds to the void type in Java"); kotlinlang.org/docs/exceptions.html (Nothing: built-in type that is a subtype of all other types, for code that never completes successfully; compiler marks code after it unreachable; TODO() always throws NotImplementedError); developer.android.com/develop/ui/compose/state (onNameChange: (String) -> Unit; onValueChange: (T) -> Unit "an event that requests the value to change"; TextField updates only when its value parameter changes). The printed text kotlin.Unit is general knowledge (the API page does not show it) and is labelled so in the body. Snippets are hand-traced, not run. -->
+
 ## The question
 
 A function prints a greeting and does nothing else. It has no answer to hand back. Yet you can call it, and Kotlin does not complain that something is missing. So what did the call give back? Is it zero, a blank, or something else?

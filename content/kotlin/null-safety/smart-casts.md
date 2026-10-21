@@ -1,21 +1,21 @@
 ---
 id: kotlin/null-safety/smart-casts
 title: How does Kotlin know a value is not null after I check it?
-status: shadow
+status: live
 difficulty: medium
 order: 20
 requires: [kotlin/null-safety/nullable-types, kotlin/control-flow/if-as-an-expression]
 summary: After you check a value is not null, Kotlin lets you use it as non-null, but only when nothing can change it.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/typecasts.html ("The compiler tracks the type checks and explicit casts for immutable values and inserts implicit (safe) casts automatically"; a negative check that leads to a return; smart cast prerequisites: val local variables always, val properties if private or internal or checked in the same module and not open and no custom getter, var local variables if not modified between the check and its usage and not captured in a lambda that modifies it, var properties never "because the variable can be modified at any time by other code"; right-hand side of && and ||); kotlinlang.org/docs/null-safety.html ("the example above only works when the compiler can guarantee that b doesn't change between the check and its usage, same as the smart cast prerequisites"); developer.android.com/guide/fragments/create (if (savedInstanceState == null) adds the fragment only once; "when the activity is recreated, savedInstanceState is no longer null"). That a function's inputs are read-only, the copy-into-a-local-val fix and the Android field picture are general knowledge or derived and are labelled in the body. Snippets are hand-traced, not run. -->
+
 ## The question
 
 You check that a name is not null, and on the next line Kotlin lets you use it as if it had no question mark. Change the name into something that can change later, and the very same line is refused. Why does Kotlin trust one check and not the other?

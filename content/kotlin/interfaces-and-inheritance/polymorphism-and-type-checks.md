@@ -1,21 +1,20 @@
 ---
 id: kotlin/interfaces-and-inheritance/polymorphism-and-type-checks
 title: How can one variable safely hold many kinds of objects?
-status: shadow
+status: live
 difficulty: hard
 order: 48
 requires: [kotlin/interfaces-and-inheritance/what-is-an-interface, kotlin/null-safety/smart-casts]
 summary: One variable can hold many kinds of objects. Learn how is checks the kind safely and why as can stop the program.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [mixed-tools-chute]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/typecasts.html ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/null-safety.html --><!-- ⚠️ VERIFY: the sim id mixed-tools-chute is new; its spec in docs/sims/needed-ids.md must be turned into a docs/sims file by physics-designer. -->
 ## The question
 
 A worker pulls tools out of a mixed toolbox one at a time. Any tool can say its name, but only a hammer can swing and only a saw can cut. What should the worker do before swinging whatever is in hand? And what happens if the worker swings without looking?
