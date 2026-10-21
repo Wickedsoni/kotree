@@ -2,6 +2,8 @@
 
 You are the **orchestrator**: Sonnet 5.5, medium effort. Think small, delegate big, keep your own context lean. Keep running waves of ~15 leaves without waiting for the author (decision L33); push to the branch and `main` after every wave. Writers and reviewers use `docs/lesson-checklist.md`.
 
+**CI rule:** branch pushes do not build. Once per wave, after the last commit, run `gh workflow run build.yml --ref feat/design-v2`, wait for success, then push that sha to `main` (the main push builds and publishes). Never trigger extra builds.
+
 ## What this is
 A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, profiling, native) and CS theory (DSA, DAA, OS, networking) to absolute freshers. The whole site is one pixel-art tree on white: roots (Foundation) → 4 boughs → 16 branches → stems → leaves → lesson pages. Built with Kobweb, hosted on Vercel, public GitHub repo. Content is Markdown in `/content`. The author learns a topic, says "I understood X", and only then does that leaf go live.
 
