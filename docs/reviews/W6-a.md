@@ -238,3 +238,15 @@ Re-check VERDICT: FIX for 2 leaves (N1, N2 are one-line edits), PASS for 6. Afte
 
 ## Final (orchestrator, 21 Oct 2026)
 N1 and N2 applied as specified; validateContent passes. All 8 leaves in this report: PASS.
+
+## Re-check
+
+Date 21 Oct 2026, second pass on `unit-and-nothing` and `smart-casts`.
+
+- unit-and-nothing: items 1 to 4 applied (line 21 "Is it zero, a blank, or something else?"; line 209 "Text shows up when the function runs"; line 225 split with the functions-page sentence; three `verified: kotlin-2.4.21`, 0 `not-run`). N1 applied (line 222 "a function with braces and no written return type").
+- smart-casts: items 1 to 7 applied. Item 1 as revised by N2 (line 72 "Always, except for one rare kind that this course does not cover"); line 74 other-module rule; **fragments** and **activity** bold; lines 238 and 252 split; line 246 extra cases; three `verified` markers, 0 `not-run`.
+- Snippets: re-extracted 4 `kotlin` fences plus 3 challenge `code` fields in unit and 3 plus 3 in smart, ran each with `scripts/kt-run.sh` (kotlinc 2.4.21). Outputs are identical to the first table; the two "does not compile" fences still fail with the stated reasons; no warnings. No snippet text changed.
+- `./gradlew :site:validateContent`: `validateContent: ok`.
+- N3 (not blocking, comment is stripped at go-live): line 18 SOURCES comment of both leaves still says "Snippets are hand-traced, not run." `housekeeper` strips it.
+
+VERDICT (re-check, final): PASS
