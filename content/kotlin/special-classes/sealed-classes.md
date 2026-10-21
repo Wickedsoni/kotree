@@ -5,7 +5,7 @@ status: shadow
 difficulty: hard
 order: 52
 requires: [kotlin/special-classes/enum-classes, kotlin/interfaces-and-inheritance/polymorphism-and-type-checks]
-summary: A sealed type lists every kind a value can be. See why the compiler warns you when a when forgets one.
+summary: A sealed type lists every kind a value can be. See why Kotlin stops the build when a when forgets one.
 video: ""
 publishedOn:
 updatedOn:
@@ -24,7 +24,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 Roadmap note about when statements versus expressions: the body claims exhaustiveness for expressions only, as the pages state.
 The roadmap row's F(ai) and B tasks are not built: playground is false. The type is named LoadState, not Result.
 Sim id three-lamp-signal appended to docs/sims/needed-ids.md. Roadmap row says balls and trays; the leaf uses lamps and a plan card to keep one analogy.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -54,7 +53,7 @@ Think of a signal post with exactly three lamps and a driver with a plan card.
 3. Press "Fit a fourth lamp" and check the plan again.
 4. (Optional reveal) Tick "Add a catch-all line", fit the fourth lamp again, and watch which line the driver follows.
 
-**What you should notice:** A plan card with a missing line turns the build light red before any car moves, and a catch-all line keeps it green while a new lamp is handled in a way nobody chose.
+**What you should notice:** A plan card with a missing line turns the build light red before any car moves. A catch-all line keeps the light green, even though a new lamp is handled in a way nobody chose.
 
 ## Build the logic
 
@@ -91,14 +90,16 @@ Idea B means no card could ever be complete. Idea C leaves the post stuck for ev
 
 ### Name it
 
-A **sealed** type is a type with a closed list of kinds. The Kotlin documentation says all direct subclasses of a sealed class or interface are known at compile time, and that no other subclasses may appear outside the module and package where it is defined. It also says direct subclasses must be declared in the same package. A **subclass** is one kind of a type, written with a colon, as in `class Success(val text: String) : LoadState`. The colon is the same one you saw in `class Hammer : Tool`.
+A **sealed** type is a type with a closed list of kinds. It is written as a `sealed class` or a `sealed interface`. An **interface** is a list of things a type promises to do. A **subclass** is one kind of a type, written with a colon, as in `class Success(val text: String) : LoadState`. The colon is the same one you saw in `class Hammer : Tool`.
 
-The documentation says that when you use a `when` expression with a sealed type, the compiler checks exhaustively that all cases are covered, and you do not need an `else`. **Exhaustive** means every kind has a line. The control flow page says a `when` expression must cover all cases, or the compiler reports an error. This lesson claims that rule only for `when` used as an expression, the form that hands back a value.
+The Kotlin documentation says all direct subclasses of a sealed type are known at **compile time**, which means while the program is being built, before it runs. It also says no other subclasses may appear outside the **module** and **package** where the type is defined. A module is one built unit of a project. A package is a named group of code files. The documentation adds that direct subclasses must be declared in the same package.
+
+The documentation says that when you use a `when` expression with a sealed type, the **compiler** checks exhaustively that all cases are covered. The compiler is the tool that checks your code and builds the program. With that check, you do not need an `else`. **Exhaustive** means every kind has a line. The control flow page says a `when` expression must cover all cases, or the compiler reports an error. This lesson claims that rule only for `when` used as an expression, the form that hands back a value.
 
 | | Enum class | Sealed interface |
 |---|---|---|
 | One choice is | A single fixed value | A kind, made as often as you like |
-| Facts it carries | The same properties on every constant | Each kind can have its own properties |
+| Facts it carries | The same facts (called properties) on every constant | Each kind can have its own facts |
 | `when` without `else` | Allowed when every choice has a line | Allowed when every kind has a line |
 
 This program has one plan line for each of three lamps.
@@ -125,7 +126,7 @@ fun main() {
 }
 ```
 
-It prints `please wait`, `got news` and `problem: no signal`. Inside each branch the `is` check lets the code read the sign, such as `state.text`.
+It prints `please wait`, `got news` and `problem: no signal`. Each line starts with an **`is` check**, which asks whether the value is a given kind. Inside that line, the code can read the sign, such as `state.text`.
 
 Kotlin refuses to run this one, because the plan card must hand back a text and the `Failed` lamp has no line.
 
@@ -155,7 +156,7 @@ fun main() {
 type: predict
 run: false
 id: which-lamp-which-line
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   sealed interface Load
   class Waiting : Load
@@ -192,7 +193,7 @@ output: |
 type: predict
 run: false
 id: catch-all-hides-a-lamp
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   sealed interface Load
   class Waiting : Load
@@ -230,7 +231,7 @@ output: |
 type: predict
 run: false
 id: read-the-sign-after-the-check
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   sealed interface Load
   class Done(val n: Int) : Load
@@ -293,7 +294,7 @@ A screen is in exactly one of those states at a time, and each state may carry d
 The documentation says that with a sealed type the compiler checks that all possible cases are covered, and you do not need an `else`. The control flow page says a `when` expression must cover all cases, or the compiler reports an error. That is for the form that hands back a value.
 
 **What goes wrong in a real project with sealed types?**
-My own reasoning: an `else` line hides a new kind, so the new state is handled in a way nobody chose. The documentation says subclasses must stay in the module and package, so a type you get from a library cannot be extended by you. My own reasoning: if a library adds a kind in a new version, a `when` of yours that has no `else` may stop compiling, and that is the warning working.
+My own reasoning: an `else` line hides a new kind, so the new state is handled in a way nobody chose. The documentation says subclasses must stay in the module and package, so a type you get from a library cannot be extended by you. My own reasoning: if a library adds a kind in a new version, a `when` of yours that has no `else` may stop compiling, and that is the check working.
 
 ## Recap
 

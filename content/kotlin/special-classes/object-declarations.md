@@ -21,7 +21,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://developer.android.com/training/data-storage/room (singleton note for the database object)
 Roadmap note about data object stability: not claimed. The page shows data object and its toString; it states no version or status.
 The roadmap row's F(ai) task is not built: playground is false.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -76,11 +75,11 @@ Idea B gives a copy that would drift. Idea C breaks the rule of one clock. Idea 
 
 ### Name it
 
-An **object declaration** is written with the word `object` and a name. The Kotlin documentation says it lets you define a class and create an instance of it in a single step, which is useful for implementing **singletons**. A singleton is a class that has exactly one instance (general knowledge). The documentation says that the initialisation of an object declaration is thread-safe and done on first access. **Thread-safe** means safe when several parts of a program run at the same time (general knowledge). You refer to the object by its name directly, as in `Counter.hit()`.
+An **object declaration** is written with the word `object` and a name. The Kotlin documentation says it lets you define a class and create an **instance** of it in a single step, which is useful for implementing **singletons**. An instance is one actual thing made from a class. A singleton is a class that has exactly one instance (general knowledge). The documentation says that the initialisation of an object declaration is thread-safe and done on first access. **Thread-safe** means safe when several parts of a program run at the same time (general knowledge). You refer to the object by its name directly, as in `Counter.hit()`.
 
-A **companion object** is an object declaration inside a class, marked with the word `companion`. The documentation says it lets you define class-level functions and properties, and that its members can be called by using the class name as the qualifier. It also says a companion object is initialised when its class is loaded.
+A **companion object** is an object declaration inside a class, marked with the word `companion`. The documentation says it lets you define class-level functions and properties, and that its members can be called by putting the class name and a dot in front, which the documentation calls using the class name as the **qualifier**. It also says a companion object is initialised when its class is loaded. A class is loaded when the running program first needs it (general knowledge).
 
-A **`data object`** is an object declaration with the word `data` in front. The documentation says the compiler then makes `toString()` return the actual name of the object. Without `data`, printing an object shows its name plus an extra code.
+A **`data object`** is an object declaration with the word `data` in front. The documentation says the compiler, the tool that builds your code, then makes `toString()` return the actual name of the object. The `toString()` function turns a thing into the text that `println` shows. Without `data`, printing an object shows its name plus an extra code.
 
 This program shares one counter between two calls.
 
@@ -153,7 +152,7 @@ fun main() {
 type: predict
 run: false
 id: two-callers-one-clock
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   object Clock {
       var ticks = 0
@@ -191,7 +190,7 @@ output: |
 type: predict
 run: false
 id: companion-counts-all-tickets
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Ticket(val no: Int) {
       companion object {
@@ -232,7 +231,7 @@ output: |
 type: predict
 run: false
 id: shared-session-leaks
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   object Session {
       var user = "nobody"
@@ -274,13 +273,13 @@ output: |
 - **Thinking an object is made fresh each time you write its name.** A name often means "make a new one". For an object it means "go to the one that exists". Anything set earlier is still there.
 - **Keeping one user's facts in an object.** It feels tidy to have one place for the session. Every user and every test then shares that one place, so Ben's login replaces Ana's. Keep per-user facts in objects you make for each user.
 - **Trying to build another one.** The class-like body invites `Counter()`. An object is already built, and Kotlin refuses the call.
-- **Putting a value in a companion when each object needs its own.** The companion is inside the class, so it feels per-object. It belongs to the class and is shared by every object. Put it in the main brackets or the body instead.
+- **Putting a value in a companion when each object needs its own.** The companion is inside the class, so it feels per-object. It belongs to the class and is shared by every object. Put it in the constructor, or make it a normal property of the class, so each object gets its own.
 
 ## Where this shows up in Android
 
-The Android Room page has a note. It says that if your app runs in a single process, you should follow the singleton design pattern when instantiating an `AppDatabase` object, because each `RoomDatabase` instance is fairly expensive and you rarely need access to multiple instances within a single process. **Room** is the Android library for keeping an app's data in a database on the phone (general knowledge). This lesson does not explain the database class itself.
+The Android Room page has a note. It says that if your app runs in a single process, you should follow the singleton design pattern when instantiating (making) an `AppDatabase` object. The reason it gives is that each `RoomDatabase` instance is fairly expensive, and you rarely need access to multiple instances within a single process. A **process** is one running copy of the app (general knowledge). **Room** is the Android library for keeping an app's data in a database on the phone (general knowledge). This lesson does not explain the database class itself.
 
-This lesson shows the tool for that one-of-something: an object, or a companion object that holds the single instance. The symptom of the opposite mistake is an app that opens the database again and again and gets slow. My own reasoning: the other danger is a shared object that holds one user's data, so a second user sees the first user's name after a sign-out.
+My own reasoning: this lesson shows the tool for that one-of-something, which is an object, or a companion object that holds the single instance. The Room page names the pattern, not the Kotlin tool. General knowledge: the symptom of the opposite mistake is an app that opens the database again and again and gets slow. My own reasoning: the other danger is a shared object that holds one user's data, so a second user sees the first user's name after a sign-out.
 
 ## Say it in an interview
 

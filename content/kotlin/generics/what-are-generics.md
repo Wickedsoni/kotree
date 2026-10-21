@@ -23,7 +23,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 The roadmap row's P about the inferred type of listOf(1, "a") is not used: the type is not asserted. The code declares its types.
 The row's F task (a List<Any> that forces casts everywhere) appears as a Predict item, because playground is false.
 The roadmap says no sim, because the demo is compiler errors on the wrong item type. This leaf follows that.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -65,7 +64,7 @@ Is a tub labelled "anything" the best all-purpose tub? Here are three ideas.
 - B. Yes. It holds everything, so it is the best.
 - C. It is refused, because a tub must have a narrow label.
 
-Idea B feels right because more is better. But the cost shows up each time you pull something out. Idea C has no source. Idea A is the answer.
+Idea B feels right because more is better. But the cost shows up each time you pull something out. Idea C is not true, because a tub may carry the wide label "anything", as `List<Any>` shows. Idea A is the answer.
 
 ### Build
 
@@ -78,11 +77,11 @@ Idea B feels right because more is better. But the cost shows up each time you p
 
 ### Name it
 
-A **generic type** is a type with a gap for another type, written in angle brackets, as in `List<String>`. The part in the brackets is the **type argument**. The Kotlin documentation says that classes can have type parameters, and that if the compiler can work out the type arguments, you do not need to write them. In this lesson they are written out, so you can see them.
+A **generic type** is a type with a gap for another type, written in angle brackets, as in `List<String>`. The part in the brackets is the **type argument**. The Kotlin documentation says that classes can have **type parameters**, which are gaps for a type that you fill in when you use the class. It also says that if the **compiler**, the tool that builds your code, can work out the type arguments, you do not need to write them. In this lesson they are written out, so you can see them.
 
 `List<String>` is a list of `String`, which is the "socks only" tub. `List<Int>` is the "numbers only" tub. `List<Any>` is the "anything" tub, where `Any` is a type that every value has.
 
-The documentation says the type safety checks for generic types are done at compile time. At run time, the instances of generic types do not hold information about their type arguments. This is called **type erasure**. The documentation says that because of it, the compiler prohibits checks such as `ints is List<Int>`. It allows a check against `List<*>`, and the items are then typed as `Any?`.
+The documentation says the type safety checks for generic types are done at **compile time**, which is while the program is being built. At **run time**, which is while the program is running, the instances of generic types do not hold information about their type arguments. This is called **type erasure**. The documentation says that because of it, the compiler prohibits checks such as `ints is List<Int>`. Here `is` asks whether a value is of a given type, and the next part of this lesson shows it at work. The compiler allows a check against `List<*>`, a list whose item type is left open. The items are then typed as `Any?`, which means any value, or no value (`null`).
 
 This program uses two narrow tubs. No check is needed when an item comes out.
 
@@ -131,7 +130,7 @@ fun main() {
 type: predict
 run: false
 id: lengths-from-a-socks-only-tub
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val socks: List<String> = listOf("red", "blue")
@@ -157,7 +156,7 @@ output: |
 type: predict
 run: false
 id: anything-tub-needs-a-look
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val tub: List<Any> = listOf("red", 7, "blue")
@@ -188,7 +187,7 @@ output: |
 type: predict
 run: false
 id: add-to-a-labelled-tub
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val tub: MutableList<String> = mutableListOf("red")
@@ -217,13 +216,13 @@ output: |
 - Read `List<String>` as "list of String". The label comes second.
 - A narrow label means no check when an item comes out.
 - The inspector reads the label at the till. A running program cannot.
-- On your own machine, try to write `if (list is List<String>)` and read what Kotlin says. The documentation says the compiler prohibits it.
+- On your own machine, write `fun check(x: Any) { if (x is List<String>) println("yes") }` and read what Kotlin says. It refuses, because `x` has type `Any` and the label is erased.
 
 ## Common mistakes
 
 - **Treating `List<Any>` as the same as any generic list.** "Any" sounds like "all lists". It is one tub with the widest label. Every item that comes out needs a look. Prefer `List<String>` when only text goes in.
-- **Expecting a run-time check on the label.** The label is in the code, so it feels like it travels with the list. The documentation says type arguments are erased, so a check such as `is List<Int>` is refused. Check the items instead, or use `List<*>`.
-- **Thinking `List<Int>` and `List<String>` are different kinds of tub at run time.** The labels differ, so the tubs feel different. The documentation says instances of `Foo<Bar>` and `Foo<Baz?>` are erased to `Foo<*>`. The label is for the inspector only.
+- **Expecting a run-time check on the label.** The label is in the code, so it feels like it travels with the list. The documentation says type arguments are erased, so a check such as `x is List<Int>` is refused when `x` has type `Any`. Check the items instead, or use `List<*>`.
+- **Thinking `List<Int>` and `List<String>` are different kinds of tub at run time.** The labels differ, so the tubs feel different. The documentation says instances of `Foo<Bar>` and `Foo<Baz?>` are erased to `Foo<*>`. Here `Foo` stands for any generic type, such as `List`, and `Bar` and `Baz` for two different item types. The label is for the inspector only.
 
 ## Where this shows up in Android
 
@@ -234,13 +233,13 @@ The symptom is a red underline on a list, saying the types do not match, such as
 ## Say it in an interview
 
 **What are generics, and what problem do they solve?**
-The Kotlin documentation says classes can have type parameters. With `List<String>`, the compiler knows what the list holds and checks at compile time that only text goes in. What comes out is a `String`, so no cast is needed.
+The Kotlin documentation says classes can have type parameters. With `List<String>`, the compiler knows what the list holds and checks at compile time that only text goes in. What comes out is a `String`, so no cast is needed. A **cast** is an order to treat a value as a given type.
 
 **What is type erasure?**
 The documentation says generic type checks are done at compile time. At run time, the instances do not hold their type arguments, so `Foo<Bar>` and `Foo<Baz?>` are erased to `Foo<*>`. The label is gone once the program runs.
 
-**Why can you not write `if (list is List<String>)`?**
-The documentation says there is no general way to check at run time whether a generic instance was made with certain type arguments, and the compiler prohibits such `is` checks. You may check against `List<*>`, and the items are then typed as `Any?`.
+**Why can you not write `if (list is List<String>)` when `list` has type `Any`?**
+The documentation says there is no general way to check at run time whether a generic instance was made with certain type arguments, and the compiler prohibits such `is` checks. You may check against `List<*>`, and the items are then typed as `Any?`. My own reasoning: when `list` is already typed `List<String>`, the same line compiles, because the type is known.
 
 **What goes wrong when you cast a value to a generic type?**
 My own reasoning, from general knowledge: because the label is erased, a cast to `List<String>` cannot be checked at run time. A list with the wrong items passes the cast, and the failure shows later, when an item is used as a `String`, far from the cast. Check the items you rely on, or keep the label right from the start.
@@ -249,7 +248,7 @@ My own reasoning, from general knowledge: because the label is erased, a cast to
 
 1. The part in angle brackets tells the compiler what a list may hold.
 2. A narrow label means items come out with a known type and need no check.
-3. Type arguments are erased at run time, so `is List<String>` is refused.
+3. Type arguments are erased at run time, so `is List<String>` is refused on a value typed `Any`.
 
 ## You can now
 

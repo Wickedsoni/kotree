@@ -20,7 +20,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://kotlinlang.org/docs/enum-classes.html (declaration, name, ordinal, entries, valueOf, when without else)
 - https://kotlinlang.org/docs/control-flow.html (when as an expression must cover all cases)
 - https://developer.android.com/topic/libraries/architecture/lifecycle (Lifecycle.State.RESUMED and STARTED used as values)
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -74,13 +73,13 @@ Idea B feels safe, but Soup is then priced by the "anything else" line and nobod
 
 ### Name it
 
-An **enum class** is a class whose objects are a fixed list that you write out once. The Kotlin documentation says you write `enum class` and list the **enum constants** inside curly brackets, separated by commas, as in `enum class Drink { TEA, COFFEE, COCOA }`. You reach one with the class name and a dot, such as `Drink.TEA`. The documentation's examples write the constants in capitals.
+An **enum class** is a **class**, a blueprint for things, whose ready-made things (its **objects**) are a fixed list that you write out once. The Kotlin documentation says you write `enum class` and list the **enum constants** inside curly brackets, separated by commas, as in `enum class Drink { TEA, COFFEE, COCOA }`. You reach one with the class name and a dot, such as `Drink.TEA`. The documentation's examples write the constants in capitals.
 
-The documentation says every enum constant has built-in `name` and `ordinal` properties: its name, and its position counted from `0`. It also says `entries` is a specialised list of all the constants, so the usual list tools work on it, such as `size`.
+The documentation says every enum constant has built-in `name` and `ordinal` **properties**, which are facts stored on a thing and read with a dot: its name, and its position counted from `0`. It also says `entries` is a specialised list of all the constants, so the usual list tools work on it, such as `size`.
 
 To visit every constant, use a **`for` loop**, which repeats its block once for each item in a list (general knowledge). In `for (d in Drink.entries)`, the name `d` holds each constant in turn, in order.
 
-A `when` over an enum works as in the `when` lesson. The documentation says that when you use all enum constants in a `when` expression, you do not need an `else` branch. The control flow page says a `when` expression must cover all cases, or the compiler reports an error.
+A `when` over an enum works as in the `when` lesson. A `when` **expression** is a `when` whose result is used as a value, as in `val price = when ...`. The **compiler** is the tool that checks your code and turns it into a program before it runs. The documentation says that when you use all enum constants in a `when` expression, you do not need an `else` branch. The control flow page says a `when` expression must cover all cases, or the compiler reports an error.
 
 | Drink machine | In Kotlin |
 |---|---|
@@ -148,7 +147,7 @@ fun main() {
 type: predict
 run: false
 id: count-name-and-place
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   enum class Day { MON, TUE, WED, THU, FRI }
 
@@ -178,23 +177,20 @@ output: |
 type: predict
 run: false
 id: else-hides-a-new-button
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   enum class Drink { TEA, COFFEE, COCOA }
 
+  fun label(d: Drink): String {
+      return when (d) {
+          Drink.TEA -> "hot leaf"
+          else -> "other"
+      }
+  }
+
   fun main() {
-      val a = Drink.TEA
-      val b = Drink.COCOA
-      val first = when (a) {
-          Drink.TEA -> "hot leaf"
-          else -> "other"
-      }
-      val second = when (b) {
-          Drink.TEA -> "hot leaf"
-          else -> "other"
-      }
-      println(first)
-      println(second)
+      println(label(Drink.TEA))
+      println(label(Drink.COCOA))
   }
 options:
   - id: a
@@ -216,7 +212,7 @@ output: |
 type: predict
 run: false
 id: add-up-the-price-sheet
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   enum class Drink { TEA, COFFEE, COCOA }
 
@@ -257,7 +253,7 @@ output: |
 ## Common mistakes
 
 - **Treating a constant as text.** `Drink.TEA` and `"TEA"` look alike. A button is not its label. Use `name` when you need the text, and compare constants with constants.
-- **Adding `else` to a `when` over an enum to be safe.** It feels careful. A new constant then falls into `else` and nobody is told. List every constant and let the compiler warn you.
+- **Adding `else` to a `when` over an enum to be safe.** It feels careful. A new constant then falls into `else` and nobody is told. List every constant, and the compiler refuses to build a `when` that is missing one.
 - **Counting places from 1.** People count from 1 in daily life. The documentation says `ordinal` starts at `0`.
 - **Using free text where a fixed list would do.** Text is quick to type. A typo like "Wensday" is then a valid value until someone looks. Make an enum, so only the real choices exist.
 

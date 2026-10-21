@@ -1,5 +1,11 @@
 # Next steps (handoff, written 18 Oct 2026, updated 20 Oct 2026 after Phase 3)
 
+## RADIAL BUILD from wave 11 (author, 21 Oct 2026, decision L34)
+- Waves 1-10 completed Foundation and most of Kotlin (Kotlin has 3 leaves left: reading-order-for-code, spotting-risky-patterns, review-a-generated-file; they join a later layer).
+- From wave 11, each author "next" = one layer: the next eligible leaf of every branch. `python3 scripts/next-layer.py` prints it (currently 16 leaves; every branch's first leaf is an old shadow pilot draft that must be rewritten to the current checklist and reviewed, not just flipped).
+- Layer pipeline: writer batches (max 3 agents), 2 reviewers, fixer, re-check, housekeeper, then ONE `gh workflow run build.yml --ref feat/design-v2`, wait for success, push the sha to main. Branch pushes do not build.
+
+
 > Read this first in a new session, then `docs/INDEX.md`. `docs/00-decisions.md` wins every conflict.
 
 ## State on 18 Oct 2026 (historical; current state is "Phase 3 done" below)

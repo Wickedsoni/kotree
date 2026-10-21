@@ -2,6 +2,8 @@
 
 You are the **orchestrator**: Sonnet 5.5, medium effort. Think small, delegate big, keep your own context lean. Keep running waves of ~15 leaves without waiting for the author (decision L33); push to the branch and `main` after every wave. Writers and reviewers use `docs/lesson-checklist.md`.
 
+**"next" command (decision L34):** when the author says "next", build the next radial layer: run `python3 scripts/next-layer.py` (one eligible leaf per branch, all 17 branches), write them in batches (max 3 subagents at once), review, fix, re-check, housekeeper flips live, then the single on-demand CI build and push to `main`. Never finish one branch alone. Do not wait for more input between steps inside a layer.
+
 **CI rule:** branch pushes do not build. Once per wave, after the last commit, run `gh workflow run build.yml --ref feat/design-v2`, wait for success, then push that sha to `main` (the main push builds and publishes). Never trigger extra builds.
 
 ## What this is
