@@ -173,7 +173,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Reading Code** (3)
 
-- - In what order should I read an unfamiliar Kotlin file? (medium)
+- [x] In what order should I read an unfamiliar Kotlin file? (medium)
 - - Which lines in tidy-looking Kotlin deserve a second look? (hard)
 - - Would I accept this generated file in review? (hard)
 
@@ -182,7 +182,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **What Is an App** (2)
 
-- >> What is actually inside an Android app? (easy)
+- [x] What is actually inside an Android app? (easy)
 - - Who starts my app if I never call main()? (easy)
 
 **Activities** (3)
@@ -258,7 +258,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **First Composable** (4)
 
-- >> Why does Compose describe the screen instead of changing it step by step? (medium)
+- [x] Why does Compose describe the screen instead of changing it step by step? (medium)
 - - What makes a Kotlin function a composable? (easy)
 - - How do I put words and pictures on the screen? (easy)
 - - How can I see my screen without running the app? (easy)
@@ -352,7 +352,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Why the Main Thread Matters** (2)
 
-- >> Which thread draws my screen and runs my click code? (easy)
+- [x] Which thread draws my screen and runs my click code? (easy)
 - - Why does one slow job freeze the whole screen? (medium)
 
 **Threads** (2)
@@ -429,7 +429,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Why Architecture** (2)
 
-- >> Why does an app with everything in one file become impossible to change? (easy)
+- [x] Why does an app with everything in one file become impossible to change? (easy)
 - - Which code shows things, which decides, and which fetches? (easy)
 
 **ViewModel** (4)
@@ -501,7 +501,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Requests from an App** (2)
 
-- >> What does my app actually send to a server, and what comes back? (easy)
+- [x] What does my app actually send to a server, and what comes back? (easy)
 - - Why does my first network call fail before it even leaves the phone? (easy)
 
 **The HTTP Client** (3)
@@ -548,7 +548,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **What Is Kotlin Multiplatform** (2)
 
-- >> Which parts of an app can I write once, and which must I still write for each phone? (easy)
+- [x] Which parts of an app can I write once, and which must I still write for each phone? (easy)
 - - How does the same Kotlin end up inside an app on an iPhone? (medium)
 
 **Source Sets** (2)
@@ -606,7 +606,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Complexity** (4)
 
-- >> How many steps does this code take for 10 items, 100 items and 1000 items? (easy)
+- [x] How many steps does this code take for 10 items, 100 items and 1000 items? (easy)
 - - What does O(n) say about my code, and what does it ignore? (medium)
 - - Which of these loops hides an O(n²) cost? (medium)
 - - When is it right to spend more memory to save time? (easy)
@@ -703,7 +703,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Analysis of Algorithms** (3)
 
-- >> Why can the same code be fast on one input and slow on another? (easy)
+- [x] Why can the same code be fast on one input and slow on another? (easy)
 - - What do O, Omega and Theta each promise? (medium)
 - - How can I be sure a loop gives the right answer for every input, not just my tests? (medium)
 
@@ -755,7 +755,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **What an Operating System Does** (2)
 
-- >> What does the operating system do for my app that my code cannot do alone? (easy)
+- [x] What does the operating system do for my app that my code cannot do alone? (easy)
 - - How does my app ask the operating system to use the hardware for it? (easy)
 
 **Processes** (3)
@@ -811,7 +811,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **How the Internet Works** (2)
 
-- >> When my app loads data, which computer asks and which one answers? (easy)
+- [x] When my app loads data, which computer asks and which one answers? (easy)
 - - How does a message cross the internet as many small packets? (easy)
 
 **Layers** (1)
@@ -868,7 +868,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Why Test** (1)
 
-- >> What does a test give me that tapping through the app does not? (easy)
+- [x] What does a test give me that tapping through the app does not? (easy)
 
 **Unit Tests** (2)
 
@@ -926,7 +926,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Measure First** (1)
 
-- >> Why must I measure before I try to make my app faster? (easy)
+- [x] Why must I measure before I try to make my app faster? (easy)
 
 **Profiler Tour** (1)
 
@@ -975,7 +975,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **What Is Native Code** (1)
 
-- >> What is native code inside an Android app? (easy)
+- [x] What is native code inside an Android app? (easy)
 
 **ART and Dex** (2)
 
@@ -1007,7 +1007,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Threat Thinking** (1)
 
-- >> How do I think like someone who wants to attack my app? (easy)
+- [x] How do I think like someone who wants to attack my app? (easy)
 
 **Secure Storage** (2)
 
@@ -1055,7 +1055,7 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 
 **Git** (4)
 
-- >> How do I save a snapshot of my project that I can return to later? (medium)
+- [x] How do I save a snapshot of my project that I can return to later? (medium)
 - - How can I try an idea without breaking my working code? (medium)
 - - What do I do when git says two changes collide? (hard)
 - - How does my code get to GitHub and into a teammate's project? (hard)

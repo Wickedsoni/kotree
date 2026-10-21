@@ -1,14 +1,14 @@
 ---
 id: kmp/what-is-kmp/what-kmp-shares
 title: "Which parts of an app can I write once, and which must I still write for each phone?"
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: Kotlin Multiplatform shares the logic you choose, such as rules and data code. Camera, notifications and other phone features stay with each platform.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [shared-or-platform-bins]
 playground: false
 fruit: false

@@ -239,7 +239,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` (none live, none up-next forced). Sims in this branch are browser animations of what changes on the phone screen; there is no Android emulator (L15, D8).
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Sims in this branch are browser animations of what changes on the phone screen; there is no Android emulator (L15, D8).
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

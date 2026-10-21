@@ -314,7 +314,7 @@ Foundation is recommended first ("Start here"), then `kotlin`. Phase plan: compl
 
 Every theory leaf names where the idea shows up in a real app in its Notes cell (`Android:`), as the Theory-Scared Student requires (`docs/01` §2.3). Android lines describe what a user can see; anything about library internals is marked `⚠️ VERIFY` against developer.android.com before the leaf goes live. No complexity number is attached to an Android class in this roadmap. All examples are plain Kotlin that runs in the browser editor.
 
-All 46 leaves are `shadow` on 18 Oct 2026. Nothing is published.
+One leaf is live since 21 Oct 2026; the rest are `shadow`.
 
 ## Stems
 

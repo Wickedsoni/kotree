@@ -1,14 +1,14 @@
 ---
 id: concurrency/why-the-main-thread/what-the-main-thread-does
 title: "Which thread draws my screen and runs my click code?"
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: One thread, the main thread, draws your screen and runs your tap code. In our picture, its jobs wait in one line.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [main-thread-queue]
 playground: true
 fruit: false

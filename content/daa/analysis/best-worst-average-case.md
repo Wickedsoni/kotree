@@ -1,28 +1,19 @@
 ---
 id: daa/analysis/best-worst-average-case
 title: Why can the same code be fast on one input and slow on another?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: A search can take 1 step or 1,000 steps on lists of equal size. Best, worst and average case say which one you mean.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [linear-search-shelf]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live) LeetCode 81, 912, 215 (titles checked).
-- Theory leaf: the step counts are traced by hand and the one average (1 to 5 gives 3) is arithmetic. The best-and-worst-steps snippet was run with kotlin 2.4.21 (scripts/kt-run.sh); the two non-Kotlin items were not run.
-- Kotlin for loops over a collection: https://kotlinlang.org/docs/control-flow.html
-- Best, worst and average case, amortized cost, linear search: general knowledge, labelled in the text.
-- Android Where-this-shows-up paragraph is an illustration from the roadmap row, labelled "my own reasoning".
-- Practice problems: docs/practice/practice-daa.md (LeetCode 28 and HackerRank Running Time of Algorithms; numbers and URLs copied from the supplied file, not opened; reviewer re-checks).
--->
 
 ## The question
 

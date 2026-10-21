@@ -127,7 +127,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` on 18 Oct 2026. Nothing is published. Every stem is phase 4, so every `Assumes` target must sit in phase 4 or lower, and in phase 4 only in a branch that comes earlier in the `docs/08` §10.1 tie-break order (computer networking, android-core, concurrency, architecture and data). Anything later (android-core phase 5 stems, ui phase 5 stems, security, testing, tools) is `Helps to know` only.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Every stem is phase 4, so every `Assumes` target must sit in phase 4 or lower, and in phase 4 only in a branch that comes earlier in the `docs/08` §10.1 tie-break order (computer networking, android-core, concurrency, architecture and data). Anything later (android-core phase 5 stems, ui phase 5 stems, security, testing, tools) is `Helps to know` only.
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

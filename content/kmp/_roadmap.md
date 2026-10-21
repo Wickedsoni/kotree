@@ -156,7 +156,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` on 18 Oct 2026. Nothing is published. Every stem is phase 6. Every `Assumes` target below sits in phase 5 or lower, or in a branch earlier in the `docs/08` §10.1 tie-break; Security comes after this branch, so it is `Helps to know` only.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Every stem is phase 6. Every `Assumes` target below sits in phase 5 or lower, or in a branch earlier in the `docs/08` §10.1 tie-break; Security comes after this branch, so it is `Helps to know` only.
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

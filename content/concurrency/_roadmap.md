@@ -218,7 +218,7 @@ stems:
 
 ## Branch prerequisites
 
-All 32 leaves are `shadow` on 18 Oct 2026. Nothing is published. The branch is phase 4. Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). Android-behaviour sims use `code-to-screen`: the learner flips between pre-written code variants and watches a drawn screen and timeline change.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. The branch is phase 4. Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). Android-behaviour sims use `code-to-screen`: the learner flips between pre-written code variants and watches a drawn screen and timeline change.
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

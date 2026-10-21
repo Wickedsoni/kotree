@@ -1,28 +1,19 @@
 ---
 id: dsa/complexity/counting-steps
 title: How many steps does this code take for 10 items, 100 items and 1000 items?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: Count how often a loop's work runs as a list grows. A loop inside a loop grows far faster than a single loop.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [step-counter-bars]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- Kotlin ranges, 1..4 includes both ends: https://kotlinlang.org/docs/ranges.html
-- Kotlin for loops over ranges and collections: https://kotlinlang.org/docs/control-flow.html
-- Android, frames must render in under 16 ms for 60 fps, overrun drops the frame: https://developer.android.com/topic/performance/vitals/render
-- Practice problems: docs/practice/practice-dsa.md (tags [both] and [A]; LeetCode 268 is tag [B], number from memory, re-check).
-- Theory leaf: the step counts are arithmetic traced by hand; the challenge snippets were run with kotlin 2.4.21 (scripts/kt-run.sh).
--->
 
 ## The question
 

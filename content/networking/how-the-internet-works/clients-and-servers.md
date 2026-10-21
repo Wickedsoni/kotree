@@ -1,21 +1,19 @@
 ---
 id: networking/how-the-internet-works/clients-and-servers
 title: When my app loads data, which computer asks and which one answers?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: When an app loads data, the app asks and a server answers. See who does what, and what you see when nobody answers.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/basics/network-ops/connecting (INTERNET and ACCESS_NETWORK_STATE are normal permissions, granted at install time; network work on the main thread throws NetworkOnMainThreadException; HttpsURLConnection supports configurable timeouts). Interview data: docs/practice/interview-networking.md (its Volley link does not match the topic, so it is not used). General knowledge, not from an Android page: what a client and a server are, and the cloud. No sim: the roadmap row says one diagram of two boxes and an arrow. The roadmap's chat-message and news-alert situations are left out because how an app receives them is a different topic. Predict items are traced by hand. -->
 
 ## The question
 

@@ -1,21 +1,19 @@
 ---
 id: os/what-an-os-does/what-the-os-does-for-apps
 title: What does the operating system do for my app that my code cannot do alone?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: The operating system shares the phone between apps and keeps them apart. Your code asks it for the screen, storage and CPU time.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/guide/platform ("The foundation of the Android platform is the Linux kernel"; from Android 5.0 each app runs in its own process with its own instance of ART). https://developer.android.com/media/optimize/audio-focus (only one app can hold audio focus at a time; from Android 12 the system forces the playing app to fade out when another app requests focus; before Android 12 the system cannot stop an app that keeps playing loudly). The unique user ID per app comes from https://source.android.com/docs/security/app-sandbox, which could not be opened from here; the sentence was read in a search excerpt of that page. General knowledge, not from an Android page: what a process is, CPU time shared in turns, the four resources an OS shares. Interview data: docs/practice/practice-os.md. It says problems: none for this leaf, so there is no Practise on these list. No sim: the roadmap row says one picture of three bands. Predict items are traced by hand. -->
 
 ## The question
 

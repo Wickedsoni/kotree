@@ -167,7 +167,7 @@ Foundation is recommended first ("Start here"). The whole branch is phase 5, aft
 
 Every theory leaf names where the idea shows up in a real app in its Notes cell (`Android:`), as `docs/01` §2.3 requires. Lines about library internals carry `⚠️ VERIFY` against official docs. Examples are plain Kotlin that runs in the browser editor.
 
-All 22 leaves are `shadow` on 18 Oct 2026. Nothing is published.
+One leaf is live since 21 Oct 2026; the rest are `shadow`.
 
 ## Stems
 

@@ -119,7 +119,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` on 18 Oct 2026. Nothing is published. Stems `git` and `android-studio` are phase 2, `gradle-basics`, `adb-and-logcat` and `lint-and-static-analysis` are phase 5, and `ci` and `publishing` are phase 6. Tools comes right after Kotlin in the `docs/08` §10.1 tie-break, so the phase-2 and phase-5 stems may `Assume` only Foundation, Kotlin and earlier-phase leaves; later branches (`android-core`, `ui`, `testing`, `profiling`) appear here as `Helps to know` only. Gradle in depth is in `## Later`. There is no Android emulator or simulator (L15): git and CI sims are plain animations; Android-behaviour sims, where used, are `code-to-screen`.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Stems `git` and `android-studio` are phase 2, `gradle-basics`, `adb-and-logcat` and `lint-and-static-analysis` are phase 5, and `ci` and `publishing` are phase 6. Tools comes right after Kotlin in the `docs/08` §10.1 tie-break, so the phase-2 and phase-5 stems may `Assume` only Foundation, Kotlin and earlier-phase leaves; later branches (`android-core`, `ui`, `testing`, `profiling`) appear here as `Helps to know` only. Gradle in depth is in `## Later`. There is no Android emulator or simulator (L15): git and CI sims are plain animations; Android-behaviour sims, where used, are `code-to-screen`.
 
 - Assumes Foundation: `foundation/first-code/run-your-first-program` (phase 1) — used by what-is-a-commit.
 - Assumes Foundation: `foundation/how-an-app-is-born/run-your-first-app` (phase 1) — used by find-your-way-around-studio, adb-basics and debug-with-breakpoints (first use of Android Studio is there; this stem is the full tour).

@@ -126,7 +126,7 @@ stems:
 
 ## Branch prerequisites
 
-All 16 leaves are `shadow` on 18 Oct 2026. Nothing is published. The branch is phase 5 and comes after `testing` in the tie-break order. The author has no emulator on the site (L15, D8): profiler results are shown through reference videos and recorded charts played as `animation` sims (`docs/05` §4.2), in which the learner switches between recorded runs of pre-written code variants and watches a timeline change. This branch uses `animation`, not `code-to-screen` (author decision 18 Oct 2026). Nothing in this branch runs a profiler in the browser.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. The branch is phase 5 and comes after `testing` in the tie-break order. The author has no emulator on the site (L15, D8): profiler results are shown through reference videos and recorded charts played as `animation` sims (`docs/05` §4.2), in which the learner switches between recorded runs of pre-written code variants and watches a timeline change. This branch uses `animation`, not `code-to-screen` (author decision 18 Oct 2026). Nothing in this branch runs a profiler in the browser.
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

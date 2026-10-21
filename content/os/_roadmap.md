@@ -161,7 +161,7 @@ stems:
 
 ## Branch prerequisites
 
-All 23 leaves are `shadow` on 18 Oct 2026. Nothing is published. Phases follow `docs/08` §10.1: `what-an-os-does`, `processes`, `memory` and `threads` are phase 3; `scheduling`, `synchronisation` and `deadlock` are phase 4; `files`, `android-os` and `putting-it-together` are phase 6. Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). Most challenges are small plain-Kotlin models, printed output, or a diagram to read. ⚠️ VERIFY on kotlinlang.org that the embedded Kotlin Playground can start threads before any thread leaf goes live.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Phases follow `docs/08` §10.1: `what-an-os-does`, `processes`, `memory` and `threads` are phase 3; `scheduling`, `synchronisation` and `deadlock` are phase 4; `files`, `android-os` and `putting-it-together` are phase 6. Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). Most challenges are small plain-Kotlin models, printed output, or a diagram to read. ⚠️ VERIFY on kotlinlang.org that the embedded Kotlin Playground can start threads before any thread leaf goes live.
 
 Rule for the phase checks below: phase 3 stems here may assume only Foundation, Kotlin and phase-2 DSA, because Android core and the phase-3 DSA stems come after `os` in the tie-break order. Android core, DSA and Concurrency leaves are therefore "Helps to know" for phases 3 and 4. Phase 6 stems may assume Android core and Concurrency.
 

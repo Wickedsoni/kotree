@@ -1,21 +1,19 @@
 ---
 id: profiling/measure-first/measure-before-you-fix
 title: Why must I measure before I try to make my app faster?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: Guessing which code is slow often picks the wrong code. A measurement shows where the time goes, so your fix lands in the right place.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [measure-bars]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/topic/performance/vitals/render ("Run a release or at least non-debuggable version of your app. The ART runtime disables several important optimizations to support debugging features"; frames must render in under 16 ms for 60 frames per second; method traces "produce false-positive janks due to heavy overhead"; Profile GPU Rendering, Systrace and Perfetto named for finding jank). The page has no sentence that says "measure before you optimize", so that rule is this lesson's teaching, not a quote. The numbers in the lesson (300, 200, 60, 40 ms) are invented for teaching and the lesson says so. General knowledge: premature optimization. Interview data: docs/practice/interview-profiling.md (its link to developer.android.com/topic/performance/profiling returns 404, so it is not used). Sim measure-bars is new, see docs/sims/needed-ids.md. Predict items are traced by hand. -->
 
 ## The question
 

@@ -1,21 +1,19 @@
 ---
 id: ui/first-composable/what-is-declarative-ui
 title: "Why does Compose describe the screen instead of changing it step by step?"
-status: shadow
+status: live
 difficulty: medium
 order: 1
 requires: []
 summary: The screen is built from the current data. You describe how it should look, and you do not patch it step by step.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [declarative-vs-steps]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/develop/ui/compose/mental-model ("a declarative API that lets you render your app UI without imperatively mutating frontend views"; "You update the UI by calling the same composable function with different arguments"; the imperative way is to "walk the tree using functions like findViewById()" and call methods like button.setText(String); "Manipulating views manually increases the likelihood of errors"; "If a piece of data is rendered in multiple places, you might forget to update one of the views that shows it"; "conceptually regenerating the entire screen from scratch, then applying only the necessary changes"; recomposition "calls only the functions or lambdas that might have changed, and skips the rest"; composable functions should be "fast, idempotent, and free of side-effects"; "A side-effect is any change that is visible to the rest of your app"). Interview data: docs/practice/interview-ui.md (its senior question about lifting state and its claim that Compose eliminates inconsistent UI are not on the page, so they are not used). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.20 only; for this rewrite, the challenges were run with kotlin 2.4.21 (scripts/kt-run.sh) and every output matched, so slides-with-a-list, slides-with-a-description and fix-badge-left-behind say kotlin-2.4.21. Compose definition: https://developer.android.com/compose ("Jetpack Compose is Android's recommended modern toolkit for building native UI."). Common mistakes bullet 4: https://developer.android.com/develop/ui/compose/mental-model ("In Compose's declarative approach, widgets are relatively stateless and don't expose setter or getter functions."). All code is a model in plain Kotlin, not real Android. Sim declarative-vs-steps is new and is a code-to-screen sim, see docs/sims/needed-ids.md. -->
 
 ## The question
 

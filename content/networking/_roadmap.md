@@ -151,7 +151,7 @@ stems:
 
 ## Branch prerequisites
 
-All 21 leaves are `shadow` on 18 Oct 2026. Nothing is published. Every stem is phase 4 (`docs/08` §10.1). Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). The Kotlin Playground may not be able to open network connections, so challenges use printed text, small plain-Kotlin models and diagrams. ⚠️ VERIFY on kotlinlang.org whether the Playground allows outgoing network calls before any leaf promises a live request.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Every stem is phase 4 (`docs/08` §10.1). Android framework code does not run in the browser editor and there is no Android emulator or simulator (L15, D8). The Kotlin Playground may not be able to open network connections, so challenges use printed text, small plain-Kotlin models and diagrams. ⚠️ VERIFY on kotlinlang.org whether the Playground allows outgoing network calls before any leaf promises a live request.
 
 Rule for the phase checks below: networking is phase 4 and comes after `foundation`, `kotlin`, `tools`, `os` and `dsa` in the tie-break order, so it may assume leaves from those branches (phase 4 or lower for the OS and DSA stems). Android core, Concurrency and Networking inside apps come later in the tie-break order, so they are "Helps to know" only.
 

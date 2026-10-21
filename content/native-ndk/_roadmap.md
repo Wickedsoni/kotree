@@ -85,7 +85,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` on 18 Oct 2026. Nothing is published. Every stem is phase 6. Every `Assumes` target below sits in phase 5 or lower, or in `tools` (earlier than `native-ndk` in the `docs/08` §10.1 tie-break). This branch is at overview level: a fresher learns to read and review native code and to decide whether to use it, not to write a game engine. There is no Android emulator or simulator in Kotree (L15), so every Android-behaviour sim is `code-to-screen` or a plain animation.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Every stem is phase 6. Every `Assumes` target below sits in phase 5 or lower, or in `tools` (earlier than `native-ndk` in the `docs/08` §10.1 tie-break). This branch is at overview level: a fresher learns to read and review native code and to decide whether to use it, not to write a game engine. There is no Android emulator or simulator in Kotree (L15), so every Android-behaviour sim is `code-to-screen` or a plain animation.
 
 - Assumes Foundation: `foundation/how-computers-work/what-is-a-cpu` (phase 1) — used by what-is-native-code and abis-and-so-files.
 - Assumes Foundation: `foundation/from-code-to-running/what-is-a-compiler` and `foundation/from-code-to-running/what-is-the-jvm` (phase 1) — used by what-is-native-code and what-is-dex.

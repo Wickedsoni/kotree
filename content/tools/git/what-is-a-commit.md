@@ -1,21 +1,19 @@
 ---
 id: tools/git/what-is-a-commit
 title: How do I save a snapshot of my project that I can return to later?
-status: shadow
+status: live
 difficulty: medium
 order: 1
 requires: []
 summary: A commit is a saved snapshot of your project that you choose first, and Git keeps every old one.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [snapshot-tray]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026, from the Pro Git book source at github.com/progit/progit2, because git-scm.com could not be opened from here): book/02-git-basics/sections/recording-changes.asc ("Git stages a file exactly as it is when you run the git add command"; "the commit records the snapshot you set up in your staging area"; "Anything you didn't stage is still sitting there modified"; the git commit -m example; a file named .gitignore lists patterns to leave out; git restore --staged to unstage) and book/01-introduction/sections/what-is-git.asc (Git thinks of its data as snapshots; modified, staged and committed; "Committed means that the data is safely stored in your local database"; most operations need only local files). git restore: a search excerpt of the git-restore manual says the default source for the working tree is the index and --source picks a different commit; the manual page itself was not opened. The default branch name is not stated on purpose. No git command was run for this lesson. General knowledge or my own reasoning, labelled in the text: why a password in an old snapshot is hard to take back, build output files, and what a good commit message looks like. Interview data: docs/practice/interview-tools.md. Sim snapshot-tray is new, see docs/sims/needed-ids.md. Predict items are traced by hand. -->
 
 ## The question
 

@@ -1,14 +1,14 @@
 ---
 id: native-ndk/what-is-native/what-is-native-code
 title: What is native code inside an Android app?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: Native code is already turned into instructions for one kind of CPU. On Android it sits in a file ending in .so.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false

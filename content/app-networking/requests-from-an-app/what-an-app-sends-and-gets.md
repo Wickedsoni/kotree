@@ -1,14 +1,14 @@
 ---
 id: app-networking/requests-from-an-app/what-an-app-sends-and-gets
 title: "What does my app actually send to a server, and what comes back?"
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: A request has an address, a kind, notes and sometimes a body. The reply carries a status code and a body.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [request-parcel-pipe]
 playground: true
 fruit: false

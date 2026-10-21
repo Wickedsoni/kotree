@@ -1,29 +1,19 @@
 ---
 id: kotlin/reading-code/reading-order-for-code
 title: In what order should I read an unfamiliar Kotlin file?
-status: shadow
+status: live
 difficulty: medium
 order: 63
 requires: [kotlin/null-safety/when-to-use-double-bang, kotlin/extensions-scope-and-delegates/scope-functions]
 summary: "Read an unfamiliar file with four questions in a fixed order: types, what runs when, what can be null, and what can run twice."
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!--
-SOURCES (housekeeper strips this comment at go-live)
-- Class layout order and "related stuff together, read top to bottom": https://kotlinlang.org/docs/coding-conventions.html
-- init blocks run in written order with property initializers; parameters without val or var are not stored: https://kotlinlang.org/docs/classes.html
-- Member wins over an extension with the same name; extensions are dispatched statically: https://kotlinlang.org/docs/extensions.html
-- Activity onCreate runs once per activity instance; rotation creates a new instance; savedInstanceState is null the first time: https://developer.android.com/guide/components/activities/activity-lifecycle
-- The four-question order comes from docs/01 section 3.5 and the roadmap row; the car analogy is the roadmap's.
-- Supplied interview data (docs/practice/interview-kotlin.md) said public methods then private helpers; the coding-conventions page does not say that, so the lesson follows the page.
--->
 
 ## The question
 

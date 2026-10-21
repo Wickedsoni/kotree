@@ -160,7 +160,7 @@ stems:
 
 ## Branch prerequisites
 
-All 22 leaves are `shadow` on 18 Oct 2026. Nothing is published. The branch is phase 5. There is no Android emulator or simulator in the browser (L15, D8): local tests that use plain Kotlin run in the Kotlin Playground as models; anything that needs a phone (device tests, Compose UI tests, screenshot tests) is shown with a reference video or a `code-to-screen` sim, where the learner flips between pre-written code variants and watches a drawn screen or a pass/fail timeline change.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. The branch is phase 5. There is no Android emulator or simulator in the browser (L15, D8): local tests that use plain Kotlin run in the Kotlin Playground as models; anything that needs a phone (device tests, Compose UI tests, screenshot tests) is shown with a reference video or a `code-to-screen` sim, where the learner flips between pre-written code variants and watches a drawn screen or a pass/fail timeline change.
 
 All targets below are full leaf IDs, checked against the existing roadmaps on 18 Oct 2026.
 

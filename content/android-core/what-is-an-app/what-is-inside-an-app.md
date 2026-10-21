@@ -1,14 +1,14 @@
 ---
 id: android-core/what-is-an-app/what-is-inside-an-app
 title: "What is actually inside an Android app?"
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: An Android app is a set of separate parts, not one program. Four kinds exist, and the system can start each on its own.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false

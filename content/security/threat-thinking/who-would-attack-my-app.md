@@ -1,21 +1,19 @@
 ---
 id: security/threat-thinking/who-would-attack-my-app
 title: How do I think like someone who wants to attack my app?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: To protect an app, list who might want its data and which door they would try. Attackers go for the weakest door, not the strongest lock.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [app-house-doors]
 playground: false
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/privacy-and-security/security-tips (use HTTPS over HTTP because mobile devices often join unsecured networks such as public Wi-Fi hotspots; files on internal storage are by default accessible only to your app; files on external storage, such as SD cards, are globally readable and writable; logs are a shared resource available to an app with the READ_LOGS permission). https://developer.android.com/privacy-and-security/risks/log-info-disclosure (since Android 4.1 only privileged system apps can be granted READ_LOGS, but some pre-loaded apps on some devices declare it, so logging to logcat is discouraged; do not log sensitive data). The page does not use the words attack surface or threat modelling, so those are general knowledge. Also general knowledge: scripts that try many apps, and what a person who holds a copy of the app file can do with it. Interview data: docs/practice/interview-security.md. Sim app-house-doors is new, see docs/sims/needed-ids.md. Predict items are traced by hand. -->
 
 ## The question
 

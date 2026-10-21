@@ -121,7 +121,7 @@ stems:
 
 ## Branch prerequisites
 
-All leaves are `shadow` on 18 Oct 2026. Nothing is published. Every stem is phase 6. Every `Assumes` target sits in phase 5 or lower, or in a phase-6 branch that comes earlier in the `docs/08` §10.1 tie-break (here only `tools`). Security comes after `kmp`, so `kmp` and `native-ndk` link to Security with `Helps to know` only. There is no Android emulator or simulator (L15): Android-behaviour sims are `code-to-screen`; steps with no Android screen are plain animations.
+One leaf is live since 21 Oct 2026; the rest are `shadow`. Every stem is phase 6. Every `Assumes` target sits in phase 5 or lower, or in a phase-6 branch that comes earlier in the `docs/08` §10.1 tie-break (here only `tools`). Security comes after `kmp`, so `kmp` and `native-ndk` link to Security with `Helps to know` only. There is no Android emulator or simulator (L15): Android-behaviour sims are `code-to-screen`; steps with no Android screen are plain animations.
 
 Android, Play and library facts below were checked on 18 Oct 2026 against developer.android.com; each one is marked again with `⚠️ VERIFY` in the leaf where it is used, because security guidance changes between releases.
 

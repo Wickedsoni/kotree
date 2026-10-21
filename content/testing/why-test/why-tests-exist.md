@@ -1,21 +1,19 @@
 ---
 id: testing/why-test/why-tests-exist
 title: What does a test give me that tapping through the app does not?
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: A test is a small program that checks your code the same way every time, so you need not remember to look.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [tests-lamps]
 playground: true
 fruit: false
 upnext: false
 ---
-
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/testing/fundamentals ("manual testing scales poorly" and regressions in your app's behavior can be overlooked; automated testing "is faster, more repeatable, and generally gives you more actionable feedback about your app earlier"; local tests "execute on your development machine or a server" and are "usually small and fast"). The page does not define regression, so the definition here is marked as general knowledge. The page does not say how local tests run, so nothing is claimed about the JVM. Interview data: docs/practice/interview-testing.md (test-driven development and living documentation are not on the page, so they are left out). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.0 only; for this rewrite, the challenges were run with kotlin 2.4.21 (scripts/kt-run.sh) and every output matched, so break-the-price, one-check-misses and fix-the-discount say kotlin-2.4.21. Sim tests-lamps is new, see docs/sims/needed-ids.md. -->
 
 ## The question
 

@@ -1,14 +1,14 @@
 ---
 id: architecture-data/why-architecture/why-code-needs-structure
 title: "Why does an app with everything in one file become impossible to change?"
-status: shadow
+status: live
 difficulty: easy
 order: 1
 requires: []
 summary: When one function gets data, decides and draws, a small change can break the other jobs. Splitting the jobs keeps each change small.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: true
 fruit: false
