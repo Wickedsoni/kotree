@@ -64,3 +64,16 @@ Frontmatter keys and order; `id` equals path; `title`, `difficulty`, `requires`,
 Items 1 to 3, 5 to 9 applied on 21 Oct 2026 to the four leaves (Guess keys varied, `verified: kotlin-2.4.21` on all 12 Predict items). Item 4 merged into 5. Item 10 not applied: owner decision pending. Build check result is recorded in the handoff report.
 
 Optional (not FIX): sentence length (T7). Over 25 words: `functions-as-values` lines 34, 74, 242, 251; `lambda-syntax` lines 72, 78, 226, 239, 242; `higher-order-functions` lines 225 (35 words), 233, 236. `functions-as-values` line 78 "(general knowledge)" can say "the documentation calls these first-class" because the lambdas page does. `lambda-syntax` Guess 1 option C ("the note must always use the word card") is a weak distractor; "the note must always call it `x`" is more believable.
+
+## Re-check
+
+Date 21 Oct 2026, independent re-check of the fixer's diff (`git diff` on the four leaves). `./gradlew :site:validateContent`: `validateContent: ok`, BUILD SUCCESSFUL. No Kotlin code line changed (only prose, Guess order and `verified` fields), so no snippet needed recompiling; the 21-program run above still stands. Item 10 is decided by the owner: Interview sections sit outside the word budget, no build-exercise lines. Not a FIX.
+
+Items confirmed fixed: 2, 5 (Guess keys now A / C / A+C / C; all 12 `verified: kotlin-2.4.21`), 6, 7 (Build step 6, Tricks, interview answer), 8 (`repeat` wording, "lambda" and "trailing lambda" defined at first use, "layout" defined), 9.
+
+VERDICT: FIX (2 small mechanical items remain, `fixer` can do both)
+
+1. `arrays-vs-lists.md` lines 213, 222, 236 (items 1 and 3 together). The new sentences say "The compiler only warns" / "The compiler warns about that `==`". "compiler" is still not defined in this leaf, which is what item 3 removed from lines 35 and 227. Reword to "Kotlin only warns, and the warning is easy to miss". Mechanical.
+2. `lambda-syntax.md` lines 227 and 237 still say "the only argument", the word item 8 removed from line 76. Use "the only input to the call". Mechanical.
+
+Optional: `lambda-syntax.md` line 234 and `higher-order-functions.md` line 236 use "compiler" undefined; ignore if the owner accepts it for later-lesson leaves.
