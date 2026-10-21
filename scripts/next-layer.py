@@ -18,7 +18,7 @@ def live_ids():
             continue
         head = open(f, encoding="utf-8").read(800)
         if re.search(r"^status:\s*live\s*$", head, re.M):
-            rel = os.path.relpath(f, ROOT)[:-3]
+            rel = os.path.relpath(f, ROOT)[:-3].replace(os.sep, "/")
             out.add(rel)
     return out
 
