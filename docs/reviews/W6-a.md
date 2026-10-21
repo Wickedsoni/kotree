@@ -207,3 +207,31 @@ Run `./gradlew :site:validateContent` once more. No other check is needed (no fr
 3. Word budget: `scope-and-shadowing` (about 1,690) and `when-to-use-double-bang` (about 1,675) exceed the 1,600-word prose budget of `docs/04` section 6 by about 5 percent, because of the interview section (L33). Either widen the budget in `docs/04` section 6 or accept. Not a FIX.
 4. The official functions page says `fun empty() = null` "always require[s]" a return type, but kotlinc 2.4.21 compiles it. Possible upstream docs issue; the leaf wording after FIX 2 avoids depending on it.
 5. kotlinc 2.4.21 prints no name-shadowing warning. If the author wants the "warning" fact back in the leaf, it needs an IDE check (Android Studio) that I could not make.
+
+## Re-check (21 Oct 2026, after the fixer)
+
+Checked `git diff` of the eight leaves against every FIX above. Only the FIX lines changed (54 lines in 8 files). I re-extracted all 20 `kotlin` fences and 24 challenge `code` fields and ran each with `bash scripts/kt-run.sh` (kotlinc 2.4.21): outputs and refusals are identical to the table above, the three `verified:` markers per leaf (24 in total, 0 `not-run` left in these eight) match runs that really happened, and no new snippet was added. `./gradlew :site:validateContent`: `validateContent: ok`.
+
+Shadowing text (scope items 2 to 4), run on 2.4.21 with `-Xreport-all-warnings`: a local `val price` inside an `if`, a local `val a` shadowing a parameter and a loop-local `var total` compile with no warning and no message. "The compiler accepts the program below" and "the compiler accepts it. Some editors show a warning (general knowledge)" are TRUE. The editor claim is labelled as general knowledge and stays unverified by an official page.
+
+| Leaf | Re-check | Notes |
+|---|---|---|
+| single-expression-functions | PASS | Items 1 to 5 applied exactly; `control-flow.html` is in SOURCES. |
+| unit-and-nothing | FIX (1) | Items 1 to 4 applied. New N1 below. |
+| scope-and-shadowing | PASS | Items 1 to 6 applied; the new "keeps looking outwards" line is true (earlier probe `1` then `2`). |
+| what-is-null | PASS | Items 1 to 3 applied. |
+| nullable-types | PASS | Items 1 to 3 applied; Q4 now defines Java, annotation (tag) and platform type before use. |
+| safe-call-and-elvis | PASS | Items 1 to 3 applied. |
+| smart-casts | FIX (1) | Items 2 to 7 applied. Item 1 introduced N2 below. |
+| when-to-use-double-bang | PASS | Items 1 to 6 applied; Elvis, safe call, activity, Java, annotation and platform type are now defined where used. |
+
+No internal-process wording in learner text (grep for author, coming next, VERIFY, not-run: only the SOURCES comments, which are stripped at go-live). Sentences changed by the fixer are under 30 words each.
+
+New items (mechanical, `fixer`):
+- N1. `content/kotlin/functions/unit-and-nothing.md` line 222 (interview Q1): "a function with a block body and no written return type". `block body` is never defined on this page (checklist 3; same term was fixed in single-expression-functions item 1). New: "a function with braces and no written return type".
+- N2. `content/kotlin/null-safety/smart-casts.md` line 72: the text from my own FIX 1 ("Always, except a local delegated property, which is not covered here") brings in an undefined term, `delegated property`. My fault, not the fixer's. New: `Always, except for one rare kind that this course does not cover`.
+- N3 (low priority, not blocking, stripped at go-live). Line 18 SOURCES comment of all eight leaves still ends "Snippets are hand-traced, not run." That is now false. Replace with "Snippets were run on Kotlin 2.4.21." (the `housekeeper` strips the comment anyway).
+
+Owner items 1 to 5: none blocks the content fixes. Item 1 (roadmap Sim cells for `safe-call-and-elvis`, `scope-and-shadowing`) remains the only go-live precondition for those two leaves; the curriculum-designer is on it. Items 2 and 3 are decisions, item 4 an upstream docs quirk, item 5 an optional IDE check.
+
+Re-check VERDICT: FIX for 2 leaves (N1, N2 are one-line edits), PASS for 6. After N1 to N3 no further review is needed beyond `validateContent`.

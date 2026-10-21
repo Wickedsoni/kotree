@@ -219,7 +219,7 @@ A symptom you may see is a text box that ignores typing. The page says a `TextFi
 ## Say it in an interview
 
 **What does a Kotlin function return if it has no `return` statement?**
-It returns `Unit`. The documentation says a function with a block body and no written return type is treated as returning `Unit`, and that you do not have to write it.
+It returns `Unit`. The documentation says a function with braces and no written return type is treated as returning `Unit`, and that you do not have to write it.
 
 **How is `Unit` different from `void` in Java?**
 The API page says `Unit` corresponds to `void`. The functions page adds that `Unit` is an actual type and you can use its value. The functions page says you must write `Unit` in a function type such as `() -> Unit`. My own reasoning: a function type always names what its code gives back, and for code with nothing useful to give back the name is `Unit`.

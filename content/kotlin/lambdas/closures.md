@@ -24,15 +24,15 @@ You make a small piece of code that prints a number from outside it. When you ma
 
 Think of a window onto a garden.
 
-- The house is the lambda. Its walls keep out everything except what the window shows.
-- The garden is the code around the house, where the lambda was made.
-- A plant in the garden is a variable. What is growing there right now is its value.
-- The window connects the house to the plant. Looking through it is running the lambda.
+- The house is the small piece of code. Its walls keep out everything except what the window shows.
+- The garden is the code around the house, where the small piece of code was made.
+- A plant in the garden is a named value that can change. What is growing there right now is the value.
+- The window connects the house to the plant. Looking through it is running the small piece of code.
 - The gardener can swap the plant at any time. Whoever looks afterwards sees the new plant.
 - A photo of the garden shows the plant as it was at one moment. It never updates.
 - Two windows onto the same garden show the same plant.
 
-**Where the analogy stops:** A real window only lets you look. A Kotlin lambda can also reach out and change the plant. Also, a real house stays on its plot. A lambda can leave the place where it was made, for example when a function hands it back, and it still reaches the garden it came from.
+**Where the analogy stops:** A real window only lets you look. In Kotlin, the small piece of code is called a lambda, and it can also reach out and change the plant. Also, a real house stays on its plot. A lambda can leave the place where it was made, for example when a function hands it back, and it still reaches the garden it came from.
 
 ## See it move
 

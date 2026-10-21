@@ -69,7 +69,7 @@ The documentation says smart casts work only when the compiler can guarantee tha
 
 | The name | Does the smart cast work? |
 |---|---|
-| A `val` made inside a function | Always, except a local delegated property, which is not covered here |
+| A `val` made inside a function | Always, except for one rare kind that this course does not cover |
 | A `var` made inside a function | If it is not changed between the check and the use, and no small piece of code in braces that runs later changes it |
 | A `val` property | If it is in your own module, which is the part of the project it was declared in. It does not work on a property marked `open` (a class may replace it), on one with a custom getter (code that runs each time it is read), or on one declared in another module. The first two belong to classes |
 | A `var` property | Never, because other code can change it at any time |
