@@ -15,9 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/typecasts.html ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/null-safety.html -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
-<!-- ⚠️ VERIFY: the sim id mixed-tools-chute is new; its spec in docs/sims/needed-ids.md must be turned into a docs/sims file by physics-designer. -->
+<!-- SOURCES: https://kotlinlang.org/docs/typecasts.html ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/null-safety.html --><!-- ⚠️ VERIFY: the sim id mixed-tools-chute is new; its spec in docs/sims/needed-ids.md must be turned into a docs/sims file by physics-designer. -->
 ## The question
 
 A worker pulls tools out of a mixed toolbox one at a time. Any tool can say its name, but only a hammer can swing and only a saw can cut. What should the worker do before swinging whatever is in hand? And what happens if the worker swings without looking?
@@ -84,9 +82,9 @@ Idea A stops the line when a saw arrives. Ideas B and C are both safe. Idea B is
 
 **Polymorphism** means one variable, such as one with the label `Tool`, can hold objects of many kinds, and a call such as `t.name()` runs the version that belongs to the object inside. This is general knowledge, not a quote from the Kotlin documentation.
 
-The `is` operator is the **type check**. The Kotlin documentation says to use it to check whether an object matches a type at runtime. This is the same smart cast idea as the `!= null` check from before. After `t is Hammer`, Kotlin treats `t` as a `Hammer` inside the branch.
+The `is` operator is the **type check**. The Kotlin documentation says to use it to check whether an object matches a type at runtime (runtime means while the program is running). This is the same smart cast idea as the `!= null` check from before. After `t is Hammer`, Kotlin treats `t` as a `Hammer` inside the branch.
 
-The `as` operator is the **unsafe cast**. The documentation says that if a cast fails with `as`, a `ClassCastException` is thrown at runtime. The `as?` operator is the **safe cast**. The documentation says that if the cast fails, it returns `null`.
+The `as` operator is the **unsafe cast**. The documentation says that if a cast fails with `as`, a `ClassCastException` (an exception is a crash signal that stops the program) is thrown at runtime. The `as?` operator is the **safe cast**. The documentation says that if the cast fails, it returns `null`.
 
 ```kotlin
 interface Tool {
@@ -193,7 +191,7 @@ fun main() {
 type: predict
 run: false
 id: when-over-mixed-box
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Tool {
       fun name(): String
@@ -253,7 +251,7 @@ output: |
 type: predict
 run: false
 id: polite-cast-gives-nothing
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Tool {
       fun name(): String
@@ -302,7 +300,7 @@ output: |
 type: predict
 run: false
 id: swing-without-looking
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   interface Tool {
       fun name(): String

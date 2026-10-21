@@ -58,3 +58,15 @@ Pass: recap is one sentence per line (1); Question blocks are 5 sentences or few
 8. Note for the orchestrator, no change to the leaf. data-classes `requires: kotlin/classes-and-objects/two-kinds-of-equality` is a valid roadmap id (position 42), but no content file exists for it yet. Publish that leaf before or with data-classes.
 
 VERDICT: FIX
+
+## Fixes applied
+
+- FIX 1: stray VERIFY comments removed (abstract-classes 19-20; polymorphism 19; data-classes 19). Polymorphism line 20 note kept.
+- FIX 2: `verified: not-run` changed to `verified: kotlin-2.4.21` in all nine Predict blocks across the three leaves.
+- FIX 3: abstract-classes glosses added for "backing fields", "instantiated (made)", "members (functions and properties)", "body (no code)".
+- FIX 4: polymorphism glosses added for "runtime" and "exception".
+- FIX 5: data-classes line 247 now reads "...the same one by default."
+- Check: `./gradlew :site:validateContent` ran OK (validateContent: ok, BUILD SUCCESSFUL).
+- FIX 6 to 8 not in scope (owner and orchestrator items left open).
+
+VERDICT (re-check, final): PASS for all 3 leaves

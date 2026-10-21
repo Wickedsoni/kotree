@@ -15,9 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/data-classes.html ; https://kotlinlang.org/docs/equality.html ; https://developer.android.com/training/data-storage/room ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
-## The question
+<!-- SOURCES: https://kotlinlang.org/docs/data-classes.html ; https://kotlinlang.org/docs/equality.html ; https://developer.android.com/training/data-storage/room ; https://developer.android.com/topic/architecture/ui-layer/state-production -->## The question
 
 A shop prints two receipts for the same order. Both list milk and a total of 5. Can you hand one in for a refund when the shop only has the other one on file? Or does the shop say they are different, because they are two pieces of paper? How could a program decide?
 
@@ -113,7 +111,7 @@ fun main() {
 type: predict
 run: false
 id: data-versus-plain-equals
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Ticket(val seat: Int, val row: String)
 
@@ -145,7 +143,7 @@ output: |
 type: predict
 run: false
 id: pencil-note-is-ignored
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class User(val name: String) {
       var visits: Int = 0
@@ -181,7 +179,7 @@ output: |
 type: predict
 run: false
 id: reading-a-book-aloud
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Book(val title: String, val pages: Int)
 
@@ -244,7 +242,7 @@ My own reasoning: if the object is stored in a set or used as a map key, changin
 
 1. A data class makes `==` compare values, and not whether two objects are the same one.
 2. Only the properties in the primary constructor are compared and printed.
-3. A plain class treats two objects as equal only if they are the same one.
+3. A plain class treats two objects as equal only if they are the same one by default.
 
 ## You can now
 

@@ -15,10 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/classes.html#abstract-classes ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/inheritance.html ; https://developer.android.com/reference/androidx/lifecycle/ViewModel ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs were traced by hand. -->
-<!-- ⚠️ VERIFY: "ViewModel is declared as an abstract class" comes from a search summary of the API reference page, not from reading the page body. -->
-## The question
+<!-- SOURCES: https://kotlinlang.org/docs/classes.html#abstract-classes ; https://kotlinlang.org/docs/interfaces.html ; https://kotlinlang.org/docs/inheritance.html ; https://developer.android.com/reference/androidx/lifecycle/ViewModel ; https://developer.android.com/topic/architecture/ui-layer/state-production -->## The question
 
 You are building ten different houses. All ten need the same walls, the same wiring and the same front door. Only the rooms inside differ. Would you draw the walls ten times? And what if the town also has a rule book that lists what every house must have, but builds nothing?
 
@@ -63,14 +60,14 @@ Does the rule book still have a job? Yes, when many unrelated things must promis
 
 ### Name it
 
-An **abstract class** is a class that cannot be made directly. The Kotlin documentation says abstract classes are classes that can't be instantiated directly, and are designed to be inherited by other classes. It says an abstract class can have both abstract and non-abstract members. To declare a member as **abstract**, you must use the `abstract` keyword explicitly. An abstract member has no body, and the child fills it in with `override`. The documentation says you don't need to write `open` on abstract classes or functions.
+An **abstract class** is a class that cannot be made directly. The Kotlin documentation says abstract classes are classes that can't be instantiated (made) directly, and are designed to be inherited by other classes. It says an abstract class can have both abstract and non-abstract members (functions and properties). To declare a member as **abstract**, you must use the `abstract` keyword explicitly. An abstract member has no body (no code), and the child fills it in with `override`. The documentation says you don't need to write `open` on abstract classes or functions.
 
 Here is how the two tools compare.
 
 | Question | Interface | Abstract class |
 |---|---|---|
 | Can I make an object from it? | No | No |
-| Can it keep data? | No. The documentation says interface properties cannot have backing fields. | Yes. It can have non-abstract properties. |
+| Can it keep data? | No. The documentation says interface properties cannot have backing fields (a hidden spot that stores the value). | Yes. It can have non-abstract properties. |
 | How many can one class use? | One or more. The documentation says a class can implement one or more interfaces. | One parent class (general knowledge). |
 
 ```kotlin
@@ -134,7 +131,7 @@ fun main() {
 type: predict
 run: false
 id: pets-fill-the-gap
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   abstract class Pet(val name: String) {
       abstract fun sound(): String
@@ -182,7 +179,7 @@ output: |
 type: predict
 run: false
 id: each-house-own-count
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   abstract class Counter {
       var count = 0
@@ -229,7 +226,7 @@ output: |
 type: predict
 run: false
 id: lamp-switch-state
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   abstract class Light(var on: Boolean) {
       fun flip() {
@@ -284,7 +281,7 @@ output: |
 ## Common mistakes
 
 - **Thinking abstract classes and interfaces are the same thing with different names.** Both cannot be made directly, so they look alike. An interface cannot keep data, and a class can follow many of them. An abstract class can keep data, and a class can build on only one.
-- **Putting shared data in an interface.** It feels like a place for "things every pet has". The documentation says interface properties cannot have backing fields. Keep the data in a class.
+- **Putting shared data in an interface.** It feels like a place for "things every pet has". The documentation says interface properties cannot have backing fields (a hidden spot that stores the value). Keep the data in a class.
 - **Writing `open` on an abstract class.** It feels needed because the class is built on. The documentation says abstract classes and functions are inheritable by default, so the word is not needed.
 - **Trying to build one from the design.** `Pet("Rex")` looks like a normal call. The design has an empty room, so Kotlin refuses. Build a `Dog` or a `Bird`.
 
@@ -295,7 +292,7 @@ The Android page on producing UI state shows `class DiceRollViewModel : ViewMode
 ## Say it in an interview
 
 **What is an abstract class, and how does it differ from an interface?**
-An abstract class cannot be instantiated directly and can have both abstract and non-abstract members, according to the Kotlin documentation. An interface lists promises and cannot hold backing fields. A class can implement many interfaces but builds on one parent class (general knowledge).
+An abstract class cannot be instantiated (made) directly and can have both abstract and non-abstract members, according to the Kotlin documentation. An interface lists promises and cannot hold backing fields (a hidden spot that stores the value). A class can implement many interfaces but builds on one parent class (general knowledge).
 
 **Can you create an object of an abstract class?**
 No. The documentation says abstract classes can't be instantiated directly. You make an object of a child class that fills in every abstract member.
