@@ -210,7 +210,7 @@ output: |
 
 ## Common mistakes
 
-- **Comparing two arrays with `==` and expecting a check of the items.** It works that way for lists, so it feels right. For arrays it asks whether both names lead to one array, and Kotlin gives `false`. The compiler only warns, and the warning is easy to miss. Use `contentEquals`.
+- **Comparing two arrays with `==` and expecting a check of the items.** It works that way for lists, so it feels right. For arrays it asks whether both names lead to one array, and Kotlin gives `false`. Kotlin only warns, and the warning is easy to miss. Use `contentEquals`.
 - **Thinking `val` makes the items fixed.** The word sounds like "locked". The documentation says it only stops the name from pointing at a different array. Swap items freely, or copy with `toList()` if you need a frozen set.
 - **Printing an array and expecting the items.** A list prints its items, so an array feels the same. Printing the array itself shows a label for the array (general knowledge). Use `joinToString()`.
 - **Trying to add to an array.** A bag grows, so the box feels like it should. An array has no `add`. Make a new array and copy, or use a `MutableList`.
@@ -219,7 +219,7 @@ output: |
 
 **Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its brush page draws a gradient, which is a colour that fades into another colour. In one snippet the colour stops are written with `arrayOf(...)`, and each entry pairs a position with a colour. Elsewhere on the same page the colours are written with `listOf(...)`. So real Android code uses both kinds side by side. The page does not explain why it picks one or the other.
 
-This next part is my own reasoning. Picture a settings screen that keeps four slider positions in an array. It lights up a Save button when `saved != current`. Two arrays with the same four numbers count as different. The compiler warns about that `==`, but only warns, which is easy to miss. So the Save button stays lit when nothing has changed. A check with `contentEquals`, or a list, would ask the question the screen meant.
+This next part is my own reasoning. Picture a settings screen that keeps four slider positions in an array. It lights up a Save button when `saved != current`. Two arrays with the same four numbers count as different. Kotlin warns about that `==`, but only warns, which is easy to miss. So the Save button stays lit when nothing has changed. A check with `contentEquals`, or a list, would ask the question the screen meant.
 
 ## Say it in an interview
 
@@ -233,7 +233,7 @@ The documentation says arrays are for working with Java code and for low-level o
 The documentation says the `Array` class boxes number values into objects, and `IntArray` stores them without boxing. The trade-off is that `IntArray` is a different type from `Array<Int>` and from `List<Int>`, so you convert when another function wants the other one. My own reasoning: the saving matters most when there are very many numbers.
 
 **How do you compare the items of two arrays?**
-Use `contentEquals`. The documentation says not to use `==` for that, because `==` checks whether both names point at one array. For arrays inside arrays it names `contentDeepEquals`. The danger of `==` is that it compiles and gives `false`, so the bug hides. The compiler only warns, and the warning is easy to miss.
+Use `contentEquals`. The documentation says not to use `==` for that, because `==` checks whether both names point at one array. For arrays inside arrays it names `contentDeepEquals`. The danger of `==` is that it compiles and gives `false`, so the bug hides. Kotlin only warns, and the warning is easy to miss.
 
 ## Recap
 

@@ -77,3 +77,6 @@ VERDICT: FIX (2 small mechanical items remain, `fixer` can do both)
 2. `lambda-syntax.md` lines 227 and 237 still say "the only argument", the word item 8 removed from line 76. Use "the only input to the call". Mechanical.
 
 Optional: `lambda-syntax.md` line 234 and `higher-order-functions.md` line 236 use "compiler" undefined; ignore if the owner accepts it for later-lesson leaves.
+
+## Final (orchestrator, 21 Oct 2026)
+PASS. Re-check items 1 and 3 applied (prose only); validateContent ok.

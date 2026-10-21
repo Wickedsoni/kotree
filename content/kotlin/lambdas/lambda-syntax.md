@@ -224,17 +224,17 @@ output: |
 
 ## Where this shows up in Android
 
-**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its Kotlin page says that the last parameter of every layout, such as `Column`, is `content`, which is a function that adds the items inside the layout to the screen. A layout arranges items on the screen. So `Column { Text("Some text") }` hands a trailing lambda to `content`, and the round brackets are left out because it is the only argument. A `Button` shows both forms in one call: `onClick = { ... }` sits inside the round brackets, and a second lambda follows them.
+**Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its Kotlin page says that the last parameter of every layout, such as `Column`, is `content`, which is a function that adds the items inside the layout to the screen. A layout arranges items on the screen. So `Column { Text("Some text") }` hands a trailing lambda to `content`, and the round brackets are left out because it is the only input to the call. A `Button` shows both forms in one call: `onClick = { ... }` sits inside the round brackets, and a second lambda follows them.
 
 My own reasoning: this is a common first puzzle in a Compose file. The braces after `Column` look like a block of code with no function around it. They are the note that `Column` reads to find out what to put on the screen.
 
 ## Say it in an interview
 
 **What is `it` in a Kotlin lambda?**
-It is the default name of a lambda's only input. The documentation says you can leave the input's name and the arrow out, and the compiler names the input `it`. My own reasoning: it keeps short lambdas short, but when one lambda sits inside another, a written name such as `name` is clearer.
+It is the default name of a lambda's only input. The documentation says you can leave the input's name and the arrow out, and Kotlin names the input `it`. My own reasoning: it keeps short lambdas short, but when one lambda sits inside another, a written name such as `name` is clearer.
 
 **What is a trailing lambda, and why does Kotlin allow it?**
-It is a lambda written outside the round brackets. The documentation says this is allowed when the lambda is the last parameter, and the round brackets can go if it is the only argument. My own reasoning: the call then reads like a built-in block, which is why Compose code looks the way it does.
+It is a lambda written outside the round brackets. The documentation says this is allowed when the lambda is the last parameter, and the round brackets can go if it is the only input to the call. My own reasoning: the call then reads like a built-in block, which is why Compose code looks the way it does.
 
 **What does a lambda give back, and how do you return from the middle?**
 It gives back the value of its last expression, unless it gives back `Unit`. To leave early you use a label, such as `return@forEach`. The documentation says a bare `return`, with no label, returns from the nearest function around it, so inside a `forEach` lambda it would leave the function that holds the lambda. A bare `return` in a stored lambda does not compile. The label leaves only the lambda.
