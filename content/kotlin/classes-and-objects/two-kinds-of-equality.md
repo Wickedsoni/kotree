@@ -16,7 +16,6 @@ upnext: false
 ---
 
 <!-- SOURCES: https://kotlinlang.org/docs/equality.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/equals.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/hash-code.html ; https://kotlinlang.org/docs/data-classes.html ; https://developer.android.com/develop/ui/compose/performance/stability -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). Outputs were hand-traced twice. -->
 ## The question
 
 Two shoppers each hand a cashier a loyalty card with the number 7 on it. Are these the same card, or two cards that look alike? A program that compares two objects meets the same puzzle. When it asks whether two objects are equal, what is it really asking?
@@ -119,7 +118,7 @@ It prints `true` and then `false`. Use `==` to compare text. The documentation's
 type: predict
 run: false
 id: ada-written-twice
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val first = "Ada"
@@ -150,7 +149,7 @@ output: |
 type: predict
 run: false
 id: change-shows-through-the-tag
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Mug(var size: Int)
 
@@ -184,7 +183,7 @@ output: |
 type: predict
 run: false
 id: two-seats-same-numbers
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Seat(val row: Int, val number: Int)
 
@@ -229,7 +228,7 @@ output: |
 
 A **composable** is a function that describes one part of the screen. **Recomposition** is Compose running a composable again because its inputs may have changed. A row on a screen can redraw although nothing on it changed.
 
-The Compose stability page explains one cause. It says Compose compares stable parameters using structural equality, and skips the composable if they are equal to the previous values. For unstable parameters, with strong skipping mode on (the default from Kotlin 2.0.20), it compares with `===` and skips only if the same instance is passed. The page's example has a `Contact` class with `var` properties. It says passing a newly created `Contact` with identical values still makes `ContactDetails` recompose. That is the twin case in this lesson: two objects that are alike but not the same person, compared by sameness.
+The Compose stability page explains one cause. It says Compose compares **stable parameters** (inputs Compose knows cannot change behind its back) using structural equality, and skips the composable if they are equal to the previous values. For **unstable parameters** (inputs Compose cannot make that promise about), with **strong skipping mode** on (a compiler setting that is the default from Kotlin 2.0.20), it compares with `===` and skips only if the same object is passed. The page's example has a `Contact` class with `var` properties. It says passing a newly created `Contact` with identical values still makes `ContactDetails` recompose. That is the twin case in this lesson: two objects that are alike but not the same person, compared by sameness.
 
 ## Say it in an interview
 
@@ -243,7 +242,7 @@ The documentation says `a == b` is translated to `a?.equals(b) ?: (b === null)`.
 My own reasoning: so that `==` never crashes when the left side is null. You can write `a == null` without a guard, and the documentation says Kotlin turns it into `a === null`.
 
 **What goes wrong if you write `equals` and forget `hashCode`?**
-The `hashCode` documentation says two objects that are equal by `equals` must give the same hash code. If you break that, hash-based collections such as `HashSet` and `HashMap` can fail to find an object that is equal to one inside (general knowledge: they use the hash code to decide where to look). Data classes avoid the problem because the compiler generates both functions together, says the data class page.
+The `hashCode` documentation says two objects that are equal by `equals` must give the same **hash code** (a number computed from the object's fields). If you break that, hash-based collections such as **`HashSet`** (a set) and **`HashMap`** (a map), which look items up by that number, can fail to find an object that is equal to one inside (general knowledge: they use the hash code to decide where to look). Data classes avoid the problem because the compiler generates both functions together, says the data class page.
 
 ## Recap
 

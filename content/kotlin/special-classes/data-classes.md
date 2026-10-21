@@ -15,7 +15,9 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/data-classes.html ; https://kotlinlang.org/docs/equality.html ; https://developer.android.com/training/data-storage/room ; https://developer.android.com/topic/architecture/ui-layer/state-production -->## The question
+<!-- SOURCES: https://kotlinlang.org/docs/data-classes.html ; https://kotlinlang.org/docs/equality.html ; https://developer.android.com/training/data-storage/room ; https://developer.android.com/topic/architecture/ui-layer/state-production -->
+
+## The question
 
 A shop prints two receipts for the same order. Both list milk and a total of 5. Can you hand one in for a refund when the shop only has the other one on file? Or does the shop say they are different, because they are two pieces of paper? How could a program decide?
 

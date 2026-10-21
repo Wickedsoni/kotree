@@ -52,3 +52,13 @@ VERDICT: FIX
 4. two-kinds-of-equality.md frontmatter `sims: [twins-or-one-person]` vs roadmap row (`content/kotlin/_roadmap.md` line 511): row says "reuse `objects-are-references` sim, with a same-object light and a same-content light". Checklist 8 requires a match. Needs the owner (`curriculum-designer`): either update the roadmap row to name `twins-or-one-person` as a new sim, or change the leaf. Also, `docs/sims/twins-or-one-person.md` spec does not exist yet (only the needed-ids entry), so the leaf cannot go `live` with a working sim until `physics-designer` and `sim-engineer` deliver it.
 5. data-classes.md, line 18. The SOURCES comment and the heading are on one line: `...stack/state-production -->## The question`. A Markdown renderer treats the rest of that line as part of the HTML comment, so the heading is swallowed, and the housekeeper strip at go-live would delete it too. Insert a newline (and blank line) after `-->`. Mechanical (`fixer`). Only this file has the pattern.
 6. Dependency: `objects-are-references.md` is missing (see Observations). Neither leaf should go `live` before it. Owner/orchestrator scheduling, not a text fix.
+
+## Fixes applied
+
+- FIX 1: deleted the stray VERIFY comment in two-kinds-of-equality.md.
+- FIX 2: three challenge blocks set to `verified: kotlin-2.4.21`.
+- FIX 3: plain definitions added for stable/unstable parameters, strong skipping mode, object, hash code, HashSet, HashMap.
+- FIX 4: skipped (kept `twins-or-one-person`, per owner instruction).
+- FIX 5: newline added after the SOURCES comment in data-classes.md.
+- FIX 6: not applied (owned by another agent).
+- Check: `./gradlew :site:validateContent` ok.
