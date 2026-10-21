@@ -121,7 +121,7 @@ object Tokens {
         const val BOUGH_SPREAD_DEG = 64.000
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 440.000
+        const val BRANCH_SPREAD = 400.000
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0
@@ -155,7 +155,7 @@ object Tokens {
         const val STEM_WIDTH = 2
         const val STEM_TIP_WIDTH = 1
         /** Gap between the leaf grid's edge and the label anchor (sideways), and the twig tip's vertical label offset. */
-        const val STEM_LABEL_GAP = 28.000
+        const val STEM_LABEL_GAP = 32.000
         /** Leaf slots: fixed pitch between slots in a ceil(sqrt(n))-column grid at the twig tip; leaf edge, world px. */
         const val LEAF_PITCH = 14.000
         const val LEAF_SIZE = 8
