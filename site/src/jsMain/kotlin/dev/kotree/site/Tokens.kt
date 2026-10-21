@@ -116,12 +116,12 @@ object Tokens {
         const val BOUGH_TIP_WIDTH = 8
         const val BRANCH_WIDTH = 8
         const val BRANCH_TIP_WIDTH = 4
-        const val BOUGH_LEN = 390.000
+        const val BOUGH_LEN = 420.000
         const val BOUGH_LEN_JITTER = 30.0
-        const val BOUGH_SPREAD_DEG = 52.000
+        const val BOUGH_SPREAD_DEG = 64.000
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 205.000
+        const val BRANCH_SPREAD = 440.000
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0
@@ -142,10 +142,10 @@ object Tokens {
         /** Coordinates are rounded to 1/QUANT world px so the geometry hash is stable. */
         const val QUANT = 16.0
         /** Stem twigs attach along the limb at parameters from STEM_T_MIN to STEM_T_MAX, alternating sides. */
-        const val STEM_T_MIN = 0.250
+        const val STEM_T_MIN = 0.200
         const val STEM_T_MAX = 0.95
         /** Twig length in world px, plus per-stem jitter (Rng "stem:<id>"). */
-        const val STEM_LEN = 52.000
+        const val STEM_LEN = 92.000
         const val STEM_LEN_JITTER = 6.0
         /** Extra twig length for every second same-side stem, so neighbouring labels stack. */
         const val STEM_LEN_STAGGER = 40.000
@@ -155,9 +155,9 @@ object Tokens {
         const val STEM_WIDTH = 2
         const val STEM_TIP_WIDTH = 1
         /** Gap between the leaf grid's edge and the label anchor (sideways), and the twig tip's vertical label offset. */
-        const val STEM_LABEL_GAP = 16.000
+        const val STEM_LABEL_GAP = 28.000
         /** Leaf slots: fixed pitch between slots in a ceil(sqrt(n))-column grid at the twig tip; leaf edge, world px. */
-        const val LEAF_PITCH = 18.000
+        const val LEAF_PITCH = 14.000
         const val LEAF_SIZE = 8
         /** Twig bend as a share of twig length, and leaf slot jitter as a share of the pitch (Rng jitter, +-). */
         const val STEM_BEND = 0.15
