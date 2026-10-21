@@ -141,6 +141,22 @@ def main():
     check("scrollbar.thumb (= status.treeStem) on white", obj["Status"]["treeStem"], white, UI_MIN)
     check("scrollbar.thumb.hover (= on-surface-muted) on white", obj["Color"]["onSurfaceMuted"], white, UI_MIN)
     check("scrollbar.thumb.active (= on-surface) on white", obj["Color"]["onSurface"], white, UI_MIN)
+    # ADR 008 WP1: tree inks keep 3:1 on every backdrop colour, also the stem/limb.autumn mix.
+    bd = obj["Backdrop"]
+    stem, limb = obj["Status"]["treeStem"], obj["Autumn"]["limb"]
+    mix = tuple((a + b) / 2.0 for a, b in zip(channels(stem), channels(limb)))
+    inks = {"tree.stem": obj["Status"]["treeStem"], "leaf.shadow.stroke": obj["Status"]["leafShadowStroke"],
+            "status.live": obj["Status"]["live"], "status.upnext": obj["Status"]["upnext"],
+            "leaf.autumn.stroke": obj["Autumn"]["stroke"], "bark": obj["Color"]["bark"]}
+    for bg_name, bg_key in (("sky.top", "skyTop"), ("sky.horizon", "skyHorizon"), ("hills", "hills"),
+                            ("ground.grass", "grass"), ("ground.earth", "earth")):
+        for ink_name, ink in inks.items():
+            check(f"{ink_name} on {bg_name}", ink, bd[bg_key], UI_MIN)
+        r = ratio_rgb(mix, channels(bd[bg_key]))
+        ok = r >= UI_MIN
+        rows.append(f"{'ok  ' if ok else 'FAIL'} {'stem+limb.autumn mix on ' + bg_name:46} {r:5.2f} (min {UI_MIN})")
+        if not ok:
+            fails.append(f"stem+limb.autumn mix on {bg_name}")
     for key in ("easy", "medium", "hard", "upnext", "shadow"):
         # Swatches repeat the chip text, so they need only the non-text 3:1 against white when they carry meaning alone.
         rows.append(f"info {'leaf.' + key + ' swatch on white':46} {ratio(obj['Leaf'][key], white):5.2f} (not gated: text carries the meaning)")

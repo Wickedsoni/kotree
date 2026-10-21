@@ -204,6 +204,73 @@ object Tokens {
         const val glowPulseMs = 1000
         /** motion.tooltip.delay: delay before a custom tooltip (ADR 007). */
         const val tooltipDelayMs = 500
+        /** motion.autumn: ease of a leaf turning to autumn colour when marked done (ADR 008). */
+        const val autumnMs = 900
+    }
+
+    // ---- Tree v3 additions (ADR 008 WP1). Constants only; additions only. ----
+
+    /** Autumn colours and tuning for done leaves (ADR 008 §Tokens). */
+    object Autumn {
+        /** color.leaf.autumn.yellow: ramp stop at t = 0.5 */ const val yellow = 0xF2C94C
+        /** color.leaf.autumn.orange: ramp stop at t = 1 */ const val orange = 0xE8772E
+        /** color.leaf.autumn.stroke: done-leaf stroke and dry veins */ const val stroke = 0x8A4B12
+        /** color.limb.autumn: limb and twig tint target */ const val limb = 0x8A5A2B
+        const val lutSteps = 32
+        const val restMin = 0.75
+        const val shimmer = 0.3
+        const val limbMax = 0.5
+        const val dryAt = 0.5
+    }
+
+    /** Sky, clouds and ground drawn on the tree canvas only (decision L35). */
+    object Backdrop {
+        /** color.sky.top */ const val skyTop = 0xEAF3FA
+        /** color.sky.horizon */ const val skyHorizon = 0xFBFDFE
+        /** color.cloud = color.surface at [cloudAlphaPercent] */ const val cloud = Color.surface
+        const val cloudAlphaPercent = 55
+        /** color.hills */ const val hills = 0xE4EEDF
+        /** color.ground.grass */ const val grass = 0xE3F0D8
+        /** color.ground.earth */ const val earth = 0xF3E9DC
+        const val skyScale = 0.5
+        const val cloudCount = 5
+        const val grainAlphaPercent = 4
+        const val grainTilePx = 128
+        const val hillHeightWorld = 60
+        const val grassWorld = 10
+        const val hillSamples = 48
+    }
+
+    /** Green canopy dots (ADR 008 §Canopy). Radii and sizes in world px unless noted. */
+    object Canopy {
+        /** color.canopy.light */ const val light = 0xC8E6C9
+        /** color.canopy.mid */ const val mid = 0x9CCC65
+        /** color.canopy.deep */ const val deep = 0x66BB6A
+        const val alphaPercent = 70
+        const val dotsPerBough = 260
+        const val dotsPerBranch = 220
+        const val dotsPerStem = 12
+        const val maxDots = 7000
+        const val boughRadius = 70
+        const val limbRadius = 44
+        const val stemRadius = 26
+        const val dotRMin = 1.8
+        const val dotRMax = 3.6
+        const val texPxPerWorld = 1.5
+        const val texMaxArea = 4_000_000
+        const val fadeStartZ = 2.4
+        const val fadeEndZ = 5.0
+        const val leafFadeStartZ = 3.5
+        const val leafFadeEndZ = 5.0
+        const val leafAlphaBuckets = 8
+    }
+
+    /** Leaf sway when the camera moves (ADR 008 §Motion). */
+    object Sway {
+        const val deg = 9
+        const val periodMs = 1600
+        const val riseMs = 150
+        const val settleMs = 700
     }
 
     // ---- Phase 1 additions (docs/13 section 2). Additions only: nothing above this line was renamed. ----
