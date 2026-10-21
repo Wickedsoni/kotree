@@ -20,7 +20,7 @@ SOURCES (housekeeper strips this comment at go-live)
 - https://kotlinlang.org/docs/generics.html : type parameters go before the function name; type arguments can be left out when inferred; default upper bound is Any?; out and in; erasure and the ban on is-checks such as ints is List<Int>.
 - https://developer.android.com/topic/libraries/architecture/livedata : MutableLiveData<String> snippet; "LiveData is a wrapper that can be used with any data".
 - Interview seed: docs/practice/interview-kotlin.md, section kotlin/generics/writing-generic-code.
-- Code blocks and Predict outputs were hand-traced and not compiled in this session (no shell). Run scripts/kt-run.sh before review.
+- Code blocks and Predict outputs compiled and run with Kotlin 2.4.21 (scripts/kt-run.sh), 21 Oct 2026.
 -->
 
 ## The question
@@ -61,7 +61,7 @@ Idea A works, but the three machines are the same except for one word, so a fix 
 2. Add the blank slot, "kind of jar", and write it everywhere the steps say "this kind".
 3. Say once, at the top, that the machine has a blank slot and what it is called.
 4. When the machine is used, look at the jars you feed in and fill the slot from them.
-5. If the jars disagree about the kind, the machine is refused before the program starts.
+5. Once the slot is filled, a jar that does not fit that kind is refused before the program starts. If the jars you feed in differ, Kotlin may fill the slot with a wider kind that covers them all, and you lose the exact kind (my own reasoning, checked by running it).
 6. Inside the machine, treat a jar as a closed jar. The slot could be filled with anything, so the machine may not assume it can ask for a number of letters.
 
 ### Name it
@@ -106,7 +106,7 @@ fun main() {
 type: predict
 run: false
 id: fill-the-blank-each-call
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun <T> firstOr(list: List<T>, default: T): T {
       return if (list.isEmpty()) default else list[0]
@@ -136,7 +136,7 @@ output: |
 type: predict
 run: false
 id: blank-is-not-a-jar
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun <T> twice(item: T): List<T> {
       return listOf(item, item)
@@ -165,7 +165,7 @@ output: |
 ## Tricks to remember
 
 - The blank goes in angle brackets before the function name, and every "this kind" in the function points back at it.
-- One shelf, one kind: the blank is filled the same way everywhere in one call.
+- In one call the blank is filled once, and every "this kind" in the function means that same kind.
 - If the same function exists twice for two kinds, a blank is waiting to be added.
 - A blank could be anything, so you can only use what every kind has.
 
@@ -186,13 +186,13 @@ Picture a screen that shows a user's name, and another that shows a list of scor
 Put the type parameter in angle brackets before the function name, as in `fun <T> firstOr(list: List<T>, default: T): T`. Use `T` everywhere the function means "this kind". The Kotlin documentation says the type argument can usually be left out, because Kotlin infers it from the call.
 
 **Why can't I call `.length` on a value of type `T`?**
-By default `T` can be any type, even a nullable one. The documentation says the default upper bound is `Any?`. To use more, you give `T` a bound, such as `T : Comparable<T>` in the documentation's `sort` example. My own reasoning: the bound is a promise to the compiler that every allowed kind has the tools you want to use.
+By default `T` can be any type, even one that allows null. The documentation says the default upper bound is `Any?`. To use more, you give `T` an upper bound, which limits the kinds that may fill the blank, such as `T : Comparable<T>` in the documentation's `sort` example. My own reasoning: the bound is a promise to the compiler that every allowed kind has the tools you want to use.
 
 **What do `out` and `in` mean on a type parameter?**
-The documentation says `out` means the type is only produced, so it may appear in return positions and never be consumed. `in` is the other way: it is only consumed and never produced. A short way to remember it is "producer out, consumer in". My own reasoning: you meet this when you write your own class, not when you write a single function.
+The documentation says `out` means the type is only produced, so it may appear only in the values a function hands back and never in what it takes in. `in` is the other way: it is only consumed and never produced. A short way to remember it is "producer out, consumer in". My own reasoning: you meet this when you write your own class, not when you write a single function.
 
 **Can you check at run time whether a list is a `List<String>`?**
-No. The documentation says generic type information is erased at run time, and the compiler refuses checks such as `ints is List<Int>`. You can check against a star-projected type like `List<*>`. The check at compile time is what keeps your lists honest.
+No. The documentation says the program no longer remembers the kind at run time (the documentation calls this type erasure), and the compiler refuses checks such as `ints is List<Int>`. You can check against a list of "any kind", written `List<*>`. The check at compile time is what keeps your lists honest.
 
 ## Recap
 
