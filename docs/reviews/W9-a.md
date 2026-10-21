@@ -62,3 +62,21 @@ VERDICT: FIX
 - FIX 5: newline added after the SOURCES comment in data-classes.md.
 - FIX 6: not applied (owned by another agent).
 - Check: `./gradlew :site:validateContent` ok.
+
+## Re-check
+
+Reviewer: independent, 21 Oct 2026, commit 51b42a7 (and HEAD 23d99a7). Reviewed files not edited.
+
+- FIX 1: confirmed. The VERIFY comment is gone; no `VERIFY` marker remains in two-kinds-of-equality.md. (Nit, optional: line 19 `## The question` now follows the SOURCES comment with no blank line; it renders correctly.)
+- FIX 2: confirmed. The three predict blocks say `verified: kotlin-2.4.21`. All five Kotlin blocks were recompiled with `scripts/kt-run.sh` (Kotlin 2.4.21): outputs are `false false true true`; `true false`; `true true false`; `5 false true`; `false true true`. They match the stated outputs and keys. No snippet text changed in the fix commit.
+- FIX 3: mostly confirmed. "stable parameters", "unstable parameters", "strong skipping mode", "hash code", "HashSet", "HashMap" now have plain bold definitions; "instance" became "object". Not done: `Any` and "inherits" at line 81 ("every class inherits `equals` from `Any`") were named in the original FIX 3 and are still undefined. Mechanical (`fixer`): add a plain phrase, for example "`Any` is the top class that every Kotlin class comes from (general knowledge)".
+- FIX 4: skipped by owner decision; accepted. Go-live note: `docs/sims/twins-or-one-person.md` does not exist yet, so the leaf cannot go `live` with a working sim.
+- FIX 5: confirmed. data-classes.md now has the SOURCES comment, a blank line, then `## The question`. No snippet text changed.
+- FIX 6: `objects-are-references.md` now exists (shadow). It has its own FIX list in `docs/reviews/W9-b.md`, so neither leaf can go `live` yet.
+- `./gradlew :site:validateContent`: `validateContent: ok`.
+
+FIX list (re-check):
+
+1. two-kinds-of-equality.md, line 81. `Any` and "inherits" are used without a definition (original FIX 3). Mechanical (`fixer`).
+
+VERDICT (re-check, final): FIX (one mechanical item above)
