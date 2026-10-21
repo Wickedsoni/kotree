@@ -20,7 +20,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://kotlinlang.org/docs/properties.html (custom getters and setters, backing fields, field, no backing field for a computed property)
 - https://developer.android.com/kotlin/flow/stateflow-and-sharedflow (backing property comment)
 - docs/practice/interview-kotlin.md seed for this leaf. The recursion claim is NOT on the properties page; the body labels it general knowledge.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -82,7 +81,7 @@ Idea A forgets that the visitors' name leads back to her. Idea C has no source. 
 
 ### Name it
 
-A **property** is a named value of an object. The Kotlin documentation says you can write your own **getter**, which is code that runs every time the property is read, and your own **setter**, which is code that runs every time you assign to it. It says the setter does not run during initialisation, which is the first value given on the property's own line. By convention the setter's parameter is called `value`.
+A **property** is a named value of an object. The Kotlin documentation says you can write your own **getter**, which is code that runs every time the property is read, and your own **setter**, which is code that runs every time you assign to it. It says the setter does not run during initialisation, which is the first value given on the property's own line. A **parameter** is a name for a value handed in to a piece of code, like the parcel handed to the desk. By convention the setter's parameter is called `value`.
 
 A **backing field** is the slot that stores the value. The documentation says the compiler makes one when a value needs to be stored, and you reach it inside a getter or setter with the word **`field`**. It also says a property like `isEmpty`, whose value is worked out from `size` each time, has no backing field.
 
@@ -135,7 +134,7 @@ fun main() {
 type: predict
 run: false
 id: area-is-worked-out-each-time
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Box(var width: Int, var height: Int) {
       val area: Int
@@ -169,7 +168,7 @@ output: |
 type: predict
 run: false
 id: starting-value-skips-the-check
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Item {
       var price: Int = 0
@@ -207,7 +206,7 @@ output: |
 type: predict
 run: false
 id: setter-runs-on-write-only
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Tag {
       var text: String = "a"
@@ -254,7 +253,7 @@ output: |
 
 ## Where this shows up in Android
 
-The Android StateFlow page shows a class that keeps a private `MutableStateFlow` called `_uiState` and a public `uiState`. A code comment there calls the private one a "Backing property to avoid state updates from other classes". This lesson does not explain `StateFlow`. A **backing property** here means a private property that keeps the value, with a public one next to it for others to read (the page's wording).
+The Android StateFlow page shows a class that keeps a private `MutableStateFlow` called `_uiState` and a public `uiState`. A code comment there calls the private one a "Backing property to avoid state updates from other classes". `MutableStateFlow` and `StateFlow` are Android holders for a value that a screen can watch, the first one changeable and the second one read-only (general knowledge). This lesson does not explain them further. The page's comment calls the private one a backing property. My own reasoning: a **backing property** here means a private property that keeps the value, with a public one next to it for others to read.
 
 The symptom is a screen showing a value that nobody should have been able to set, such as a negative quantity. My own reasoning: a setter with a check, or a private property behind a public one, puts the rule in one place. When the bad value appears, you look at that one place.
 

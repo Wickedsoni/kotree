@@ -20,7 +20,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://developer.android.com/topic/architecture (separation of concerns; UI layer and data layer roles)
 - docs/practice/interview-kotlin.md seed for this leaf. Composition and inheritance points are labelled general knowledge or my own reasoning.
 The roadmap says no sim: a design skill. The roadmap's F and B tasks are not built: playground is false. fruit: true is from the roadmap, and the page has no capstone link.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -55,7 +54,7 @@ Which nouns should become stations? Here are three ideas.
 - B. One big station called Shop that knows everything.
 - C. The nouns with their own facts or their own job, which are snack and basket. Name and price are facts about a snack.
 
-Idea A makes a station for a single fact, which is more work and no clearer. Idea B is the giant all-in-one machine. Idea C is the answer.
+Idea A makes a station for a single fact, which is more work and no clearer. Idea B is the giant all-in-one machine. Idea C is the answer. The pupil and the screen are the cook in `main`, who walks between the stations, so they are not stations in this plan.
 
 Where should "total price" live? Here are three ideas.
 
@@ -71,7 +70,7 @@ Idea B gives a snack a job it cannot do, because it knows only its own price. Id
 2. Underline the nouns and the verbs.
 3. A noun with its own facts or its own job becomes a station. A noun that is only a fact about another one becomes a box on that station.
 4. Give each action to the station that already holds the facts it needs.
-5. If a station needs facts from another, it holds that other station and asks through the other's public jobs.
+5. If a station needs facts from another, it holds that other station and asks through the jobs the outside may call.
 6. Lock away anything that outsiders should not change.
 7. Test the plan by adding a feature, such as a discount. Only one station should need to change.
 
@@ -81,7 +80,7 @@ To **model** a problem is to choose the classes, properties and functions that s
 
 **Composition** means one class holds objects of another class (general knowledge). The basket holds snacks, so a basket has snacks. The Android architecture page puts the main idea like this: "separating your app into methods, classes, files, packages, modules and layers that have clearly defined responsibilities and boundaries". A **responsibility** is the job a class owns. Here the basket owns the total.
 
-The basket keeps its list private, as in the `private` lesson. Outsiders use `add`, `total` and `namesOver`. The two list tools come from the `map`, `filter` and `sumOf` lesson.
+The basket keeps its list private, as in the `private` lesson. **`private`** means only code inside the class may use it (general knowledge), like the locked cupboard. Outsiders use `add`, `total` and `namesOver`. The two list tools come from the `map`, `filter` and `sumOf` lesson.
 
 This program is the whole plan.
 
@@ -138,7 +137,7 @@ fun main() {
 type: predict
 run: false
 id: each-basket-has-its-own-snacks
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Snack(val name: String, val price: Int)
 
@@ -165,7 +164,7 @@ code: |
   }
 options:
   - id: a
-    text: "9, then 2"
+    text: "9, then 0"
     why: "You may have put the crisps into the first basket. They were added to b, so a holds only the cake and the juice."
   - id: b
     text: "7, then 2"
@@ -182,8 +181,8 @@ output: |
 ```challenge
 type: predict
 run: false
-id: ask-the-station-do-not-rummage
-verified: not-run
+id: public-list-still-works
+verified: kotlin-2.4.21
 code: |
   class Snack(val name: String, val price: Int)
 
@@ -218,7 +217,7 @@ output: |
 type: predict
 run: false
 id: new-feature-lives-in-one-station
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Snack(val name: String, val price: Int)
 

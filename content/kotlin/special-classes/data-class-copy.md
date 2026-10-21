@@ -20,7 +20,6 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://kotlinlang.org/docs/data-classes.html (copy(), shallow copy, shared references, properties declared in the class body)
 - https://developer.android.com/topic/architecture/ui-layer/state-production (copy( inside update on a UI state data class)
 Sim id form-photocopier appended to docs/sims/needed-ids.md. Roadmap row says to reuse objects-are-references; the leaf uses a form and a photocopier to keep one analogy.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 The roadmap's F(ai) task is not built: playground is false, as in data-classes.
 -->
 
@@ -88,7 +87,7 @@ Idea B feels natural, because a copy "should" be complete. But the copier only s
 
 ### Name it
 
-The Kotlin documentation says you use the **`copy()`** function to copy an object, allowing you to alter some of its properties while keeping the rest unchanged. It is made for you on a data class. The documentation says the properties declared in the primary constructor are the ones it uses, so a value declared in the class body is left out.
+The Kotlin documentation says you use the **`copy()`** function to copy an object, allowing you to alter some of its properties while keeping the rest unchanged. It is made for you on a data class. The **primary constructor** is the brackets right after the class name, where the boxes are listed. The documentation says the properties declared there are the ones `copy()` uses, so a value declared in the class body is left out.
 
 To change one box, write its name and the new answer inside the brackets, as in `copy(age = 31)`. A **named argument** is a value written with the parameter's name in front of it, so Kotlin knows which box you mean (general knowledge). A box you do not name keeps its old answer.
 
@@ -144,7 +143,7 @@ fun main() {
 type: predict
 run: false
 id: copy-one-plain-box
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Form(val name: String, val age: Int)
 
@@ -176,7 +175,7 @@ output: |
 type: predict
 run: false
 id: copy-shares-the-folder
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Folder(val owner: String, val notes: MutableList<String>)
 
@@ -207,7 +206,7 @@ output: |
 type: predict
 run: false
 id: copy-with-its-own-folder
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   data class Folder(val owner: String, val notes: MutableList<String>)
 
@@ -229,7 +228,7 @@ options:
     why: "You may have thought the copy still shares the folder. This time its folder number was replaced with a new folder."
   - id: c
     text: "[x], [x, y], true"
-    why: "You may have thought the owner decides equality. A data class compares every value in the main brackets, and the notes now differ."
+    why: "You may have thought the owner decides equality. A data class compares every value in the brackets after the class name, and the notes now differ."
 output: |
   [x]
   [x, y]
@@ -248,7 +247,7 @@ output: |
 - **Expecting `copy()` to copy the inside objects too.** "Copy" sounds complete. The documentation says it is shallow, and references to other objects are shared. Pass a new list into the copy when it needs its own.
 - **Calling `copy()` and ignoring the result.** The word suggests the form on your desk changes. The call gives you a new object and leaves the old one alone, so keep the result in a name.
 - **Changing a `var` in place instead of copying.** It is shorter. Every part of the program that holds that object sees the change at once. Use `val` properties and `copy()` so an old object stays as it was.
-- **Expecting a value declared in the class body to be copied.** It looks like part of the class. The documentation says only primary constructor properties are used, so the others start fresh on the copy.
+- **Expecting a value declared in the class body to be copied.** It looks like part of the class. The documentation says only primary constructor properties are used. My own reasoning, confirmed by a test run: the others are not carried over and start from their starting value on the copy.
 
 ## Where this shows up in Android
 

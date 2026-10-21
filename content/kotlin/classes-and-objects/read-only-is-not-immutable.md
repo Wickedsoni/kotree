@@ -21,8 +21,8 @@ SOURCES (housekeeper strips this comment at go-live; read 21 Oct 2026):
 - https://kotlinlang.org/docs/constructing-collections.html (copy functions make a snapshot; new references see changes; copies share elements)
 - https://developer.android.com/develop/ui/compose/state (caution on mutable objects as state; calls listOf() "immutable")
 - https://developer.android.com/topic/architecture/recommendations (MutableStateFlow exposed as an immutable StateFlow)
+- https://github.com/Kotlin/kotlinx.collections.immutable (README read 21 Oct 2026: persistentListOf, toPersistentList, "experimental and the API is subject to change")
 Sim id shop-window-restock appended to docs/sims/needed-ids.md. Roadmap row says to reuse objects-are-references; the leaf uses a shop window to keep one analogy.
-Code not compiled: no shell in this session. Outputs hand-traced twice. Predict items are run: false, verified: not-run.
 -->
 
 ## The question
@@ -51,7 +51,7 @@ Think of a shop with a front window and a stock room.
 2. Press "Take a photo of the window", then let staff restock again. Compare the photo with the window.
 3. (Optional reveal) Tick "Hand over the photo, not the window". Let staff restock again and watch the customer's view.
 
-**What you should notice:** The glass blocks the customer from changing the display, but staff behind it still can, and the customer sees every change, while a photo stays as it was.
+**What you should notice:** The glass blocks the customer from changing the display. Staff behind it still can, and the customer sees every change. A photo stays as it was.
 
 ## Build the logic
 
@@ -89,7 +89,7 @@ Idea B shows every change. Idea C depends on the artist's memory. Idea A is the 
 
 ### Name it
 
-The Kotlin documentation says each collection type comes as a pair of interfaces. A **read-only** one lets you access the elements, and a mutable one adds write operations. So read-only means you cannot change the list through this name. It does not say that nobody can.
+The Kotlin documentation says each collection type comes as a pair of **interfaces**, which are two lists of what you may do with a collection. A **read-only** one lets you access the elements, and a **mutable** one, meaning one that can be changed, adds write operations. So read-only means you cannot change the list through this name. It does not say that nobody can.
 
 The documentation also says a mutable collection can still be written to when it is assigned to a `val`. The `val` is the sign above the window. It protects the sign, not the stock.
 
@@ -165,7 +165,7 @@ fun main() {
 type: predict
 run: false
 id: window-follows-the-stock-room
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val stock = mutableListOf("hat", "scarf")
@@ -194,7 +194,7 @@ output: |
 type: predict
 run: false
 id: photo-versus-window
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val stock = mutableListOf("hat", "scarf")
@@ -224,7 +224,7 @@ output: |
 type: predict
 run: false
 id: shop-hands-out-a-photo
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Shop {
       private val stock = mutableListOf("hat")
@@ -277,11 +277,11 @@ output: |
 
 ## Where this shows up in Android
 
-The Android Compose state page has a caution. It says that using mutable objects such as `ArrayList<T>` or `mutableListOf()` as state in Compose causes users to see incorrect or stale data. It says Compose does not observe those objects and so a change does not trigger a redraw. It recommends an observable data holder such as `State<List<T>>` and the immutable `listOf()`. **Compose** is the Android toolkit for describing screens in Kotlin code (general knowledge).
+**Compose** is the Android toolkit for describing screens in Kotlin code (general knowledge). The Android Compose state page has a caution. It says that using mutable objects such as `ArrayList<T>` or `mutableListOf()` as state in Compose causes users to see incorrect or stale data. It says Compose does not observe those objects and so a change does not trigger a redraw. It recommends a holder that tells the screen when its value changes, such as `State<List<T>>`, together with the immutable `listOf()`.
 
 This lesson shows the other side of the same problem. The list on the screen is a window onto a stock room that staff can change. My own reasoning: a screen can show old items because nobody told it that the stock changed, and a second screen can show a list that changed under it.
 
-The Android architecture recommendations page says that for simple cases it is acceptable to use a `MutableStateFlow` exposed as an immutable `StateFlow`. A `ViewModel` is a class that holds a screen's data (general knowledge). The shop with its back door private and a window public is the same shape.
+The Android architecture recommendations page says that for simple cases it is acceptable to use a `MutableStateFlow` exposed as an immutable `StateFlow`. A `StateFlow` is a holder for a value that a screen can watch, and the `MutableStateFlow` is its changeable form. A `ViewModel` is a class that holds a screen's data (both general knowledge). The shop with its back door private and a window public is the same shape.
 
 ## Say it in an interview
 
@@ -289,7 +289,7 @@ The Android architecture recommendations page says that for simple cases it is a
 Yes. The Kotlin documentation says each collection type has a read-only interface and a mutable one that adds write operations. A `List` name stops you from writing, but the same list can have a `MutableList` name held elsewhere. The documentation says new references to an existing collection see changes made through any of them.
 
 **What is the difference between `val` and an immutable collection?**
-The documentation says a mutable collection assigned to a `val` can still be written to, and the `val` protects the reference. So `val` fixes which list the name points at. Immutable means the list cannot change at all (general knowledge).
+The documentation says a mutable collection assigned to a `val` can still be written to, and the `val` protects the reference. So `val` fixes which list the name points at. Immutable means the list cannot change at all (general knowledge). For a real one, the `kotlinx.collections.immutable` library offers `persistentListOf` and `toPersistentList()`. Its README calls it experimental, so its API may change.
 
 **Why does a class copy a list before it hands it out?**
 My own reasoning: a copy cannot change under the caller, and the caller cannot change the class's data by accident. The trade-off is a copy each time, which costs memory and time for big lists. The documentation says `toList()` makes a snapshot, and that the copy still holds the same objects.
