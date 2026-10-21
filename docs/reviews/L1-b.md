@@ -60,3 +60,18 @@ VERDICT: FIX
 
 VERDICT: FIX
 FIXED, awaiting re-check
+
+## Re-check (21 Oct 2026)
+
+Checked: FIX 1 to 14 against the six leaves as they now stand (including the git snapshot wording in Build step 3, "The framed files are the new versions; everything else is carried over unchanged"). `validateContent: ok`. No Kotlin code changed since the first review (the diff touches prose and `verified:` lines only), so `scripts/kt-run.sh` was not re-run; the earlier runs stand. Verified online: the Compose definition sentence, the "relatively stateless and don't expose setter or getter functions" quote, the recomposition sentence, and LeetCode 81, 912 and 215 titles. FIX 1, 2, 3, 4, 5, 7, 8, 9, 11, 12, 13 and 14 are done. FIX 6 lesson text is done, FIX 10 is half done.
+
+Remaining:
+
+1. `content/kotlin/reading-code/reading-order-for-code.md`, The question: "It is 26 lines long", but the cart file shown is 27 lines (`class Cart` to the closing brace of `main`, blank lines included). Change to "27 lines" or "about 30 lines". Mechanical (`fixer`).
+2. `docs/sims/needed-ids.md` line 51, `snapshot-tray`: still says "adds a snapshot holding only the tray files". This contradicts the leaf (the snapshot holds the whole project; only the staged edits are new). Reword, for example "the tray files become the new versions in the snapshot, every other file is carried over unchanged, and an edit left outside the tray stays in the folder". Mechanical wording, but it changes what the sim shows, so `physics-designer` or the owner confirms.
+3. `content/daa/analysis/best-worst-average-case.md`, SOURCES comment line 24: names only LeetCode 28 and HackerRank. Add LeetCode 81, 912 and 215 (from `docs/practice/practice-daa.md`; titles confirmed by web search, not opened on leetcode.com). Mechanical (`fixer`).
+
+Notes (not FIX): ui Mental model uses "Compose" one paragraph before its definition in Name it; the title does too. Acceptable. daa item 5 (LeetCode 215) does not show a "worst-case input" as the intro line promises; optional rewording.
+
+VERDICT (re-check): FIX
+VERDICT (re-check, final): PASS

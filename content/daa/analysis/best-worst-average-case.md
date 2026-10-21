@@ -16,7 +16,7 @@ upnext: false
 ---
 
 <!--
-SOURCES (housekeeper strips this comment at go-live)
+SOURCES (housekeeper strips this comment at go-live) LeetCode 81, 912, 215 (titles checked).
 - Theory leaf: the step counts are traced by hand and the one average (1 to 5 gives 3) is arithmetic. The best-and-worst-steps snippet was run with kotlin 2.4.21 (scripts/kt-run.sh); the two non-Kotlin items were not run.
 - Kotlin for loops over a collection: https://kotlinlang.org/docs/control-flow.html
 - Best, worst and average case, amortized cost, linear search: general knowledge, labelled in the text.

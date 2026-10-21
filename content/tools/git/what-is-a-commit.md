@@ -68,7 +68,7 @@ Idea B saves the half-finished work and mixes it with the finished work. Idea C 
 
 1. Work in your folder as usual. Files change.
 2. Choose which changed files belong in the next snapshot, and put them in the frame.
-3. Take the snapshot. Only the framed files go in.
+3. Take the snapshot. The framed files are the new versions; everything else is carried over unchanged.
 4. Write a caption that says what the snapshot is about.
 5. Keep working. The files you left out are still changed, waiting for a later snapshot.
 

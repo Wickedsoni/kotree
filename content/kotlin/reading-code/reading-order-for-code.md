@@ -27,7 +27,7 @@ SOURCES (housekeeper strips this comment at go-live)
 
 ## The question
 
-You open a Kotlin file you did not write. It is 26 lines long, the names are tidy, and the formatting is clean. Where do you start reading? Do you go from the first line to the last, like a story? And what should you look for on the way, so that a hidden crash does not get past you?
+You open a Kotlin file you did not write. It is 27 lines long, the names are tidy, and the formatting is clean. Where do you start reading? Do you go from the first line to the last, like a story? And what should you look for on the way, so that a hidden crash does not get past you?
 
 ## Mental model
 
