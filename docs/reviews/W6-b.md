@@ -1,24 +1,24 @@
 # Review W6-b: eight shadow leaves (strings, collections)
 
 Date 20 Oct 2026. Reviewer: independent (did not write the leaves). Gate: L31/L33. Voice: L29. Nothing in the leaves was edited.
-Checked against `docs/lesson-checklist.md` (items 1 to 11; item 12 is DSA/DAA/OS only, n/a), `content/_templates/leaf.md`, `docs/04`, `docs/06` §5, hard rules, `content/kotlin/_roadmap.md` rows (lines 130-182 and 468-490), kotlinlang.org and developer.android.com pages read 20 Oct 2026 (raw HTML for the Kotlin docs pages, so quotes are exact).
+Checked against `docs/lesson-checklist.md` (items 1 to 11; item 12 is DSA/DAA/OS only, n/a), `content/_templates/leaf.md`, `docs/04` (§3 writing rules, §4 thirteen sections, §6 length budget, §7 tone checks T1 to T8, §8 reviewer checklist 8.1 to 8.5), `docs/00` §8.2 (frontmatter), `docs/09` §8 (definition of done), `docs/06` §5, hard rules, `content/kotlin/_roadmap.md` rows (lines 130-182 and 468-490), kotlinlang.org and developer.android.com pages read 20 Oct 2026 (raw HTML for the Kotlin docs pages, so quotes are exact).
 
 VERDICT: FIX (0 PASS, 8 FIX). Every FIX is small and mechanical (`fixer` can do all of them). No factual error was found in any claim. No leaf fails on code.
 
 | Leaf | Verdict | Items |
 |---|---|---|
-| `kotlin/strings/strings-are-sequences` | FIX | 2 (answer length, verified) |
+| `kotlin/strings/strings-are-sequences` | FIX | 2 (answer length and undefined "code points", verified) |
 | `kotlin/strings/everyday-string-functions` | FIX | 2 (undefined "mutable", verified) |
 | `kotlin/strings/text-to-numbers` | FIX | 2 (`Double` not bold, verified) |
 | `kotlin/collections/list-vs-mutable-list` | FIX | 2 ("interfaces" and "extends" undefined, verified) |
 | `kotlin/collections/index-out-of-bounds` | FIX | 2 (idiomatic last-item answer, verified) |
-| `kotlin/collections/sets` | FIX | 2 (unlabelled general-knowledge claim, verified) |
+| `kotlin/collections/sets` | FIX | 3 (unlabelled general-knowledge claim, undefined "iteration" and "implementations", verified) |
 | `kotlin/collections/maps` | FIX | 2 (answer far too long to say aloud, verified) |
 | `kotlin/collections/pairs-and-destructuring` | FIX | 2 (name-based destructuring now in the docs, verified) |
 
 ## How I checked code
 
-Pinned compiler: `bash scripts/kt-run.sh` (kotlinc 2.4.21). I extracted every `kotlin` block (14) and every Predict `code` block (24) into files and compiled and ran all 38, then diffed stdout against each `output` block. Plus 5 probe programs for claims in the interview answers and Common mistakes.
+Pinned compiler: `bash scripts/kt-run.sh` (kotlinc 2.4.21). I extracted every `kotlin` block (15) and every Predict `code` block (24) into files and compiled and ran all 39, then diffed stdout against each `output` block. Plus 6 probe programs (a to f) for claims in the interview answers and Common mistakes.
 
 - All 24 Predict `output` blocks equal real stdout byte for byte. Every `correct: true` option matches its output. No compiler warnings on any program.
 - Key letters vary in every leaf (see the table below; no leaf uses one letter three times). All wrong options are plausible and each `why` leads to the option.
@@ -55,7 +55,7 @@ Pinned compiler: `bash scripts/kt-run.sh` (kotlinc 2.4.21). I extracted every `k
 | | swapped-plate-labels | `3 costs tea` | c |
 | | bin-in-the-middle | `zx` | a |
 
-The 14 body `kotlin` blocks print exactly what the text under each says (strings k1 `6 K n`; everyday `[  Sam  ]`, `[Sam]`, `SAM`, `Som`, `true`; text-to-numbers `-1 43 42 null`; list-vs `4 cake 4 5`; index `5 Moon null "no such room" Sun`; sets `3 true false true`; maps `3 null 0 5 3 4`; pairs `tea 3 tea x "tea costs 3" "juice costs 6"`).
+Of the 15 body `kotlin` blocks, 4 are `// does not compile`, 3 stop on purpose (above) and 8 run to the end. The 8 print exactly what the text under each says (strings k1 `6 K n`; everyday `[  Sam  ]`, `[Sam]`, `SAM`, `Som`, `true`; text-to-numbers `-1 43 42 null`; list-vs `4 cake 4 5`; index `5 Moon null "no such room" Sun`; sets `3 true false true`; maps `3 null 0 5 3 4`; pairs `tea 3 tea x "tea costs 3" "juice costs 6"`).
 
 Probe facts that back the interview answers (all run on 2.4.21): `"😀".length` is 2; `"".split(",")` has size 1 (one empty string); `setOf(3,1,2)` prints `[3, 1, 2]` and its class is `LinkedHashSet`; `hashSetOf("banana","apple","cherry","date","elderberry")` prints `[banana, date, apple, cherry, elderberry]` (not insertion order); `toSet()` and `distinct()` keep order; `mapOf(1 to "a", 2 to "b", 1 to "c")` is `{1=c, 2=b}`; `mutableMapOf` is a `LinkedHashMap`; `emptyList().lastIndex` is -1 and `getOrNull(-1)` and `lastOrNull()` are `null`; `val (email, username) = User("u","e")` gives `email = "u"` (position-based by default); `"٤٢".toIntOrNull()` is `42` (see note under text-to-numbers).
 
@@ -93,71 +93,87 @@ Claims I could not verify against an official page: none that the leaves present
 - Item 4 labels: present on every "tip calculator", "badge", "screen" inference ("This next part is our own reasoning").
 - Hard rules: no hardcoded colours or fonts (content only), no L26 sections, no Video heading.
 
+## docs/04 conformance (§3, §4, §6, §7, §8), all eight
+
+Checked by reading and by script (word counts, search for banned words, bold terms, backticks in Notice/Guess/Build):
+
+- §3.1 and §4.1: every first screenful has a `?`, no code and no bold; no unmet term found. §3.2: one analogy per leaf, "Where the analogy stops:" present, objects reused in Build, Predict `why` lines and Common mistakes. §3.3 acceptance: no backtick (no Kotlin keyword or operator) in Notice, Guess or Build in any leaf. Name it ends with one complete program in every leaf.
+- §4 table: thirteen headings in order minus the allowed omissions; `## Say it in an interview` present with 4 questions. §4.8 to §4.12: Tricks 4 or fewer, Common mistakes 3 or 4, Recap exactly three lines under 20 words, "You can now" lines each backed by a Predict item, Android sections cite a page in the SOURCES comment.
+- §6 length budget: prose outside code and tables (whitespace-split words) is strings-are-sequences 1,221; everyday 1,231; sets 1,382; text-to-numbers 1,395; pairs 1,416; index 1,485; maps 1,526; list-vs-mutable-list 1,580. All inside 900 to 1,600. **list-vs-mutable-list is 20 words under the ceiling, so its fix must not add words (see its FIX 1).** `kotlin` blocks per leaf: at most 5 (limit 8). 0 or 1 sim.
+- §7 T4 banned words (simply, just, obviously, easy, trivial, of course, basically, clearly): zero hits in all eight bodies. T6: zero emoji and zero exclamation marks in prose. T2: every bold term is bold once per page. T3: no "the student", no "one should".
+- §8.4: every Kotlin, Android and KMP claim was checked against an official page (table above); no invented API name (every function in code ran); no compiler message is quoted in a leaf; no VERIFY marker.
+- §7 extra rule "define each term the first time it appears": the misses are in the FIX lists (everyday "mutable", list-vs "interfaces", sets "iteration"/"implementations", strings "code points", text-to-numbers `Double`).
+
 ## Rulings
 
 1. **Sim divergences (`menu-board-cover`, `inn-room-clerk`): acceptable, not a rule 5 violation.** Same ruling as W4-b and W5-b. Rule 5 protects structure (id, title, difficulty, requires, fruit; build rule V5), and all eight leaves equal their rows. The roadmap Sim and Analogy cells are notes. `list-vs-mutable-list` uses a menu board with a cover instead of "printed menu versus whiteboard"/"two shelves behind glass", and `index-out-of-bounds` builds a new inn sim instead of reusing the `what-is-a-list` sim; both keep ONE analogy per leaf (docs/04 §3.2) and both are recorded in `needed-ids.md`. Owner follow-up, not blocking: `curriculum-designer` rewords the Sim cells of roadmap lines 480-481 so `sim-engineer` builds to the leaf text (a new sim costs more than the reuse the roadmap planned).
-2. **Roadmap `F(ai):` and `B:` challenges not delivered as challenge blocks** (list-vs-mutable-list F(ai)/B, sets F, maps F(ai), everyday B, pairs and others are covered only as Common mistakes or the does-not-compile block): acceptable under the accepted `playground: false` pattern (W2 to W5); the key misconceptions are all tested by a Predict. No FIX.
+2. **Roadmap `F:`, `F(ai):` and `B:` tasks are not delivered as Fix the bug blocks** (`playground: false`): accepted by earlier rulings (W3-b line 105, W4-a line 83: delivered as Predict items). Here that holds for most rows (strings F, text-to-numbers F and B, index B and F(ai) in part, sets P, maps counter, pairs F). Not delivered anywhere as a challenge: `list-vs-mutable-list` F(ai) (a helper returns `List`, a caller adds) and B (`val` to `var`; only a Common mistake), `maps` F(ai) "getValue on user input" (only the plain snippet), `everyday-string-functions` B (`split` on empty text; only a Common mistake). **Owner follow-up, not blocking:** `docs/08` §5 says an `ai-review` stem (collections) carries `F(ai)` tasks on at least half its leaves; if that must hold in the delivered content, `curriculum-designer` or the owner decides whether to turn those into Predict items or to let the stem go `playground: true` later. No FIX now.
 3. **Interview section quality (L33):** all 32 answers are accurate; labels are placed correctly; the "read-only view, not immutable" answer, the HashSet/LinkedHashSet ordering answers, the HashMap `equals`/`hashCode` contract and the `toIntOrNull` rules all match the pages above. UTF-16 claims are grounded in the characters page. The only issues are length (two answers) and the items below.
 
 ## FIX lists
 
+All replacements are written as short sentences (aim under 25 words) and stay within 2 to 4 sentences per interview answer. `fixer` applies them as written. Line numbers are the current ones.
+
 ### 1. `content/kotlin/strings/strings-are-sequences.md`
 
-1. Line 207: interview answer is 6 sentences and 91 words; the template says 2 to 4 short sentences, easy to say aloud (L29). Replace the whole line:
-   old: `No. The Kotlin characters page says a `Char` is one UTF-16 code unit, which is one 16-bit piece of how text is stored as numbers. A symbol outside the basic range, such as an emoji, is stored as two `Char` values called a surrogate pair. The page shows an emoji with a length of 2. My own reasoning: an app that cuts a name at 10 characters could cut an emoji in half. The page says to use Unicode code points, stored as `Int`, to handle such symbols one by one.`
-   new: `No. A `Char` is one UTF-16 code unit, a 16-bit piece of how text is stored, and an emoji takes two of them, called a surrogate pair. The Kotlin characters page shows an emoji with a length of 2, and says to use Unicode code points, stored as `Int`, to handle such symbols one by one. My own reasoning: an app that cuts a name at 10 characters could cut an emoji in half.` (mechanical)
-2. Lines 102, 129, 156: `verified: not-run` → `verified: kotlin-2.4.21` (all three blocks ran on 2.4.21 and match; `run: false` stays). (mechanical)
+1. Line 207: interview answer is 6 sentences and 91 words (template: 2 to 4 short sentences, easy to say aloud, L29) and "Unicode code points" is not explained (docs/04 §7). Replace all of line 207:
+   new: `No, because a `Char` is one UTF-16 code unit, a 16-bit piece of how text is stored, and an emoji takes two of them, called a surrogate pair. The Kotlin characters page shows an emoji with a length of 2, and says to handle such symbols with Unicode code points stored as `Int`. General knowledge: a code point is the one number Unicode gives to a symbol. My own reasoning: an app that cuts a name at 10 characters could cut an emoji in half.` (4 sentences, mechanical)
+2. Lines 102, 129, 156: `verified: not-run` → `verified: kotlin-2.4.21` (all three blocks ran on 2.4.21 and match; `run: false` stays; the regex in `LessonRenderer.kt` line 62 accepts it). (mechanical)
 
 ### 2. `content/kotlin/strings/everyday-string-functions.md`
 
-1. Line 204 (checklist item 3): "mutable" is used before any lesson defines it (`list-vs-mutable-list` is order 25, this leaf is order 23).
-   old: `The documentation describes `StringBuilder` as a mutable sequence of characters for efficient string operations, and says`
-   new: `The documentation describes `StringBuilder` as a mutable sequence of characters, which means text you can change in place, built for efficient string operations, and says` (mechanical)
-2. The three `verified: not-run` lines (101, 127, 155) → `verified: kotlin-2.4.21`. (mechanical)
+1. Line 204 (docs/04 §7, checklist item 3): "mutable" is used before any lesson defines it (`list-vs-mutable-list` is order 25, this leaf is order 23). Replace the middle of the line:
+   old: `The documentation describes `StringBuilder` as a mutable sequence of characters for efficient string operations, and says `buildString()` creates a `StringBuilder` internally and returns the resulting string.`
+   new: `The documentation describes `StringBuilder` as a mutable sequence of characters, which means text you can change in place. It says `buildString()` creates a `StringBuilder` internally and returns the resulting string.` (the answer becomes 4 sentences; mechanical)
+2. Lines 101, 127, 155: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ### 3. `content/kotlin/strings/text-to-numbers.md`
 
-1. Line 207 (checklist item 3): `Double` is defined but not bold at first use.
+1. Line 207 (docs/04 §7 and checklist item 3): `Double` is defined but not bold at first use.
    old: `A `Double` is a number with a decimal part`
    new: `A **`Double`** is a number with a decimal part` (mechanical)
-2. The three `verified: not-run` lines (114, 142, 169) → `verified: kotlin-2.4.21`. (mechanical)
+2. Lines 114, 142, 169: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
-Note, no change required: the leaf correctly attributes "decimal digits (0-9)" to the documentation. On the JVM, `"٤٢".toIntOrNull()` really returns `42` (Arabic-Indic digits are accepted), so the documented rule is slightly narrower than the behaviour. Owner may add one sentence to Q2 later; I did not find an official page that states it, so it must not be added as a documentation claim.
+Note, no change required: the leaf correctly attributes "decimal digits (0-9)" to the documentation. On the JVM, `"٤٢".toIntOrNull()` really returns `42` (Arabic-Indic digits are accepted), so the documented rule is slightly narrower than the behaviour. I found no official page that states it, so it must not be added as a documentation claim.
 
 ### 4. `content/kotlin/collections/list-vs-mutable-list.md`
 
-1. Line 75 (checklist item 3): "interfaces" and "extends" are unexplained jargon (the interface lesson comes later).
-   old: `each collection type comes as a pair of interfaces: a read-only one for accessing the elements, and a mutable one that extends it with write operations such as adding, removing and updating.`
-   new: `each collection type comes as a pair of types, which Kotlin calls **interfaces**: a read-only one for accessing the elements, and a mutable one that has everything the read-only one has and adds write operations such as adding, removing and updating.` (mechanical)
-2. The three `verified: not-run` lines (126, 154, 181) → `verified: kotlin-2.4.21`. (mechanical)
+1. Line 75 (docs/04 §7): "interfaces" and "extends" are unexplained jargon (the interface lesson comes later). The leaf is at 1,580 words against a 1,600 ceiling, so the replacement is shorter than the old sentence (39 words, new 33 words in three sentences).
+   old: `The Kotlin documentation says each collection type comes as a pair of interfaces: a read-only one for accessing the elements, and a mutable one that extends it with write operations such as adding, removing and updating.`
+   new: `The Kotlin documentation says each collection type comes as a pair of types, called **interfaces**. One is read-only, for accessing the elements. The other adds write operations such as adding, removing and updating.` (mechanical)
+2. Lines 126, 154, 181: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ### 5. `content/kotlin/collections/index-out-of-bounds.md`
 
-1. Lines 231 to 232: the answer works but a senior interviewer expects `lastOrNull()`; verified: `List.lastOrNull()` "Returns the last element, or `null` if the list is empty" (kotlin.collections/last-or-null.html) and the run printed `null` for an empty list.
-   old: `Use `list.getOrNull(list.lastIndex)`. The documentation says `lastIndex` is -1 for an empty list, and -1 is out of bounds, so `getOrNull` returns `null` instead of crashing.`
-   new: `Use `list.lastOrNull()`, which the documentation says returns the last element, or `null` if the list is empty. The longer form `list.getOrNull(list.lastIndex)` gives the same result, because the documentation says `lastIndex` is -1 for an empty list, and -1 is out of bounds.` (mechanical)
-2. The three `verified: not-run` lines (124, 151, 178) → `verified: kotlin-2.4.21`. (mechanical)
+1. Lines 231 to 232: the answer works, but a senior interviewer expects `lastOrNull()`. Verified: `List.lastOrNull()` "Returns the last element, or `null` if the list is empty" (kotlin.collections/last-or-null.html) and the run printed `null` for an empty list.
+   old (line 232): `Use `list.getOrNull(list.lastIndex)`. The documentation says `lastIndex` is -1 for an empty list, and -1 is out of bounds, so `getOrNull` returns `null` instead of crashing.`
+   new: `Use `list.lastOrNull()`. The documentation says it returns the last element, or `null` if the list is empty. The longer form `list.getOrNull(list.lastIndex)` also works. For an empty list, `lastIndex` is -1, which is out of bounds, so you get `null`.` (4 sentences, mechanical)
+2. Lines 124, 151, 178: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ### 6. `content/kotlin/collections/sets.md`
 
-1. Line 207 (checklist item 4): "quick answers" is a general CS claim without a label, and the `Set` interface alone does not promise speed.
+1. Line 207 (checklist item 4): "quick answers" is a general CS claim without a label, and the `Set` type alone does not promise speed. Verified: the `HashSet` and `LinkedHashSet` pages say "a hash table data structure that provides fast lookups".
    old: `Use a `Set` when you need unique values and quick answers to "is it here?". Use a `List` when order, numbered places or repeats matter. The documentation says a `Set` holds unique elements, while a `List` gives indexed access in a specified order.`
-   new: `Use a `Set` when you need unique values and often need to ask "is it here?". Use a `List` when order, numbered places or repeats matter. The documentation says a `Set` holds unique elements, while a `List` gives indexed access in a specified order. General knowledge: a hash-based set can answer "is it here?" without checking every item, while a list checks them one by one.` (mechanical)
-2. The three `verified: not-run` lines (103, 130, 158) → `verified: kotlin-2.4.21`. (mechanical)
+   new: `Use a `Set` when you need unique values and often ask "is it here?". Use a `List` when order, numbered places or repeats matter. The documentation says a `Set` holds unique elements, while a `List` gives indexed access in a specified order. The `HashSet` page says it gives fast lookups, while a list has to check items one by one (general knowledge).` (4 sentences, mechanical)
+2. Undefined jargon (docs/04 §7; the page defines no "iteration" or "implementation", and "interface" comes later). Four edits:
+   - Line 65: `implementations usually decide uniqueness` → `kinds of set usually decide uniqueness`.
+   - Line 67: `does not guarantee any particular order for iteration, although particular implementations may have a fixed order` → `does not guarantee any particular order for **iteration**, which means going through the items one by one, although particular kinds of set may have a fixed order`.
+   - Line 210: `The `Set` interface does not guarantee any order.` → `The `Set` type does not guarantee any order.`
+   - Line 213: `The documentation says implementations usually use `equals`.` → `The documentation says kinds of set usually use `equals`.` and, in the same answer, `a hash-based set may hold two values` → `a `HashSet` may hold two values`. (mechanical)
+3. Lines 103, 130, 158: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ### 7. `content/kotlin/collections/maps.md`
 
-1. Line 229: the answer is 5 sentences and 126 words, with "it also says" pointing at an unclear subject; too long to say aloud (template: 2 to 4 short sentences). Replace the whole line:
-   old: `The documentation for `hashCode` says that if two objects are equal according to `equals`, they must give the same hash code, ... My own reasoning: this is why text and numbers, which never change, make good keys.` (the full line 229)
-   new: `The documentation for `hashCode` says that if two objects are equal according to `equals`, they must give the same hash code, which is a number computed from the object. The `HashMap` page says it relies on both functions to locate entries, and that breaking the contract can lead to incorrect behavior. My own reasoning in coat-check words: the clerk picks a section by the number, so two equal tickets with different numbers are looked for in different sections and the coat is missed. The page also warns that changing a key after use can make its entry unreachable, so my own reasoning is that text and numbers, which never change, make good keys.` (mechanical)
-2. The three `verified: not-run` lines (118, 145, 177) → `verified: kotlin-2.4.21`. (mechanical)
+1. Line 229: the answer is 5 sentences and 126 words, with "It also says" pointing at an unclear subject; too long to say aloud (template: 2 to 4 short sentences). Replace all of line 229 (about 72 words):
+   new: `Two keys equal by `equals` must give the same hash code, a number computed from the key. The `HashMap` page says it relies on both to find entries, and that breaking this can lead to incorrect behavior. My own reasoning in coat-check words: equal tickets must lead to the same section, and a ticket must never change after filing. The page warns that a key changed after use may become unreachable.` (4 sentences, mechanical)
+2. Lines 118, 145, 177: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ### 8. `content/kotlin/collections/pairs-and-destructuring.md`
 
-1. Line 221 (accuracy, senior level): "By position." is right for ordinary `val (a, b)` and I confirmed it on 2.4.21, but the official destructuring page now has a section "Name-based destructuring" (Experimental, needs `-Xname-based-destructuring`; without the flag the compiler on 2.4.21 refuses the new syntax). An interviewer in 2026 may ask. Append one sentence:
+1. Line 221 (accuracy, senior level): "By position." is right for ordinary `val (a, b)` and I confirmed it on 2.4.21, but the official destructuring page now has a section "Name-based destructuring" (Experimental, needs `-Xname-based-destructuring`; without the flag the 2.4.21 compiler refuses the new syntax with "only available since language version 2.5"). An interviewer in 2026 may ask. Append one sentence:
    old: `So the order of your names must match the order of the properties.`
-   new: `So the order of your names must match the order of the properties. A name-based form exists, but the documentation marks it Experimental and it needs a compiler option.` (mechanical)
-2. The three `verified: not-run` lines (120, 148, 174) → `verified: kotlin-2.4.21`. (mechanical)
+   new: `So the order of your names must match the order of the properties. A name-based form exists, but the documentation marks it Experimental and it needs a compiler option.` (answer stays at 4 sentences, mechanical)
+2. Lines 120, 148, 174: `verified: not-run` → `verified: kotlin-2.4.21`. (mechanical)
 
 ## Optional, owner level (not blocking)
 
