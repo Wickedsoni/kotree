@@ -59,3 +59,4 @@ VERDICT: FIX
 14. Checklist 13 build-exercise not used: `content/tools/git/what-is-a-commit.md` has no hands-on task (`docs/practice/interview-tools.md`: stage one modified file, commit it with a clear message, inspect with `git log`), and `content/kotlin/reading-code/reading-order-for-code.md` has none (`interview-kotlin.md`: take a file with random member order and lay it out by the official conventions). Add a short task to Tricks to remember in each. `fixer` must run every git command locally and paste only real output. Mechanical (`fixer`).
 
 VERDICT: FIX
+FIXED, awaiting re-check

@@ -21,12 +21,12 @@ SOURCES (housekeeper strips this comment at go-live)
 - Kotlin for loops over ranges and collections: https://kotlinlang.org/docs/control-flow.html
 - Android, frames must render in under 16 ms for 60 fps, overrun drops the frame: https://developer.android.com/topic/performance/vitals/render
 - Practice problems: docs/practice/practice-dsa.md (tags [both] and [A]; LeetCode 268 is tag [B], number from memory, re-check).
-- Theory leaf: the step counts are arithmetic traced by hand; no code was run.
+- Theory leaf: the step counts are arithmetic traced by hand; the challenge snippets were run with kotlin 2.4.21 (scripts/kt-run.sh).
 -->
 
 ## The question
 
-Your app shows a list of items. With 10 test items the screen opens at once. With 1,000 real items it feels slow, and with 5,000 it stutters. Nobody changed the code. Only the list grew. How can you tell, before you run anything, how much slower the code gets when the list is 10 times bigger?
+Your app shows a list of items. With 10 test items the screen opens at once. With 1,000 real items it feels slow, and with 5,000 it stutters. Only the list grew. How can you tell, before you run anything, how much slower the code gets when the list is 10 times bigger?
 
 ## Mental model
 
@@ -68,7 +68,7 @@ What happens to the footsteps if the street gets 10 times longer, from 10 houses
 - B. They become 10 times bigger, from 10 to 100.
 - C. They become 100 times bigger, from 10 to 1,000.
 
-Idea A mixes up speed with footsteps. A faster postman still takes as many footsteps. Idea C is what happens with the habit change, not with one walk. Idea B is the answer for one walk.
+Idea A mixes up speed with footsteps. A faster postman still takes as many footsteps. Idea C is the jump you get with a walk inside a walk, not with one walk. Idea B is the answer for one walk.
 
 Now the habit change. For 5 houses, how many footsteps is the walk inside a walk?
 
@@ -135,7 +135,7 @@ When n grows 10 times, one loop takes 10 times the steps. The nested loop takes 
 type: predict
 run: false
 id: count-nested-3-by-4
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var steps = 0
@@ -165,7 +165,7 @@ output: |
 type: predict
 run: false
 id: largest-in-one-pass
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val items = listOf(3, 9, 4, 7, 1)
@@ -196,7 +196,7 @@ output: |
 type: predict
 run: false
 id: double-the-street
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       for (n in listOf(10, 20)) {
@@ -241,7 +241,7 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a list screen that feels fine with the 20 items you used while testing, then stutters when a real user has 5,000. The Android page on slow rendering says an app must render each frame in under 16 ms to reach 60 frames per second, and that a frame which overruns is dropped. This next part is my own reasoning. A loop inside a loop over 5,000 items takes 25,000,000 steps, while one loop takes 5,000. The test list was too small to show the difference.
+Picture a list screen that feels fine with the 20 items you used while testing, then stutters when a real user has 5,000. The Android page on slow rendering says an app must render each frame in under 16 ms to reach 60 frames per second. A frame that overruns is dropped. This next part is my own reasoning. A loop inside a loop over 5,000 items takes 25,000,000 steps, while one loop takes 5,000. The test list was too small to show the difference.
 
 This lesson gives you the first question for that symptom. Is there a loop inside a loop, and how many items does it run over?
 
@@ -273,9 +273,9 @@ That is n times 100: 1,000, then 10,000, then 100,000. The 100 stays fixed, so t
 
 ## Practise on these
 
-Each problem asks you to see how many times a loop runs. LeetCode shows a rating beside each title.
+Each problem asks you to see how many times a loop runs. The list runs from the gentlest problem to the hardest.
 
-1. LeetCode 1480, Running Sum of 1d Array (rating: Easy). Count the loop runs for one pass over n numbers. https://leetcode.com/problems/running-sum-of-1d-array/
-2. LeetCode 1342, Number of Steps to Reduce a Number to Zero (rating: Easy). Count the operations as you halve or subtract, and watch how the count grows with the input. https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/
-3. LeetCode 268, Missing Number (rating: Easy). Compare a method with several passes against one pass over the list. https://leetcode.com/problems/missing-number/
-4. LeetCode 1512, Number of Good Pairs (rating: Easy). Count the steps of checking every pair with a loop inside a loop. https://leetcode.com/problems/number-of-good-pairs/
+1. LeetCode 1480, Running Sum of 1d Array. Count the loop runs for one pass over n numbers. https://leetcode.com/problems/running-sum-of-1d-array/
+2. LeetCode 1342, Number of Steps to Reduce a Number to Zero. Count the operations as you halve or subtract, and watch how the count grows with the input. https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/
+3. LeetCode 268, Missing Number. Compare a method with several passes against one pass over the list. https://leetcode.com/problems/missing-number/
+4. LeetCode 1512, Number of Good Pairs. Count the steps of checking every pair with a loop inside a loop. https://leetcode.com/problems/number-of-good-pairs/

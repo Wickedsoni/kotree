@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 1
 requires: []
-summary: Compose builds the screen from the current data. You describe how it should look for that data, and you do not patch it step by step.
+summary: The screen is built from the current data. You describe how it should look, and you do not patch it step by step.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/develop/ui/compose/mental-model ("a declarative API that lets you render your app UI without imperatively mutating frontend views"; "You update the UI by calling the same composable function with different arguments"; the imperative way is to "walk the tree using functions like findViewById()" and call methods like button.setText(String); "Manipulating views manually increases the likelihood of errors"; "If a piece of data is rendered in multiple places, you might forget to update one of the views that shows it"; "conceptually regenerating the entire screen from scratch, then applying only the necessary changes"; recomposition "calls only the functions or lambdas that might have changed, and skips the rest"; composable functions should be "fast, idempotent, and free of side-effects"; "A side-effect is any change that is visible to the rest of your app"). Interview data: docs/practice/interview-ui.md (its senior question about lifting state and its claim that Compose eliminates inconsistent UI are not on the page, so they are not used). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.20 only; none were run for this rewrite, so every challenge says not-run and a 2.4.21 run is still needed. All code is a model in plain Kotlin, not real Android. Sim declarative-vs-steps is new and is a code-to-screen sim, see docs/sims/needed-ids.md. -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/develop/ui/compose/mental-model ("a declarative API that lets you render your app UI without imperatively mutating frontend views"; "You update the UI by calling the same composable function with different arguments"; the imperative way is to "walk the tree using functions like findViewById()" and call methods like button.setText(String); "Manipulating views manually increases the likelihood of errors"; "If a piece of data is rendered in multiple places, you might forget to update one of the views that shows it"; "conceptually regenerating the entire screen from scratch, then applying only the necessary changes"; recomposition "calls only the functions or lambdas that might have changed, and skips the rest"; composable functions should be "fast, idempotent, and free of side-effects"; "A side-effect is any change that is visible to the rest of your app"). Interview data: docs/practice/interview-ui.md (its senior question about lifting state and its claim that Compose eliminates inconsistent UI are not on the page, so they are not used). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.20 only; for this rewrite, the challenges were run with kotlin 2.4.21 (scripts/kt-run.sh) and every output matched, so slides-with-a-list, slides-with-a-description and fix-badge-left-behind say kotlin-2.4.21. Compose definition: https://developer.android.com/compose ("Jetpack Compose is Android's recommended modern toolkit for building native UI."). Common mistakes bullet 4: https://developer.android.com/develop/ui/compose/mental-model ("In Compose's declarative approach, widgets are relatively stateless and don't expose setter or getter functions."). All code is a model in plain Kotlin, not real Android. Sim declarative-vs-steps is new and is a code-to-screen sim, see docs/sims/needed-ids.md. -->
 
 ## The question
 
@@ -43,7 +43,7 @@ With brush strokes, the painter does only what the list says. If you forget one 
 2. Slide five times quickly on both panels. Look at both labels on each panel.
 3. (Optional reveal) Press "Skip one instruction" on the left panel and slide again.
 
-**What you should notice:** The left panel follows a list of changes and drifts out of step when one change is missing, while the right panel is described again from the number and always matches.
+**What you should notice:** The left panel follows a list of changes and drifts out of step when one change is missing. The right panel is described again from the number and always matches.
 
 ## Build the logic
 
@@ -75,9 +75,9 @@ Idea B works until the screen gets bigger or someone else edits it. Idea A is th
 
 The number is the **state**: the data the screen depends on. Describing the screen from that data is **declarative UI**. Telling the screen what to change, step by step, is the **imperative** way.
 
-The Android documentation says the common imperative way is to walk the tree of views using functions like `findViewById()` and change them with calls like `button.setText(String)`. A **view** is one item on the screen, such as a button or a piece of text. The documentation adds that manipulating views manually increases the likelihood of errors, and that if a piece of data is shown in several places, you might forget to update one of them.
+The Android documentation says the common imperative way is to walk the tree of views using functions like `findViewById()` and change them with calls like `button.setText(String)`. A **view** is one item on the screen, such as a button or a piece of text. The documentation adds that manipulating views manually increases the likelihood of errors. It also says that if a piece of data is shown in several places, you might forget to update one of them.
 
-In Compose, the documentation says you update the UI by calling the same composable function with different arguments. A **composable** is a Kotlin function that describes a piece of the screen.
+Jetpack Compose is Android's recommended modern toolkit for building native UI. A **composable** is a Kotlin function that describes a piece of the screen. In Compose, the documentation says you update the UI by calling the same composable function with different arguments.
 
 Here is the idea as a model in plain Kotlin, not real Android. The function takes the state and returns the whole screen as text.
 
@@ -100,7 +100,7 @@ This prints `Title: Count is 1 | Badge: 1 left`, then `Title: Count is 2 | Badge
 ```challenge
 type: predict
 id: slides-with-a-list
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   var label = "Count is 0"
@@ -130,7 +130,7 @@ output: |
 ```challenge
 type: predict
 id: slides-with-a-description
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   fun describeScreen(count: Int): String {
@@ -169,7 +169,7 @@ output: |
 ```challenge
 type: fix
 id: fix-badge-left-behind
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // A model in plain Kotlin, not real Android.
   var title = "Cart: 0"
@@ -230,7 +230,7 @@ For this code, question 3 has a short answer: this code has no null values in pl
 
 ## Where this shows up in Android
 
-Think of a shopping app where the cart title says "2 items" but the small badge on the cart icon still says "1". That is the drifting left panel from this page. In the older view-based approach, each place had its own change call, and the Android documentation says that if a piece of data is shown in several places, you might forget to update one.
+Think of a shopping app where the cart title says "2 items" but the small badge on the cart icon still says "1". That is the drifting left panel from this page. In the older view-based approach, each place had its own change call. The Android documentation says that if a piece of data is shown in several places, you might forget to update one.
 
 With Compose, the title and the badge are both described from the same cart count, and a new count builds the description again. If you see two parts of a screen disagreeing, ask whether they read the same state, or whether each one got its own patch.
 
@@ -243,7 +243,7 @@ In the imperative way, you find a view and change it step by step, for example w
 When every place on the screen is built from the same state, they cannot disagree. The documentation says manual updating increases the likelihood of errors, because you might forget to update one view that shows the data. The trade-off is that you must keep the state in one place.
 
 **Does Compose redraw the whole screen on every change?**
-No. The documentation says the technique works by conceptually regenerating the entire screen, then applying only the necessary changes. On recomposition it calls only the functions that might have changed and skips the rest. So describing everything does not mean redoing everything.
+No. The documentation says the technique works by conceptually regenerating the entire screen, then applying only the necessary changes. Recomposition means Compose runs the description again after a change. On recomposition it calls only the functions that might have changed and skips the rest. So describing everything does not mean redoing everything.
 
 **Why should a composable function be free of side-effects?**
 The documentation says a side-effect is any change visible to the rest of your app. It says you should never depend on side-effects from running a composable, because recomposition may be skipped. My own reasoning: a description that also edits other things can leave the screen out of step, which is the bug this page is about.

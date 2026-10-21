@@ -5,7 +5,7 @@ status: shadow
 difficulty: easy
 order: 1
 requires: []
-summary: A test is a small program that checks your code the same way every time. It finds a broken feature in seconds, so you need not remember to look.
+summary: A test is a small program that checks your code the same way every time, so you need not remember to look.
 video: ""
 publishedOn:
 updatedOn:
@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/testing/fundamentals ("manual testing scales poorly" and regressions in your app's behavior can be overlooked; automated testing "is faster, more repeatable, and generally gives you more actionable feedback about your app earlier"; local tests "execute on your development machine or a server" and are "usually small and fast"). The page does not define regression, so the definition here is marked as general knowledge. The page does not say how local tests run, so nothing is claimed about the JVM. Interview data: docs/practice/interview-testing.md (test-driven development and living documentation are not on the page, so they are left out). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.0 only; none were run for this rewrite, so every challenge says not-run and a 2.4.21 run is still needed. Sim tests-lamps is new, see docs/sims/needed-ids.md. -->
+<!-- SOURCES (read 21 Oct 2026): https://developer.android.com/training/testing/fundamentals ("manual testing scales poorly" and regressions in your app's behavior can be overlooked; automated testing "is faster, more repeatable, and generally gives you more actionable feedback about your app earlier"; local tests "execute on your development machine or a server" and are "usually small and fast"). The page does not define regression, so the definition here is marked as general knowledge. The page does not say how local tests run, so nothing is claimed about the JVM. Interview data: docs/practice/interview-testing.md (test-driven development and living documentation are not on the page, so they are left out). The kotlin blocks and outputs are unchanged from the earlier draft, whose notes record runs on Kotlin 2.4.0 only; for this rewrite, the challenges were run with kotlin 2.4.21 (scripts/kt-run.sh) and every output matched, so break-the-price, one-check-misses and fix-the-discount say kotlin-2.4.21. Sim tests-lamps is new, see docs/sims/needed-ids.md. -->
 
 ## The question
 
@@ -97,7 +97,7 @@ The `${...}` part puts the answer into the printed text. Each line is a check. I
 ```challenge
 type: predict
 id: break-the-price
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun price(quantity: Int, unit: Int): Int = quantity + unit
 
@@ -128,7 +128,7 @@ output: |
 ```challenge
 type: predict
 id: one-check-misses
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun twice(n: Int): Int = n * n
 
@@ -178,7 +178,7 @@ fun main() {
 ```challenge
 type: fix
 id: fix-the-discount
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   // Takes a percentage off a price.
   // For example, 10 percent off 200 should give 180.
@@ -243,7 +243,7 @@ The Android testing documentation says manual testing scales poorly and that reg
 ## Say it in an interview
 
 **What does an automated test give you that tapping through the app does not?**
-It runs the same checks the same way every time, so a change that breaks an old feature shows up fast. The Android documentation says automated testing is faster and more repeatable. Tapping scales poorly, because every new feature adds more screens to check by hand.
+It runs the same checks the same way every time, so a change that breaks an old feature shows up fast. The Android documentation says automated testing is faster and more repeatable. My own reasoning: tapping scales poorly, because every new feature adds more screens to check by hand.
 
 **Does a passing test suite prove the app has no bugs?**
 No. A test only checks the cases someone wrote down. In this lesson, two checks passed on broken code. So I also add a check for a case that would fail, and I work out the expected answer by hand before I write it.
@@ -252,7 +252,7 @@ No. A test only checks the cases someone wrote down. In this lesson, two checks 
 My own reasoning: the tests are a checklist that still works after the change. If a check turns red, you know which behaviour broke, and you can fix it before a user finds it. Without them, you rely on remembering every place the code is used.
 
 **What goes wrong if a team relies only on manual testing?**
-The Android documentation says manual testing scales poorly and that regressions can slip past you. A change in one place can break a screen nobody opens again before release. The trade-off is that writing tests costs time up front, but running them again costs almost nothing.
+The Android documentation says manual testing scales poorly and that regressions can slip past you. A change in one place can break a screen nobody opens again before release. My own reasoning: the trade-off is that writing tests costs time up front, but running them again costs almost nothing.
 
 ## Recap
 

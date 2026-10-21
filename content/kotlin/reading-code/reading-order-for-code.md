@@ -27,7 +27,7 @@ SOURCES (housekeeper strips this comment at go-live)
 
 ## The question
 
-You open a Kotlin file you did not write. It is 60 lines long, the names are tidy, and the formatting is clean. Where do you start reading? Do you go from the first line to the last, like a story? And what should you look for on the way, so that a hidden crash does not get past you?
+You open a Kotlin file you did not write. It is 26 lines long, the names are tidy, and the formatting is clean. Where do you start reading? Do you go from the first line to the last, like a story? And what should you look for on the way, so that a hidden crash does not get past you?
 
 ## Mental model
 
@@ -60,7 +60,7 @@ Idea A feels natural, and the Kotlin style guide does say a reader going down a 
 
 ### Build
 
-1. First, learn what everything is. For each name, find its kind of value: the constructor boxes, the property types, what each function hands back. Do not think about running yet.
+1. First, learn what everything is. For each name, find its kind of value: the values passed to the constructor, the property types, what each function hands back. Do not think about running yet.
 2. Second, learn what runs when. Find where the program starts. Then find what runs when an object is made, and in what order. Functions inside a class run only when something calls them.
 3. Third, learn what can be missing. Look for every place a value might be absent, and for every place the code promises it is not.
 4. Fourth, learn what can happen twice. Look for anything that can be called again, or made again, and ask what changes the second time.
@@ -73,9 +73,9 @@ Each trip through the file with one question in mind is a **pass**. The four pas
 
 For the second pass, three Kotlin facts matter. A **property initializer** is the `= ...` part of a property that gives it its starting value. An **init block**, written `init { ... }`, holds code that runs when an object is made. The Kotlin documentation says init blocks run in the order they appear in the class body, along with property initializers. That is why the order on the page matters inside a class, and why it is different from the order of the functions.
 
-The Kotlin coding conventions list the order of a class: property declarations and initializer blocks, then secondary constructors, then method declarations, then the companion object. They also say not to sort methods alphabetically or by visibility, and to keep related things together so a reader going from top to bottom can follow the logic. So top to bottom is how you find things, not how the code runs.
+The Kotlin coding conventions list the order of a class: property declarations and initializer blocks, then secondary constructors, then method declarations, then the companion object. They also say not to sort methods alphabetically or by visibility. They want related things kept together, so a reader going from top to bottom can follow the logic. So top to bottom is how you find things, not how the code runs.
 
-For the third pass, look for `?` after a type, for `?.` and `?:`, and for the **not-null assertion** `!!`, which stops the program with a NullPointerException when the value is null.
+For the third pass, look for `?` after a type, for `?.` and `?:`, and for the **not-null assertion** `!!`. The `!!` stops the program with a NullPointerException when the value is null.
 
 Here is the cart file. The four passes follow the code.
 
@@ -117,7 +117,7 @@ Pass 1, types: `owner` is a `String`, `coupon` is a `String?`, `items` is a list
 type: predict
 run: false
 id: what-runs-first
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Report(val title: String) {
       val tag = title.uppercase()
@@ -150,7 +150,7 @@ output: |
 type: predict
 run: false
 id: bang-hidden-in-a-tidy-class
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Profile(val name: String, val nickname: String?) {
       fun greeting(): String = "Hi " + (nickname ?: name)
@@ -182,7 +182,7 @@ output: |
 type: predict
 run: false
 id: init-runs-per-object
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   class Counter {
       var count = 0
@@ -219,6 +219,7 @@ output: |
 - Page order is not running order. Find `main` and the `init` blocks first.
 - A tidy name is not a papers check. Look at the type.
 - Write a line number next to every doubt.
+- Task: take a class with its members in random order and lay it out by the coding conventions: properties and init blocks first, then methods, then the companion object. Write one line on what changed.
 
 ## Common mistakes
 
@@ -245,7 +246,7 @@ The Kotlin coding conventions give the order: properties and initializer blocks,
 No. The conventions say not to sort methods alphabetically or by visibility. Put related things together, so a reader going from top to bottom can follow what happens. My own reasoning: a sorted file scatters the lines that belong together.
 
 **How do extension functions change the way you trace code?**
-They are not inside the class, so you also look in the file and its imports. The documentation says extensions do not change the class, that they are dispatched statically, and that a member function wins over an extension with the same name and arguments. My own reasoning: when a call does something odd, check whether an extension or a member is being called.
+They are not inside the class, so you also look in the file and its imports. The documentation says extensions do not change the class and are dispatched statically. A member function wins over an extension with the same name and arguments. My own reasoning: when a call does something odd, check whether an extension or a member is being called.
 
 ## Recap
 

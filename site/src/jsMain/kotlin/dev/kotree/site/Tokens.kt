@@ -116,12 +116,12 @@ object Tokens {
         const val BOUGH_TIP_WIDTH = 8
         const val BRANCH_WIDTH = 8
         const val BRANCH_TIP_WIDTH = 4
-        const val BOUGH_LEN = 360.0
+        const val BOUGH_LEN = 420
         const val BOUGH_LEN_JITTER = 30.0
-        const val BOUGH_SPREAD_DEG = 56.0
+        const val BOUGH_SPREAD_DEG = 70
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 165.0
+        const val BRANCH_SPREAD = 400
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0

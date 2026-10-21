@@ -5,7 +5,7 @@ status: shadow
 difficulty: medium
 order: 1
 requires: []
-summary: A commit is a saved snapshot of your project. You choose what goes in it first, and Git keeps every old snapshot so you can go back.
+summary: A commit is a saved snapshot of your project that you choose first, and Git keeps every old one.
 video: ""
 publishedOn:
 updatedOn:
@@ -33,7 +33,7 @@ Think of a photo album of your room.
 
 You tidy the desk, you move the things you want to keep into the frame, and you take the photo. Then you write a caption. Later, you can open the album and look at any old photo.
 
-**Where the analogy stops:** A photo shows the whole room, including what you did not mean to show. A snapshot holds only what you placed in the frame, and the rest of the room stays as it is. Also, an old photo can only be looked at, but an old snapshot can bring a file back into your folder.
+**Where the analogy stops:** A photo shows the whole room, including what you did not mean to show. A snapshot holds the whole project, but only the staged edits are new in it; edits you did not stage stay in your folder. Also, an old photo can only be looked at, but an old snapshot can bring a file back into your folder.
 
 ## See it move
 
@@ -44,7 +44,7 @@ You tidy the desk, you move the things you want to keep into the frame, and you 
 2. Drag file A into the tray, which stands for the frame. Then press "Take snapshot".
 3. Edit file B and leave it out of the tray. Take another snapshot and open it.
 
-**What you should notice:** A snapshot holds only the files that were in the tray, and the edit you left out is still waiting in your folder.
+**What you should notice:** Only the staged edits are new in the snapshot, and the edit you left out is still waiting in your folder.
 
 ## Build the logic
 
@@ -153,14 +153,15 @@ output: |
 
 - Frame first, photo second, caption last.
 - Save changes your folder. Commit changes your album.
-- A commit holds what you staged, not what you changed.
+- Only the staged edits are new in a commit, not every change you made.
 - Never put a secret in the frame. The album keeps every old photo.
+- Task: stage one modified file, commit it with a clear message, then look at the result with `git log`.
 
 ## Common mistakes
 
 - **Thinking Git saves the file every time you press Save.** It feels that way because both are called saving. Pressing Save writes to your folder. Git records a snapshot only when you commit.
 - **Thinking a commit uploads your project to the internet.** Sites that host code make it feel like one step. A commit is stored on your own computer, and sending it to a site is a separate step.
-- **Committing and finding that the last change is missing.** You edited a file and committed without staging it again, so the new change was not in the frame. Check what is staged before you commit, and stage again after a new change.
+- **Committing and finding that the last change is missing.** You edited a file and committed without staging it again. The new change was not in the frame. Check what is staged before you commit, and stage again after a new change.
 
 ## Where this shows up in Android
 
@@ -174,7 +175,7 @@ A real Android project also has files that the build tools create (general knowl
 A commit is a saved snapshot of your project at one moment, with a message. The Git book says Git thinks of its data as snapshots, and a committed snapshot is stored in your local database. Every commit stays in the history, so you can go back to it.
 
 **How do you stage changes and record a commit?**
-I run `git add` on the files I want, then `git commit -m` with a short message. The Git book says Git stages a file as it is when I run `git add`, so a later edit needs another `git add`. Anything I did not stage is not in the commit.
+I run `git add` on the files I want, then `git commit -m` with a short message. The Git book says Git stages a file as it is when I run `git add`, so a later edit needs another `git add`. Anything I did not stage stays as a change in my folder, and only the staged edits are new in the commit.
 
 **Is a commit a list of changes, or a snapshot?**
 The Git book describes it as a snapshot of the project's files at that moment, not a list of changes. The trade-off is that you think in whole states you can return to. It also helps to remember that a commit only holds what was staged.
@@ -185,7 +186,7 @@ This answer is my own reasoning and general knowledge. A commit about one thing 
 ## Recap
 
 1. A commit is a saved snapshot with a caption, stored on your own computer.
-2. You stage the files you want first, and only staged files go into the commit.
+2. You stage the files you want first, and only the staged edits are new in the commit.
 3. The album keeps every snapshot, so you can go back to an old one.
 
 ## You can now

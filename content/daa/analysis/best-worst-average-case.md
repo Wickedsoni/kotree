@@ -17,7 +17,7 @@ upnext: false
 
 <!--
 SOURCES (housekeeper strips this comment at go-live)
-- Theory leaf: the step counts are traced by hand and the one average (1 to 5 gives 3) is arithmetic. No code was run.
+- Theory leaf: the step counts are traced by hand and the one average (1 to 5 gives 3) is arithmetic. The best-and-worst-steps snippet was run with kotlin 2.4.21 (scripts/kt-run.sh); the two non-Kotlin items were not run.
 - Kotlin for loops over a collection: https://kotlinlang.org/docs/control-flow.html
 - Best, worst and average case, amortized cost, linear search: general knowledge, labelled in the text.
 - Android Where-this-shows-up paragraph is an illustration from the roadmap row, labelled "my own reasoning".
@@ -26,7 +26,7 @@ SOURCES (housekeeper strips this comment at go-live)
 
 ## The question
 
-A developer says: "I tested my search on a list of 1,000 names. It took one step." Another developer runs the same code on another list of 1,000 names. It takes a thousand steps. Same code, same size of list. How can the speed be so different, and which number should you believe?
+A developer says: "I tested my search on a list of 1,000 names. It took one step." Another developer runs the same code on another list of 1,000 names. It takes a thousand steps, with the same code and the same size of list. How can the speed be so different, and which number should you believe?
 
 ## Mental model
 
@@ -52,7 +52,7 @@ How long the search takes depends on where the keys happen to be, not only on ho
 2. Put the keys in the middle place, then in the last place, and search each time.
 3. Take the keys out of every place and search again.
 
-**What you should notice:** The row has the same number of places each time, but the check count depends on where the keys sit, and missing keys cost the most.
+**What you should notice:** The row has the same number of places each time. The check count depends on where the keys sit, and missing keys cost the most.
 
 ## Build the logic
 
@@ -118,7 +118,7 @@ This prints `1`, then `5`, then `5`. The function `search` counts one step for e
 type: predict
 run: false
 id: best-and-worst-steps
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun search(items: List<Int>, target: Int): Int {
       var steps = 0
@@ -248,7 +248,10 @@ Test the worst case on purpose: the target in the last place and a target that i
 
 ## Practise on these
 
-Each problem has a worst-case input that is different from the typical one. Check the statement for the exact rules.
+Each problem has a worst-case input that is different from the typical one. Check the statement for the exact rules. The list runs from the gentlest problem to the hardest.
 
-1. LeetCode 28, Find the Index of the First Occurrence in a String (rating: Easy). A plain search through the text is quick on most inputs and slow on texts like "aaaa...ab". https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
-2. HackerRank, Running Time of Algorithms (Algorithms, Sorting, rating: Easy). Count the shifts insertion sort does on a sorted list (the best case) and on a reversed list (the worst case). https://www.hackerrank.com/challenges/runningtime/problem
+1. LeetCode 28, Find the Index of the First Occurrence in a String. A plain search through the text is quick on most inputs and slow on texts like "aaaa...ab". https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
+2. HackerRank, Running Time of Algorithms (Algorithms, Sorting). Count the shifts insertion sort does on a sorted list (the best case) and on a reversed list (the worst case). https://www.hackerrank.com/challenges/runningtime/problem
+3. LeetCode 81, Search in Rotated Sorted Array II. Count the checks when the list has repeated values and you cannot tell which half is sorted. https://leetcode.com/problems/search-in-rotated-sorted-array-ii/
+4. LeetCode 912, Sort an Array. Count the steps a sort takes on a sorted list and on a reversed list. https://leetcode.com/problems/sort-an-array/
+5. LeetCode 215, Kth Largest Element in an Array. Compare a method that sorts the whole list with one that stops once it finds the answer. https://leetcode.com/problems/kth-largest-element-in-an-array/
