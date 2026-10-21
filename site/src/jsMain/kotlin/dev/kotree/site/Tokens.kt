@@ -121,7 +121,7 @@ object Tokens {
         const val BOUGH_SPREAD_DEG = 64.000
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 400.000
+        const val BRANCH_SPREAD = 440.000
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0
@@ -142,7 +142,7 @@ object Tokens {
         /** Coordinates are rounded to 1/QUANT world px so the geometry hash is stable. */
         const val QUANT = 16.0
         /** Stem twigs attach along the limb at parameters from STEM_T_MIN to STEM_T_MAX, alternating sides. */
-        const val STEM_T_MIN = 0.200
+        const val STEM_T_MIN = 0.250
         const val STEM_T_MAX = 0.95
         /** Twig length in world px, plus per-stem jitter (Rng "stem:<id>"). */
         const val STEM_LEN = 104.000
