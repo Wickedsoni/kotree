@@ -15,10 +15,12 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.math.PI
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.math.sin
 
 private const val PERCENT = 100.0
 private const val STATUS_SHADOW = 0
@@ -35,6 +37,9 @@ private const val DRY_RIB_HALF = 0.36
 private const val DRY_SIDE_START = -0.06
 private const val DRY_SIDE_END_X = 0.14
 private const val DRY_SIDE_END_Y = 0.13
+private const val DEG = PI / 180.0
+private const val MAX_DT_MS = 50.0
+private const val FIRST_DT_MS = 16.0
 
 /** A filled shape and its colour. [branch] is the branch index whose progress tints it (-1: none); [base] its untinted ink. */
 private class Piece(val path: dynamic, val base: Int, val branch: Int, var color: String)
@@ -181,7 +186,12 @@ class VectorRenderer(
     private val branchCount = nodes.branchNodes.size
     private val foundationIdx = nodes.branchIndex["foundation"] ?: -1
     private val leafDoneIds: Array<String?> = Array(nodes.leafCount) { leafDoneId(nodes.leafNodes[it].leaf) }
-    private val leafRest = DoubleArray(nodes.leafCount) { AutumnColor.rest(seed, nodes.leafNodes[it].id) }
+    private val reducedQuery: dynamic = window.matchMedia("(prefers-reduced-motion: reduce)")
+    private val motion = AutumnMotion(nodes.leafCount, seed, { nodes.leafNodes[it].id }, { reducedQuery.matches == true })
+    private var lastNow = Double.NaN
+    private var lastZ = Double.NaN
+    private var lastCx = Double.NaN
+    private var lastCy = Double.NaN
     private val leafDone = BooleanArray(nodes.leafCount)
     private val branchDone = IntArray(branchCount)
     private val branchLive = IntArray(branchCount).also { live ->
@@ -265,14 +275,17 @@ class VectorRenderer(
 
     /**
      * The visitor's done marks changed ([doneIds] = ids of done live leaves). Recounts every branch, retints limbs, twigs
-     * and canopy dots by fraction done, and makes the wood layer render again. Static: no animation yet (ADR 008 WP6).
+     * and canopy dots by fraction done, and makes the wood layer render again. Changed leaves start their colour ease
+     * (instant under reduced motion) in the live pass, which the caller's next frame draws (ADR 008 WP6).
      */
     fun onProgress(doneIds: Set<String>) {
         branchDone.fill(0)
+        val now = window.performance.now()
         for (i in 0 until nodes.leafCount) {
             val id = leafDoneIds[i]
             leafDone[i] = id != null && id in doneIds
             if (leafDone[i]) branchDone[nodes.leafBranchIdx[i]]++
+            motion.setDone(i, leafDone[i], now)
         }
         val byId = HashMap<String, Double>()
         for (b in 0 until branchCount) {
@@ -287,6 +300,9 @@ class VectorRenderer(
         progressVersion++
         wood.invalidate()
     }
+
+    /** True while a frame is still needed for the sway or a colour ease; false when idle (the frame loop then stops). */
+    fun motionActive(): Boolean = motion.active()
 
     private fun retint(p: Piece) {
         if (p.branch >= 0) p.color = tintedLimb(p.base, p.branch)
@@ -327,6 +343,7 @@ class VectorRenderer(
             if (level < LEVEL_STEM && nodes.leafBranchIdx[i] != branch) continue
             val status = nodes.leafStatus[i]
             if (status == STATUS_SHADOW && !drawShadowLeaves) continue
+            if (motion.inLive(i)) continue // drawn by the live pass
             val x = nodes.leafX[i]
             val y = nodes.leafY[i]
             if (x < ox - reach || x > ox + ww + reach || y < oy - reach || y > oy + wh + reach) continue
@@ -348,14 +365,6 @@ class VectorRenderer(
                 g.strokeStyle = upNextCss
                 g.lineWidth = lineLocal
                 g.stroke(lens)
-            } else if (leafDone[i]) {
-                val idx = AutumnColor.index(leafRest[i])
-                g.fillStyle = lut.fill[nodes.leafDifficulty[i]][idx]
-                g.fill(lens)
-                g.strokeStyle = lut.stroke[idx]
-                g.lineWidth = lineLocal
-                g.stroke(lens)
-                if (leafRest[i] >= Tokens.Autumn.dryAt) g.stroke(dryVeins)
             } else {
                 val diff = nodes.leafDifficulty[i]
                 g.fillStyle = leafFillCss[diff]
@@ -373,10 +382,62 @@ class VectorRenderer(
     }
 
     /**
-     * One frame. [pointerX], [pointerY] = pointer in CSS px relative to the canvas, negative when outside; the hover node
+     * The live pass: done and easing leaves, drawn on the visible canvas after the wood layer with the same cull as
+     * [paintLeaves]. Sway angle and shimmer follow the activity envelope; they are zero when idle or under reduced motion.
+     */
+    private fun drawLivePass(cam: Camera, s: Double, dpr: Double, level: Int, branch: Int, leafBucket: Int, now: Double) {
+        motion.drawn = 0
+        if (leafBucket <= 0) return
+        val vw = cam.viewport.widthPx.toDouble()
+        val vh = cam.viewport.heightPx.toDouble()
+        val ww = vw / s
+        val wh = vh / s
+        val ox = cam.cx - ww / 2.0
+        val oy = cam.cy - wh / 2.0
+        val strokePx = Tokens.Tree.stemLineMinPx
+        val ls = (Tokens.Gen.LEAF_SIZE * s).coerceIn(leafMin, leafMax)
+        val reach = ls / s
+        val lineLocal = strokePx / ls
+        val omegaNow = TWO_PI / Tokens.Sway.periodMs * now
+        val swayRad = motion.activity * Tokens.Sway.deg * DEG
+        var drawn = 0
+        g.globalAlpha = leafBucket.toDouble() / Tokens.Canopy.leafAlphaBuckets
+        for (i in 0 until nodes.leafCount) {
+            if (!motion.inLive(i)) continue
+            if (level < LEVEL_STEM && nodes.leafBranchIdx[i] != branch) continue
+            val x = nodes.leafX[i]
+            val y = nodes.leafY[i]
+            if (x < ox - reach || x > ox + ww + reach || y < oy - reach || y > oy + wh + reach) continue
+            val wave = sin(omegaNow + motion.phase[i])
+            var c = nodes.leafCos[i]
+            var sn = nodes.leafSin[i]
+            if (swayRad > 0.0) {
+                val d = swayRad * wave
+                val cd = cos(d)
+                val sd = sin(d)
+                val nc = c * cd - sn * sd
+                sn = sn * cd + c * sd
+                c = nc
+            }
+            g.setTransform(c * ls * dpr, sn * ls * dpr, -sn * ls * dpr, c * ls * dpr, (x - ox) * s * dpr, (y - oy) * s * dpr)
+            val idx = AutumnColor.index(motion.shimmered(i, now, wave))
+            g.fillStyle = lut.fill[nodes.leafDifficulty[i]][idx]
+            g.fill(lens)
+            g.strokeStyle = lut.stroke[idx]
+            g.lineWidth = lineLocal
+            g.stroke(lens)
+            if (motion.base(i, now) >= Tokens.Autumn.dryAt) g.stroke(dryVeins)
+            drawn++
+        }
+        g.globalAlpha = 1.0
+        motion.drawn = drawn
+    }
+
+    /**
+     * One frame at [now] (the rAF timestamp). [pointerX], [pointerY] = pointer in CSS px relative to the canvas, negative when outside; the hover node
      * is found here, once per frame. [crisp] = motion has stopped, make the wood layer exact.
      */
-    fun draw(cam: Camera, view: ViewState, crisp: Boolean, pointerX: Double, pointerY: Double) {
+    fun draw(cam: Camera, view: ViewState, crisp: Boolean, pointerX: Double, pointerY: Double, now: Double) {
         val t0 = PerfProbe.beginDraw()
         val vp = cam.viewport
         val dpr = window.devicePixelRatio
@@ -399,6 +460,13 @@ class VectorRenderer(
         }
         val s = cam.scale
         val level = view.level.ordinal
+        val moved = cam.z != lastZ || cam.cx != lastCx || cam.cy != lastCy
+        lastZ = cam.z
+        lastCx = cam.cx
+        lastCy = cam.cy
+        val dt = if (lastNow.isNaN()) FIRST_DT_MS else min(max(now - lastNow, 0.0), MAX_DT_MS)
+        lastNow = now
+        if (motion.step(now, dt, moved)) progressVersion++
         val set = labels.get(level, branchIdx, stemIdx, cam.z, cam.base)
         curS = s
         curCx = cam.cx
@@ -413,7 +481,9 @@ class VectorRenderer(
         backdrop.draw(g, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
         val step = (splitProgress(cam.z) * Tokens.Zoom.splitSteps).roundToInt()
         canopy.draw(g, cam.z, dpr, s, cam.cx, cam.cy, vp.widthPx, vp.heightPx)
-        wood.draw(g, cam, s, dpr, step, level, branchIdx, leafAlphaBucket(cam.z), progressVersion, crisp)
+        val leafBucket = leafAlphaBucket(cam.z)
+        wood.draw(g, cam, s, dpr, step, level, branchIdx, leafBucket, progressVersion, crisp)
+        if (level >= LEVEL_BRANCH) drawLivePass(cam, s, dpr, level, branchIdx, leafBucket, now)
         g.setTransform(dpr, 0.0, 0.0, dpr, 0.0, 0.0)
 
         val hovered = hover

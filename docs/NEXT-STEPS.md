@@ -1,5 +1,8 @@
 # Next steps (handoff, written 18 Oct 2026, updated 20 Oct 2026 after Phase 3)
 
+## HANDOFF 21 Oct 2026 (WP2-WP6 built, newest)
+Tree v3 WP2-WP6 are built on feat/design-v2 (commits a05f2a3, c2eba6f, 6fad499, 86adfbb, WP6). **WP2 is a ratchet, not strict:** layoutReport still has 12 failures at 1280x800 and 11 at 1440x900 (kotlin, dsa and os stem clusters; cross-branch stem checks). Constants alone cannot close it, and widening a bough shrinks the fit zoom so it cancels out (the checks scale with the whole tree). Options if wanted: per-branch stem-entry zoom, or relax the invariants for those branches. Pinned hashes: limbHash 69892f0589a95532, fullHash e855f6794973cef2. WP3-WP6 are NOT visually verified: check backdrop, canopy cross-fade (z 3.5-5), Mark as done, autumn sway, idle frames, kotree.js gzip. WP7 (docs alignment, reviewer acceptance) still to do.
+
 ## HANDOFF 21 Oct 2026 (late) — read this first, it replaces the earlier HANDOFF below
 **State:** 96 of 482 leaves live on `main` (Foundation 34/34, Kotlin 62 of 65... see PROGRESS.md). Working branch `feat/design-v2`; `main` was last updated at the wave-10 merge (44cc27d). Branch pushes do not build; one on-demand build per layer: `gh workflow run build.yml --ref feat/design-v2`, wait for success, push that sha to `main`.
 **Layer 1 (radial build, decision L34) is IN PROGRESS** (leaves are `shadow` drafts, not live):

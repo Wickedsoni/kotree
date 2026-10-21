@@ -14,8 +14,8 @@ import kotlin.math.min
 /**
  * The one requestAnimationFrame loop of the tree (ADR 006). Input handlers only record intent here (summed wheel delta, pan
  * delta, pointer position) and call [requestFrame], which schedules at most one frame. A frame applies the flight, the pan and
- * the smoothed wheel zoom, finds the hover node, updates the view state and draws. It keeps running only while a flight or the
- * wheel smoothing is unsettled, so an idle tree costs no frames (docs/07 §7). Nothing is allocated per frame: the camera keeps
+ * the smoothed wheel zoom, finds the hover node, updates the view state and draws. It keeps running only while a flight, the
+ * wheel smoothing or the leaf motion (sway, colour ease) is unsettled, so an idle tree costs no frames (docs/07 §7). Nothing is allocated per frame: the camera keeps
  * plain doubles and the intents are fields.
  */
 class FrameLoop(
@@ -114,9 +114,9 @@ class FrameLoop(
         }
         val wasCrisp = crisp
         crisp = false
-        renderer.draw(camera, view, wasCrisp, pointerX, pointerY)
+        renderer.draw(camera, view, wasCrisp, pointerX, pointerY, now)
         inFrame = false
-        if (more) {
+        if (more || renderer.motionActive()) {
             requestFrame()
         } else {
             lastNow = Double.NaN
