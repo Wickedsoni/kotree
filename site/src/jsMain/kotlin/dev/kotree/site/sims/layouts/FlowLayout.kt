@@ -232,6 +232,7 @@ private fun FlowChip(stage: SimStage, item: SimItem, lastAt: HashMap<String, Str
             property("border-radius", shapeMdVar.value())
             property("background-color", colorSurfaceVar.value())
             property("color", if (ghost) colorOnSurfaceMutedVar.value().toString() else colorOnSurfaceVar.value().toString())
+            if (ghost) property("opacity", Tokens.Opacity.ghost)
             typo(Typo.Label)
         }.toAttrs {
             ref { el ->

@@ -218,6 +218,12 @@ object Tokens {
         const val simStepBarPx = 4
     }
 
+    /** Opacity values (ADR 009 section 2). */
+    object Opacity {
+        /** Mark `ghost`: a place that is not there yet, drawn dashed at 40 %. */
+        const val ghost = 0.4
+    }
+
     // ---- Tree v3 additions (ADR 008 WP1). Constants only; additions only. ----
 
     /** Autumn colours and tuning for done leaves (ADR 008 §Tokens). */

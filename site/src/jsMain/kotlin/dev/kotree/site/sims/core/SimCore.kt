@@ -133,7 +133,7 @@ object SimCore {
             is SimEffect.Spawn -> {
                 val id = interpolate(spec, s, e.id)
                 val item = SimItem(id, interpolate(spec, s, e.label), e.at)
-                w.s = s.copy(items = s.items.filter { it.id != id } + item, marks = s.marks - id)
+                w.s = s.copy(items = s.items.filter { it.id != id } + item, marks = s.marks - id, labels = s.labels - id)
             }
             is SimEffect.Remove ->
                 if (s.item(e.item) == null) w.fail = true else w.s = s.copy(items = s.items.filter { it.id != e.item }, marks = s.marks - e.item)

@@ -226,6 +226,7 @@ private fun ItemChip(
         property("border-radius", shapeMdVar.value())
         property("background-color", colorSurfaceVar.value())
         property("color", if (mark == "ghost") colorOnSurfaceMutedVar.value().toString() else colorOnSurfaceVar.value().toString())
+        if (mark == "ghost") property("opacity", Tokens.Opacity.ghost)
         property("touch-action", if (canDrag) "none" else "auto")
         property("user-select", "none")
         if (canDrag) property("cursor", "grab")

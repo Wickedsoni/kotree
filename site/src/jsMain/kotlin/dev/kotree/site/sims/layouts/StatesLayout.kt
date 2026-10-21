@@ -279,6 +279,7 @@ private fun TokenChip(stage: SimStage, item: SimItem) {
             property("border-radius", shapeMdVar.value())
             property("background-color", ink)
             property("color", colorOnBranchVar.value())
+            if (mark == "ghost") property("opacity", Tokens.Opacity.ghost)
             typo(Typo.Label)
         }.toAttrs { ref { el -> if (!reduced) enter(el); onDispose { } } }
     ) {
