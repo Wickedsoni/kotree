@@ -25,7 +25,7 @@ Code not compiled: no shell in this session. Outputs hand-traced twice. Predict 
 
 ## The question
 
-A school tuck shop asks for a small program. Pupils pick snacks and put them in a basket. The screen shows the basket's total price and the names of the snacks that cost more than 2. You open an empty file. Where do you start? How do you decide what becomes a class, what becomes a value, and which class does each action?
+A school tuck shop asks for a small program. Pupils put snacks in a basket, and the screen shows the total price and the names of the snacks that cost more than 2. You open an empty file. Where do you start? How do you decide what becomes a class, what becomes a value, and which class does each action?
 
 ## Mental model
 
@@ -52,18 +52,18 @@ The story says: "A pupil picks snacks. Each snack has a name and a price. The pu
 Which nouns should become stations? Here are three ideas.
 
 - A. Every noun, including name and price.
-- B. The nouns with their own facts or their own job, which are snack and basket. Name and price are facts about a snack.
-- C. One big station called Shop that knows everything.
+- B. One big station called Shop that knows everything.
+- C. The nouns with their own facts or their own job, which are snack and basket. Name and price are facts about a snack.
 
-Idea A makes a station for a single fact, which is more work and no clearer. Idea C is the giant all-in-one machine. Idea B is the answer.
+Idea A makes a station for a single fact, which is more work and no clearer. Idea B is the giant all-in-one machine. Idea C is the answer.
 
 Where should "total price" live? Here are three ideas.
 
-- A. On the snack, because a snack has a price.
-- B. On the basket, because the basket holds the snacks.
+- A. On the basket, because the basket holds the snacks.
+- B. On the snack, because a snack has a price.
 - C. On the big Shop station, which knows everything.
 
-Idea A gives a snack a job it cannot do, because it knows only its own price. Idea C works until every new feature has to edit it. Idea B is the answer.
+Idea B gives a snack a job it cannot do, because it knows only its own price. Idea C works until every new feature has to edit it. Idea A is the answer.
 
 ### Build
 

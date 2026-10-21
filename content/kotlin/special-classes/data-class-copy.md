@@ -26,7 +26,7 @@ The roadmap's F(ai) task is not built: playground is false, as in data-classes.
 
 ## The question
 
-A screen keeps its current settings in one object. The user turns on dark mode. The program must make a settings object where dark mode is on and every other value is the same. It should also keep the old settings, in case the user taps Undo. Must the program copy every value by hand? Or is there a way to say "the same as before, except this one"?
+A screen keeps its current settings in one object. The user turns on dark mode, so the program needs a new settings object where dark mode is on and every other value is the same. It must keep the old settings too, in case the user taps Undo. Must the program copy every value by hand? Or can it say "the same as before, except this one"?
 
 ## Mental model
 
@@ -64,18 +64,18 @@ Ada's form says name Ada, age 30, folder number 7. Folder 7 in the cabinet holds
 How can the clerk get a form with one box changed and the old form untouched? Here are three ideas.
 
 - A. Write the new answer over the box on the original.
-- B. Photocopy the form and write the new answer on the copy.
-- C. Fill in a new form from memory.
+- B. Fill in a new form from memory.
+- C. Photocopy the form and write the new answer on the copy.
 
-Idea A loses the old answer. Idea C risks a box being forgotten. Idea B is the answer.
+Idea A loses the old answer. Idea B risks a box being forgotten. Idea C is the answer.
 
 What happens to folder 7 when the form is photocopied? Here are three ideas.
 
-- A. The folder is copied too, and the copy points to a new folder, number 8.
-- B. The copy holds the same folder number, so there is still one folder.
+- A. The copy holds the same folder number, so there is still one folder.
+- B. The folder is copied too, and the copy points to a new folder, number 8.
 - C. Folder 7 is emptied.
 
-Idea A feels natural, because a copy "should" be complete. But the copier only sees the number printed in the box. Idea C has no source. Idea B is the answer.
+Idea B feels natural, because a copy "should" be complete. But the copier only sees the number printed in the box. Idea C has no source. Idea A is the answer.
 
 ### Build
 

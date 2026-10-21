@@ -27,7 +27,7 @@ Code not compiled: no shell in this session. Outputs hand-traced twice. Predict 
 
 ## The question
 
-A shop class shows its list of stock to the rest of the program. Another part of the code reads the list and prints how many items there are. It prints 2. A moment later, with nobody touching that part of the code, it prints 3. The list was marked as one that cannot be changed. How did it change?
+A shop class shows its list of stock to the rest of the program. Another part of the code reads the list and prints 2 items. A moment later, with nobody touching that part of the code, it prints 3. The list was marked as one that cannot be changed. How did it change?
 
 ## Mental model
 
@@ -64,18 +64,18 @@ A shop window shows a hat and a scarf. A street artist is asked to draw it and c
 The artist cannot open the glass. Is the display guaranteed not to change while the artist draws? Here are three ideas.
 
 - A. Yes, glass means nothing can change.
-- B. No, staff behind the glass can still change it.
-- C. Only if the shop is closed.
+- B. Only if the shop is closed.
+- C. No, staff behind the glass can still change it.
 
-Idea A feels right because the glass stops the artist from touching anything. But the glass only stops the artist. Idea C is not part of the rule at all. Idea B is the answer.
+Idea A feels right because the glass stops the artist from touching anything. But the glass only stops the artist. Idea B is not part of the rule at all. Idea C is the answer.
 
 How can the shop give someone a display that will not change under them? Here are three ideas.
 
-- A. Hand over the window.
-- B. Hand over a photo of the window.
+- A. Hand over a photo of the window.
+- B. Hand over the window.
 - C. Ask the artist to promise to ignore any change.
 
-Idea A shows every change. Idea C depends on the artist's memory. Idea B is the answer.
+Idea B shows every change. Idea C depends on the artist's memory. Idea A is the answer.
 
 ### Build
 
@@ -96,6 +96,8 @@ The documentation also says a mutable collection can still be written to when it
 **Immutable** means the list cannot change at all, through any name (general knowledge). The Compose page on Android calls `listOf()` immutable. My own reasoning: the type `List` promises only that you cannot write through it, so keep the two words apart.
 
 The documentation says copying functions such as `toList()` create a snapshot at a specific moment, and later changes to the original do not affect the copy. It also says that when you assign an existing collection to a new variable, changes made through one reference show in all of them. The photo has one more limit. The documentation's example shows that a copy holds the same objects as the original, so a change to one of those objects shows in both.
+
+In the next programs, the word `private` in front of a property means only code inside the class may use it (general knowledge). The stock room has a locked back door.
 
 This class shows its window, and so leaks its stock room.
 

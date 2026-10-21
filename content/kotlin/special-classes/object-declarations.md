@@ -52,10 +52,10 @@ The square has one clock that shows 0 ticks. The bakery adds 1 tick each time it
 How many clocks should the square have? Here are three ideas.
 
 - A. One for each building that looks up.
-- B. Exactly one, built when it is first looked at.
-- C. One for each visitor.
+- B. One for each visitor.
+- C. Exactly one, built when it is first looked at.
 
-Idea A means the bakery reads 1 and the post office reads 10. Idea C has the same fault. Idea B is the answer.
+Idea A means the bakery reads 1 and the post office reads 10. Idea B has the same fault. Idea C is the answer.
 
 How does a building refer to the clock? Here are three ideas.
 

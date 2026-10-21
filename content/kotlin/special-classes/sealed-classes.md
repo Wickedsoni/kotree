@@ -67,18 +67,18 @@ The signal for the news screen has three lamps: wait, got news and problem. The 
 How should the plan card be written so no lamp is forgotten? Here are three ideas.
 
 - A. One line per lamp, and a last line that says "any other lamp: stop".
-- B. One line per lamp and no catch-all, so a missing line can be found.
-- C. A short card, and the driver learns the rest by heart.
+- B. A short card, and the driver learns the rest by heart.
+- C. One line per lamp and no catch-all, so a missing line can be found.
 
-Idea A feels safe. But a new lamp then falls into the last line and nobody is told. Idea C depends on memory. Idea B is the answer.
+Idea A feels safe. But a new lamp then falls into the last line and nobody is told. Idea B depends on memory. Idea C is the answer.
 
 Who should be allowed to fit new lamps? Here are three ideas.
 
-- A. Any driver who wants one.
-- B. Only the city office that owns the post.
+- A. Only the city office that owns the post.
+- B. Any driver who wants one.
 - C. Nobody, ever.
 
-Idea A means no card could ever be complete. Idea C leaves the post stuck for ever. Idea B is the answer.
+Idea B means no card could ever be complete. Idea C leaves the post stuck for ever. Idea A is the answer.
 
 ### Build
 
@@ -98,7 +98,7 @@ The documentation says that when you use a `when` expression with a sealed type,
 | | Enum class | Sealed interface |
 |---|---|---|
 | One choice is | A single fixed value | A kind, made as often as you like |
-| Carries its own facts | No, the choices are alike | Yes, each kind can have its own properties |
+| Facts it carries | The same properties on every constant | Each kind can have its own properties |
 | `when` without `else` | Allowed when every choice has a line | Allowed when every kind has a line |
 
 This program has one plan line for each of three lamps.

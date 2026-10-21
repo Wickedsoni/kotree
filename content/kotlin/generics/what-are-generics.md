@@ -54,18 +54,18 @@ A sock drawer holds a tub labelled "socks only" with a red sock and a blue sock.
 What does the label do? Here are three ideas.
 
 - A. Nothing. It is only decoration.
-- B. It tells the inspector what may go in, and tells you what comes out.
-- C. It is checked only when you pull something out, and a wrong item makes the program stop.
+- B. It is checked only when you pull something out, and a wrong item makes the program stop.
+- C. It tells the inspector what may go in, and tells you what comes out.
 
-Idea A treats the label as a comment. Idea C describes a world with no inspector, where a wrong item is found late. Idea B is the answer.
+Idea A treats the label as a comment. Idea B describes a world with no inspector, where a wrong item is found late. Idea C is the answer.
 
 Is a tub labelled "anything" the best all-purpose tub? Here are three ideas.
 
-- A. Yes. It holds everything, so it is the best.
-- B. It holds everything, but you lose what you know about the items that come out, so you look at each one.
+- A. It holds everything, but you lose what you know about the items that come out, so you look at each one.
+- B. Yes. It holds everything, so it is the best.
 - C. It is refused, because a tub must have a narrow label.
 
-Idea A feels right because more is better. But the cost shows up each time you pull something out. Idea C has no source. Idea B is the answer.
+Idea B feels right because more is better. But the cost shows up each time you pull something out. Idea C has no source. Idea A is the answer.
 
 ### Build
 
@@ -97,6 +97,8 @@ fun main() {
 ```
 
 It prints `3` and `21`. The item from `socks` is known to be a `String`, so `length` is allowed. The item from `nums` is known to be an `Int`, so adding 1 is allowed.
+
+The **`is` check** asks whether a value is of a given type, as in `first is String`. Inside the braces after the `if`, Kotlin then treats `first` as a `String` (general knowledge). The `for` loop in the later programs hands each item of a list to its name, one at a time.
 
 This program uses the "anything" tub. Each item needs a look before you ask about its length.
 
