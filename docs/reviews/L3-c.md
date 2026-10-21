@@ -105,3 +105,11 @@ VERDICT: FIX
 - testing/unit-tests/arrange-act-assert: items 1-2 applied (VERIFY line removed, verified kotlin-2.4.21 on 3 challenges, SOURCES line).
 - tools/git/merge-conflicts and ui/first-composable/text-and-images: PASS, no edits.
 - validateContent: ok (run after edits).
+
+## Re-check
+
+Re-checked 21 Oct 2026 against fix commit 56762f9. `../gradlew :site:validateContent` printed `validateContent: ok`. The fix commit changed no runnable Kotlin (only the Android block gained `.setKeySize(256)`), so earlier compile and run results still hold. `grep VERIFY|UNVERIFIED` over the three fixed leaves finds nothing.
+
+Applied and confirmed: find-the-hot-function items 1 to 5 (VERIFY line, 3 stamps, SOURCES line, Try 3 wording, `say`, sampling sentence); keystore-and-encryption items 1 to 6 (both VERIFY lines gone, SOURCES and re-check line, `deprecated` defined, `biometric` sentence, `.setKeySize(256)`, closing sentence); arrange-act-assert items 1 and 2. merge-conflicts and text-and-images unchanged PASS. Not run: browser pass of `/preview/<id>`, owed by the layer build.
+
+VERDICT (re-check, final): PASS

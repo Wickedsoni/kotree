@@ -125,3 +125,44 @@ VERDICT: FIX
 - loop-invariants: `verified` stamps, VERIFY lines stripped; prose trimmed to about 1600 words.
 - Owner items (common-wrong-beliefs, Playground check) left open.
 - validateContent: ok.
+
+## Re-check
+
+Re-checked 21 Oct 2026 against fix commit db10b6e. `../gradlew :site:validateContent` printed `validateContent: ok`. Kotlin: the fix commit changed no code block; the thread leaf's Name it program was re-run with `bash scripts/kt-run.sh` (kotlinc 2.4.21) and prints the three lines in order. `docs/sims/needed-ids.md` is committed (14786ab).
+
+Applied and confirmed: what-is-an-activity items 1 to 3; first-get-call items 1 to 4 and 6 (OkHttp KDoc source, `(general knowledge)`, `Call.enqueue` answer, Tricks task, VERIFY lines gone); what-is-a-viewmodel items 1 to 4 (glosses, saved-state wording, Tricks, `verified: kotlin-2.4.21` on 3 challenges); running-work-on-another-thread items 1 to 4 (Tricks merge, two glosses, run label, 3 stamps); loop-invariants item 1 (3 stamps, VERIFY gone). `grep VERIFY|UNVERIFIED` over all five: one hit, below.
+
+Open FIX items:
+
+1. running-work-on-another-thread, line 23 (inside the SOURCES comment): VERIFY about the Playground printing the thread name `main` must not stay in a live body (V12). Minimal fix: make the output independent of the Playground by naming the main thread in the program, then delete line 23. Thread name setter is plain JVM (`Thread.setName`); compiled and run locally with kotlinc 2.4.21: prints `Job runs on: helper` / `Main runs on: main-line`, and `Job runs on: main-line` / `Main runs on: main-line`. Needs the fixer (mechanical, exact text below).
+   - Delete line 23 (`⚠️ VERIFY: compile and run not done ... not documented here.`).
+   - `which-thread-prints` code, old first line of `main`: `fun main() {` then `val helper = thread(name = "helper") {`. New: insert `    Thread.currentThread().name = "main-line"` as the first line inside `fun main() {` (also in the `run-is-not-start` code, first line inside `main`).
+   - Option a, old: `Job runs on: main, then Main runs on: main`. New: `Job runs on: main-line, then Main runs on: main-line`.
+   - Option c, old: `Job runs on: helper, then Main runs on: main`. New: `Job runs on: helper, then Main runs on: main-line`.
+   - `output` old: `Main runs on: main` (line 198). New: `Main runs on: main-line`.
+   - `run-is-not-start` option a, old: `Job runs on: main, then Main runs on: main`. New: `Job runs on: main-line, then Main runs on: main-line`. Option b, old: `Job runs on: Thread-0, then Main runs on: main`. New: `Job runs on: Thread-0, then Main runs on: main-line`. Option c, old: `Only Main runs on: main, because the job was never started`. New: `Only Main runs on: main-line, because the job was never started`. `output`, old: `Job runs on: main` / `Main runs on: main`. New: `Job runs on: main-line` / `Main runs on: main-line`.
+   - Add one sentence before the first predict (after line 167): `The line \`Thread.currentThread().name = "main-line"\` gives the main thread a name we can see in the output.`
+   - After the edit the fixer re-runs `kt-run.sh` on both programs. Residual risk: whether the hosted Playground permits `setName` on the main thread is not run, the same level of uncertainty as `thread` itself there. Alternative if the author prefers no code change: reword the two predicts to not print the main thread name (print `Thread.currentThread() === mainThread` style), but that is a larger edit.
+2. Prose over budget (docs/04 900 to 1,600 words; same counting method as the review): running-work-on-another-thread 1,628, what-is-a-viewmodel 1,640 (the gloss added in fix item 1 pushed it over). Minor: trim about 30 and 45 words (fixer, or accept per the L2-a budget question). Owner call.
+
+Owner items, still open (not blocking by themselves):
+
+- first-get-call `common-wrong-beliefs` (a suspend call on a Retrofit interface needs `withContext(Dispatchers.IO)`): the leaf now carries the changelog statement (suspend behaves like a function returning `Call` run with `enqueue`) and a labelled own-reasoning line. To add it as a fourth Common mistake the owner must say yes and name a page that states suspend Retrofit calls are main-safe (the Retrofit docs site or release notes); the 2.6.0 changelog alone says only `enqueue`. If no such page is found, leave it out.
+- what-is-a-viewmodel `common-wrong-beliefs` (every composable needs its own ViewModel): the owner must say whether to add it. If yes, base it on the viewmodel page's "screen level state holder" wording (already in SOURCES) and label any extra as own reasoning. Leaving it out is acceptable.
+- Playground: confirming `main` on the live Playground becomes unnecessary if item 1 is applied.
+
+VERDICT (re-check, final): FIX
+
+## Re-check 2
+
+Re-checked 21 Oct 2026 against commit 6c37c8c. `../gradlew :site:validateContent` printed `validateContent: ok`. `grep VERIFY|UNVERIFIED` over the 5 leaves: no hits.
+
+Kotlin (`bash scripts/kt-run.sh`, kotlinc 2.4.21): the Name it program prints `Main: start` / `Helper: counting the stockroom` / `Main: done`. `which-thread-prints` prints `Job runs on: helper` / `Main runs on: main-line`. `run-is-not-start` prints `Job runs on: main-line` / `Main runs on: main-line`. These match the `output` fields and all options. No `on: main` or `"main"` remains in the leaf. The Fix and Try-it blocks were not changed in this commit.
+
+Trimmed leaves: no fact was lost. Removed text was duplicate or filler: "The stage manager does not survive that", "decides what the data is", "It needs the Android lifecycle library, so it cannot run on this page" (the `// does not compile` marker stays), "You tap Save and the screen freezes", and the "better tool" aside. All sourced quotes (activity recreation, state holder, `Context` and `Resources`, `join`, `run`, UI toolkit rules) are intact. The sim prose (main line, helper counter, note in the main line) is unchanged and still matches.
+
+Non-blocking notes (optional, fixer):
+- running-work-on-another-thread, the new sentence about `Thread.currentThread().name = "main-line"` comes right after the smallest program, which does not contain that line. Move it to just before `## Predict the output`, or start it with "In the next two programs,".
+- Same leaf, "and threads cost memory" is general knowledge. Add `(general knowledge)` if the writer wants every such claim labelled.
+
+VERDICT (re-check, final): PASS

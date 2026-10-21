@@ -1,5 +1,9 @@
 # Next steps (handoff, written 18 Oct 2026, updated 20 Oct 2026 after Phase 3)
 
+## HANDOFF 21 Oct 2026 (end of day; newest)
+**State:** layer 3 live, 144 of 482 leaves. All 7 sim templates built (WP1-WP8 done), all 53 legacy markers converted, SM0 and SM11 are errors. kotree.js gzip 429 KB (budget 600). **Author decision:** no more auto layers. The author will name a topic when they have prepared it; only then write, review and publish that topic's leaves (each with a working sim). Do NOT run `next-layer.py` unprompted.
+**Open:** sims never checked in a browser (drag, keyboard, reduced motion) on /preview; curriculum-designer should fix the stale native-ndk roadmap note (see docs/reviews/L3-b.md Re-check); owner items: `common-wrong-beliefs` for first-get-call and what-is-a-viewmodel; needed-ids.md rows that describe richer sims than templates give are the brief for later bespoke sims.
+
 ## HANDOFF 21 Oct 2026 (sims WP1-WP5 + WP7a done, newest)
 **State:** `main` = 192d7c9 (layer 2 live, 128 of 482 leaves). `feat/design-v2` = ab8ecf0 (pushed, no CI build yet for it). Generic sims (ADR 009, L37): WP1 buildSrc parser/validators, WP2 core runtime, WP3 zones, WP4 stepper+lanes, WP5 flow+states are built; WP7a backfilled 14 zones leaves with ```sim blocks (53 legacy `<!-- SIM -->` markers remain, SM0 is a warning). Nothing sim-related is verified in a browser; kotree.js gzip not measured.
 **Next, in order:**

@@ -201,3 +201,24 @@ Applied 21 Oct 2026 on top of commit 14786ab. `../gradlew :site:validateContent`
 - native-ndk/art-and-dex/how-art-runs-code: items 1-7 applied (VERIFY removed, Pixel flow framing, speed-profile sentence removed, "at install" scope, NDK/JNI defined, "this order" wording, 30% statements limited to the two sourced page statements). Item 8 is owner-only, not changed. Checklist 14: all multi-sentence `say` texts merged to one sentence.
 - networking/layers/why-networks-use-layers: items 1-4 applied (VERIFY removed, RFC section title, Android references, socket/port/handshake, HTTP/TCP/IP glosses). Checklist 14: multi-sentence `say` texts merged.
 - os/processes/what-is-a-process: items 1-5 applied (VERIFY removed, recap sentence, optional Try step rewritten, UID/component/certificate defined, two terminal windows in the Predict and Task). Checklist 14: fire, spread and copy `say` texts merged to one sentence.
+
+## Re-check
+
+Re-check of commit f19716b, 21 Oct 2026. No content edited.
+
+- FIX items: all applied as specified, checked line by line against `git show f19716b -- content`. dsa 1-5, kmp 1-3, kotlin 1-7, ndk 1-7, networking 1-4, os 1-5. Item 6 of dsa and item 8 of ndk were notes or owner-only.
+- VERIFY / UNVERIFIED: `grep` finds none in the six leaves.
+- `./gradlew :site:validateContent`: `validateContent: ok`.
+- Kotlin: `bash scripts/kt-run.sh` on the 5 dsa and 6 kotlin blocks (kotlin blocks, challenge `code` and `fix`). All compile. Outputs unchanged and match (45 / 4950 / 499500, 6, `[4, 8, 2, 6]`, 8775 then 200 checks, 7 / 4 / `[9]`, 7 / 7.5, NPE, ArithmeticException, broken stops after `Asha: 85`, fixed prints the three expected lines).
+- Sims: only `say` texts, the dsa `scale` and `intro`, and one os Try step changed. dsa with `x: [0, 1000]` puts n = 10, 100 and 1000 on the plot; the n100 `say` says "about 100 times more" (4950 / 45 = 110), acceptable. Other sims traced unchanged; `say` merges stay true. Browser preview still not run (see the layer build pass).
+- Note, not blocking: the ndk SOURCES comment (line 19) still lists `speed-profile`; the prose no longer claims it. Optional to trim.
+
+### NDK item 8 decision
+
+Keep the Baseline Profile paragraph, with its source. No cut. Reasons: the leaf cites the Baseline Profiles overview (SOURCES line 20), says only what that page says, and limits the 30% to the two page statements. The full topic is its own leaf, `profiling/startup/baseline-profiles` (profiling roadmap line 93), so there is no duplication of its lesson. The leaf needs the term to explain the install-time profile. The roadmap note "Baseline Profiles belong to Profiling" is stale, so change the note, not the leaf. This is a roadmap edit, so it goes through `curriculum-designer`:
+
+- File: `content/native-ndk/_roadmap.md`, row `how-art-runs-code` (line 122).
+- Old: `Baseline Profiles belong to Profiling.`
+- New: `Baseline Profiles have their own leaf in Profiling (profiling/startup/baseline-profiles); this leaf only defines one in a short paragraph and cites the Baseline Profiles overview.`
+
+VERDICT (re-check, final): PASS
