@@ -50,19 +50,19 @@ A good doctor does not look at the patient and prescribe the strongest medicine.
 
 ### Notice
 
-A screen takes 300 milliseconds to open. A millisecond, written ms, is a thousandth of a second. The author of the app reads the code that lays out the screen. It looks long and busy, so the author makes that function twice as fast.
+A screen takes 300 milliseconds to open. A millisecond, written ms, is a thousandth of a second. The developer reads the code that lays out the screen. It looks long and busy, so the developer makes that function twice as fast.
 
-The screen still takes almost 300 ms to open. The author is surprised.
+The screen still takes almost 300 ms to open. The developer is surprised.
 
 ### Guess
 
-What was the author missing?
+What was the developer missing?
 
 - A. A list that says how many milliseconds each part took.
 - B. A faster phone.
 - C. A fix that speeds up every part of the screen at once.
 
-Idea B hides the problem instead of finding it. Idea C does not exist for a real app. Idea A is the thermometer. Without it, the author fixed the part that looked big, not the part that was slow.
+Idea B hides the problem instead of finding it. Idea C does not exist for a real app. Idea A is the thermometer. Without it, the developer fixed the part that looked big, not the part that was slow.
 
 ### Build
 
@@ -88,7 +88,7 @@ If the number did not move, the fix went to the wrong place, or the fix did noth
 | The fever | Bottleneck | Waiting for the network takes 200 ms |
 | The medicine | The fix | Your change to the code |
 
-One more rule goes with this: measure on a build that looks like what the user runs. A **build** is the version of the app that the tools produce. The Android documentation says to run a release, or at least non-debuggable, version of your app. Its reason is that the runtime, which is the part of Android that runs your app, disables several important optimizations to support debugging. A debug build can look slower than the real app.
+One more rule goes with this: measure on a build that looks like what the user runs. A **build** is the version of the app that the tools produce. The Android documentation says to run a release, or at least non-debuggable, version of your app. Its reason is that the runtime, which is the part of Android that runs your app, disables several important optimizations to support debugging. A **debug build** is made for testing and carries extra support for debugging. A **release build** is the one users get. A non-debuggable build is one with that debugging support switched off. A debug build can look slower than the real app.
 
 There is no code to run on this page. The numbers are made up for teaching and were not measured from a real app.
 
@@ -164,7 +164,7 @@ output: |
 
 The symptom is a screen that feels slow or choppy. Android calls this jank. A **frame** is one picture on the screen, and the Android documentation says your app must render frames in under 16 ms to reach 60 frames per second. So jank means some frames took longer than 16 ms.
 
-The same page names tools for finding where the time goes: Profile GPU Rendering, Systrace and Perfetto. It also warns that method traces can show false jank because of their heavy overhead. When someone says "the app is slow", the first move is to pick a tool, take the baseline and find the biggest bar. That is the order this lesson teaches.
+The same page names tools for finding where the time goes: Profile GPU Rendering, Systrace and Perfetto. These are recording tools: they note what the phone did and when. It also warns that method traces can show false jank because of their heavy overhead. When someone says "the app is slow", the first move is to pick a tool, take the baseline and find the biggest bar. That is the order this lesson teaches.
 
 ## Say it in an interview
 

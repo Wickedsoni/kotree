@@ -19,7 +19,7 @@ upnext: false
 
 ## The question
 
-You are listening to music. You open a video app and press play. On a recent Android phone, the music fades out and the video takes over the sound. Nobody asked you to pick one, and your app's code never said "stop the other app". So what made that call, and what does it do for every app on the phone?
+You are listening to music. You open a video app and press play. On a recent Android phone, the music often fades out and the video takes over the sound. Nobody asked you to pick one, and your app's code never said "stop the other app". So what makes that call, and what does it do for every app on the phone?
 
 ## Mental model
 
@@ -34,7 +34,7 @@ Think of an apartment building with a building manager.
 
 A tenant cannot walk into the electrical room and flip switches. A tenant asks the manager. The manager hands out rooms, keys and electricity so tenants do not fight over them. The manager also makes sure one tenant cannot open another tenant's door.
 
-**Where the analogy stops:** A real manager is a person who can bend a rule. The operating system is code, and it follows fixed rules. It also does not sit in a separate office. Every tenant's request passes through it, thousands of times a second, and you never see it happen.
+**Where the analogy stops:** A real manager is a person who can bend a rule. The operating system is code, and it follows fixed rules. It also does not sit in a separate office. Every tenant's request passes through it, and you never see it happen.
 
 ## Build the logic
 
@@ -129,8 +129,8 @@ options:
     text: "Each app waits its turn politely"
     why: "You may have trusted every app to wait. Apps are written by strangers, so nothing makes them wait when no manager sits between them."
   - id: c
-    text: "The phone refuses to start"
-    why: "You may have expected a clean stop. Missing sharing rules usually show up as a mess, not as a refusal."
+    text: "The louder app wins and the other goes silent"
+    why: "You may have expected a winner to emerge. Without the manager nothing picks one, so both push sound at the speaker and the result is a mess, not a tidy winner."
 output: |
   Both send sound to the speaker at once, and nothing decides how they mix
 ```
@@ -151,9 +151,9 @@ output: |
 
 Go back to the music and the video app. The Android documentation says the foundation of the platform is the Linux kernel, which is the core part of the OS that sits right on top of the hardware. It also says that from Android 5.0 each app runs in its own process. The Android security documentation adds that every app gets its own user ID, which is a number the system uses to tell apps apart. That is the private room.
 
-For sound, Android has a rule called audio focus. The documentation says only one app can hold audio focus at a time. It also says that before Android 12, the system could not stop an app that kept playing loudly after losing focus. From Android 12, it says the system forces the playing app to fade out when another app requests focus.
+For sound, Android has a rule called audio focus. The documentation says only one app can hold audio focus at a time. It also says that before Android 12, the system could not stop an app that kept playing loudly after losing focus. From Android 12, it says the system forces the playing app to fade out when another app requests focus. The page lists conditions, for example that the playing app is a media or game app and the new app asks for full focus, so it does not happen in every case.
 
-So when your music fades out, the manager made it happen. If two apps clash, ask what the OS hands out and who is allowed to ask.
+So when your music fades out, the manager often made it happen. If two apps clash, ask what the OS hands out and who is allowed to ask.
 
 ## Say it in an interview
 
@@ -167,7 +167,7 @@ This answer is general knowledge. It shares CPU time, memory, files on storage a
 Each app runs in its own process, and the system gives it its own user ID. The Android documentation says that from Android 5.0 each app runs in its own process. The user ID is how the system tells the apps apart. This is how the private room works.
 
 **Why can the sound of one app fade out when you start another?**
-Android has audio focus, and only one app can hold it at a time. From Android 12 the system itself forces the playing app to fade out when another app requests focus. Before that, the system could not stop an app that kept playing, so it depended on apps being polite. That shows the difference between a rule the OS enforces and a rule apps agree to follow.
+Android has audio focus, and only one app can hold it at a time. From Android 12 the system itself can force the playing app to fade out when another app requests focus, under conditions, for example when the playing app is a media or game app. Before that, the system could not stop an app that kept playing, so it depended on apps being polite. That shows the difference between a rule the OS enforces and a rule apps agree to follow.
 
 ## Recap
 

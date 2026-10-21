@@ -81,10 +81,10 @@ You are not trying to build a wall. You are trying to leave no open door.
 - The **attack surface** is the full list of doors an attacker could try (general knowledge).
 - **Threat thinking**, also called threat modelling, is the habit of listing the attackers and the doors before you build the locks (general knowledge).
 
-Four more words appear in the Predict section below.
+Four more words appear in the Predict section.
 
-- **HTTP** is the plain way an app talks to a server. Anyone on the same network can read it.
-- **HTTPS** is the same talk with a lock on it, so a snoop on the network cannot read it (general knowledge).
+- **HTTP** is the plain way an app talks to a server. Anyone on the same network can read it (general knowledge).
+- **HTTPS** is the same talk with a lock on it (general knowledge).
 - **Internal storage** is the private area where an app saves its files. By default only that app can open them.
 - **External storage** is a shared area, such as an SD card. Other apps can read and write files there.
 
@@ -170,9 +170,9 @@ output: |
 
 ## Where this shows up in Android
 
-Take the notes app. A user reads a note on a train and joins the free Wi-Fi. HTTP is the plain way an app talks to a server, and HTTPS is the same talk with a lock on it. If the app sends data over plain HTTP, the snoop on that network has an open door. The Android documentation says to use HTTPS wherever the server supports it, because phones often join unsecured networks such as public Wi-Fi hotspots.
+Take the notes app. A user reads a note on a train and joins the free Wi-Fi. If the app sends data over plain HTTP, the snoop on that network has an open door. The Android documentation says to use HTTPS wherever the server supports it, because phones often join unsecured networks such as public Wi-Fi hotspots.
 
-Now take the files door. Android keeps an app's internal storage, its private area, closed to other apps by default. External storage, such as an SD card, is a shared area, and the documentation says its files are readable and writable by anyone. Where you save a file decides which attacker can reach it.
+Now take the files door. Android keeps an app's internal storage closed to other apps by default. The documentation says files on external storage are readable and writable by anyone. Where you save a file decides which attacker can reach it.
 
 Now take the log door. A log line is written to logcat, the phone's shared log. The documentation says that since Android 4.1 only privileged system apps can be granted permission to read it, but some apps that come pre-installed on some devices ask for it. So it tells you not to log sensitive data. A debug line that prints a password can be the easiest door in the app.
 

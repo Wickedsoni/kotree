@@ -33,7 +33,7 @@ Think of a restaurant.
 
 You decide to order. The waiter carries it. The kitchen answers. The kitchen does not walk to your table on its own and put food in front of you.
 
-**Where the analogy stops:** A restaurant has one kitchen and a few tables. A real data computer answers thousands of customers at the same moment, and it may sit in a building you will never see. Also, "customer" and "kitchen" are jobs, not kinds of machine. One computer can be the customer in one moment and the kitchen in the next.
+**Where the analogy stops:** A restaurant has one kitchen and a few tables. A real data computer answers thousands of customers at the same moment (general knowledge), and it may sit in a building you will never see. Also, "customer" and "kitchen" are jobs, not kinds of machine. One computer can be the customer in one moment and the kitchen in the next.
 
 ## Build the logic
 
@@ -146,7 +146,7 @@ output: |
 
 ## Where this shows up in Android
 
-The symptom is the spinner (the little turning circle) that never stops. An Android app is a client. It sends a request over the network and waits for a response. If the server is down or the network is cut, no response comes, and an app that never stops waiting leaves the spinner on the screen. The Android documentation lists configurable timeouts, which are limits on how long the app waits, as a feature of its `HttpsURLConnection` client.
+The symptom is the spinner (the little turning circle) that never stops. An Android app is a client. It sends a request over the network and waits for a response. If the server is down or the network is cut, no response comes, and an app that never stops waiting leaves the spinner on the screen (my own reasoning). The Android documentation lists configurable timeouts, which are limits on how long the app waits, as a feature of its `HttpsURLConnection` client.
 
 Two more facts from the same Android page fit the picture. First, the app lists the `INTERNET` permission in its manifest, the file where an app declares what it needs. The page calls it a normal permission, which means it is granted when the app is installed and the app does not ask the user while it runs. Second, the page says that if you do network work on the main thread, Android throws a `NetworkOnMainThreadException`. The main thread is the part of the app that draws the screen and reacts to taps (general knowledge), so a wait there would freeze the screen. The order has to go out to another computer, and the app must wait for it without freezing.
 

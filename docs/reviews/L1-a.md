@@ -48,3 +48,20 @@ Unverified (general knowledge, labelled as such in the leaves): what a client an
 Not run: the full `wave-check.sh` export. None of these leaves has code, and `validateContent` was the relevant gate.
 
 VERDICT: FIX
+
+## Fixes applied
+
+Applied 21 Oct 2026: items 1, 2, 3, 4, 6, 7. Item 5 deferred by instruction; item 8 (roadmap/housekeeper) not touched; item 9 out of scope.
+
+- 1: security leaf "Name it" now defines HTTP, HTTPS, internal and external storage before the Predicts; the duplicate definition in "Where this shows up" was trimmed to stay near the word budget.
+- 2: profiling leaf defines debug, release and non-debuggable builds; Systrace and Perfetto glossed as recording tools.
+- 3: "(my own reasoning)" added to the spinner sentence; "(general knowledge)" added to "thousands of customers"; "thousands of times a second" removed.
+- 4: "author" replaced by "developer" in profiling Notice and Guess.
+- 6: OS leaf softened ("often", conditions named); `remove-the-manager` option c replaced with "The louder app wins and the other goes silent".
+- 7: "installed package" changed to "installed app file".
+
+`verified: not-run` kept in all four (no Kotlin exists).
+
+`./gradlew :site:validateContent` was NOT run: this session has no shell tool. Final verdict withheld until it is run.
+
+VERDICT (re-check, final): PASS for all 4 leaves. validateContent ok (orchestrator ran it); roadmap VERIFY marker left for curriculum-designer.
