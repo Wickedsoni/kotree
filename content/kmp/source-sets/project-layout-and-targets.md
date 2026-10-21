@@ -22,7 +22,6 @@ Kotlin, Add dependencies (common code needs to compile for every declared target
 Android, KMP library plugin (com.android.kotlin.multiplatform.library, the android block, androidMain): https://developer.android.com/kotlin/multiplatform/plugin
 Interview seed: docs/practice/interview-kmp.md section for this leaf. Its androidTarget() and iosX64() wording was not used as fact (androidTarget() appears only in the Android page's migration example, iosX64 was on no page read).
 -->
-<!-- ⚠️ VERIFY: (1) the roadmap note that androidTarget was renamed android is NOT claimed here; the pages read show android { } for the new plugin and androidTarget() only in a migration example. (2) The exact wording of the project wizard options (kmp.jetbrains.com) is not used. (3) iOS-side claims are from the docs, not run. -->
 ## The question
 
 A teammate shows you a shared project. One folder is named for the iPhone, one for Android and one for code that every phone uses. They point at a file in the iPhone folder and ask: which builds read it? You cannot answer by looking at the folder alone. What decides which folder is read for which phone, and where does that decision live?
@@ -39,7 +38,7 @@ Think of a floor plan of a small block.
 
 A room in the corridor is open to every builder. A room in a wing is open only to its own builder. If the plan lists no iPhone wing, no iPhone builder comes.
 
-**Where the analogy stops:** A room in a block is one room that everyone walks through. A file in the shared folder is read once for each build, and each build makes its own result from it. The Kotlin documentation says the shared folder compiles to all declared targets. Nothing is copied into the wings. Also, a wing can use the corridor, but the corridor cannot use anything that lives in a wing.
+**Where the analogy stops:** A room in a block is one room that everyone walks through. The Kotlin documentation says the shared folder compiles to all declared targets. My own reasoning, from that: each build compiles the shared files for its own target and makes its own result from them, and nothing is pasted into the wings. Also, a wing can use the corridor, but the corridor cannot use anything that lives in a wing.
 
 ## See it move
 
@@ -82,7 +81,7 @@ actions:
       - do:
           - mark: { "iphone.corridor": ghost, "iphone.android-wing": ghost, "iphone.iphone-wing": ghost }
           - light: []
-          - say: "The plan lists no iPhone wing, so the iPhone builder never comes. It reads no room, not even the shared corridor."
+          - say: "The plan lists no iPhone wing, so the iPhone builder never comes and reads no room, not even the shared corridor."
 script: [build-android, build-ios, "ios=off", build-ios]
 try:
   - text: "Press \"Build for Android\". Look at which two rooms light up on the Android side."
@@ -131,11 +130,11 @@ A **source set** is a group of Kotlin files that are compiled together for one o
 
 The documentation says `commonMain` is present in all multiplatform projects and compiles to all declared targets. It says each target has a platform source set that compiles for only that target. It says that for iOS apps you usually work with `iosMain`, which is shared among the iOS targets.
 
-The build file is the plan. Targets are declared with calls inside a `kotlin { }` block. The Kotlin documentation shows `iosArm64()` for 64-bit iPhones and says to use `iosSimulatorArm64` as the simulator target on an Apple silicon Mac.
+The build file is the plan. In a shared module it is the file `build.gradle.kts`, which **Gradle**, the tool that builds the project, reads (general knowledge). Targets are declared with calls inside a `kotlin { }` block. The Kotlin documentation shows `iosArm64()` for 64-bit iPhones and says to use `iosSimulatorArm64` as the simulator target on an Apple silicon Mac.
 
 From the docs, not run by me. ([Discover your project](https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html))
 
-An **intermediate source set** is a source set that sits between `commonMain` and some targets and holds code for only some of them. `iosMain` is one. You do not make it by hand. The Kotlin Gradle plugin has a built-in **default hierarchy template**. The documentation says that when you declare the targets `android`, `iosArm64` and `iosSimulatorArm64`, the plugin finds suitable shared source sets from the template and creates them for you.
+An **intermediate source set** is a source set that sits between `commonMain` and some targets and holds code for only some of them. `iosMain` is one. You do not make it by hand. A **plugin** is an add-on that teaches Gradle how to build one kind of project (general knowledge). The Kotlin Gradle plugin has a built-in **default hierarchy template**. The documentation says that when you declare the targets `android`, `iosArm64` and `iosSimulatorArm64`, the plugin finds suitable shared source sets from the template and creates them for you.
 
 From the docs, not run by me. ([Hierarchical project structure](https://kotlinlang.org/docs/multiplatform/multiplatform-hierarchy.html))
 
@@ -155,7 +154,7 @@ kotlin {
 }
 ```
 
-The real file also needs more settings, such as `compileSdk` and `minSdk`, which the Android page's example sets. With these three targets declared, the folders `commonMain`, `androidMain` and `iosMain` all have a builder.
+The real file also needs more settings, such as `compileSdk` and `minSdk`, which the Android page's example sets. They name the Android version the code is built against and the oldest Android version it runs on (general knowledge). With these three targets declared, the folders `commonMain`, `androidMain` and `iosMain` all have a builder.
 
 ## Predict the output
 
@@ -238,7 +237,7 @@ options:
     why: "The shared corridor is open to every builder that exists. Each builder reads the same file and makes its own result."
   - id: b
     text: "Neither, until a copy is made in each platform folder"
-    why: "You may have thought the shared folder is pasted into each wing. It is read in place, once for each build."
+    why: "You may have thought the shared folder is pasted into each wing. The documentation says the shared folder compiles to all declared targets, with no copying step."
   - id: c
     text: "Only android, because it is listed first"
     why: "You may have thought the first wing owns the corridor. The order of the targets does not matter."
@@ -255,7 +254,7 @@ output: |
 
 ## Common mistakes
 
-- **Thinking the shared folder is pasted into each platform folder.** It feels that way because each phone ends up with its own result. The file is read in place, once for each build.
+- **Thinking the shared folder is pasted into each platform folder.** It feels that way because each phone ends up with its own result. The documentation says the shared folder compiles to all declared targets, so each build compiles it for itself (my own reasoning).
 - **Adding a folder and expecting a build.** A folder named `iosMain` looks like an iPhone setup. The build file must declare an iOS target before anything is made for the iPhone.
 - **Putting a file in the wrong wing.** A file in `androidMain` feels shared because it is in the project. Only the Android builder reads it, so the iPhone builder cannot see it.
 - **Thinking the first listed target owns the shared folder.** A list has a first line, so it feels special. Every declared target reads the shared folder equally.
@@ -283,11 +282,11 @@ The Kotlin documentation says common code needs to compile for every declared ta
 ## Recap
 
 1. Each folder under `src` is a source set, read only by the targets it belongs to.
-2. The shared folder compiles to all declared targets, in place and never copied.
+2. The shared folder compiles to all declared targets, so each build uses the same files.
 3. The build file declares the targets, so a folder without a target builds nothing.
 
 ## You can now
 
 - Predict which targets compile a file in `commonMain`, `androidMain` or `iosMain`.
 - Read a short `kotlin { }` block and say which phones it can build for.
-- Explain why the shared folder is read once for each build and is not copied.
+- Explain why the shared folder compiles to every declared target and does not need a copy in each platform folder.

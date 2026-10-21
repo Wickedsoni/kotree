@@ -21,9 +21,11 @@ Kotlin numbers, Integer division (integer division always returns an integer, th
 Kotlin String.toInt (NumberFormatException on an invalid string): https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int.html
 Android activity lifecycle (onCreate receives savedInstanceState, null if the activity has never existed before): https://developer.android.com/guide/components/activities/activity-lifecycle
 Android crashes (a crash is an unhandled exception or signal; Android terminates the app's process and shows a dialog): https://developer.android.com/topic/performance/vitals/crash
+Android reference, java.lang.ArithmeticException (an integer "divide by zero" throws an instance of this class): https://developer.android.com/reference/java/lang/ArithmeticException
+Android reference, java.lang.NullPointerException (thrown when an application attempts to use null in a case where an object is required): https://developer.android.com/reference/java/lang/NullPointerException
+Android reference, java.lang.NumberFormatException (string not in the right format for a numeric type): https://developer.android.com/reference/java/lang/NumberFormatException
 Interview seed: docs/practice/interview-kotlin.md section for this leaf. Its claims about reflection, allocations and boxing in generated code were NOT used; they were not checked. Its listed reference (Kotlin Symbol Processing overview) was not used either.
 -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). Hand-traced outputs only. Also VERIFY that Int division by zero throws ArithmeticException on the Playground (JVM behaviour, general knowledge; the Kotlin pages read do not state it). The roadmap row says sim: none; this leaf ships a stepper sim by order of the author's task. -->
 ## The question
 
 A tool writes 150 lines of Kotlin for you in ten seconds. It compiles, the names are clear and the one test you tried passes. Would you put your name on it? And if you only have ten minutes, what would you check before you sign?
@@ -74,7 +76,7 @@ actions:
           - add: { found: 1 }
           - light: [l2, l3]
           - row: ["1", "What are the types?", "Line 3: an Int divided by an Int drops the half"]
-          - say: "Walk 1 asks about types. In the room at line 3, an Int divided by an Int drops the half, so the average of 7 and 8 comes out as 7. Risk written down."
+          - say: "Walk 1 asks about types: in the room at line 3, an Int divided by an Int drops the half, so the average of 7 and 8 comes out as 7."
     refuse: "You already made this walk. Pick another walk, or press Decide."
   - id: pass-runs
     label: "Walk 2: what runs"
@@ -85,7 +87,7 @@ actions:
           - add: { found: 1 }
           - light: [l3]
           - row: ["2", "What runs, and in what order?", "Line 3: an empty list divides 0 by 0"]
-          - say: "Walk 2 asks what runs. In the same room, an empty list gives 0 divided by 0, and that stops the program. Risk written down."
+          - say: "Walk 2 asks what runs: in the same room, an empty list gives 0 divided by 0, and that stops the program."
     refuse: "You already made this walk. Pick another walk, or press Decide."
   - id: pass-null
     label: "Walk 3: what can be missing"
@@ -96,7 +98,7 @@ actions:
           - add: { found: 1 }
           - light: [l5, l6]
           - row: ["3", "What can be missing?", "Line 6: !! promises the name is there"]
-          - say: "Walk 3 asks what can be missing. At line 6 the !! promises that the name is there, and a missing name stops the program. Risk written down."
+          - say: "Walk 3 asks what can be missing: at line 6 the !! promises that the name is there, and a missing name stops the program."
     refuse: "You already made this walk. Pick another walk, or press Decide."
   - id: pass-twice
     label: "Walk 4: what can run twice"
@@ -107,7 +109,7 @@ actions:
           - add: { found: 1 }
           - light: [l8, l9]
           - row: ["4", "What can run twice?", "Line 9: every call adds an entry and none is removed"]
-          - say: "Walk 4 asks what can run twice. At line 9 every call adds one more entry to the history, and nothing removes one, so it only grows. Risk written down."
+          - say: "Walk 4 asks what can run twice: at line 9 every call adds one more entry to the history, and nothing removes one, so it only grows."
     refuse: "You already made this walk. Pick another walk, or press Decide."
   - id: decide
     label: "Decide: sign or send back"
@@ -116,7 +118,7 @@ actions:
         do:
           - light: [l3, l6, l9]
           - row: ["-", "Decision", "Send back: lines 3, 6 and 9"]
-          - say: "Not yet. Line 3 stops the program on an empty list, line 6 stops it on a missing name, and line 9 grows without limit. Send the file back with these three line numbers and ask for a run that proves each fix."
+          - say: "Do not sign yet: line 3 stops the program on an empty list, line 6 stops it on a missing name, and line 9 grows without limit, so send the file back with these three line numbers and ask for a run that proves each fix."
     refuse: "Finish all four walks first. A decision before the inspection is a guess."
 script: [pass-types, pass-runs, pass-null, pass-twice, decide]
 try:
@@ -165,7 +167,7 @@ A **pass** is one trip through the file with one question in mind. A **risk** is
 
 The four questions are the passes from the reading-order leaf, and the risky lines are the ones from the risky-patterns leaf. This lesson puts them together. Three facts from the Kotlin documentation sit behind the file below. The Kotlin documentation says division of two integers always returns an integer and the compiler discards the fractional part. It says the `!!` operator results in a NullPointerException, called an **NPE** for short, when the value is `null`. And it lists `!!` among the only possible causes of an NPE in Kotlin, so a clean build does not rule it out.
 
-The Predict items use two helpers. **`runCatching`** runs a block of code and hands back either its value or the failure, so the program does not stop. `exceptionOrNull()` gives the failure, or `null` if there was none. This lets one program show what each risky line does with an odd input.
+The Predict items use two helpers. **`runCatching`** runs a block of code and hands back either its value or the failure, so the program does not stop. `exceptionOrNull()` gives the failure, or `null` if there was none, and `javaClass.simpleName` is the short name of that failure's type, such as `ArithmeticException`. This lets one program show what each risky line does with an odd input.
 
 Here is the file from the sim. It compiles. It works on normal data.
 
@@ -199,7 +201,7 @@ This prints three lines: `7`, `4` and `[9]`. The average of 7 and 8 is really 7.
 ```challenge
 type: predict
 id: int-division-drops-half
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val scores = listOf(7, 8)
@@ -225,7 +227,7 @@ output: |
 ```challenge
 type: predict
 id: missing-name-promise
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun nameLength(name: String?): Int {
       return name!!.length
@@ -256,7 +258,7 @@ output: |
 ```challenge
 type: predict
 id: average-of-empty-list
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun average(scores: List<Int>): Int {
       return scores.sum() / scores.size
@@ -297,7 +299,7 @@ output: |
 type: fix
 id: fix-average-of-nobody
 generated: true
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   data class Student(val name: String, val scores: List<Int>)
 
@@ -380,7 +382,7 @@ Tool or teammate, the person who can check the file is the person who stays in t
 
 ## Where this shows up in Android
 
-An activity is one screen of an app (general knowledge). The Android documentation says its `onCreate` method receives `savedInstanceState`, a `Bundle` that holds the activity's previously saved state, and that the value is `null` if the activity has never existed before. A generated screen that writes `savedInstanceState!!` makes a promise that is false the first time the screen opens. That is line 6 of the sim.
+An activity is one screen of an app (general knowledge). The Android documentation says its `onCreate` method receives `savedInstanceState`, a `Bundle`, a small bag of saved values (general knowledge), that holds the activity's previously saved state, and that the value is `null` if the activity has never existed before. A generated screen that writes `savedInstanceState!!` makes a promise that is false the first time the screen opens. That is line 6 of the sim.
 
 The Android documentation says that when an app crashes, Android terminates the app's process and shows a dialog saying the app has stopped. My own reasoning: a user who sees that dialog on first launch is the user your one passing test never was. That is why the report asks for odd inputs and not only normal ones.
 
@@ -396,7 +398,7 @@ I ask two things for each one: how bad is the damage and how likely is the odd i
 I run the odd input before and after. Before, the program stops or gives a wrong answer. After, it behaves, and the normal input still gives the same result. The point is a run, not an opinion.
 
 **Why can code with no compiler warnings still crash?**
-The compiler checks that the types fit together, not what a line does with an odd input. The Kotlin documentation lists `!!` among the only possible causes of an NPE, and `String.toInt()` throws a `NumberFormatException` for text that is not a number. Integer division by an empty list's size is the same kind of hidden stop (general knowledge).
+The compiler checks that the types fit together, not what a line does with an odd input. The Kotlin documentation lists `!!` among the only possible causes of an NPE, and `String.toInt()` throws a `NumberFormatException` for text that is not a number. Integer division by an empty list's size is the same kind of hidden stop: the Android reference for `ArithmeticException` says an integer "divide by zero" throws it.
 
 ## Recap
 

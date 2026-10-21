@@ -22,7 +22,6 @@ Kotlin MutableSet.add (true if the element has been added, false if already cont
 Android slow rendering (16 ms per frame, dropped frame, jank): https://developer.android.com/topic/performance/vitals/render
 Practice data: docs/practice/practice-dsa.md, section for this leaf ([both] problems only, plus [A] 14 whose number and title are well known).
 -->
-<!-- ⚠️ VERIFY: compile not run for any kotlin block in this leaf (Kotlin 2.4.21, docs/06 section 5). All outputs below were traced by hand. Also VERIFY that Kotlin's mutableListOf is an ArrayList on Android; the Kotlin pages state no cost for contains, indexOf or remove, so that part is general knowledge. -->
 ## The question
 
 Your app merges 2,000 items from the server into the saved list. With 20 test items it ran at once. On a real phone the screen freezes for a moment. The code has one loop, and one loop looks cheap. So where is the extra cost hiding, and how can you find it by reading the code?
@@ -47,12 +46,12 @@ You see one student walk in per turn. You do not see the handshakes unless you a
 id: hidden-second-loop
 template: chart
 title: Two ways to check a class as it walks in
-intro: "A class of n students walks into a corridor. The plot shows n from 0 to 12, and the buttons read the costs at 10, 100 and 1000 students."
+intro: "A class of n students walks into a corridor. The plot shows n from 0 to 1000, and the buttons read the costs at 10, 100 and 1000 students."
 axes: { x: "n (students)", y: "Steps" }
 curves:
   - { id: board, label: "Sign-in board: one glance per student (n steps)", f: { poly: [0, 1, 0] } }
   - { id: hands, label: "Handshake check: n times (n minus 1), divided by 2", f: { poly: [0, -0.5, 0.5] } }
-scale: { x: [0, 12] }
+scale: { x: [0, 1000] }
 vars: { x: 1 }
 actions:
   - id: n10
@@ -64,7 +63,7 @@ actions:
     label: Set n to 100
     do:
       - set: { x: 100 }
-      - say: "At n = {x}, the sign-in board costs {board.at} steps and the handshake check costs {hands.at}. The class is 10 times bigger and the handshakes are about 100 times more."
+      - say: "At n = {x}, the sign-in board costs {board.at} steps and the handshake check costs {hands.at}, about 100 times more than at 10 students."
   - id: n1000
     label: Set n to 1000
     do:
@@ -73,7 +72,7 @@ actions:
   - id: compare
     label: Compare with the sign-in board
     do:
-      - say: "The sign-in board turns each round of handshakes into one glance. At n = {x} the class costs {board.at} steps instead of {hands.at}."
+      - say: "The sign-in board turns each round of handshakes into one glance, so at n = {x} the class costs {board.at} steps instead of {hands.at}."
 script: [n10, n100, n1000, compare]
 try:
   - text: "Press \"Set n to 10\", \"Set n to 100\" and \"Set n to 1000\". Each time, read both costs."
@@ -132,7 +131,7 @@ Here are four calls to check in any loop.
 | `list.remove(x)` | Finds x first, then closes the gap | About n |
 | `set.contains(x)` or `set.add(x)` on a `HashSet` | Jumps to where x would be | About 1 on average |
 
-The Java documentation for `ArrayList` says that `size`, `isEmpty`, `get` and `set` run in constant time and that all other operations run in linear time, roughly speaking, except that `add` takes amortized constant time. `contains`, `indexOf` and `remove(x)` are among the other operations. The Java documentation for `HashSet` says it offers constant time for `add`, `remove`, `contains` and `size`, assuming the hash function, the rule that decides where each element is stored, spreads the elements properly. The Kotlin pages for these calls state no cost, so the idea that a Kotlin list behaves like `ArrayList` is general knowledge.
+The Java documentation for `ArrayList` says that `size`, `isEmpty`, `get` and `set` run in constant time, which means about one step however long the list is, and that all other operations run in linear time, which means about n steps for n items, roughly speaking, except that `add` takes amortized constant time, which means one step on average over many adds. `contains`, `indexOf` and `remove(x)` are among the other operations. The Java documentation for `HashSet` says it offers constant time for `add`, `remove`, `contains` and `size`, assuming the hash function, the rule that decides where each element is stored, spreads the elements properly. The Kotlin pages for these calls state no cost, so the idea that a Kotlin list behaves like `ArrayList` is general knowledge.
 
 Kotlin's `MutableSet.add` gives back `true` if it added the element and `false` if the element was already there. So one call both checks and adds, in about one glance.
 
@@ -183,7 +182,7 @@ Ten times more items cost about 100 times more steps.
 ```challenge
 type: predict
 id: count-the-hidden-steps
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val items = listOf(5, 7, 9, 11)
@@ -213,7 +212,7 @@ output: |
 ```challenge
 type: predict
 id: sign-in-board-keeps-first
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val items = listOf(4, 8, 4, 2, 8, 6)
@@ -254,7 +253,7 @@ output: |
 type: fix
 id: fix-merge-scan
 generated: true
-verified: "UNVERIFIED: compile not run"
+verified: kotlin-2.4.21
 code: |
   data class Item(val id: Int, val title: String)
 
@@ -347,7 +346,7 @@ For question 3, this code has no null values in play. For question 4, `hasId` ru
 
 ## Where this shows up in Android
 
-The Android documentation says an app must render frames in under 16 ms to reach 60 frames per second. If it overruns, the system skips frames and the user sees stutter, which the page calls jank. Now picture a feed that refreshes by matching each of 2,000 server items against the whole saved list, the same shape as the Fix the bug task. That is about two million checks, and the checks run before the screen can draw. My own reasoning: I have no official figure for how long two million checks take on a phone. The symptom is a feed that refreshes smoothly in a test with 20 items and stutters for a user with a long history. The part of this lesson that explains it is the hidden loop in the matching call.
+The Android documentation says an app must render frames in under 16 ms to reach 60 frames per second. If it overruns, the system skips frames and the user sees stutter, which the page calls jank. Now picture a feed that refreshes by matching each of 2,000 server items against the whole saved list, the same shape as the Fix the bug task. That is about two million checks. My own reasoning: if the merge runs while the screen waits to draw, the checks come first, and I have no official figure for how long two million checks take on a phone. The symptom is a feed that refreshes smoothly in a test with 20 items and stutters for a user with a long history. The part of this lesson that explains it is the hidden loop in the matching call.
 
 ## Say it in an interview
 

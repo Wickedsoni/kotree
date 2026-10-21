@@ -21,7 +21,6 @@ Android Developers, Processes and threads overview (the system starts a new Linu
 Android Developers, Crashes (a crash is an unexpected exit from an unhandled exception or signal; Android terminates the app's process and shows a dialog that the app has stopped): https://developer.android.com/topic/performance/vitals/crash
 Interview seed: docs/practice/practice-os.md section for this leaf (problems: none, so no Practise on these section). Its claims about the process control block and task_struct are general knowledge, not quoted.
 -->
-<!-- ⚠️ VERIFY: the roadmap row asked to VERIFY that each app gets its own process by default and that a manifest option can change it. Checked on 21 Oct 2026 against the three pages above: the sandbox page says each app runs in its own process; the processes page says the components of one app share a process by default and that android:process can change it. The claim that starting a program twice on a laptop gives two processes is general knowledge. The claim that a process's memory is gone when it ends is general knowledge. -->
 ## The question
 
 You have a map app, a music player and a notes app open. The music player stops working, and a message tells you it has stopped. The map and the notes carry on as if nothing happened. Why does one broken app not take the whole phone down with it?
@@ -73,7 +72,7 @@ actions:
           - mark: { music: bad }
           - label: { music: "Music: fire, stopped" }
           - add: { running: -1 }
-          - say: "Flat 2 is on fire and the people leave it. The door and walls hold, so Flats 1 and 3 carry on. {running} flats are still lived in."
+          - say: "Flat 2 is on fire and the people leave it, and the door and walls hold so Flats 1 and 3 carry on, with {running} flats still lived in."
   - id: spread
     label: Let the mess spread to Flat 3
     cases:
@@ -83,7 +82,7 @@ actions:
           - mark: { notes: bad }
           - label: { notes: "Notes: spoiled" }
           - add: { running: -1 }
-          - say: "With no walls, the mess from Flat 2 flows into Flat 3. Notes is spoiled as well. {running} flats are still lived in."
+          - say: "With no walls, the mess from Flat 2 flows into Flat 3 and Notes is spoiled as well, with {running} flats still lived in."
       - when: { mark: { notes: bad } }
         do:
           - say: "Flat 3 is already spoiled. Nothing more can happen to it."
@@ -96,7 +95,7 @@ actions:
           - add: { copies: 1 }
           - add: { running: 1 }
           - spawn: { id: notes-two, label: "Notes, second run", at: free-flat }
-          - say: "A second run of Notes gets its own new flat, built from the same plan. Two flats now hold Notes, and each has its own walls."
+          - say: "A second run of Notes gets its own new flat, built from the same plan, so two flats now hold Notes and each has its own walls."
     refuse: "Both Notes flats are already there."
 script: [fire, spread, copy, "walls=off", spread]
 try:
@@ -106,7 +105,7 @@ try:
     done: [spread]
   - text: "Press \"Open Notes a second time\". A new flat appears for the second run."
     done: [copy]
-  - text: "(Optional) Switch off \"Walls between the flats\", then press \"Let the mess spread to Flat 3\". Flat 3 is spoiled. This is what the walls prevent."
+  - text: "(Optional) Switch off \"Walls between the flats\". Your earlier presses play again with no walls, so Flat 3 is spoiled. Then press \"Let the mess spread to Flat 3\" once more and read what is said. This is what the walls prevent."
     done: ["walls=off", spread]
     optional: true
 ```
@@ -153,9 +152,9 @@ A program is a file of instructions that sits on the disk. A process is a progra
 
 Starting the same program twice gives two processes, one for each start (general knowledge).
 
-Three facts from the Android documentation fit this picture. The Application Sandbox page says Android assigns a unique user ID to each app and runs it in its own process. It says Android uses that ID to set up a kernel-level **sandbox**, a walled area that the operating system keeps an app inside, and that the kernel enforces security between apps at the process level. The processes page says that by default all the components of one app run in the same process, and that most apps do not change this. The crash page says that when an app crashes, Android terminates the app's process and displays a dialog to let the user know that the app has stopped.
+Three facts from the Android documentation fit this picture. The Application Sandbox page says Android assigns a unique user ID, a number the system uses to tell who owns what (general knowledge), to each app and runs it in its own process. It says Android uses that ID to set up a kernel-level **sandbox**, a walled area that the operating system keeps an app inside, and that the kernel enforces security between apps at the process level. The processes page says that by default all the **components** of one app run in the same process, and that most apps do not change this. A component is one part of an app, such as a screen or a background service (general knowledge). The crash page says that when an app crashes, Android terminates the app's process and displays a dialog to let the user know that the app has stopped.
 
-The processes page also says that the manifest, the file that lists an app's parts, can give each component an `android:process` attribute, which can name a process for that component to run in. A component is one part of an app, such as a screen or a background service (general knowledge). It says components of different apps can share a process only if the apps share the same Linux user ID and are signed with the same certificate. The Application Sandbox page says that by default apps cannot interact with each other.
+The processes page also says that the manifest, the file that lists an app's parts, can give each component an `android:process` attribute, which can name a process for that component to run in. It says components of different apps can share a process only if the apps share the same Linux user ID and are signed with the same certificate, the developer's digital signature on the app (general knowledge). The Application Sandbox page says that by default apps cannot interact with each other.
 
 ## Predict the output
 
@@ -165,8 +164,8 @@ run: false
 id: two-starts-two-processes
 verified: not-run
 code: |
-  On a laptop you start the same text editor program twice,
-  by double-clicking its icon two times.
+  On a laptop you open two terminal windows
+  and start the same small program in each one. Both are still running.
 
   How many processes are running that program now?
 options:
@@ -242,7 +241,7 @@ output: |
 - One fire, one flat. The walls hold.
 - Same plan started twice means two flats, and each starts empty.
 - An app is one flat by default, so a crash in one screen closes the whole app.
-- Task: start a program you use twice on a computer, then open the system's list of running programs and count its entries.
+- Task: start a small program twice, for example in two terminal windows, then open the system's list of running programs and count its entries.
 
 ## Common mistakes
 
@@ -273,7 +272,7 @@ The processes page says it can put a component in its own process, so components
 
 ## Recap
 
-1. A program is a file. A process is that program running, with its own memory.
+1. A program is a file, and a process is that program running with its own memory.
 2. The operating system keeps processes apart, so a crash stays in one process.
 3. By default an Android app runs in one process, so a crash closes the whole app.
 

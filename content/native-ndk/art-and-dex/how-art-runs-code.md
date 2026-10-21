@@ -21,7 +21,6 @@ Android Developers, Baseline Profiles overview (without a profile, code is JIT-c
 Android NDK guides (the NDK compiles C and C++ into a native library packaged into the APK; Java calls it through JNI): https://developer.android.com/ndk/guides
 No practice or interview seed exists for the native-ndk branch; the interview answers below are written from these pages.
 -->
-<!-- ⚠️ VERIFY: (1) the roadmap row says VERIFY again before live; the three Android pages above were read on 21 Oct 2026. (2) No page read states in so many words that ART does not translate native code; that sentence is labelled general knowledge and my own reasoning. (3) The open VERIFY at native-ndk/_roadmap.md line 121 is on the what-is-dex row (dex format and D8 wording). This leaf makes no dex-format or D8 claim. (4) The picture numbers (3 orders, 20 of 5,000 methods) are made up; no page gives a threshold. -->
 ## The question
 
 You install an app and open it. The first start feels slow. A few days later the same app starts faster, and you changed nothing. Did the phone do something while you were not looking? What did it do to the app's code, and why not do it all before you first opened the app?
@@ -74,26 +73,26 @@ actions:
           - add: { orders: 1 }
           - set: { speed: "fast" }
           - light: [ahead]
-          - say: "The waiter serves the dish from memory made before the shift. No card is read, so even the first order is quick."
+          - say: "The waiter serves the dish from memory made before the shift, so no card is read and this order is quick."
       - when: { at: { dish: memo } }
         do:
           - add: { orders: 1 }
           - set: { speed: "fast" }
           - light: [memo]
-          - say: "The waiter serves the dish from memory. No card is read, so this order is quick."
+          - say: "The waiter serves the dish from memory, so no card is read and this order is quick."
       - when: { at: { dish: read }, var: { orders: 2 } }
         do:
           - add: { orders: 1 }
           - set: { speed: "slow" }
           - move: { dish: memo }
           - light: ["read>memo"]
-          - say: "This is the third order, so the waiter memorises the dish while working. This order is still read from the card. The next one will be quick."
+          - say: "This is the third order, so the waiter memorises the dish while working, but this order is still read from the card and the next one will be quick."
       - when: { at: { dish: read } }
         do:
           - add: { orders: 1 }
           - set: { speed: "slow" }
           - light: [read]
-          - say: "The waiter reads the card line by line. It is slow, but it works at once. Pasta has now been ordered {orders} times."
+          - say: "The waiter reads the card line by line, which is slow but works at once, and Pasta has now been ordered {orders} times."
   - id: overnight
     label: Leave the phone idle and charging
     cases:
@@ -101,7 +100,7 @@ actions:
         do:
           - move: { dish: ahead }
           - light: ["memo>ahead"]
-          - say: "The phone is idle and charging. The waiter studies the popular dish, so it is memorised before the next shift."
+          - say: "The phone is idle and charging, so the waiter studies the popular dish and memorises it before the next shift."
       - when: { at: { dish: ahead } }
         do:
           - say: "The dish is already memorised before the shift, so there is nothing more to study."
@@ -120,10 +119,10 @@ actions:
         do:
           - move: { dish: ahead }
           - light: ["read>ahead"]
-          - say: "Before the first customer, the waiter used the list and memorised the popular dish. The first order will be quick."
+          - say: "Before the first customer, the waiter used the list to memorise the popular dish, so the first order will be quick."
       - when: { at: { dish: read } }
         do:
-          - say: "There is no list, so the waiter has nothing to memorise before the shift. The first orders will be read from the card."
+          - say: "There is no list, so the waiter has nothing to memorise before the shift and the first orders will be read from the card."
     refuse: "The dish is already memorised, so there is nothing to prepare."
 script: [serve, serve, serve, serve, overnight, reinstall, "profile=on", prep, serve]
 try:
@@ -175,13 +174,12 @@ ART runs your app's code on the phone. The code arrives as dex, the compact form
 
 JIT and AOT are the official short names. JIT means the code is compiled while the app runs, at the moment it is needed. AOT means it is compiled before the method runs. To **compile** means to turn code into machine code. A **profile** is a list of the methods an app runs most. When AOT uses a profile, it is called profile-guided.
 
-The Android Open Source Project page on configuring ART says that starting in Android 7, ART uses a hybrid combination of AOT compilation, JIT compilation and interpretation. It says AOT compilation can be profile-guided. It says the first few times an app runs, methods that are not AOT-compiled are interpreted, and among those, the ones that run often are then JIT-compiled. It says that when the device is idle and charging, a compilation daemon runs to re-compile the application. A **daemon** is a program that runs quietly in the background (general knowledge). My own reasoning: the idle step works from the profile that the first runs collected. The page says the default for apps is the `speed-profile` filter, which compiles the methods listed in the profile.
+The Android Open Source Project page on configuring ART says that starting in Android 7, ART uses a hybrid combination of AOT compilation, JIT compilation and interpretation. It says AOT compilation can be profile-guided. It then gives the flow that Pixel devices use as its example. In that flow, the first few times an app runs, methods that are not AOT-compiled are interpreted, and among those, the ones that run often are then JIT-compiled. It says that when the device is idle and charging, a compilation daemon runs to re-compile the application. A **daemon** is a program that runs quietly in the background (general knowledge). My own reasoning: the idle step works from the profile that the first runs collected.
+In the same Pixel example, the page says that an app installed without a dex metadata file, a side file that can carry the profile (general knowledge), gets no AOT compilation at install. That is why the common belief "the phone translates the whole app at install" does not match the documentation. At install, ART compiles ahead only the methods that a profile lists.
 
-The same page says that an app installed without a dex metadata file, a side file that can carry the profile (general knowledge), gets no AOT compilation. That is why the common belief "the phone translates the whole app at install" does not match the documentation. At install, ART compiles ahead only the methods that a profile lists.
+A **Baseline Profile** is a profile that an app ships with. The Android documentation says that without one, code is JIT-compiled in memory after being interpreted, or written to a file in the background when the device is idle. It says that during installation ART performs AOT compilation of the methods in the profile. It also says users have a suboptimal experience from the first run until new code paths are optimized. The page's introduction says Baseline Profiles improve code execution speed by about 30% from the first launch, and its benefits section says many apps measure boosts of about 30%.
 
-A **Baseline Profile** is a profile that an app ships with. The Android documentation says that without one, code is JIT-compiled in memory after being interpreted, or written to a file in the background when the device is idle. It says that during installation ART performs AOT compilation of the methods in the profile. It also says users have a suboptimal experience from the first run until new code paths are optimized. And it says a Baseline Profile improves code execution speed by about 30% from the first launch, which the page presents as a typical result, not a promise.
-
-One more thing from the NDK documentation: native C and C++ code is compiled into a native library and packaged into the APK, and Java calls it through JNI. That text says nothing about ART translating it. My own reasoning, and general knowledge: native code is already machine code when it is packaged, so ART has no card to read for it.
+One more thing from the NDK documentation. The NDK, the Native Development Kit, is the toolkit that compiles C and C++ code into a native library and packages it into the APK, the app file. Java code then calls that library through JNI, the Java Native Interface, which is the doorway between Java or Kotlin and native code. That text says nothing about ART translating it. My own reasoning, and general knowledge: native code is already machine code when it is packaged, so ART has no card to read for it.
 
 ## Predict the output
 
@@ -226,7 +224,7 @@ code: |
 options:
   - id: a
     text: "Every method was already turned into machine code at install"
-    why: "You may have thought the phone translates the whole app at install. Without a profile, the documentation says no AOT compilation is done."
+    why: "You may have thought the phone translates the whole app at install. Without a profile, the documentation says no AOT compilation is done at install."
   - id: b
     text: "Methods are read step by step, and the ones that run often get compiled while the app runs"
     correct: true
@@ -273,7 +271,7 @@ output: |
 
 ## Common mistakes
 
-- **Thinking the phone translates the whole app at install.** It feels natural, because "install" sounds like "prepare everything". The documentation says that without a profile no AOT compilation is done, and with one only the listed methods are.
+- **Thinking the phone translates the whole app at install.** It feels natural, because "install" sounds like "prepare everything". The documentation says that without a profile no AOT compilation is done at install, and with one only the listed methods are.
 - **Thinking compiled code is always better.** Fast machine code sounds like a free win. Memorising a rare dish wastes the waiter's time and space, which is my own reasoning.
 - **Thinking ART translates C++ too.** The app contains C++, so it feels like one more card. Native code is already machine code when it is packaged (general knowledge, my own reasoning), so ART has no card to read for it.
 - **Thinking the speed stays for ever.** The waiter feels trained. The Baseline Profiles page says that after installing or updating an app, users have a suboptimal experience until new code paths are optimized.
@@ -282,7 +280,7 @@ output: |
 
 The symptom is an app that starts slowly right after install or update and faster after some use. The Android documentation on Baseline Profiles says that after installing or updating an app, users have a suboptimal experience from the first run until new code paths are optimized. In the picture, that is the new waiter reading the cards.
 
-The same page says that shipping a Baseline Profile lets ART AOT-compile the listed code paths, and that this improves execution speed by about 30% from the first launch. The part of this lesson that explains it is the popular-dishes list.
+The same page says that shipping a Baseline Profile lets ART AOT-compile the listed code paths, and that many apps measure speed boosts of about 30%. The part of this lesson that explains it is the popular-dishes list.
 
 ## Say it in an interview
 

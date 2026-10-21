@@ -16,14 +16,16 @@ upnext: false
 ---
 
 <!-- SOURCES (housekeeper strips this comment at go-live):
-RFC 1122, section 1.1.3 Internet Architecture (the layers: application, transport, internet, link; the transport layer provides end-to-end communication services for applications; all Internet transport protocols use IP to carry data from source host to destination host; a host must implement the communication protocol of its network): https://www.rfc-editor.org/rfc/rfc1122.html
+RFC 1122, section 1.1.3 Internet Protocol Suite (the layers: application, transport, internet, link; the transport layer provides end-to-end communication services for applications; all Internet transport protocols use IP to carry data from source host to destination host; a host must implement the communication protocol of its network): https://www.rfc-editor.org/rfc/rfc1122.html
 MDN, An overview of HTTP (HTTP is an application layer protocol sent over TCP, or over a TLS-encrypted TCP connection; the layered design hides the network and transport layers; proxies work at the application layer): https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
 Java SE 17, java.net.UnknownHostException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/UnknownHostException.html
 Java SE 17, java.net.ConnectException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/ConnectException.html
 Java SE 17, javax.net.ssl.SSLHandshakeException: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/javax/net/ssl/SSLHandshakeException.html
+Android reference, java.net.UnknownHostException: https://developer.android.com/reference/java/net/UnknownHostException
+Android reference, java.net.ConnectException: https://developer.android.com/reference/java/net/ConnectException
+Android reference, javax.net.ssl.SSLHandshakeException: https://developer.android.com/reference/javax/net/ssl/SSLHandshakeException
 Interview seed: docs/practice/interview-networking.md section for this leaf (question list used; its HTTP -> TLS -> TCP -> IP -> Ethernet chain is treated as general knowledge, not quoted).
 -->
-<!-- ⚠️ VERIFY: (1) the roadmap row asks to VERIFY exact exception names at developer.android.com. The three classes were read on the Java SE 17 pages because the Android reference pages returned no description text. Check that the Android reference pages use the same wording and the same packages (java.net, javax.net.ssl). (2) Matching an error name to a layer is my own reasoning, not an official mapping. (3) "Each layer reads only its own label" is general knowledge; RFC 1122 section 1.1.3 has no sentence that says it. -->
 ## The question
 
 Your app asks a server for a picture. Between your code and the Wi-Fi radio there are several steps, and each one does a different job. Why not send the request straight out? And when a request fails, why does the error name usually point at only one of those steps?
@@ -77,37 +79,37 @@ actions:
           - move: { letter: internet-out }
           - label: { letter: "Letter in envelope in courier box" }
           - light: [internet-out]
-          - say: "The internet handler puts the envelope in a courier box and writes the other computer's address on it. It does not open the envelope."
+          - say: "The internet handler puts the envelope in a courier box and writes the other computer's address on it, without opening the envelope."
       - when: { at: { letter: internet-out } }
         do:
           - move: { letter: link-out }
           - label: { letter: "Letter in envelope in courier box in lorry" }
           - light: [link-out]
-          - say: "The link handler loads the box on a lorry and writes the next stop on it. Three wrappers are closed now."
+          - say: "The link handler loads the box on a lorry and writes the next stop on it, so three wrappers are closed now."
       - when: { at: { letter: link-out } }
         do:
           - move: { letter: link-in }
           - light: [link-in]
-          - say: "The lorry crosses the wire. The link handler on the other side reads only the lorry label."
+          - say: "The lorry crosses the wire, and the link handler on the other side reads only the lorry label."
       - when: { at: { letter: link-in } }
         do:
           - move: { letter: internet-in }
           - label: { letter: "Letter in envelope in courier box" }
           - light: [internet-in]
-          - say: "The link handler takes the lorry off. The internet handler reads the courier box label and nothing under it."
+          - say: "The link handler takes the lorry off, and the internet handler reads the courier box label and nothing under it."
       - when: { at: { letter: internet-in } }
         do:
           - move: { letter: transport-in }
           - label: { letter: "Letter in envelope" }
           - light: [transport-in]
-          - say: "The courier box comes off. The transport handler reads the envelope label to see which program gets the letter."
+          - say: "The courier box comes off, and the transport handler reads the envelope label to see which program gets the letter."
       - when: { at: { letter: transport-in } }
         do:
           - move: { letter: app-in }
           - label: { letter: "Letter" }
           - mark: { letter: good }
           - light: [app-in]
-          - say: "The envelope comes off. The server app reads the letter. Each handler read one label and left the rest alone."
+          - say: "The envelope comes off, and the server app reads the letter, with each handler reading one label and leaving the rest alone."
       - when: { at: { letter: app-in } }
         do:
           - say: "The letter has arrived. Press Reset to send it again."
@@ -122,7 +124,7 @@ actions:
           - say: "The transport handler wrote the envelope label a moment ago, so it can read it back."
       - when: { at: { letter: transport-in } }
         do:
-          - say: "The transport handler reads the envelope label. The envelope is the outside wrapper at this stop, so reading it is allowed."
+          - say: "The transport handler reads the envelope label, which is allowed because the envelope is the outside wrapper at this stop."
       - when: { at: { letter: app-in } }
         do:
           - say: "All wrappers are gone, so there is no envelope label left to read."
@@ -170,7 +172,7 @@ Idea A would break every app whenever a wire changes. Idea B makes every app lea
 
 A layer is one step in the chain, with one job. A **protocol** is a set of agreed rules that two sides follow. A **header** is the label a layer writes in front of the data. **Encapsulation** is the wrapping of data in a header at each layer on the way out.
 
-This lesson uses the four layers named in RFC 1122, an Internet standards document. The internet layer is sometimes called the network layer, for example in MDN's picture. Another picture, the seven-layer OSI model, splits the same work into more layers. It is general knowledge, and it is not used here.
+This lesson uses the four layers named in RFC 1122, an Internet standards document. The internet layer is sometimes called the network layer, for example in MDN's picture. Another picture, the seven-layer OSI model, splits the same work into more layers. It is general knowledge, and it is not used here. In the table, **HTTP** is the language web programs speak, **TCP** is a protocol that delivers data between two programs, and **IP**, the Internet Protocol, gives each computer an address (general knowledge).
 
 | Layer | Its one job | Example | Picture |
 |---|---|---|---|
@@ -292,7 +294,7 @@ output: |
 
 ## Where this shows up in Android
 
-When a request from an app fails, the error often has a name, and the name points at one step of the trip. These are the descriptions in the Java SE 17 documentation. Android apps use the same Java classes, which I did not confirm on the Android reference pages.
+When a request from an app fails, the error often has a name, and the name points at one step of the trip. These are the descriptions on the Android reference pages for these classes. A socket is one end of a connection between two programs, a port is the number that picks the program on a computer, and a handshake is the first exchange in which the two sides agree how to protect the connection (general knowledge).
 
 - `UnknownHostException`: "Thrown to indicate that the IP address of a host could not be determined." The app could not find the address for the name.
 - `ConnectException`: "Signals that an error occurred while attempting to connect a socket to a remote address and port." The page adds that typically the connection was refused remotely, for example when no process is listening on the remote address and port.
