@@ -218,14 +218,14 @@ output: |
 ## Common mistakes
 
 - **Writing `return` at the end of a lambda, as in a function.** A function needs it, so a note feels the same. The last line is already the answer. Write the value on the last line.
-- **Ending a lambda with a print line and expecting a useful answer.** The print feels like the finishing touch. A print gives back `Unit`, which means nothing useful, and that becomes the answer. Put the value you want on the last line.
+- **Ending a lambda with a print line and expecting a useful answer.** The print feels like the finishing touch. A print gives back `Unit`, which means nothing useful, and that becomes the answer. Printing a `Unit` shows the text `kotlin.Unit`, which is general knowledge because the documentation pages do not show it. Put the value you want on the last line.
 - **Reading `names.forEach { ... }` as a block that runs once on the spot.** Curly brackets in an `if` do run on the spot, so this feels right. Here they are a note handed to `forEach`, and the helper reads it once for each name.
 
 ## Where this shows up in Android
 
 **Jetpack Compose** is the modern toolkit for building Android screens in Kotlin. Its Kotlin page says that the last parameter of every layout, such as `Column`, is `content`, which is a function that adds the child elements to the screen. So `Column { Text("Some text") }` hands a trailing lambda to `content`, and the round brackets are left out because it is the only argument. A `Button` shows both forms in one call: `onClick = { ... }` sits inside the round brackets, and a second lambda follows them.
 
-Everyone who opens a Compose file meets this first. The braces after `Column` look like a block of code with no function around it. They are the note that `Column` reads to find out what to put on the screen.
+This is a common first puzzle in a Compose file. The braces after `Column` look like a block of code with no function around it. They are the note that `Column` reads to find out what to put on the screen.
 
 ## Say it in an interview
 
