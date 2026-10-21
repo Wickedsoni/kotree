@@ -283,7 +283,7 @@ output: |
 
 ## Common mistakes
 
-- **Thinking abstract classes and interfaces are the same thing with different names.** Both cannot be made directly, so they look alike. An interface cannot keep data and a class can follow many, while an abstract class can keep data and a class can build on only one.
+- **Thinking abstract classes and interfaces are the same thing with different names.** Both cannot be made directly, so they look alike. An interface cannot keep data, and a class can follow many of them. An abstract class can keep data, and a class can build on only one.
 - **Putting shared data in an interface.** It feels like a place for "things every pet has". The documentation says interface properties cannot have backing fields. Keep the data in a class.
 - **Writing `open` on an abstract class.** It feels needed because the class is built on. The documentation says abstract classes and functions are inheritable by default, so the word is not needed.
 - **Trying to build one from the design.** `Pet("Rex")` looks like a normal call. The design has an empty room, so Kotlin refuses. Build a `Dog` or a `Bird`.
