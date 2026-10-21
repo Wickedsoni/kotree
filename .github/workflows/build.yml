@@ -1,9 +1,12 @@
 name: build
 
+# Branch pushes do not build. Run one build per wave on demand:
+#   gh workflow run build.yml --ref feat/design-v2
 on:
   push:
-    branches: [main, 'feat/**']
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 # A newer push to the same branch cancels the older run.
 concurrency:
