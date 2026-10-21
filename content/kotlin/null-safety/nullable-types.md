@@ -122,7 +122,7 @@ fun main() {
 type: predict
 run: false
 id: seats-and-nothing
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val seats: Int? = 3
   val spare: Int? = null
@@ -153,7 +153,7 @@ output: |
 type: predict
 run: false
 id: which-lines-are-refused
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val a: String = "hi"      // line 1
   val b: String? = "hi"     // line 2
@@ -179,7 +179,7 @@ output: |
 type: predict
 run: false
 id: parcel-in-maybe-door
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val code: String = "A1"
   val maybe: String? = "B2"
@@ -223,7 +223,7 @@ output: |
 
 An **activity** is one screen of an Android app. When the system makes one, it calls `onCreate(savedInstanceState: Bundle?)`, and the Android page about how a screen is created and destroyed shows that exact line. The type is `Bundle?`, which is a locker with the sticker "may be empty". The page says `savedInstanceState` is a `Bundle` object holding the activity's previously saved state. It says: "If the activity has never existed before, the value of the `Bundle` object is null."
 
-So the first time a screen opens, that locker is empty, and later it may hold a parcel. This next part is our own reasoning: if Kotlin let you reach into `savedInstanceState` without a look, the code would work after the screen has been rebuilt and crash on the very first open. The question mark makes Kotlin refuse that code before the app runs.
+So the first time a screen opens, that locker is empty, and later it may hold a parcel. This next part is our own reasoning. Suppose Kotlin let you reach into `savedInstanceState` without a look. The code would work after the screen has been rebuilt and crash on the very first open. The question mark makes Kotlin refuse that code before the app runs.
 
 ## Say it in an interview
 
@@ -237,7 +237,7 @@ No. It only lets the name be `null`. After that, the compiler refuses to use it 
 A `String?` accepts a text or nothing, so a text always fits. A `String` accepts only a text, so a `String?` might break it. The documentation shows that `null` itself is refused by a non-null `String`.
 
 **Where do nullable types come from when you call Java code?**
-The Kotlin documentation says Java types that carry nullability annotations are read as real nullable or non-null Kotlin types. Without annotations they become platform types, and the checks are relaxed. The Android interop page says every non-primitive parameter, return and field type in a public API should have a nullability annotation. So an annotation in Java gives your Kotlin code the right sticker.
+Java is an older language that many Android libraries use, and a Java type can carry a nullability annotation, a tag that says whether a value may be null (general knowledge). The Kotlin documentation says such a type is read as a real nullable or non-null Kotlin type. Without the tag it becomes a **platform type**, where Kotlin does not know and the checks are relaxed. The Android interop page says every non-primitive parameter, return and field type in a public API should have the tag.
 
 ## Recap
 

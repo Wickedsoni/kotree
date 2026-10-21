@@ -69,7 +69,7 @@ Idea A is how a hurried person thinks, and the judge does believe every oath. Bu
 
 The oath is the **not-null assertion**, written `!!`. The Kotlin documentation says it converts any value to a non-nullable type, and that if the value is `null`, the result is a **NullPointerException**, called an NPE for short. The documentation's list of the only possible causes of an NPE in Kotlin includes the `!!` operator, so a crash from one is never a surprise.
 
-Swearing in words is `requireNotNull`. The Kotlin library page says it throws an `IllegalArgumentException` if the value is `null`, and otherwise returns the value. You can give it a message in braces. Its sample says the value is smart cast afterwards, which means Kotlin treats it as not null from then on. A sibling, `checkNotNull`, throws an `IllegalStateException` instead. The null-safety page adds one more way, which uses `throw` on the right of the Elvis operator: `?: throw IllegalArgumentException("name expected")`.
+Swearing in words is `requireNotNull`. The Kotlin library page says it throws an `IllegalArgumentException` if the value is `null`, and otherwise returns the value. You can give it a message in braces. Its sample says the value is smart cast afterwards, which means Kotlin treats it as not null from then on. A sibling, `checkNotNull`, throws an `IllegalStateException` instead. The null-safety page adds one more way, which uses `throw` on the right of the Elvis operator, `?:`, the fallback that is used only when its left side is `null`: `?: throw IllegalArgumentException("name expected")`.
 
 This table is our own summary of the build steps.
 
@@ -111,7 +111,7 @@ This prints `Age: 18` and then `43`. The Kotlin library page says `toIntOrNull()
 type: predict
 run: false
 id: parse-with-bang
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val typed: String = "12a"
 
@@ -139,7 +139,7 @@ output: |
 type: predict
 run: false
 id: note-instead-of-oath
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val typed: String = "12a"
 
@@ -169,7 +169,7 @@ output: |
 type: predict
 run: false
 id: oath-checked-where-used
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   var current: String? = null
 
@@ -211,11 +211,11 @@ output: |
 
 ## Where this shows up in Android
 
-The Android tip-calculator codelab turns the typed text into a number and says the value could be `null` if the text field is empty. This next part is our own reasoning: if that line ended in `!!`, the app would close whenever the box is empty, and every test with a filled box would pass.
+The Android tip-calculator codelab turns the typed text into a number and says the value could be `null` if the text field is empty. This next part is our own reasoning. If that line ended in `!!`, the app would close whenever the box is empty. Every test with a filled box would still pass.
 
-Another place is the Android activity page. It shows `onCreate(savedInstanceState: Bundle?)` and says that if the activity has never existed before, the value of the `Bundle` object is `null`. An activity is one screen of the app. Our own reasoning: writing `savedInstanceState!!` there would work after the screen is rebuilt and close the app the very first time it opens.
+Another place is the Android page about an **activity**, which is one screen of the app. It shows `onCreate(savedInstanceState: Bundle?)` and says that if the activity has never existed before, the value of the `Bundle` object is `null`. Our own reasoning: writing `savedInstanceState!!` there would work after the screen is rebuilt and close the app the very first time it opens.
 
-Values from Java are the third place. The Android interop page says every non-primitive parameter, return and field type in a public API should have a nullability annotation. Without one, Kotlin sees a platform type, and it cannot tell you whether the value can be missing.
+Values from Java, an older language that many Android libraries use, are the third place. A nullability annotation is a tag in the Java code that says whether a value may be null (general knowledge). The Android interop page says every non-primitive parameter, return and field type in a public API should have one. Without one, Kotlin sees a **platform type**, which means it cannot tell you whether the value can be missing.
 
 ## Say it in an interview
 
@@ -223,7 +223,7 @@ Values from Java are the third place. The Android interop page says every non-pr
 When you can point to the reason the value is not null, and the compiler cannot see it. For example, you set the value on the line before, or an earlier check guarantees it. My own reasoning: write a short comment with the reason, because the next reader cannot see it either. It is not acceptable to silence the red line, or on values from users, files or the network.
 
 **What does `!!` throw, and how is that different from `requireNotNull`?**
-`!!` throws a NullPointerException with no explanation. The library page says `requireNotNull` throws an `IllegalArgumentException` and accepts a message, while `checkNotNull` throws an `IllegalStateException`. My own reasoning: use `require` when a caller handed you something bad and `check` when your own state is wrong, and write a message so the crash report explains itself.
+`!!` throws a NullPointerException with no explanation. The library page says `requireNotNull` throws an `IllegalArgumentException` and accepts a message, while `checkNotNull` throws an `IllegalStateException`. My own reasoning: use `require` when a caller handed you something bad and `check` when your own state is wrong. Write a message either way, so the crash report explains itself.
 
 **What is the trade-off between `!!` and `?:` with a default?**
 The `!!` stops loudly at the exact line, so you find the bug early, but the user sees a crash. A default keeps the app running, but if the default is wrong, the user sees wrong data and nobody is told. My own reasoning: for user input, choose an honest default or a message. For a broken promise inside your own code, a loud stop is better.
@@ -235,7 +235,7 @@ Yes, through Java. The Kotlin documentation says a platform value gets no nullab
 
 1. `!!` turns a missing value into a NullPointerException on that line.
 2. Use `!!` only when you can say aloud why the value is there.
-3. Otherwise use a safe call, a fallback, or `requireNotNull` with a message.
+3. Otherwise use a safe call (`?.`, which gives `null` instead of crashing), a fallback, or `requireNotNull` with a message.
 
 ## You can now
 

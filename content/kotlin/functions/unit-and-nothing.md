@@ -18,7 +18,7 @@ upnext: false
 <!-- SOURCES: kotlinlang.org/docs/functions.html (block body without return type is Unit; "Unlike void in other programming languages, Unit is an actual type, and you can use its value"; Unit need not be written; must be written in a function type such as () -> Unit); kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/ ("The type with only one value: the Unit object. This type corresponds to the void type in Java"); kotlinlang.org/docs/exceptions.html (Nothing: built-in type that is a subtype of all other types, for code that never completes successfully; compiler marks code after it unreachable; TODO() always throws NotImplementedError); developer.android.com/develop/ui/compose/state (onNameChange: (String) -> Unit; onValueChange: (T) -> Unit "an event that requests the value to change"; TextField updates only when its value parameter changes). The printed text kotlin.Unit is general knowledge (the API page does not show it) and is labelled so in the body. Snippets are hand-traced, not run. -->
 ## The question
 
-A function prints a greeting and does nothing else. It has no answer to hand back. Yet you can call it, and Kotlin does not complain that something is missing. So what did the call give back? Is it null, zero, or something else?
+A function prints a greeting and does nothing else. It has no answer to hand back. Yet you can call it, and Kotlin does not complain that something is missing. So what did the call give back? Is it zero, a blank, or something else?
 
 ## Mental model
 
@@ -115,7 +115,7 @@ It prints `The program starts`. Nobody calls `notReadyYet`, so its body never ru
 type: predict
 run: false
 id: print-of-print
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       println(println("a"))
@@ -140,7 +140,7 @@ output: |
 type: predict
 run: false
 id: flag-in-a-name
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun shout(word: String) {
       println(word.uppercase())
@@ -170,7 +170,7 @@ output: |
 type: predict
 run: false
 id: todo-is-called
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun price(): Int {
       TODO("ask the shop")
@@ -206,7 +206,7 @@ output: |
 ## Common mistakes
 
 - **Thinking no answer means null.** The postbox gave no slip, so it feels like "nothing here". But every call gives a value, and `Unit` is a real one. `null` has a different job, for a box that may hold nothing.
-- **Mixing up printing with giving back.** Text appears on the screen, so it feels like the answer. The text is the clunk. What comes back is the flag, and a name made for text cannot hold it.
+- **Mixing up printing with giving back.** Text shows up when the function runs, so it feels like the answer. The text is the clunk. What comes back is the flag, and a name made for text cannot hold it.
 - **Storing the flag in a name meant for a text or number.** A call looks like it could give back anything, so it feels fine. Kotlin refuses it. There is rarely a reason to store the flag at all.
 - **Thinking `TODO()` is a comment.** It sits quietly in the code, so it feels like a note. It is a call, and it throws an error when it runs.
 
@@ -222,7 +222,7 @@ A symptom you may see is a text box that ignores typing. The page says a `TextFi
 It returns `Unit`. The documentation says a function with a block body and no written return type is treated as returning `Unit`, and that you do not have to write it.
 
 **How is `Unit` different from `void` in Java?**
-The API page says `Unit` corresponds to `void`. The functions page adds that `Unit` is an actual type and you can use its value. My own reasoning: because it is a real type, it can appear where any type is expected, which is why you must write it in a function type such as `() -> Unit`.
+The API page says `Unit` corresponds to `void`. The functions page adds that `Unit` is an actual type and you can use its value. The functions page says you must write `Unit` in a function type such as `() -> Unit`. My own reasoning: a function type always names what its code gives back, and for code with nothing useful to give back the name is `Unit`.
 
 **Is `Unit` the same as `null`?**
 No. `Unit` is a value, the only one of its type. `null` is the mark for "nothing here" and is allowed only in types written with a question mark. A function that returns `Unit` has not returned nothing, it has returned the flag.

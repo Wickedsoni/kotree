@@ -78,7 +78,7 @@ Idea A is tempting because 0 is a number and the visitor wants a number. But 0 w
 
 The polite knock is the **safe call**, written `?.`. The Kotlin documentation says that, instead of throwing a NullPointerException, if the object is `null`, the `?.` returns `null`. The documentation adds that a chain of safe calls returns `null` if any part of it is `null`.
 
-The note is the **Elvis operator**, written `?:`. The documentation says that if the expression on the left of `?:` is not `null`, it is returned. Otherwise the expression on the right is returned. The right side can also be `return`, which leaves the function, or `throw`, which stops the program with an error you choose. The documentation says you can use them there because `throw` and `return` are expressions.
+The note is the **Elvis operator**, written `?:`. The documentation says that if the **expression** on the left of `?:` (a piece of code that works out a value) is not `null`, it is returned. Otherwise the expression on the right is returned. The right side can also be `return`, which leaves the function, or `throw`, which stops the program with an error you choose. The documentation says you can use them there because `throw` and `return` are expressions.
 
 ```kotlin
 val name: String? = null
@@ -115,7 +115,7 @@ It prints `Start` and nothing else. Nobody was home, so the note said "go home n
 type: predict
 run: false
 id: chain-and-note
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val city: String? = "  Oslo "
   val missing: String? = null
@@ -144,7 +144,7 @@ output: |
 type: predict
 run: false
 id: answer-is-no-reply
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val title: String? = null
 
@@ -173,7 +173,7 @@ output: |
 type: predict
 run: false
 id: note-says-go-home
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val draft: String? = null
 
@@ -216,7 +216,7 @@ output: |
 
 The Android tip-calculator codelab turns the typed text into a number with the line `val tipPercent = tipInput.toDoubleOrNull() ?: 0.0`. The function `toDoubleOrNull()` gives back a number, or `null`. The Kotlin library page for the matching `toIntOrNull()` says it returns `null` if the text is not a valid number. The codelab says this value could be `null` if the text field is empty. The note `?: 0.0` turns that case into 0.0.
 
-That is the case this lesson handles: the text field is empty, so there is no number to use. With the note, the calculation goes on with 0.0 instead of stopping. This next part is our own reasoning: with `!!` in place of the note, an empty box would close the app, and a user who leaves it empty would see the crash.
+That is the case this lesson handles: the text field is empty, so there is no number to use. With the note, the calculation goes on with 0.0 instead of stopping. This next part is our own reasoning. With `!!` in place of the note, an empty box would close the app. A user who leaves it empty would see the crash.
 
 ## Say it in an interview
 

@@ -15,7 +15,7 @@ fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/functions.html (single-expression syntax, return type inferred "most of the time", must be declared for recursive functions and fun empty() = null, check the inferred type e.g. Number, block body without a return type is Unit); kotlinlang.org/docs/numbers.html (integer division drops the fractional part); kotlinlang.org/docs/coding-conventions.html (libraries state function return types); developer.android.com/kotlin/style-guide (expression functions, override fun toString(): String = "Hey", implicit return type may be omitted). The no-sim reasoning, the doesn't-compile block and the interview trade-offs marked "my own reasoning" are derived, not quoted. Snippets are hand-traced, not run. -->
+<!-- SOURCES: kotlinlang.org/docs/functions.html (single-expression syntax, return type inferred "most of the time", must be declared for recursive functions and fun empty() = null, check the inferred type e.g. Number, block body without a return type is Unit); kotlinlang.org/docs/numbers.html (integer division drops the fractional part); kotlinlang.org/docs/coding-conventions.html (libraries state function return types); kotlinlang.org/docs/control-flow.html (if can be written as an expression, an else branch is required); developer.android.com/kotlin/style-guide (expression functions, override fun toString(): String = "Hey", implicit return type may be omitted). The no-sim reasoning, the doesn't-compile block and the interview trade-offs marked "my own reasoning" are derived, not quoted. Snippets are hand-traced, not run. -->
 ## The question
 
 You open a Kotlin file and find two functions that do the same job. One is wrapped in curly braces and ends with the word return. The other has an equals sign and a short calculation, with no braces at all. Is the second one a function, or something else? And when are you allowed to write it that way?
@@ -88,7 +88,7 @@ fun main() {
 
 This prints `8` and then `8`. The first function is the long board. The second is the short sign. Both are called the same way.
 
-Kotlin refuses to run this next program. The braces open a steps board, and nothing on it hands a result over. The documentation says a function with a block body and no written return type is treated as returning `Unit`, which means nothing useful. A whole-number name cannot hold that. The refusal is our own reasoning from that rule.
+Kotlin refuses to run this next program. The braces open a steps board, and nothing on it hands a result over. The documentation says a function with braces and no written return type is treated as returning `Unit`, which means nothing useful. A whole-number name cannot hold that. The refusal is our own reasoning from that rule.
 
 ```kotlin
 // does not compile
@@ -108,7 +108,7 @@ fun main() {
 type: predict
 run: false
 id: half-of-seven
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun half(x: Int) = x / 2
 
@@ -136,7 +136,7 @@ output: |
 type: predict
 run: false
 id: two-customers
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun total(price: Int, count: Int) = price * count
 
@@ -164,7 +164,7 @@ output: |
 type: predict
 run: false
 id: sign-inside-sign
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun plusOne(n: Int) = n + 1
 
@@ -206,7 +206,7 @@ output: |
 
 The Android Kotlin style guide says that when a function contains only a single expression, it can be written as an expression function. Its example is `override fun toString(): String = "Hey"`. The word `override` is not covered here. The rest is this lesson: a name, empty round brackets, a return type `String`, an equals sign and one expression. The guide also shows the same line with the type left out.
 
-This next part is our own reasoning: because an expression function holds one calculation, when a screen shows the wrong text, the cause is on that one line or in the values handed to it. There are no hidden steps to search.
+This next part is our own reasoning. An expression function holds one calculation. So when a screen shows the wrong text, the cause is on that one line or in the values handed to it. There are no hidden steps to search.
 
 ## Say it in an interview
 
@@ -214,7 +214,7 @@ This next part is our own reasoning: because an expression function holds one ca
 It does the same job and you call it the same way. The Kotlin documentation says that when the body is a single expression you can omit the braces and write it after an `=`. The trade-off is length against room: the short form is tidy for one calculation, and the braces form is needed when there are several steps.
 
 **Do you have to write the return type?**
-Often not. The documentation says Kotlin works it out for a single expression, but you must write it for a function that calls itself and for something like `fun empty() = null`. The coding conventions say library code, which other people build on, should state its return types so a change inside does not alter them by accident. My own reasoning: for code only your team reads, a worked-out type saves noise.
+Often not. The documentation says Kotlin works it out for a single expression. You must write it for a function that calls itself, because the compiler refuses that function without one. The coding conventions say library code, which other people build on, should state its return types so a change inside does not alter them by accident. My own reasoning: for code only your team reads, a worked-out type saves noise.
 
 **What is the difference between `fun f(x: Int) = x * 2` and `fun f(x: Int) { x * 2 }`?**
 The first gives back `x * 2`. The second has braces and no `return`, so the documentation says its return type is `Unit` and the calculation is thrown away. One missing `=` changes what the function gives back.

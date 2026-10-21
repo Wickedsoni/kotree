@@ -69,9 +69,9 @@ The documentation says smart casts work only when the compiler can guarantee tha
 
 | The name | Does the smart cast work? |
 |---|---|
-| A `val` made inside a function | Always |
+| A `val` made inside a function | Always, except a local delegated property, which is not covered here |
 | A `var` made inside a function | If it is not changed between the check and the use, and no small piece of code in braces that runs later changes it |
-| A `val` property | If it is in your own module, which is the part of the project it was declared in. It does not work on a property marked `open` or on one with a custom getter. Both belong to classes |
+| A `val` property | If it is in your own module, which is the part of the project it was declared in. It does not work on a property marked `open` (a class may replace it), on one with a custom getter (code that runs each time it is read), or on one declared in another module. The first two belong to classes |
 | A `var` property | Never, because other code can change it at any time |
 
 ```kotlin
@@ -126,7 +126,7 @@ This prints `3`. This copy-into-a-local-`val` fix is our own reasoning from the 
 type: predict
 run: false
 id: check-then-use
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val nickname: String? = "Ada"
   val other: String? = null
@@ -160,7 +160,7 @@ output: |
 type: predict
 run: false
 id: send-away-then-use
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val note: String? = null
 
@@ -190,7 +190,7 @@ output: |
 type: predict
 run: false
 id: swap-after-use
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val first: String? = "Ada"
 
@@ -233,9 +233,9 @@ output: |
 
 ## Where this shows up in Android
 
-The Android page on creating fragments, which are reusable parts of a screen, shows `override fun onCreate(savedInstanceState: Bundle?)` followed by `if (savedInstanceState == null)`. An activity is one screen of the app. The page says the part is added only when the activity is first created. When the activity is recreated, `savedInstanceState` is no longer `null`.
+The Android page on creating **fragments**, which are reusable parts of a screen, shows `override fun onCreate(savedInstanceState: Bundle?)` followed by `if (savedInstanceState == null)`. An **activity** is one screen of the app. The page says the part is added only when the activity is first created. When the activity is recreated, `savedInstanceState` is no longer `null`.
 
-That `Bundle?` is a name that may be empty. This next part is our own reasoning: in the other branch, after a check for `!= null`, the code can use the `Bundle` straight away, because function inputs are read-only (general knowledge) and the smart cast works on them. A screen field that other code can set later is different. Android Studio would show the refusal from this lesson there, and the fix is the local copy.
+That `Bundle?` is a name that may be empty. This next part is our own reasoning. In the other branch, after a check for `!= null`, the code can use the `Bundle` straight away. The Kotlin functions page says function parameters are read-only, so the smart cast works on them. A screen field that other code can set later is different. Android Studio would show the refusal from this lesson there, and the fix is the local copy.
 
 ## Say it in an interview
 
@@ -243,13 +243,13 @@ That `Bundle?` is a name that may be empty. This next part is our own reasoning:
 It is when the compiler treats a value as a more exact type because of a check. The Kotlin documentation says the compiler tracks the type checks for values that cannot change and inserts the cast for you. After `if (x != null)`, a `String?` is used as a `String`. The trade-off: you save a cast or a `!!`, but you depend on the compiler being able to prove nothing changes the value.
 
 **Why does a smart cast not work on a `var` property?**
-The documentation says a `var` property never works, because other code can change it at any time. So the check proves nothing about the next line. My own reasoning: "at any time" includes code that runs at the same time as yours, which can change the value between two lines.
+The documentation says a `var` property never works, because other code can change it at any time. So the check proves nothing about the next line. A `val` property also fails when it is `open`, has a custom getter, or is declared in another module. My own reasoning: "at any time" includes code that runs at the same time as yours, which can change the value between two lines.
 
 **You see `if (x != null) x!!.length` on a `var` property. What would you say in review?**
 The `!!` silences the error but keeps the risk, because the value can still become `null` between the check and the use. A safer way is to copy the property into a local `val`, then check and use the copy. Or use a safe call with a fallback. My own reasoning: the local copy costs one line and removes the reason for the crash.
 
 **Does a smart cast work after an early return, or inside `&&`?**
-Yes to both. The documentation says the compiler knows a cast is safe if a negative check leads to a return, and that it can smart cast on the right of `&&` and `||` after a check on the left. A `var` made inside a function loses the cast if it is changed between the check and the use.
+Yes to both. The documentation says the compiler knows a cast is safe if a negative check leads to a return. It also says the compiler can smart cast on the right of `&&` and `||` after a check on the left. A `var` made inside a function loses the cast if it is changed between the check and the use.
 
 ## Recap
 

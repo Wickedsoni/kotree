@@ -242,7 +242,7 @@ The variable. The documentation says captured variables can be modified in the l
 In the counter example, `count` lives on, because the returned lambda still uses it. Each call of `makeCounter` gets its own `count`. This is general knowledge, shown by the program above. My own reasoning: the trade-off is memory, because a lambda that outlives its function keeps those variables alive.
 
 **How do you make a lambda use a value from one moment in time?**
-Copy the value into a `val` before you make the lambda, and use the copy. The lambda then reads the copy, which never changes. The trade-off is that the lambda will not follow later changes of the original, so choose the copy only when you want that.
+Copy the value into a `val` before you make the lambda, and use the copy. The lambda then reads the copy, which never changes. The trade-off is that the lambda will not follow changes made to the original afterwards, so choose the copy only when you want that.
 
 ## Recap
 

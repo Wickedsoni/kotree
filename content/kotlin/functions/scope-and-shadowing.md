@@ -69,7 +69,7 @@ Idea A would make the name unclear. Idea C feels fair because the baker came fir
 ### Build
 
 1. Every pair of curly braces is a house. A function body, one branch of a choice and a loop body each make one.
-2. A person is born on the line that makes them and lives until the closing brace of their house. A call to them before that line finds nobody.
+2. A person is born on the line that makes them and lives until the closing brace of their house. A call before that line does not find them, so it keeps looking outwards.
 3. To answer a call, look first in the house where you are standing. If a person with that name lives there, stop.
 4. If not, step out one level and look again. Keep going until you reach the street.
 5. If you reach the end of the street with no match, Kotlin refuses to run the program.
@@ -82,7 +82,7 @@ Idea A would make the name unclear. Idea C feels fair because the baker came fir
 
 The stretch of code where a name can be used is its **scope**. The Kotlin language specification says a scope is a delimited region of code in which names are introduced. It says scopes can be nested, with names from outer scopes possibly available in the inner ones. A **block** is a group of steps between curly braces, and the body of a function is one. The specification also says that inside a function body, a name can be used only after the line that makes it.
 
-When an inner name has the same spelling as an outer name, the inner one **shadows** the outer one: it hides it while you are inside. The specification does not use the word shadowing, but it does say that giving a name to a value is allowed even when the name is already available from an outer scope. The word shadowing is general knowledge. The Kotlin compiler usually warns you when you do it (also general knowledge), because the same spelling for two people causes mix-ups.
+When an inner name has the same spelling as an outer name, the inner one **shadows** the outer one: it hides it while you are inside. The specification does not use the word shadowing. It does say that giving a name to a value is allowed even when the name is already available from an outer scope. The word shadowing is general knowledge. The same spelling for two people causes mix-ups, so many teams avoid it (my own reasoning). The compiler accepts the program below. Some editors show a warning for it (general knowledge).
 
 ```kotlin
 fun main() {
@@ -116,7 +116,7 @@ fun main() {
 type: predict
 run: false
 id: inner-total-hides
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       val total = 10
@@ -146,7 +146,7 @@ output: |
 type: predict
 run: false
 id: street-person-changed
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun main() {
       var sum = 0
@@ -175,7 +175,7 @@ output: |
 type: predict
 run: false
 id: add-up-gives-zero
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   fun addUp(limit: Int): Int {
       var total = 0
@@ -215,7 +215,7 @@ output: |
 
 - **Expecting a name made in a loop to exist after it.** The loop is over, and the name still looks close on the page, so it feels reachable. It was born in the loop's house and left with it. Make the name before the loop, in the house where you need it later.
 - **Making a second variable to "update" the first.** Writing `var total = 0` again inside a loop looks like resetting it. It makes a new person, and the old one never changes. Give the old name a new value without `var` or `val`.
-- **Ignoring the hidden-name warning.** The program still runs, so the warning feels harmless. It is the compiler telling you that two people share a name. Rename the inner one so the next reader does not need to count houses.
+- **Leaving two people with one name.** The program still runs, so it feels harmless. But the next reader must count houses to know who answers. Rename the inner one.
 
 ## Where this shows up in Android
 
@@ -223,7 +223,7 @@ output: |
 
 That is a house on the street. The code inside the braces calls `name` and finds the person on the street, so it changes the real one. The name `it` was born in the braces and is gone after the closing brace. The page says a `TextField` updates only when its `value` parameter changes.
 
-This next part is our own reasoning: if the code in the braces made a new `name` instead of giving a new value to the street's `name`, the real one would never change. The field would not update, and the typing would seem to vanish.
+This next part is our own reasoning. Suppose the code in the braces made a new `name` instead of giving a new value to the street's `name`. Then the real one would never change. The field would not update, and the typing would seem to vanish.
 
 ## Say it in an interview
 
@@ -234,7 +234,7 @@ Scope is the part of the code where a name can be used. The Kotlin specification
 No. The name lives from its line to the closing brace of the loop body. A new one is made on every round. To use a value after the loop, make the variable before the loop. This follows from the specification's scope rules (my own reasoning), and Kotlin refuses to run code that uses it outside.
 
 **What is shadowing, and does it change the outer variable?**
-Shadowing is when an inner name has the same spelling as an outer one and hides it. It does not change the outer one. They are two separate variables. The specification allows this, and the compiler usually warns about it (general knowledge).
+Shadowing is when an inner name has the same spelling as an outer one and hides it. It does not change the outer one. They are two separate variables. The specification allows this, and the compiler accepts it. Some editors show a warning (general knowledge).
 
 **Is shadowing good practice?**
 Usually not. The same spelling saves you one new name, but it makes the code hard to read correctly. A function that adds up numbers in a loop but declares a second `total` inside the loop returns 0, with no error. My own reasoning: renaming the inner variable costs a few seconds and removes the trap.

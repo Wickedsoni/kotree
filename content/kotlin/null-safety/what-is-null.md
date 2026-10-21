@@ -119,7 +119,7 @@ Kotlin has one more tool. You can tell it "trust me, this box is not empty" by w
 type: predict
 run: false
 id: print-null-box
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val middleName: String? = null
 
@@ -147,7 +147,7 @@ output: |
 type: predict
 run: false
 id: bang-on-empty-box
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val middleName: String? = null
 
@@ -175,7 +175,7 @@ output: |
 type: predict
 run: false
 id: empty-note-is-not-null
-verified: not-run
+verified: kotlin-2.4.21
 code: |
   val nickname: String? = ""
   val surname: String? = null
@@ -217,7 +217,7 @@ output: |
 
 Picture a profile screen that shows the user's middle name. A new user has none. If the code uses `!!` on that value, the screen crashes the moment it opens. Everything that looked fine in testing used users who had a middle name. This next part is our own reasoning: the label and the check in this lesson are what stand between that user and the crash.
 
-The same crash can come from Java, an older language that many Android libraries are written in. The Android Kotlin interop page says that Java types with no nullability annotation are read as platform types, which have ambiguous nullability. The Kotlin documentation says Kotlin does not report nullability errors at compile time for such values, but the call may fail while the app runs. So for any value that comes from Java code, look at where it comes from.
+The same crash can come from Java, an older language that many Android libraries are written in. The Android Kotlin interop page says that Java types with no nullability annotation (a tag in the Java code that says whether a value may be null, general knowledge) are read as platform types, which have ambiguous nullability. The Kotlin documentation says Kotlin does not report nullability errors at compile time for such values, but the call may fail while the app runs. So for any value that comes from Java code, look at where it comes from.
 
 ## Say it in an interview
 
@@ -231,7 +231,7 @@ No. An empty string is a text with zero letters, which is a real value. Zero is 
 No. The Kotlin documentation says the only possible causes are an explicit throw of one, the `!!` operator, data that is not ready during setup, and Java interoperation. The last one covers a member access on a null platform value and other issues from Java code. So the safety is strong, but it has gaps at the edges.
 
 **What is a platform type?**
-It is how Kotlin sees a value from Java when Java does not say whether it can be null. Tools write it as `String!`, meaning `String` or `String?`, and the documentation says the checks are relaxed, so the call may fail while the app runs. If you put such a value in a non-null variable and it is null, Kotlin throws a NullPointerException, so write `String?` on your own variable or add nullability annotations in the Java code. The trade-off is convenience with Java libraries against the null guarantee.
+It is how Kotlin sees a value from Java when Java does not say whether it can be null. Tools write it as `String!`, meaning `String` or `String?`, and the documentation says the checks are relaxed, so the call may fail while the app runs. If you put such a value in a non-null variable and it is null, Kotlin throws a NullPointerException. So write `String?` on your own variable, or add nullability annotations in the Java code. The trade-off is convenience with Java libraries against the null guarantee.
 
 ## Recap
 
