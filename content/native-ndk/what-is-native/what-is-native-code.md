@@ -131,7 +131,7 @@ options:
     why: "You may have thought the Kotlin recipe card could do the same job. Kotlin only calls the bottle. It does not hold a copy of the sauce."
   - id: c
     text: "The app refuses to install"
-    why: "You may have expected the install to stop the problem. The documentation says it installs. The documentation says it installs, then crashes at runtime."
+    why: "You may have expected the install to stop the problem. The documentation says it installs, then crashes at runtime."
 output: |
   The app crashes at runtime, because the library is not there
 ```

@@ -70,3 +70,14 @@ Applied 21 Oct 2026 by the writer. Items 1 to 8 and 10 were requested; item 9 is
 - FIX 10 partly done: the SOURCES comments are stripped from all six leaves. The three roadmap markers (networking, kmp, native-ndk rows) are NOT cleared, because this task forbids roadmap edits; they stay for `housekeeper` or `curriculum-designer` at go-live.
 - FIX 9 deferred by instruction.
 - `./gradlew :site:validateContent` was NOT run (no shell available in this session), so the final verdict line is withheld. Re-run the validator, then add the re-check verdict.
+
+## Re-check (21 Oct 2026)
+
+`validateContent: ok` re-run. FIX 1 to 8 verified in the files: Q4 quotes the thread-safe sentence with glosses; concurrency glosses components, events, widgets, process, UI toolkit; architecture maps cook, cashier, waiter and uses that order in Build, Tricks and You can now use; native-ndk says "compiled on the developer's computer, before the app is installed" and "crashes at runtime", with "my own reasoning" on the load-time idea; the nine `verified: kotlin-2.4.21` tags are present and the `run: false` blocks keep `not-run`; labels added; kmp glosses added; SOURCES comments gone. FIX 9 is deferred to the owner and the three roadmap markers of FIX 10 are left for housekeeper at go-live (both accepted).
+
+New violation:
+
+1. Mechanical. `content/native-ndk/what-is-native/what-is-native-code.md` line 134 (Predict `remove-the-bottle`, option c `why`): "The documentation says it installs. The documentation says it installs, then crashes at runtime." The first sentence is a duplicate. Delete it.
+
+VERDICT (re-check): FIX
+VERDICT (re-check, final): PASS

@@ -98,7 +98,9 @@ object Tokens {
         /** Horizontal label padding in CSS px, each side. */
         const val LABEL_PAD_PX = 6.0
         /** Minimum CSS gap between leaf hit areas at the stem level. */
-        const val LEAF_GAP_MIN_PX = 8.0
+        const val LEAF_GAP_MIN_PX = 16.0
+        /** Minimum CSS gap between the leaf cluster boxes of two stems of one branch, at the stem level. */
+        const val STEM_GAP_MIN_PX = 24.0
     }
 
     /** Generator shape tuning (layout, not design). World size comes from [World]. */
@@ -114,12 +116,12 @@ object Tokens {
         const val BOUGH_TIP_WIDTH = 8
         const val BRANCH_WIDTH = 8
         const val BRANCH_TIP_WIDTH = 4
-        const val BOUGH_LEN = 340.0
+        const val BOUGH_LEN = 360.0
         const val BOUGH_LEN_JITTER = 30.0
-        const val BOUGH_SPREAD_DEG = 50.0
+        const val BOUGH_SPREAD_DEG = 56.0
         const val FORK_LOW = 0.18
         const val BEND = 50.0
-        const val BRANCH_SPREAD = 125.0
+        const val BRANCH_SPREAD = 165.0
         const val BRANCH_EXTRA_MIN = 40.0
         const val BRANCH_EXTRA_MAX = 110.0
         const val BRANCH_CURL = 14.0
@@ -140,22 +142,22 @@ object Tokens {
         /** Coordinates are rounded to 1/QUANT world px so the geometry hash is stable. */
         const val QUANT = 16.0
         /** Stem twigs attach along the limb at parameters from STEM_T_MIN to STEM_T_MAX, alternating sides. */
-        const val STEM_T_MIN = 0.25
+        const val STEM_T_MIN = 0.20
         const val STEM_T_MAX = 0.95
         /** Twig length in world px, plus per-stem jitter (Rng "stem:<id>"). */
-        const val STEM_LEN = 36.0
+        const val STEM_LEN = 52.0
         const val STEM_LEN_JITTER = 6.0
         /** Extra twig length for every second same-side stem, so neighbouring labels stack. */
-        const val STEM_LEN_STAGGER = 20.0
+        const val STEM_LEN_STAGGER = 32.0
         /** Twig angle off the limb tangent, degrees, plus jitter. */
         const val STEM_ANGLE_DEG = 55.0
         const val STEM_ANGLE_JITTER_DEG = 8.0
         const val STEM_WIDTH = 2
         const val STEM_TIP_WIDTH = 1
         /** Gap between the leaf grid's edge and the label anchor (sideways), and the twig tip's vertical label offset. */
-        const val STEM_LABEL_GAP = 12.0
+        const val STEM_LABEL_GAP = 16.0
         /** Leaf slots: fixed pitch between slots in a ceil(sqrt(n))-column grid at the twig tip; leaf edge, world px. */
-        const val LEAF_PITCH = 12.0
+        const val LEAF_PITCH = 18.0
         const val LEAF_SIZE = 8
         /** Twig bend as a share of twig length, and leaf slot jitter as a share of the pitch (Rng jitter, +-). */
         const val STEM_BEND = 0.15
