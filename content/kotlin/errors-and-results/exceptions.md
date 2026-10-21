@@ -124,6 +124,8 @@ fun main() {
 
 It prints `30`. Then the second call rings the alarm, and `done` is never printed.
 
+The curly brackets after `require(age >= 0)` hold a small block of code that makes the message. That kind of block is called a lambda (general knowledge). Kotlin runs it only if the check fails (general knowledge).
+
 ## Predict the output
 
 ```challenge
@@ -134,9 +136,7 @@ verified: not-run
 code: |
   fun inspect(n: Int) {
       println("looking at " + n)
-      if (n < 0) {
-          throw IllegalArgumentException("negative")
-      }
+      if (n < 0) throw IllegalArgumentException("negative")
       println("fine")
   }
 
@@ -165,7 +165,7 @@ output: |
 ```challenge
 type: predict
 run: false
-id: alarm-from-the-desk
+id: alarm-leaves-the-caller
 verified: not-run
 code: |
   fun inner() {
@@ -173,29 +173,24 @@ code: |
       throw IllegalStateException("boom")
   }
 
-  fun outer() {
-      println("outer start")
-      inner()
-      println("outer end")
-  }
-
   fun main() {
-      outer()
+      println("main start")
+      inner()
       println("main end")
   }
 options:
   - id: a
-    text: "outer start, inner, outer end, main end"
-    why: "You may have thought the alarm stays in the room where it rang. It moves outwards, so outer end is skipped."
+    text: "main start, inner, main end"
+    why: "You may have thought the alarm stays in the room where it rang. It moves outwards to the room that called it, so main end is skipped."
   - id: b
-    text: "outer start, inner, main end"
-    why: "You may have thought the alarm stops at the room that called it. It leaves every room, so main end is skipped too."
+    text: "main start and then the program stops"
+    why: "You may have thought the alarm rings as soon as inner is called. The alarm rings on the throw line, after inner prints."
   - id: c
-    text: "outer start, inner"
+    text: "main start, inner"
     correct: true
-    why: "The alarm rings in inner. Then outer empties, then main. No later line in any room runs."
+    why: "The alarm rings in inner, on the throw line. Then main empties too, so no later line in any room runs."
 output: |
-  outer start
+  main start
   inner
 ```
 

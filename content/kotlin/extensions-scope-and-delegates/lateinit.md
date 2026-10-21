@@ -196,7 +196,6 @@ verified: not-run
 code: |
   class Seat {
       lateinit var guest: String
-
       init {
           println("Building")
           println(guest)
@@ -238,7 +237,7 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a screen that crashes the moment it opens, and the note says `lateinit property statusTextView has not been initialized`. The Android Kotlin patterns page shows a `LoginFragment` with a `lateinit` text view that is assigned inside `onViewCreated`. It says that reading a `lateinit` property before it is set throws `UninitializedPropertyAccessException`. A code line that reads the text view before `onViewCreated` has run is the usher pointing at an empty chair. Another page shows an Activity using `lateinit var binding`, but a Fragment using a nullable value that is cleared in `onDestroyView`, because fragments outlive their views. My own reasoning: a `lateinit` property cannot be set back to empty, so a Fragment needs a nullable property when the guest has to leave.
+Picture a screen that crashes the moment it opens, and the note says `lateinit property statusTextView has not been initialized`. A **Fragment** is one part of a screen, with its own steps that Android calls as it starts and stops (general knowledge). The Android Kotlin patterns page shows a `LoginFragment` with a `lateinit` text view that is assigned inside `onViewCreated`, the step Android calls once the part's views exist (general knowledge). The page says that reading a `lateinit` property before it is set throws `UninitializedPropertyAccessException`. A code line that reads the text view before `onViewCreated` has run is the usher pointing at an empty chair. Another page shows an Activity, which is one full screen of an app (general knowledge), using `lateinit var binding`. For a Fragment it uses a nullable value cleared in `onDestroyView`, the step Android calls when the part's views go away, because fragments outlive their views. My own reasoning: a `lateinit` property cannot be set back to empty, so a Fragment needs a nullable property when the guest has to leave.
 
 ## Say it in an interview
 

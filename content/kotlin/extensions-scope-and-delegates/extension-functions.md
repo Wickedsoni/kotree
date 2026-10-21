@@ -131,7 +131,6 @@ code: |
           println("built-in stand")
       }
   }
-
   fun Phone.stand() {
       println("case stand")
   }
@@ -197,11 +196,11 @@ output: |
 - **Thinking an extension changes the original class.** The call looks like a member call, so it feels like the class gained a function. The documentation says extensions do not modify the class. Only your call changes.
 - **Trying to read a private property from an extension.** The extension reads like part of the class, so the private value feels in reach. It is outside, and the compiler refuses. Use the public functions and properties of the class.
 - **Writing an extension with the same name as a member.** It looks like it overrides the member. The member wins, so your code is never called. Pick a different name.
-- **Expecting the extension to change text in place.** The word `shout` sounds like it changes the word. Text values cannot be changed in place (general knowledge), so the extension returns a new text. Catch it in a `val`.
+- **Expecting an extension to pick the real object's version, like a member does.** The call looks the same as a member call, so it feels like the real object decides. The documentation says extensions are dispatched statically: the compiler picks the function from the declared type of the value, not from the real object. Check the declared type before you trust the call.
 
 ## Where this shows up in Android
 
-Picture code that saves a setting with `sharedPreferences.edit { putBoolean("key", value) }`. A reader looks through the list of functions of `SharedPreferences` and cannot find that `edit` with curly brackets. The Android KTX page says Android KTX is a set of Kotlin extensions, and that `SharedPreferences.edit` is an extension function from Android KTX. So it is a case on a class that Android wrote, and not a function inside the class. This lesson explains why: the phone is unchanged, and the case adds a new way to call. The signature on that page also shows a lambda and a default value. That is more than this lesson covers.
+Picture code that saves a setting with `sharedPreferences.edit { putBoolean("key", value) }`. A `SharedPreferences` is a small store of settings saved on the phone (general knowledge). A reader looks through the list of functions of `SharedPreferences` and cannot find that `edit` with curly brackets. The Android KTX page says Android KTX is a set of Kotlin extensions, and that `SharedPreferences.edit` is an extension function from Android KTX. So it is a case on a class that Android wrote, and not a function inside the class. This lesson explains why: the phone is unchanged, and the case adds a new way to call. The signature on that page also shows a lambda and a default value. That is more than this lesson covers.
 
 ## Say it in an interview
 

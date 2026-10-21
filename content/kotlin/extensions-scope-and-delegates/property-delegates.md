@@ -125,7 +125,6 @@ code: |
           "espresso"
       }
   }
-
   fun main() {
       val shop = Shop()
       println("opened")
@@ -198,9 +197,9 @@ output: |
 
 ## Where this shows up in Android
 
-Picture a screen where a holder for the user's name is made only when the screen first needs it. The Android LiveData page declares `val currentName: MutableLiveData<String> by lazy { MutableLiveData<String>() }`. That is a coffee machine: the holder is built on the first read and reused after that.
+Picture a screen where a holder for the user's name is made only when the screen first needs it. LiveData is a holder for data that a screen can watch (general knowledge). The Android LiveData page declares `val currentName: MutableLiveData<String> by lazy { MutableLiveData<String>() }`. That is a coffee machine: the holder is built on the first read and reused after that.
 
-Two other `by` lines appear all over Android code, and this lesson only names them. The ViewModel page shows `val viewModel: MyViewModel by viewModels()`, which is a helper that supplies the ViewModel. The Compose state page shows `var value by remember { mutableStateOf(default) }` and says the `by` syntax needs the `getValue` and `setValue` imports. In both lines, the word `by` hands the property to a helper.
+Two other `by` lines appear all over Android code, and this lesson only names them. A **ViewModel** is a class that holds the data for a screen (general knowledge). The Android ViewModel page shows `val viewModel: MyViewModel by viewModels()`, which hands the job of supplying the ViewModel to a helper. **Compose** is Android's toolkit for building screens from Kotlin code (general knowledge). The Compose state page shows `var value by remember { mutableStateOf(default) }` and says the `by` syntax needs the `getValue` and `setValue` imports. In both lines, the word `by` hands the property to a helper.
 
 ## Say it in an interview
 

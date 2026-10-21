@@ -77,7 +77,7 @@ Standing inside the pot gives short lines but can hide where a name comes from. 
 4. Standing inside and carrying out the last thing made is for working something out from the pot. A label and carrying out the last thing made is for the same job, and it suits a pot that might be missing.
 5. The fifth tool also stands inside and carries out the last thing made. You hand it the pot, instead of putting the tool to the pot.
 6. When the pot is missing, the tool is skipped and what you carry out is nothing.
-7. Only use one tool at a time on one pot. A tool inside a tool means two pots and two labels, and it is easy to mix them up.
+7. Only use one tool at a time on one pot. A tool inside a tool means two pots and two labels, and the labels get mixed up.
 
 ### Name it
 
@@ -121,29 +121,31 @@ run: false
 id: pot-or-dish
 verified: not-run
 code: |
+  class Soup(var salt: Int = 0)
+
   fun main() {
-      val x = StringBuilder().apply { append("a") }
-      val y = StringBuilder().let {
-          it.append("a")
-          5
+      val x = Soup().apply { salt = 2 }
+      val y = Soup().let {
+          it.salt = 2
+          7
       }
-      println(x)
+      println(x.salt)
       println(y)
   }
 options:
   - id: a
-    text: "a and a"
-    why: "You may have thought every tool hands the pot back. let hands back the last thing made, which is the number 5."
+    text: "2 and 2"
+    why: "You may have thought every tool hands the pot back. let hands back the last thing made, which is the number 7."
   - id: b
-    text: "5 and 5"
-    why: "You may have thought apply hands back the last line. apply always hands back the pot, which holds the text a."
+    text: "7 and 7"
+    why: "You may have thought apply hands back the last line. apply always hands back the pot, and its salt is 2."
   - id: c
-    text: "a and 5"
+    text: "2 and 7"
     correct: true
-    why: "apply carries out the pot, and the pot holds a. let carries out the dish made inside, the number 5."
+    why: "apply carries out the pot, and the pot's salt is 2. let carries out the dish made inside, the number 7."
 output: |
-  a
-  5
+  2
+  7
 ```
 
 ```challenge
@@ -213,12 +215,12 @@ output: |
 
 - **Treating the five as interchangeable.** They look alike, so any choice feels fine. They hand back different things, and an `apply` where a `let` was needed hands back the pot instead of the number.
 - **Using `apply` to compute a value.** `apply` feels like the general one. It carries out the pot, so the value you computed is lost. Use `let` or `run` when you need the dish.
-- **Putting one tool inside another.** It feels tidy, because each block is short. The documentation says to avoid nesting scope functions, because it is easy to confuse the current object and the value of `this` or `it`. Name the inner value or write a plain line.
+- **Putting one tool inside another.** It feels tidy, because each block is short. The documentation says to avoid nesting scope functions, because it gets hard to tell which object `this` or `it` means. Name the inner value or write a plain line.
 - **Forgetting that `?.let` can hand back `null`.** The block returns a number, so the whole line feels like it returns a number. If the value is missing, nothing runs and `null` comes out.
 
 ## Where this shows up in Android
 
-Picture code that starts another screen in an app. The Android intents guide builds the message in one go: `val sendIntent = Intent().apply { action = ...; putExtra(...); type = ... }`. Inside the curly brackets, `action` and `type` are set on the `Intent` itself, with no `sendIntent.` in front. That is the `this` style. And `apply` hands back the `Intent`, which is why `sendIntent` ends up holding it. If a reader mistook `apply` for `let`, they would expect a number or a text back and not the `Intent`.
+Picture code that starts another screen in an app. An **Intent** is a message that asks Android to start something (general knowledge). The Android intents guide builds that message in one go: `val sendIntent = Intent().apply { action = ...; putExtra(...); type = ... }`. Inside the curly brackets, `action` and `type` are set on the `Intent` itself, with no `sendIntent.` in front. That is the `this` style. And `apply` hands back the `Intent`, which is why `sendIntent` ends up holding it. If a reader mistook `apply` for `let`, they would expect a number or a text back and not the `Intent`.
 
 ## Say it in an interview
 
@@ -232,12 +234,12 @@ They are `let`, `run`, `with`, `apply` and `also`. The Kotlin documentation says
 `apply` and `also` hand back the object. `let`, `run` and `with` hand back the result of the lambda. So `apply` fits building an object and `let` fits turning a value into another value.
 
 **What goes wrong when scope functions are nested?**
-The documentation recommends avoiding nesting and being careful with chaining, because it is easy to get confused about the current object and the value of `this` or `it`. A second `it` hides the first. My own reasoning: a reviewer must read every layer to know which object a name means, so a tidy-looking chain can hide a mistake.
+The documentation recommends avoiding nesting and being careful with chaining, because you can lose track of the current object and of what `this` or `it` means. A second `it` hides the first. My own reasoning: a reviewer must read every layer to know which object a name means, so a tidy-looking chain can hide a mistake.
 
 ## Recap
 
 1. A scope function runs a block on an object, and the five differ in two choices.
-2. One choice is the name inside, `this` or `it`; the other is what comes back.
+2. Two choices separate them: the name inside, `this` or `it`, and what comes back.
 3. `apply` and `also` hand back the object, and `let`, `run` and `with` hand back the lambda's result.
 
 ## You can now
