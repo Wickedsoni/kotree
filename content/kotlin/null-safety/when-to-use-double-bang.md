@@ -1,21 +1,20 @@
 ---
 id: kotlin/null-safety/when-to-use-double-bang
 title: When is !! ever the right choice?
-status: shadow
+status: live
 difficulty: medium
 order: 21
 requires: [kotlin/null-safety/safe-call-and-elvis]
 summary: The !! operator turns a missing value into a crash. It is right only when you can point to why the value is there.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/null-safety.html ("The not-null assertion operator !! converts any value to a non-nullable type"; "if the value is null, the !! operator forces it to be treated as non-nullable, which results in an NPE"; "The only possible causes of an NPE in Kotlin are": explicit throw NullPointerException, the !! operator, data inconsistency during initialization, Java interoperation; return and throw on the right of Elvis; the IllegalArgumentException("name expected") example); kotlinlang.org/api/core/kotlin-stdlib/kotlin/require-not-null.html (requireNotNull throws IllegalArgumentException if the value is null, otherwise returns it, with an optional lazyMessage; the sample says the value is smart cast afterwards); kotlinlang.org/api/core/kotlin-stdlib/kotlin/check-not-null.html (checkNotNull throws IllegalStateException if the value is null); kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int-or-null.html (toIntOrNull returns null if the string is not a valid Int); kotlinlang.org/docs/java-interop.html (platform types, assignment of a null platform value to a non-null type throws a NullPointerException, assertions are emitted when passing platform values to Kotlin functions expecting non-null values); developer.android.com/kotlin/interop (every non-primitive parameter, return and field type in a public API should have a nullability annotation); developer.android.com/guide/components/activities/activity-lifecycle (savedInstanceState is null if the activity has never existed before); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip ("This value could be null if the text field is empty"). The decision table, when-it-is-acceptable rules and the trade-offs marked "my own reasoning" are derived. Snippets are hand-traced, not run. -->
 ## The question
 
 A tip app turns the typed text into a number with a line that ends in the `!!` operator. It passes every test. Then a user types the letter O instead of the number zero, and the app closes. Is `!!` ever the right choice, and how would you tell?

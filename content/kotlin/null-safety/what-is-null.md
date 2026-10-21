@@ -1,21 +1,20 @@
 ---
 id: kotlin/null-safety/what-is-null
 title: What is null and why does it crash apps?
-status: shadow
+status: live
 difficulty: easy
 order: 17
 requires: [kotlin/types-and-variables/basic-types]
 summary: Null means nothing is here. See how Kotlin catches it before your app runs, and how a crash still gets through.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [null-lunch-box]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/null-safety.html (nullable types with ?, "Null can not be a value of a non-null type String", the compiler reports an error for b.length on a nullable, the !! operator and the NPE it causes, the list "The only possible causes of an NPE in Kotlin"); kotlinlang.org/docs/java-interop.html (platform types, T!, "Kotlin does not issue nullability errors at compile time, but the call may fail at runtime", assigning a platform value to a non-null type can throw NullPointerException, nullability annotations make Java types nullable or non-null); kotlinlang.org/docs/strings.html (a null String? in a template prints null); developer.android.com/kotlin/interop ("Non-annotated types are interpreted as platform types, which have ambiguous nullability"). The profile-screen picture, the difference between null and empty text and the interview trade-offs marked "my own reasoning" are derived. Snippets are hand-traced, not run. -->
 ## The question
 
 A user fills in a sign-up form and leaves the middle name blank. The app closes on the spot. Nothing in the form looked wrong.

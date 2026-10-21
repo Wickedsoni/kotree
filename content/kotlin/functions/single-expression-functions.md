@@ -1,21 +1,20 @@
 ---
 id: kotlin/functions/single-expression-functions
 title: Why do some Kotlin functions use = instead of braces?
-status: shadow
+status: live
 difficulty: easy
 order: 14
 requires: [kotlin/functions/declaring-functions]
 summary: A function that is one calculation can swap its braces and return for an equals sign. It is still a normal function.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/functions.html (single-expression syntax, return type inferred "most of the time", must be declared for recursive functions and fun empty() = null, check the inferred type e.g. Number, block body without a return type is Unit); kotlinlang.org/docs/numbers.html (integer division drops the fractional part); kotlinlang.org/docs/coding-conventions.html (libraries state function return types); kotlinlang.org/docs/control-flow.html (if can be written as an expression, an else branch is required); developer.android.com/kotlin/style-guide (expression functions, override fun toString(): String = "Hey", implicit return type may be omitted). The no-sim reasoning, the doesn't-compile block and the interview trade-offs marked "my own reasoning" are derived, not quoted. Snippets are hand-traced, not run. -->
 ## The question
 
 You open a Kotlin file and find two functions that do the same job. One is wrapped in curly braces and ends with the word return. The other has an equals sign and a short calculation, with no braces at all. Is the second one a function, or something else? And when are you allowed to write it that way?

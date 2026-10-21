@@ -1,21 +1,20 @@
 ---
 id: kotlin/null-safety/safe-call-and-elvis
 title: How do I use a maybe-missing value without crashing?
-status: shadow
+status: live
 difficulty: medium
 order: 19
 requires: [kotlin/null-safety/nullable-types]
 summary: A safe call asks a question only when the value is there. An Elvis fallback gives an answer when it is not.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [knock-and-note]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/null-safety.html (safe call ?. "Instead of throwing an NPE, if the object is null, the ?. operator returns null"; "This chain returns null if any of its properties are null"; Elvis ?: "If the expression to the left of ?: is not null, the Elvis operator returns it. Otherwise, the Elvis operator returns the expression to the right"; "Since throw and return are expressions in Kotlin, you can also use them on the right-hand side of the Elvis operator"; !! results in an NPE); kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int-or-null.html (toIntOrNull returns null if the string is not a valid Int); developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip (val tipPercent = tipInput.toDoubleOrNull() ?: 0.0 and "This value could be null if the text field is empty"). That trim() removes spaces at both ends, the silent-skip reading of ?: return and the sim idea are general knowledge or derived and are labelled in the body. Snippets are hand-traced, not run. -->
 ## The question
 
 A tip calculator has a box for the bill. The user leaves it empty and presses the button. The app must still show a number, and it must not close. How can code ask a question about a value that might be missing and still get an answer?

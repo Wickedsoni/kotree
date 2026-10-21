@@ -1,21 +1,20 @@
 ---
 id: kotlin/strings/text-to-numbers
 title: How do I turn the text "42" into a number without crashing?
-status: shadow
+status: live
 difficulty: medium
 order: 24
 requires: [kotlin/strings/strings-are-sequences, kotlin/null-safety/safe-call-and-elvis]
 summary: Text from a keyboard is not a number yet. Two functions convert it, and only one of them survives bad input.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/to-int-or-null.html ; https://developer.android.com/codelabs/basic-android-kotlin-compose-calculate-tip -->
 ## The question
 
 A user types the letters abc into a box that asks for an age. One app closes on the spot. Another app shows "please type a number" and carries on. Both apps read the same text. What does the second app do that the first does not?

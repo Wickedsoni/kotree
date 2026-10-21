@@ -1,21 +1,20 @@
 ---
 id: kotlin/null-safety/nullable-types
 title: How does Kotlin mark a value that might be missing?
-status: shadow
+status: live
 difficulty: easy
 order: 18
 requires: [kotlin/null-safety/what-is-null]
 summary: A question mark after a type says the value might be missing. Kotlin then refuses to use it until you deal with that.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/docs/null-safety.html ("To allow null values, declare a variable with a ? sign right after the variable type"; "Null can not be a value of a non-null type String"; the type system distinguishes nullable and non-nullable types; the compiler reports an error for a direct .length on a nullable); kotlinlang.org/docs/java-interop.html (Java types with nullability annotations are represented as actual nullable or non-nullable Kotlin types; without them they are platform types); developer.android.com/guide/components/activities/activity-lifecycle (onCreate(savedInstanceState: Bundle?) and "If the activity has never existed before, the value of the Bundle object is null"); developer.android.com/kotlin/interop (every non-primitive parameter, return and field type in a public API should have a nullability annotation; non-annotated types are platform types). The reading that ? alone does not make code safe, and the line-by-line refusal in the trace item, are derived. Snippets are hand-traced, not run. -->
 ## The question
 
 An address form has two boxes. The street name is filled in for every address. The flat number is filled in for some addresses and left empty for houses. How can Kotlin know which box may be empty and which never is? And what does the question mark after a type name really promise?

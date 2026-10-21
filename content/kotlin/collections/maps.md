@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/maps
 title: How do I look up a value by its key?
-status: shadow
+status: live
 difficulty: easy
 order: 28
 requires: [kotlin/collections/list-vs-mutable-list, kotlin/null-safety/nullable-types]
 summary: Look up a value by a label instead of a number. A missing label gives back nothing and does not crash.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/map-operations.html ; https://kotlinlang.org/docs/collections-overview.html ; https://kotlinlang.org/docs/constructing-collections.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/map-of.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/get-value.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-hash-map/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/hash-code.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/equals.html ; https://developer.android.com/codelabs/basic-android-kotlin-compose-higher-order-functions ; https://developer.android.com/develop/ui/compose/lists -->
 ## The question
 
 A café app stores a price for each drink: tea, coffee and juice. When a customer taps tea, the app needs the price of tea. Searching a long row of prices for the word tea would be slow and clumsy. Is there a way to jump straight from the name to its price? And what should happen when someone asks for a drink the café does not sell?

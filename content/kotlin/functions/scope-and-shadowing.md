@@ -1,21 +1,20 @@
 ---
 id: kotlin/functions/scope-and-shadowing
 title: Why can't I use a variable outside the braces where I made it?
-status: shadow
+status: live
 difficulty: medium
 order: 16
 requires: [kotlin/functions/declaring-functions, kotlin/control-flow/ranges-and-for-loops]
 summary: A name works only inside the braces where it was made. A name made inside can hide one with the same spelling outside.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [house-and-street-names]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: kotlinlang.org/spec/scopes-and-identifiers.html (a scope is a syntactically-delimited region of code in which names are introduced; scopes can be nested, outer names possibly available in inner ones; bodies of function declarations and function literals are statement scopes; names in a statement scope are bound in order of appearance and a value declared inside can be accessed only after its declaration point; binding a value to an identifier already available through linked scopes is allowed; the spec does not use the word shadowing); kotlinlang.org/docs/control-flow.html (for loops, ranges); developer.android.com/develop/ui/compose/state (var name by remember { mutableStateOf("") }, onValueChange = { name = it }, TextField updates only when its value parameter changes). The compiler warning for a hidden name, the loop-variable rule and the sim idea are general knowledge or derived and are labelled in the body. Snippets are hand-traced, not run. -->
 ## The question
 
 A program makes a variable called message inside a loop and prints it without trouble. Two lines later, after the loop, it tries to print message again. Kotlin refuses to run the program. The name was right there a few lines above. Why can't the later line use it?

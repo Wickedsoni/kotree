@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/pairs-and-destructuring
 title: How do I unpack two values at once?
-status: shadow
+status: live
 difficulty: easy
 order: 29
 requires: [kotlin/collections/maps]
 summary: A Pair holds two values. Unpacking copies them into two names by position, and it also works on map entries.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: []
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/destructuring-declarations.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-pair/ ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-triple/ ; https://kotlinlang.org/docs/constructing-collections.html ; https://developer.android.com/develop/ui/compose/kotlin ; https://developer.android.com/develop/ui/compose/state -->
 ## The question
 
 A shop keeps each drink with its price: tea and 3. You want to carry the two together as one thing, and later take them out again under two names. How do you pack two values into one box, and how do you unpack them? And if you unpack in the wrong order, which name gets which value?

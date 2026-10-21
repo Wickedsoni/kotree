@@ -1,21 +1,20 @@
 ---
 id: kotlin/collections/index-out-of-bounds
 title: Why does asking for item 5 crash a list of five items?
-status: shadow
+status: live
 difficulty: easy
 order: 26
 requires: [kotlin/collections/list-vs-mutable-list, kotlin/null-safety/nullable-types]
 summary: A list of five items has places 0 to 4. Learn what asking for place 5 does and how to ask safely.
 video: ""
-publishedOn:
-updatedOn:
+publishedOn: 2026-10-21
+updatedOn: 2026-10-21
 sims: [inn-room-clerk]
 playground: false
 fruit: false
 upnext: false
 ---
 
-<!-- SOURCES: https://kotlinlang.org/docs/list-operations.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/get-or-null.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/element-at.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/last-index.html ; https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-index-out-of-bounds-exception/ ; https://developer.android.com/develop/ui/compose/layouts/pager -->
 ## The question
 
 A list holds five names. One line of code asks for "item 5", and the app closes. Another line asks for the same item and gets back an answer that means "nothing there", with no crash. Both lines look at the same list. What is different about how they ask?
