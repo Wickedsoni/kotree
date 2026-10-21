@@ -44,7 +44,7 @@ intro: "Sixteen rooms share one fuse and one lamp is faulty. The marker sits on 
 lanes:
   - { id: "rooms", label: "Rooms 1 to 16 on one fuse", kind: "row", slots: 16, index0: false }
 items:
-  - { id: "probe", label: "Rooms 1 to here on", at: "rooms.0" }
+  - { id: "probe", label: "Marker", at: "rooms.0" }
 vars: { lamp: 11, tries: 0, f1: "holds", f2: "holds", f3: "holds", f4: "holds", f5: "holds", f6: "holds", f7: "holds", f8: "holds", f9: "holds", f10: "holds", f11: "blows", f12: "blows", f13: "blows", f14: "blows", f15: "blows", f16: "blows" }
 show:
   - { var: "tries", label: "Tries" }

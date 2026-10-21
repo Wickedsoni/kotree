@@ -109,23 +109,24 @@ actions:
           - set: { manager: "no" }
           - say: "The manager is gone. Nobody hands out flats or turns any more."
     refuse: "The manager is already gone."
-drops:
-  - item: chat
-    to: "flats.1"
-    when: { var: { manager: "no" }, at: { chat: "flats.0" } }
-    do:
-      - remove: "music"
-      - mark: { chat: "bad" }
-      - say: "With no manager, Chat walks into flat 1 and writes over Music's things. Music is wrecked."
+  - id: walk-in
+    label: "Chat walks into Music's flat"
+    cases:
+      - when: { var: { manager: "no" }, at: { chat: "flats.0" } }
+        do:
+          - move: { chat: "flats.1" }
+          - remove: "music"
+          - mark: { chat: "bad" }
+          - say: "With no manager, Chat walks into flat 1 and writes over Music's things. Music is wrecked."
     refuse: "Nothing changes. With the manager on duty, Chat is kept in its own flat, flat 0, so Music's things stay safe."
-script: ["ask", "give", "give", "give", "chat>flats.1", "remove-manager", "ask", "chat>flats.1"]
+script: ["ask", "give", "give", "give", "walk-in", "remove-manager", "ask", "walk-in"]
 try:
   - text: "Press \"Apps ask for the noticeboard\". Then press \"Manager gives out the noticeboard\" three times and watch the order."
     done: ["ask", "give", "give", "give"]
-  - text: "Drag Chat onto Music's flat (flat 1). See what the manager does."
-    done: ["chat>flats.1"]
-  - text: "Press \"Remove the manager\" and let the apps ask again. Then drag Chat onto Music's flat once more."
-    done: ["remove-manager", "ask", "chat>flats.1"]
+  - text: "Press \"Chat walks into Music's flat\". See what the manager does."
+    done: ["walk-in"]
+  - text: "Press \"Remove the manager\" and let the apps ask again. Then press \"Chat walks into Music's flat\" once more."
+    done: ["remove-manager", "ask", "walk-in"]
 ```
 
 **What you should notice:** With the manager, each app gets its own flat and a turn on the noticeboard. With the manager removed, apps land on the same flat and their things overlap.
