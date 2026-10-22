@@ -1,15 +1,15 @@
 # Kotree — project memory for Claude Code
 
-You are the **orchestrator**: Sonnet 5.5, medium effort. Think small, delegate big, keep your own context lean. Keep running waves of ~15 leaves without waiting for the author (decision L33); push to the branch and `main` after every wave. Writers and reviewers use `docs/lesson-checklist.md`.
+You are the **orchestrator**: Sonnet 5.5, medium effort. Think small, delegate big, keep your own context lean. Work topic by topic (decision L38): write, review and publish only the topic the author names, then stop; no automatic waves or layers. Push to the branch and `main` after each topic. Writers and reviewers use `docs/lesson-checklist.md`.
 
-**"next" command (decision L34):** when the author says "next", build the next radial layer: run `python3 scripts/next-layer.py` (one eligible leaf per branch, all 17 branches), write them in batches (max 3 subagents at once), review, fix, re-check, housekeeper flips live, then the single on-demand CI build and push to `main`. Never finish one branch alone. Do not wait for more input between steps inside a layer.
+**Topic command (decision L38, replaces the L34 "next" layer loop and L36 quiet mode):** when the author names a topic (a stem or set of stems), write its remaining leaves in batches (max 3 subagents at once), review, fix, re-check, housekeeper flips live, then one on-demand CI build and push to `main`. Do not run `python3 scripts/next-layer.py` or start new work unprompted. Every leaf ships a working sim; open its sims in a browser (mouse, keyboard, reduced motion) before it goes live. The sim stage stays 16:9 and scrolls its content.
 
-**Quiet mode (decision L36, 21 Oct 2026):** keep working layer by layer (then tree v3 work packages in `docs/adr/008-tree-v3-request.md`) until the author says "stop". Do not send status text. Message the author only for a real doubt or a decision that is theirs; keep the message to the question. Spend tokens carefully: short subagent briefs, no re-reading of files already known, no extra builds (one per layer).
+**Token care:** short subagent briefs, no re-reading of files already known, no extra builds (one per topic). Message the author only for a real doubt or a decision that is theirs.
 
-**CI rule:** branch pushes do not build. Once per wave, after the last commit, run `gh workflow run build.yml --ref feat/design-v2`, wait for success, then push that sha to `main` (the main push builds and publishes). Never trigger extra builds.
+**CI rule:** branch pushes do not build. Once per topic, after the last commit, run `gh workflow run build.yml --ref feat/design-v2`, wait for success, then push that sha to `main` (the main push builds and publishes). Never trigger extra builds.
 
 ## What this is
-A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, profiling, native) and CS theory (DSA, DAA, OS, networking) to absolute freshers. The whole site is one pixel-art tree on white: roots (Foundation) → 4 boughs → 16 branches → stems → leaves → lesson pages. Built with Kobweb, hosted on Vercel, public GitHub repo. Content is Markdown in `/content`. The author learns a topic, says "I understood X", and only then does that leaf go live.
+A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, profiling, native) and CS theory (DSA, DAA, OS, networking) to absolute freshers. The whole site is one smooth tree on white: roots (Foundation) → 4 boughs → 16 branches → stems → leaves → lesson pages. Built with Kobweb, hosted on Vercel, public GitHub repo. Content is Markdown in `/content`. The author names a topic (decision L38), and only then are that topic's leaves written, reviewed and published.
 
 ## Read order (token rule)
 1. `docs/INDEX.md` — pick the docs your task needs. **Never load every doc.**
@@ -25,7 +25,7 @@ A public, no-login website that teaches Android (Kotlin, Compose, KMP, testing, 
 - Escalate model only when a cheaper one failed once: Haiku → Sonnet → Opus.
 
 ## Hard rules
-1. Leaves are written and published autonomously (decision L31, 21 Oct 2026; the "I understood X" gate is dropped). A leaf still goes `live` only after `reviewer` PASS; two failed reviews → stay `shadow` and list in `docs/NEEDS-ME.md`.
+1. Leaves are written and published without a per-leaf "I understood X" gate (L31), but only for a topic the author has named (L38). A leaf still goes `live` only after `reviewer` PASS; two failed reviews → stay `shadow` and list in `docs/NEEDS-ME.md`.
 2. White background only. No dark mode. No hardcoded colours, fonts or spacing: use design tokens from `docs/02-design-system.md`.
 3. Tree and UI chrome are smooth Material 3 Expressive; pixel art is no longer required (decision L32). Readability, clickability and smooth zoom come first.
 4. Android/Kotlin/KMP facts in lessons must be checked against official docs before status becomes `live`. `reviewer` must PASS first.
