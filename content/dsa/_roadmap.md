@@ -331,7 +331,7 @@ Flags: phase=2 · ai-review
 
 ### arrays · Arrays
 
-Flags: phase=2
+Flags: phase=2 · ai-review
 
 | Leaf | Diff | After this, a fresher can answer | Analogy | Misconception | Sim | Challenges | Notes |
 |---|---|---|---|---|---|---|---|
@@ -341,7 +341,7 @@ Flags: phase=2
 
 ### strings · Strings
 
-Flags: phase=2
+Flags: phase=2 · ai-review
 
 | Leaf | Diff | After this, a fresher can answer | Analogy | Misconception | Sim | Challenges | Notes |
 |---|---|---|---|---|---|---|---|
@@ -360,7 +360,7 @@ Flags: phase=3
 
 ### stacks · Stacks
 
-Flags: phase=3
+Flags: phase=3 · ai-review
 
 | Leaf | Diff | After this, a fresher can answer | Analogy | Misconception | Sim | Challenges | Notes |
 |---|---|---|---|---|---|---|---|

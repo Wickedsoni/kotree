@@ -609,29 +609,29 @@ Generated from tree.json. `>>` = up next (drafted as shadow). Tell Claude "I und
 - [x] How many steps does this code take for 10 items, 100 items and 1000 items? (easy)
 - [x] What does O(n) say about my code, and what does it ignore? (medium)
 - [x] Which of these loops hides an O(n²) cost? (medium)
-- - When is it right to spend more memory to save time? (easy)
+- [x] When is it right to spend more memory to save time? (easy)
 
 **Arrays** (3)
 
-- - Why is reading item 500 as quick as reading item 1? (easy)
-- - Why is removing the first item of a big list slow? (easy)
-- - How can a list keep growing when its array has a fixed size? (medium)
+- [x] Why is reading item 500 as quick as reading item 1? (easy)
+- [x] Why is removing the first item of a big list slow? (easy)
+- [x] How can a list keep growing when its array has a fixed size? (medium)
 
 **Strings** (2)
 
-- - Why is joining text with + inside a loop slow? (medium)
-- - How do I check two words use the same letters without sorting them? (easy)
+- [x] Why is joining text with + inside a loop slow? (medium)
+- [x] How do I check two words use the same letters without sorting them? (easy)
 
 **Linked Lists** (3)
 
-- - How is a chain of nodes different from a row of boxes? (easy)
-- - How do I remove a node without breaking the chain? (medium)
-- - When is a linked list actually the better choice? (medium)
+- [x] How is a chain of nodes different from a row of boxes? (easy)
+- [x] How do I remove a node without breaking the chain? (medium)
+- [x] When is a linked list actually the better choice? (medium)
 
 **Stacks** (2)
 
-- - Which item comes out first from a stack? (easy)
-- - How does a stack check that every bracket has its partner? (medium)
+- [x] Which item comes out first from a stack? (easy)
+- [x] How does a stack check that every bracket has its partner? (medium)
 
 **Queues** (2)
 
