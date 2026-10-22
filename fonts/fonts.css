@@ -1,0 +1,15 @@
+/* Self-hosted fonts (docs/02 section 3, docs/13 step 4). Licences: OFL-*.txt beside the files. */
+@font-face {
+  font-family: "Roboto Flex";
+  src: url("/fonts/roboto-flex-v1.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-v1.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
